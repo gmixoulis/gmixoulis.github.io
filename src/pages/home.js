@@ -6,16 +6,15 @@ import Hero from '../section/hero';
 import About from '../section/about';
 import Blockquote from '../section/blockquote';
 import Whatido from '../section/whatido';
-import Gallery from '../section/gallery';
+import MyGallery from '../section/gallery';
 import Resume from '../section/resume';
-import Counter from '../section/counter';
 import Blog from '../section/blog';
-import Contact from '../section/contact';
 import Footer from '../section/footer';
 import Preloader from "../layout/Preloader";
 import ScrollToTopBtn from '../layout/ScrollToTop';
 import { GlobalStyles } from './style/video';
-import CookieConsent, { Cookies } from "react-cookie-consent";
+import CookieConsent from "react-cookie-consent";
+import Activites  from "../section/activities";
 
 
 
@@ -77,14 +76,18 @@ const videoEl = useRef(null);
       </section>
 
       {/* Gallery */}
-      <section id="gallery">
-        <Gallery/>
+      <section id="MyGallery">
+        <MyGallery/>
       </section>
 
       {/* Gallery */}
       <section id="resume" className="pb-0">
         <Resume/>
       </section>
+
+      <section id="activities" className="pb-0">
+        <Activites/>
+        </section>
 
       {/* Gallery */}
       <section id="blog" className="pb-0">
