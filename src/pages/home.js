@@ -15,6 +15,8 @@ import Footer from '../section/footer';
 import Preloader from "../layout/Preloader";
 import ScrollToTopBtn from '../layout/ScrollToTop';
 import { GlobalStyles } from './style/video';
+import CookieConsent, { Cookies } from "react-cookie-consent";
+
 
 
 export default function Home() {
@@ -98,6 +100,7 @@ const videoEl = useRef(null);
       
 
 
+
       <div className="float-text">
           <div className="de_social-icons">
           <a href="https://www.facebook.com/george.mihoulis/" target="_blank"><span className="buton"><i className="fa fa-facebook fa-lg"></i></span></a>
@@ -109,7 +112,10 @@ const videoEl = useRef(null);
           
       </div>
     </div>
+
     <ScrollToTopBtn />
+    <CookieConsent>This website uses cookies to enhance the user experience.</CookieConsent>
+
     </>
   );
 }
