@@ -99,7 +99,50 @@ a {
   border-radius: 2%;
   border-color: #a17f1a;
   border-width: thick;
+  &:before {
+    box-shadow:0 0 50px 4px #000 inset;
+    -moz-box-shadow:0 0 50px 4px #000 inset;
+    -webkit-box-shadow:0 0 50px 6px #000 inset;
+    float:left;
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:20;
+    cursor: pointer;
+    transition: all 1s;
+    -webkit-transition: all 1s;
+    -moz-transition:all 1s;}
 
+    &:hover:before {
+      box-shadow:0 0 100px 30px #000 inset;}
+    
+  
+
+}
+
+.react-photo-gallery--gallery img::before {
+ 
+  box-shadow:0 0 50px 4px #000 inset;
+  -moz-box-shadow:0 0 50px 4px #000 inset;
+  -webkit-box-shadow:0 0 50px 6px #000 inset;
+  float:left;
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:20;
+  cursor: pointer;
+}
+.react-photo-gallery--gallery img::before {
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition:all 1s;
+}
+.react-photo-gallery--gallery .img:hover {
+  box-shadow:0 0 100px 30px #000 inset;
 }
 
 .slider-card{

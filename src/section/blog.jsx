@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Parallax } from "react-parallax";
 
 import AOS from 'aos';
@@ -31,7 +31,7 @@ const Blog= function() {
                     <div className="row">
                         
                             <div className="de_count text-center">
-                            <iframe src='https://widgets.sociablekit.com/linkedin-profile-posts/iframe/97069' frameborder='0' width='100%' height='1000'></iframe>
+                            <iframe title="linkein" src='https://widgets.sociablekit.com/linkedin-profile-posts/iframe/97069' frameborder='0' width='100%' height='1000'></iframe>
                         </div>
                     </div>
                 </div>

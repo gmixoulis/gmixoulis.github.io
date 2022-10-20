@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from "react";
 import Gallery from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
-
+import { Parallax } from "react-parallax";
+const image1 ="./img/background/wall.jpg";
 
 const photos = [
     {
@@ -92,7 +93,6 @@ const photos = [
 
 
 
-
 const MyGallery = function() {
     
         const [currentImage, setCurrentImage] = useState(0);
@@ -109,7 +109,8 @@ const MyGallery = function() {
         };
         return (
             
-  
+    <div>
+      
     <div className="col-md-8 text-center m-auto">
          <div className="spacer-single"></div>
 			<div className="row">
@@ -118,10 +119,14 @@ const MyGallery = function() {
 	                <div className="space-border"></div>
 	            </div>
 			</div>
-            <div className="section bg-top bg-bottom py-0"></div>
+      </div>
+      <div className="section py-0 ">
         
+      <Parallax className="py-5" bgImage={image1} strength={300}>
 
-    <div>
+    <div className="col-md-8 text-center m-auto">
+      
+    
       <Gallery photos={photos} onClick={openLightbox} />
       <ModalGateway>
         {viewerIsOpen ? (
@@ -137,6 +142,9 @@ const MyGallery = function() {
           </Modal>
         ) : null}
       </ModalGateway>
+     
+    </div>
+    </Parallax>
     </div>
     </div>
   );

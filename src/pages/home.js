@@ -15,6 +15,8 @@ import ScrollToTopBtn from '../layout/ScrollToTop';
 import { GlobalStyles } from './style/video';
 import CookieConsent from "react-cookie-consent";
 import Activites  from "../section/activities";
+import Snowfall from 'react-snowfall'
+
 
 
 
@@ -31,9 +33,23 @@ const videoEl = useRef(null);
   useEffect(() => {
     attemptPlay();
   }, []);
+  let date= new Date();
+  let month= date.getMonth() +1;
+  
+  
+    
+
 
   return (
     <>
+    { month===12 &&
+      <Snowfall style={{
+        position: 'fixed',
+        width: '100vw',
+        height: '100vh',
+        zIndex: 99999,}}/>  
+    }
+
       <GlobalStyles/>
     <Preloader/>
     <div className="home">
@@ -81,7 +97,7 @@ const videoEl = useRef(null);
       </section>
 
       {/* Gallery */}
-      <section id="resume" className="pb-0">
+      <section id="resume" >
         <Resume/>
       </section>
 
@@ -106,11 +122,11 @@ const videoEl = useRef(null);
 
       <div className="float-text">
           <div className="de_social-icons">
-          <a href="https://www.facebook.com/george.mihoulis/" target="_blank"><span className="buton"><i className="fa fa-facebook fa-lg"></i></span></a>
-          <a href="https://twitter.com/GeorgeMicou" target="_blank">  <span className="buton"><i className="fa fa-twitter fa-lg"></i></span></a>
-          <a href="https://www.linkedin.com/in/george-michoulis/" target="_blank">  <span className="buton"><i className="fa fa-linkedin fa-lg"></i></span></a>
-          <a href="https://github.com/gmixoulis" target="_blank">  <span className="buton"><i className="fa fa-github fa-lg"></i></span></a>
-          <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank">  <span className="buton"><i className="fa fa-google fa-lg"></i></span></a>
+          <a href="https://www.facebook.com/george.mihoulis/" target="blank"><span className="buton"><i className="fa fa-facebook fa-lg"></i></span></a>
+          <a href="https://twitter.com/GeorgeMicou" target="blank">  <span className="buton"><i className="fa fa-twitter fa-lg"></i></span></a>
+          <a href="https://www.linkedin.com/in/george-michoulis/" target="blank">  <span className="buton"><i className="fa fa-linkedin fa-lg"></i></span></a>
+          <a href="https://github.com/gmixoulis" target="blank">  <span className="buton"><i className="fa fa-github fa-lg"></i></span></a>
+          <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="blank">  <span className="buton"><i className="fa fa-google fa-lg"></i></span></a>
           </div>
           
       </div>
@@ -118,7 +134,9 @@ const videoEl = useRef(null);
 
     <ScrollToTopBtn />
     <CookieConsent>This website uses cookies to enhance the user experience.</CookieConsent>
-
+    
     </>
+    
+    
   );
 }
