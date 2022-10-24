@@ -9,8 +9,15 @@ const photos = [
         src: './img/certificates/Master.jpg',
         width: 1,
         height: 1,
-        title:"MOOC",
-        alt:"MOOC"
+        title:"Master in Data and Web Science",
+        alt:"Master Degree"
+      },
+      {
+        src: './img/certificates/uom.jpg',
+        width: 1,
+        height: 1,
+        title:"Bachelor in Applied Informatics",
+        alt:"Bachelor Degree"
       },
     {
         src: './img/certificates/MOOC.jpg',
@@ -25,6 +32,13 @@ const photos = [
         height: 1,
         title:"Intership Volunteer",
         alt:"Intership Volunteer"
+      },
+      {
+        src: './img/certificates/skg-code-1.jpg',
+        width: 1,
+        height: 1,
+        title:"Certificate of Participation",
+        alt:"Certificate of Participation"
       },
       {
         src: './img/certificates/CVML.jpg',
@@ -89,6 +103,79 @@ const photos = [
         title:"Certificate of Attendance",
         alt:"Certificate of Attendance"
       },
+      {
+        src: './img/certificates/ccna-1.jpg',
+        width: 1,
+        height: 1,
+        title:"CCNA",
+        alt:"CCNA"
+      },
+      {
+        src: './img/certificates/networking-essentials.png',
+        width: 1,
+        height: 1,
+        title:"Cisco Networking Essentials",
+        alt:"Certificate Cisco Networking Essentials"
+      },
+      {
+        src: './img/certificates/intracom-1.jpg',
+        width: 1,
+        height: 1,
+        title:"Certificate of Attendance",
+        alt:"Certificate of Attendance"
+      },
+      {
+        src: './img/certificates/lyceum.jpg',
+        width: 1,
+        height: 1,
+        title:"Award",
+        alt:"Award"
+      },
+      {
+        src: './img/certificates/greeklug-1.jpg',
+        width: 1,
+        height: 1,
+        title:"Certificate of Attendance",
+        alt:"Certificate of Attendance"
+      },
+      {
+        src: './img/certificates/hour.jpg',
+        width: 1,
+        height: 1,
+        title:"Certificate of Participation",
+        alt:"Certificate of Participation"
+      },
+      {
+        src: './img/certificates/Hydrobot-1.jpg',
+        width: 1,
+        height: 1,
+        title:"Certificate of Participation",
+        alt:"Certificate of Participation"
+      },
+   
+      {
+        src: './img/certificates/Pepsico-1.jpg',
+        width: 1,
+        height: 1,
+        title:"Certificate of Attendance",
+        alt:"Certificate of Attendance"
+      },
+     
+      {
+        src: './img/certificates/ECPE-1.jpg',
+        width: 1,
+        height: 1,
+        title:"English Certificate",
+        alt:"English Certificate"
+      },
+      {
+        src: './img/certificates/to.jpg',
+        width: 1,
+        height: 1,
+        title:"English Certificate",
+        alt:"English Certificate"
+      },
+      
   ];
 
 

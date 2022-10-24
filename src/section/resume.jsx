@@ -73,6 +73,83 @@ const hero = () => {
                 </div>
                 <div className="spacer-double"></div>
 			</div>
+
+            	
+              <div className="row gh-5">
+
+                <div className="col-lg-6"
+                    data-aos="fade-up"
+                        data-aos-once="true"
+                    >
+                    <div className="p-4">
+                        <h3 className="s_border">Publications</h3>
+                        <ul className="d_timeline">
+                            <li className="d_timeline-item">
+                                <h3 className="d_timeline-title">2022</h3>
+                                <p className="d_timeline-text">
+                                    <span className="d_title">Simulation Modelling Practice and Theory</span>
+                                    <span className="d_company">A process-aware approach for blockchain-based verification of academic qualifications</span>
+                                </p>
+                        
+                                <p className="d_timeline-text">
+                                    <span className="d_title">Women in Bioinformatics and Data Science LA</span>
+                                    <span className="d_company">Graph Embedding and Node Features for Drug Target Interaction: The GenGRAM-DTA Approach	</span>
+                                </p>
+                         
+                                <p className="d_timeline-text">
+                                    <span className="d_title">4th Summit on Gender Equality in Computing</span>
+                                    <span className="d_company">A Gender Equality Observatory on Scientific Research</span>
+                                    <span className="d_company">Blockchain in Higher Education: permissioned and permissionless approaches</span>
+                               </p>
+                            </li>
+                            <li className="d_timeline-item">
+                                <h3 className="d_timeline-title">2021</h3>
+                                <p className="d_timeline-text">
+                                    <span className="d_title">Φοιτητικό Συνέδριο του τμήματος Διοικητικής Επιστήμης και Τεχνολογίας</span>
+                                    <span className="d_company">Επαλήθευση εγκυρότητας Ακαδημαϊκών Τίτλων με χρήση του Ethereum Blockchain</span>
+
+                               </p>
+                            </li>
+                            <li className="d_timeline-item">
+                                <h3 className="d_timeline-title">2020</h3>
+                                <p className="d_timeline-text">
+                                    <span className="d_title">XIV Balkan Conference on Operational Research</span>
+                                    <span className="d_company">Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe</span>
+
+                               </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div className="col-lg-6" 
+                    data-aos="fade-up"
+                        data-aos-once="true"
+                    >
+                    <div className="p-4">
+                        <h3 className="s_border">Awards</h3>
+                        <ul className="d_timeline">
+                            <li className="d_timeline-item">
+                                <h3 className="d_timeline-title">2020 - 2022</h3>
+                                <p className="d_timeline-text">
+                                    <span className="d_title">DeepMind Scholarship</span>
+                                    <span className="d_company">Aristotle University of Thessaloniki</span> Thesis and MSc studies were conducted under the fully funded scholarship from DeepMind Technologies Limited. DeepMind is a division of Alphabet, Inc. responsible for developing general-purpose artificial intelligence (AGI) technology. The DeepMind’s scholarships provide financial support to students from underrepresented groups seeking to study graduate courses relating to AI and adjacent fields.
+
+                                </p>
+                            </li>
+                            <li className="d_timeline-item">
+                                <h3 className="d_timeline-title">2014 - 2015</h3>
+                                <p className="d_timeline-text">
+                                    <span className="d_title">Excelence Award</span>
+                                    <span className="d_company">1st Lyceum of Kalamaria</span> An award that is provided to every student that achieved highest scone in the last class of the lyceum.
+                                </p>
+                            </li>
+                    
+                        </ul>
+                    </div>
+                </div>
+                <div className="spacer-double"></div>
+                </div>
 		</div>
 	);
 }
