@@ -31,7 +31,7 @@ const whatido = () => {
                             <i className="icon_genius id-color-2"></i>
                             <div className="text">
                                 <h3>Research</h3>
-                                Ex velit cupidatat magna voluptate deserunt quis et dolor adipisicing elit culpa ad exercitation proident irure deserunt irure.
+                               As Blockchain researcher with multiple publications and work on blockchain projects and start-ups, my main skills have been honed to examine the data in and usage of these ledgers to determine the effectiveness of the blockchain, identify areas for improvement, and develop strategies for implementing changes. 
                             </div>
                         </div>
                     </div>
@@ -48,7 +48,7 @@ const whatido = () => {
                             <i className="icon_tools id-color-2"></i>
                             <div className="text">
                                 <h3>Development</h3>
-                                Ex velit cupidatat magna voluptate deserunt quis et dolor adipisicing elit culpa ad exercitation proident irure deserunt irure.
+                                As a developer on both blockchain (web3, nfts, defi) and data science (machine and deep learing emphasazing on graph embeddings) domains I have experiment and worked with many softwares, technologies, editors, programming languages and frameworks, 
                             </div>
                         </div>
                     </div>
@@ -65,7 +65,7 @@ const whatido = () => {
                             <i className="icon_camera_alt id-color-2"></i>
                             <div className="text">
                                 <h3>Learn</h3>
-                                Ex velit cupidatat magna voluptate deserunt quis et dolor adipisicing elit culpa ad exercitation proident irure deserunt irure.
+                                Throughout my academic years i have developed the Hacker attitude, which is to enjoy building and breaking things to understand how they work. Moreover, I belive that lifelong learning is my way of living.
                             </div>
                         </div>
                     </div>
