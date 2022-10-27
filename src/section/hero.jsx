@@ -33,7 +33,7 @@ const hero = () => {
                             data-aos-once="true"
                             >
                             <Typed
-                                strings={["BLOCKCHAIN ", "FULL-STACK" , "DATA SCIENCE", "FREELANCER"]}
+                                strings={["BLOCKCHAIN ", "FULL-STACK" , "DATA SCIENCE", "WEB3", "MACHINE LEARNING", "FREELANCE"]}
                                 typeSpeed={60}
                                 backSpeed={50}
                                 loop

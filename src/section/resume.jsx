@@ -27,8 +27,10 @@ const hero = () => {
                                 <p className="d_timeline-text">
                                 	<span className="d_title">Blockchain &amp; Full-Stack Developer</span>
                                 	<span className="d_company">University of Nicosia / IFF</span>
-                                	Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi tempora perferendis vero officia enim impedit voluptatem dignissimos, veniam ratione est alias rerum aperiam, nam aliquam reprehenderit iste dolor.
-                                </p>
+                                    <ul>
+                                    <li>Develop Flask based Application. Use of Gulp.js and Jqurey. Use Shell Scripts and Docker containers.  Develop Research Papers. Develop NFT markeplace (Web3).  </li>                             
+                                    </ul>
+                                    </p>
                             </li>
 
                             <li className="d_timeline-item">
@@ -37,9 +39,23 @@ const hero = () => {
                                 	<span className="d_title">WordPress Developer</span>
                                    <span className="d_company"> FreeLancer </span> 
                                     
-                                   <a href="https://marlab.ode.uom.gr/" target="_blank"> MarLab</a>, <a href="https://celc.web.auth.gr/" target="_blank"> CELC </a>,  <a href="https://eudem.polsci.auth.gr/" target="_blank"> EUDEM </a>
+                                   Websites: <a href="https://marlab.ode.uom.gr/" target="_blank"> MarLab</a>, <a href="https://celc.web.auth.gr/" target="_blank"> CELC </a>,  <a href="https://eudem.polsci.auth.gr/" target="_blank"> EUDEM </a>
                                     <br></br>
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi tempora perferendis vero officia enim impedit voluptatem dignissimos, veniam ratione est alias rerum aperiam, nam aliquam reprehenderit iste dolor.
+                                     <ul>
+                                      <li>Meeting with clients to discuss website design and function.</li>
+                                      <li> Created, Updated, Modified WordPress webpage</li>
+                                      <li> Created Organization's Introduction Video</li>
+                                        </ul>                                 
+                                        </p>
+                            </li>
+                            <li className="d_timeline-item">
+                                <h3 className="d_timeline-title">2018 - 2021</h3>
+                                <p className="d_timeline-text">
+                                	<span className="d_title">Web Developer</span>
+                                   <span className="d_company">MKI Hellas / Volunteer </span> 
+                                   <ul>
+                                      <li>Develop a chatbot with DialogFlow, Webpage & DB with VueJs and Firebase</li>
+                                    </ul>  
                                 </p>
                             </li>
                         </ul>
