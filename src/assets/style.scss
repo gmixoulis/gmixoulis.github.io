@@ -50,7 +50,10 @@ $color_more: #bc1c1c;
     --title-font: "Saira", Helvetica, Arial, sans-serif;
     --primary-color-rgb:207,31,31;
 }
-
+#publications{
+  overflow: scroll;
+  max-height: 33rem;
+}
 /*general*/
 html {scroll-behavior: auto;}
 body{

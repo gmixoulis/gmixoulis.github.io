@@ -14,7 +14,7 @@ const Blog= function() {
 
 	return(
 
-
+        
 		<div className="">
             <div className="spacer-single"></div>
 			<div className="row">
@@ -31,7 +31,7 @@ const Blog= function() {
                     <div className="row">
                         
                             <div className="de_count text-center">
-                            <iframe title="linkein" src='https://widgets.sociablekit.com/linkedin-profile-posts/iframe/97069' frameborder='0' width='100%' height='1000'></iframe>
+                            <iframe title="linkein" id="myiframe" src='https://widgets.sociablekit.com/linkedin-profile-posts/iframe/97069' frameborder='0' width='100%' height='1000'></iframe>
                         </div>
                     </div>
                 </div>
@@ -39,8 +39,11 @@ const Blog= function() {
         </Parallax>
         </div>
 		</div>
+        
      
 	);
 }
+
+
 
 export default Blog;

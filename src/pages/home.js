@@ -21,6 +21,7 @@ import Snowfall from 'react-snowfall'
 
 
 export default function Home() {
+  
 const videoEl = useRef(null);
   const attemptPlay = () => {
     videoEl &&

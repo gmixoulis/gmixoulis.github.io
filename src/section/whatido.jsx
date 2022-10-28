@@ -65,7 +65,7 @@ const whatido = () => {
                             <i className="icon_camera_alt id-color-2"></i>
                             <div className="text">
                                 <h3>Learn</h3>
-                                Throughout my academic years i have developed the Hacker attitude, which is to enjoy building and breaking things to understand how they work. Moreover, I belive that lifelong learning is my way of living.
+                                Throughout my academic years i have developed the Hacker attitude, which is to enjoy building and breaking things to understand how they work. Moreover, I belive that lifelong learning is my way of life.
                             </div>
                         </div>
                     </div>

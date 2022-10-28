@@ -37,10 +37,14 @@ const hero = () => {
                     data-aos-easing="ease"
                     data-aos-once="true"
 	            	>
-	            	<p>I am a website designer from Lousiana, with a strong focus in UI/UX design. 
-	                I love to get new experiences and always learn from my surroundings. 
-	                I've done more than 285 projects. You can check it through portfolio section on
-	                this website. I looking forward to any opportunities and challenges. 
+	            	<p>I am a blockchain developer and Deep Learning enthusiast from Thessaloniki, Greece, 
+					with a strong focus in Web3 design, resrarch, and development. 
+	                I love to get new experiences and always learn from my surroundings, with interest on lifelong learning. 
+	                I hold a BSc Degree in Applied Informatics from the University of Macedonia, with thesis on web3 application on 
+					verification of academic qualifications, utilizing Ethereum blockchain. Also I have graduated from MSc in Data and Web Science from
+					Aristotle University of Thessaloniki with thesis title: "Graph Embedding and Node Features for Drug-Target Interaction Prediction".
+					MSc studies were conducted under the fully funded scholarship from DeepMind Technologies Limited.
+					I am looking forward to any opportunities and challenges. 
                      </p>
 	            </div>
 			</div>

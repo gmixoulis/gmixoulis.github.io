@@ -97,9 +97,9 @@ const hero = () => {
                     data-aos="fade-up"
                         data-aos-once="true"
                     >
-                    <div className="p-4">
+                    <div className="p-4" >
                         <h3 className="s_border">Publications</h3>
-                        <ul className="d_timeline">
+                        <ul className="d_timeline" id="publications">
                             <li className="d_timeline-item">
                                 <h3 className="d_timeline-title">2022</h3>
                                 <p className="d_timeline-text">
