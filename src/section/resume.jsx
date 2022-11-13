@@ -102,27 +102,27 @@ const hero = () => {
                         <ul className="d_timeline" id="publications">
                             <li className="d_timeline-item">
                                 <h3 className="d_timeline-title">2022</h3>
+
                                 <p className="d_timeline-text">
+                                    <span className="d_title">UBRI Connect 2022 | RippleImpact</span>
+                                    <span className="d_company"> <i> "BBF: Towards a Blockchain Benchmarking Framework" </i>	</span>
+                                
                                     <span className="d_title">Simulation Modelling Practice and Theory</span>
-                                    <span className="d_company">A process-aware approach for blockchain-based verification of academic qualifications</span>
-                                </p>
-                        
-                                <p className="d_timeline-text">
+                                    <span className="d_company"> <i> "A process-aware approach for blockchain-based verification of academic qualifications" </i></span>
+                                
                                     <span className="d_title">Women in Bioinformatics and Data Science LA</span>
-                                    <span className="d_company">Graph Embedding and Node Features for Drug Target Interaction: The GenGRAM-DTA Approach	</span>
-                                </p>
-                         
-                                <p className="d_timeline-text">
+                                    <span className="d_company"> <i>"Graph Embedding and Node Features for Drug Target Interaction: The GenGRAM-DTA Approach"</i>	</span>
+                                
                                     <span className="d_title">4th Summit on Gender Equality in Computing</span>
-                                    <span className="d_company">A Gender Equality Observatory on Scientific Research</span>
-                                    <span className="d_company">Blockchain in Higher Education: permissioned and permissionless approaches</span>
+                                    <span className="d_company"><i>"A Gender Equality Observatory on Scientific Research"</i></span>
+                                    <span className="d_company"><i>"Blockchain in Higher Education: permissioned and permissionless approaches"</i></span>
                                </p>
                             </li>
                             <li className="d_timeline-item">
                                 <h3 className="d_timeline-title">2021</h3>
                                 <p className="d_timeline-text">
                                     <span className="d_title">Φοιτητικό Συνέδριο του τμήματος Διοικητικής Επιστήμης και Τεχνολογίας</span>
-                                    <span className="d_company">Επαλήθευση εγκυρότητας Ακαδημαϊκών Τίτλων με χρήση του Ethereum Blockchain</span>
+                                    <span className="d_company"><i>"Επαλήθευση εγκυρότητας Ακαδημαϊκών Τίτλων με χρήση του Ethereum Blockchain"</i></span>
 
                                </p>
                             </li>
@@ -144,13 +144,34 @@ const hero = () => {
                     >
                     <div className="p-4">
                         <h3 className="s_border">Awards</h3>
-                        <ul className="d_timeline">
+                        <ul className="d_timeline" id="awards">
+
                             <li className="d_timeline-item">
                                 <h3 className="d_timeline-title">2020 - 2022</h3>
                                 <p className="d_timeline-text">
                                     <span className="d_title">DeepMind Scholarship</span>
                                     <span className="d_company">Aristotle University of Thessaloniki</span> Thesis and MSc studies were conducted under the fully funded scholarship from DeepMind Technologies Limited. DeepMind is a division of Alphabet, Inc. responsible for developing general-purpose artificial intelligence (AGI) technology. The DeepMind’s scholarships provide financial support to students from underrepresented groups seeking to study graduate courses relating to AI and adjacent fields.
+        
+                                </p>
+                            </li>
+                            <li className="d_timeline-item">
+                                <h3 className="d_timeline-title">2020 - 2022</h3>
+                                <p className="d_timeline-text">
+                                    <span className="d_title"> Basic Research 2020-21 </span>
+                                    <span className="d_company">University of Macedonia </span> Received funding from the Research Committee of the University of Macedonia under the Basic Research 2020-21 funding programme.
 
+        
+                                </p>
+                            </li>
+
+                            <li className="d_timeline-item">
+                                <h3 className="d_timeline-title">06 / 2022</h3>
+                                <p className="d_timeline-text">
+                                    <span className="d_title"> 3rd place on Infinitech Hackathon </span>
+                                    <span className="d_company">Crowdpolicy </span> The Infinitech hackathon is one of the open innovation actions in the context of the “Infinitech Project”, implementing the Infinitech Way. 
+
+
+        
                                 </p>
                             </li>
                             <li className="d_timeline-item">

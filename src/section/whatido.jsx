@@ -28,7 +28,7 @@ const whatido = () => {
                     >
                     <div className="de_3d-box">
                         <div className="d-inner">
-                            <i className="icon_genius id-color-2"></i>
+                            <i className="icon_globe id-color-2"></i>
                             <div className="text">
                                 <h3>Research</h3>
                                As Blockchain researcher with multiple publications and work on blockchain projects and start-ups, my main skills have been honed to examine the data in and usage of these ledgers to determine the effectiveness of the blockchain, identify areas for improvement, and develop strategies for implementing changes. 
@@ -62,7 +62,7 @@ const whatido = () => {
                     >
                     <div className="de_3d-box">
                         <div className="d-inner">
-                            <i className="icon_camera_alt id-color-2"></i>
+                            <i className="icon_book id-color-2"></i>
                             <div className="text">
                                 <h3>Learn</h3>
                                 Throughout my academic years i have developed the Hacker attitude, which is to enjoy building and breaking things to understand how they work. Moreover, I belive that lifelong learning is my way of life.

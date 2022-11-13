@@ -146,7 +146,7 @@ const photos = [
         alt:"Certificate of Participation"
       },
       {
-        src: './img/certificates/Hydrobot-1.jpg',
+        src: './img/certificates/BEBAIOSI_MICHOULIS.png',
         width: 1,
         height: 1,
         title:"Certificate of Participation",
