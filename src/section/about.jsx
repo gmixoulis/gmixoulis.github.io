@@ -77,7 +77,7 @@ const hero = () => {
 				          );
 				        }}
 				      </AnimatedProgressProvider>
-				      <h4 className="mt-2">HTML/CSS</h4>
+				      <h4 className="mt-2">HTML/CSS/Javascript</h4>
                 </div>
                 <div className="col-lg-3 p-5 text-center"
                 	data-aos="fade"
@@ -88,7 +88,7 @@ const hero = () => {
                 	>
                     <AnimatedProgressProvider
 				        valueStart={0}
-				        valueEnd={80}>
+				        valueEnd={75}>
 				        {value => {
 				          const roundedValue = Math.round(value);
 				          return (
@@ -118,7 +118,7 @@ const hero = () => {
                 	>
                     <AnimatedProgressProvider
 				        valueStart={0}
-				        valueEnd={75}>
+				        valueEnd={85}>
 				        {value => {
 				          const roundedValue = Math.round(value);
 				          return (
@@ -148,7 +148,7 @@ const hero = () => {
                 	>
                     <AnimatedProgressProvider
 				        valueStart={0}
-				        valueEnd={90}>
+				        valueEnd={70}>
 				        {value => {
 				          const roundedValue = Math.round(value);
 				          return (
@@ -167,7 +167,7 @@ const hero = () => {
 				          );
 				        }}
 				      </AnimatedProgressProvider>
-				      <h4 className="mt-2">Javascript</h4>
+				      <h4 className="mt-2">Bash Scripting</h4>
                 </div>
 			</div>
 			<div className="row">

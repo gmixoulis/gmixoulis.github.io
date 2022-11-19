@@ -47,6 +47,13 @@ const photos = [
         title:"CVML Mini Course",
         alt:"CVML Mini Course"
       },
+      {
+        src: './img/certificates/hour.jpg',
+        width: 1,
+        height: 1,
+        title:"Certificate of Participation",
+        alt:"Certificate of Participation"
+      },
     {
       src: './img/certificates/curex.jpg',
       width: 1,
@@ -138,13 +145,7 @@ const photos = [
         title:"Certificate of Attendance",
         alt:"Certificate of Attendance"
       },
-      {
-        src: './img/certificates/hour.jpg',
-        width: 1,
-        height: 1,
-        title:"Certificate of Participation",
-        alt:"Certificate of Participation"
-      },
+ 
       {
         src: './img/certificates/BEBAIOSI_MICHOULIS.png',
         width: 1,
@@ -153,8 +154,16 @@ const photos = [
         alt:"Certificate of Participation"
       },
    
+      
       {
-        src: './img/certificates/Pepsico-1.jpg',
+        src: './img/certificates/hour1.jpg',
+        width: 1,
+        height: 1,
+        title:"Certificate of Attendance",
+        alt:"Certificate of Attendance"
+      },
+      {
+        src: './img/certificates/Hydrobot-1.jpg',
         width: 1,
         height: 1,
         title:"Certificate of Attendance",
