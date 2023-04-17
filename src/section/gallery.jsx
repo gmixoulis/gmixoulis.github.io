@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import Gallery from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
 import { Parallax } from "react-parallax";
+
 const image1 ="./img/background/wall.jpg";
 
 const photos = [

@@ -6,7 +6,7 @@ import Hero from '../section/hero';
 import About from '../section/about';
 import Blockquote from '../section/blockquote';
 import Whatido from '../section/whatido';
-import MyGallery from '../section/gallery';
+import MyGallery from '../section/gallery_auto';
 import Resume from '../section/resume';
 import Blog from '../section/blog';
 import Footer from '../section/footer';
