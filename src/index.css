@@ -1,13 +1,40 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.react-message-bar--bar .react-message-bar--dismiss-button {
+  float: right;
+  margin-right: 50px;
+  margin-top: 1.5rem;
+  align-items: center;
+}
+.react-message-bar--bar {
+  align-items: center;
+  margin: auto;
+  text-align: center;
+  background-color: #ec4a24;
+  color: white;
+  font-size: 30px;
+  position: relative;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.react-message-bar--bar img {
+  display: inline-block;
+  margin: 25px 10px;
+}
+
+#messageA:hover {
+  color: black;
 }
