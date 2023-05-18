@@ -1,5 +1,5 @@
 <resume>
-  <title>George Michoulis - Blockchain & Web3 Developer</title>
+  <title>George Michoulis - Blockchain &amp; Web3 Developer</title>
   <content>
     <section title="About Me">
       <paragraph>I am George Michoulis, a dedicated Blockchain Developer and Deep Learning enthusiast based in Thessaloniki, Greece. My expertise lies in Web3 design, research, and development. I am committed to continuous learning and gaining new experiences from my environment. I earned a BSc Degree in Applied Informatics from the University of Macedonia, where I focused my thesis on the application of Web3 for the verification of academic qualifications, utilizing the Ethereum blockchain. I also hold an MSc in Data and Web Science from Aristotle University of Thessaloniki. My MSc thesis, titled 'Graph Embedding and Node Features for Drug-Target Interaction Prediction', was conducted under a fully funded scholarship from DeepMind Technologies Limited. I am actively seeking new opportunities and challenges to further my career.</paragraph>
@@ -24,9 +24,9 @@
   <education degree="Bachelor of Applied Informatics" institution="University of Macedonia" year="2015 - 2020" description="My undergraduate studies provided me with a comprehensive understanding of Informatics and its applications. I attended advanced courses in Management Science, Economics, Finance, Business Administration, Quantitative Methods, as well as Computer and Internet Law." />
 </section>
 <section title="Experience">
-  <experience role="Blockchain & Full-Stack Developer" company="University of Nicosia / IFF" year="2022 - now" description="In my current role, I have developed a Flask-based application, utilized Gulp.js and jQuery, worked with Shell Scripts and Docker containers, and contributed to the development of research papers. I have also developed an NFT marketplace using Web3." />
+  <experience role="Blockchain &amp; Full-Stack Developer" company="University of Nicosia / IFF" year="2022 - now" description="In my current role, I have developed a Flask-based application, utilized Gulp.js and jQuery, worked with Shell Scripts and Docker containers, and contributed to the development of research papers. I have also developed an NFT marketplace using Web3." />
   <experience role="WordPress Developer" company="Freelancer" year="2018 - 2021" description="As a freelance WordPress developer, I have created, updated, and modified WordPress webpages for various clients. I have also created organization's introduction videos and met with clients to discuss website design and function." />
-  <experience role="Web Developer" company="MKI Hellas / Volunteer" year="2018 " description="During my time at MKI Hellas, I developed a chatbot with DialogFlow and a webpage & DB with VueJs and Firebase." />
+  <experience role="Web Developer" company="MKI Hellas / Volunteer" year="2018 " description="During my time at MKI Hellas, I developed a chatbot with DialogFlow and a webpage &amp; DB with VueJs and Firebase." />
 </section>
 <section title="Publications">
   <publication year="2022" title="BBF: Towards a Blockchain Benchmarking Framework" conference="UBRI Connect 2022 | RippleImpact" />
