@@ -23,6 +23,7 @@
     "react-card-slider-component": "^1.0.9",
     "react-circular-progressbar": "^2.1.0",
     "react-cookie-consent": "^8.0.1",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
     "react-images": "^1.2.0-beta.7",
     "react-message-bar": "^1.0.9",

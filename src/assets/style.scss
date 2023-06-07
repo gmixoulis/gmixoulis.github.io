@@ -218,6 +218,32 @@ h2 {
   clear: both;
 }
 
+
+/* new skills bar */
+.d-skill{
+  position: relative;
+  margin-bottom: 20px;
+}
+.d-skills-bar .d-bar {
+  margin: 25px 0;
+}
+.d-skills-bar .d-bar .d-info {
+  margin-bottom: 8px;
+  color: #222222;
+}
+.d-skills-bar .d-bar .d-info{
+    color: #ffffff;
+}
+.d-skills-bar .d-bar .d-info span {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.progress-bar{
+  overflow: unset;
+}
+
+
 /* preloader */
 #mainpreloader{
   .preloader{
