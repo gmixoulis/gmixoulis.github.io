@@ -55,22 +55,7 @@ export default function Home() {
 
       <div className="home">
         <header id="header-wrap">
-          <ReactMessageBar>
-            {" "}
-            <a
-              id="messageA"
-              target="blank"
-              href="https://www.facebook.com/profile.php?id=100092402166774"
-            >
-              {" "}
-              <img
-                alt="mera25"
-                width={"70rem"}
-                src="https://mera25.gr/wp-content/uploads/2023/04/logo__official_ekloges2023_symmaxia_28-3-2023-1.png"
-              ></img>
-              Εκλογές 2023!!
-            </a>
-          </ReactMessageBar>
+         
           <Navbar />
         </header>
 
