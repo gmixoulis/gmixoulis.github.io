@@ -20,6 +20,7 @@
     "npm": "^8.19.2",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
+    "react-alice-carousel": "^2.7.1",
     "react-card-slider-component": "^1.0.9",
     "react-circular-progressbar": "^2.1.0",
     "react-cookie-consent": "^8.0.1",

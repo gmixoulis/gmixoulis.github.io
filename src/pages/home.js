@@ -17,7 +17,7 @@ import CookieConsent from "react-cookie-consent";
 import Activites from "../section/activities";
 import Snowfall from "react-snowfall";
 import ReactMessageBar from "react-message-bar";
-
+import Portfolio from "../section/portfolio";
 import "../index.css";
 
 export default function Home() {
@@ -55,7 +55,6 @@ export default function Home() {
 
       <div className="home">
         <header id="header-wrap">
-         
           <Navbar />
         </header>
 
@@ -97,9 +96,12 @@ export default function Home() {
           <MyGallery />
         </section>
 
-        {/* Gallery */}
         <section id="resume">
           <Resume />
+        </section>
+
+        <section id="portfolio" className="pb-0">
+          <Portfolio />
         </section>
 
         <section id="activities" className="pb-0">
