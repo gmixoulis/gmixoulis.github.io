@@ -16,8 +16,22 @@ const hero = () => {
           <div className="p-4">
             <h3 className="s_border">Experiences</h3>
             <ul className="d_timeline">
+               <li className="d_timeline-item">
+                <h3 className="d_timeline-title">2024 - now</h3>
+                <div className="d_timeline-text">
+                  <span className="d_title">
+                    Blockchain Developer &amp;  Researcher
+                  </span>
+                  <span className="d_company">Sidroco Holdings LTD</span>
+                  <ul>
+                    <li>
+                      Develop research ideas and proposals for European programs. Coordinate and manage European programs. Develop cutting-edge blockchain-based technologies
+                    </li>
+                  </ul>
+                </div>
+              </li>
               <li className="d_timeline-item">
-                <h3 className="d_timeline-title">2022 - now</h3>
+                <h3 className="d_timeline-title">2022 - 2024</h3>
                 <div className="d_timeline-text">
                   <span className="d_title">
                     Blockchain &amp; Full-Stack Developer
@@ -25,8 +39,8 @@ const hero = () => {
                   <span className="d_company">University of Nicosia / IFF</span>
                   <ul>
                     <li>
-                      Develop Flask based Application. Use of Gulp.js and
-                      Jqurey. Use Shell Scripts and Docker containers. Develop
+                      Develop Flask based Application. Use of Gulp.js, NestJS with app routing and
+                      Jqurey. Coordinate the front-end team. Use Shell Scripts and Docker containers. Develop
                       Research Papers. Develop NFT markeplace (Web3).{" "}
                     </li>
                   </ul>
