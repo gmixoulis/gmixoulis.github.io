@@ -164,6 +164,17 @@ const hero = () => {
           <div className="p-4">
             <h3 className="s_border">Publications</h3>
             <ul className="d_timeline" id="publications">
+               <li className="d_timeline-item">
+                <h3 className="d_timeline-title">2023</h3>
+                <p className="d_timeline-text">
+                  <span className="d_title">
+                    The International Conference on Mathematical Research for Blockchain Economy
+                  </span>
+                  <span className="d_company">
+                    Exploring Decentralized Governance: A Framework Applied to Compound Finance
+                  </span>
+                </p>
+              </li>
               <li className="d_timeline-item">
                 <h3 className="d_timeline-title">2022</h3>
 
