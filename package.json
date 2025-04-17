@@ -1,7 +1,7 @@
 {
   "name": "george-michoulis",
   "version": "0.1.0",
-  "homepage": "https://gmixoulis.github.io/my-website/",
+  "homepage": "https://gmixoulis.github.io/",
   "dependencies": {
     "@apideck/better-ajv-errors": "^0.3.6",
     "@popperjs/core": "^2.11.5",
