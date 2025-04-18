@@ -13,6 +13,24 @@ const Resume = () => {
       .catch(console.error);
   }, []);
 
+  const isUniversity = (text) => {
+    const lower = text.toLowerCase();
+    return lower.includes('university') || lower.includes('πανεπιστήμιο');
+  };
+
+  const formatPublicationName = (pub, year) => {
+    if (!pub.publication) return '';
+
+    const base = pub.publication.split(',')[0].trim();
+
+    if (isUniversity(base)) {
+      if (year === '2020') return `${base} (Undergrad Thesis)`;
+      if (year === '2022') return `${base} (Grad Thesis)`;
+    }
+
+    return base;
+  };
+
   const grouped = publications.reduce((acc, pub) => {
     const year = pub.year || 'Unknown';
     if (!acc[year]) acc[year] = [];
@@ -190,31 +208,26 @@ const Resume = () => {
               {sortedYears.map((year) => (
                 <li className='d_timeline-item' key={year}>
                   <h3 className='d_timeline-title'>{year}</h3>
-                  {grouped[year].map((pub, idx) => (
-                    <p className='d_timeline-text' key={idx}>
-                      <span className='d_title'>
-                        <a
-                          href={pub.link}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                        >
-                          {pub.title}
-                        </a>
-                      </span>
-                      <br />
-                      <span className='d_company'>
-                        {pub.authors}
-                        <br />
-                        {pub.publication}
-                        {pub.cited_by && pub.cited_by.value != null && (
-                          <>
-                            <br />
-                            <strong>Citations:</strong> {pub.cited_by.value}
-                          </>
+                  {grouped[year].map((pub, i) => {
+                    const publicationTitle = formatPublicationName(pub, year);
+                    return (
+                      <p className='d_timeline-text' key={i}>
+                        {publicationTitle && (
+                          <span className='d_title'>{publicationTitle}</span>
                         )}
-                      </span>
-                    </p>
-                  ))}
+                        <br />
+                        <span className='d_company'>
+                          <a
+                            href={pub.link}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                          >
+                            "{pub.title}"
+                          </a>
+                        </span>
+                      </p>
+                    );
+                  })}
                 </li>
               ))}
             </ul>
