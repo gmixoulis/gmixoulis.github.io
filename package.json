@@ -2,6 +2,10 @@
   "name": "george-michoulis",
   "version": "0.1.0",
   "homepage": "https://gmixoulis.github.io/",
+  "repository": {
+     "type": "git",
+     "url": "https://github.com/gmixoulis/gmixoulis.github.io.git"
+   },
   "dependencies": {
     "@apideck/better-ajv-errors": "^0.3.6",
     "@popperjs/core": "^2.11.5",
@@ -49,7 +53,7 @@
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d build -u \"George Michoulis <gmixoulis@gmail.com>\" -r https://$GH_TOKEN@github.com/gmixoulis/gmixoulis.github.io.git",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
