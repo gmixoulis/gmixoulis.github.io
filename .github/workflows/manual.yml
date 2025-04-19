@@ -20,7 +20,12 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
-
+        
+      - name: Debug env var
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+        run: echo "KEY=${{ secrets.SERPAPI_KEY }}"
+        
       - name: Run fetch script
         env:
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
