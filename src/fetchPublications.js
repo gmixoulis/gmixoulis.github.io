@@ -6,7 +6,7 @@ const SCHOLAR_ID = 'nk0lq8YAAAAJ';
 
 const fetchPublications = async () => {
   try {
-    const url = `https://serpapi.com/search.json?engine=google_scholar_author&author_id=${SCHOLAR_ID}&api_key=${API_KEY}`;
+    const url = `https://serpapi.com/search.json?engine=google_scholar_author&author_id=${SCHOLAR_ID}&api_key=${API_KEY}&no_cache=true`;
     const response = await axios.get(url);
     const articles = response.data.articles || [];
     fs.writeFileSync(

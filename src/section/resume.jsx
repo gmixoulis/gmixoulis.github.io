@@ -221,9 +221,22 @@ const Resume = () => {
                             href={pub.link}
                             target='_blank'
                             rel='noopener noreferrer'
+                            style={{
+                              color: 'rgb(207, 31, 31)',
+                              display: 'block',
+                              fontSize: '16px',
+                              marginBottom: '10px',
+                            }}
                           >
                             "{pub.title}"
                           </a>
+                          <br />
+                          {pub.cited_by?.value != null && (
+                            <>
+                              <br />
+                              <strong>Citations:</strong> {pub.cited_by.value}
+                            </>
+                          )}
                         </span>
                       </p>
                     );
