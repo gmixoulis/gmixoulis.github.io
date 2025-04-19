@@ -34,3 +34,9 @@ jobs:
           git add public/publications.json
           git commit -m "📚 Auto-update publications" || echo "No changes"
           git push
+
+          
+      - name: Deploy to GitHub Pages
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: yarn deploy
