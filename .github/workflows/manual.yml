@@ -24,7 +24,7 @@ jobs:
       - name: Run fetch script
         env:
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
-        run: node src/fetchWithSerpapi.js
+        run: node ../src/fetchWithSerpapi.js
 
       - name: Commit and push
         run: |
