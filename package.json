@@ -53,7 +53,7 @@
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -u \"github-actions[bot] <github-actions[bot]@users.noreply.github.com>\"",
+    "deploy": "gh-pages -d build -u \"George Michoulis <gmixoulis@gmail.com>\"",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
