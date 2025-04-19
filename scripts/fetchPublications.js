@@ -10,7 +10,7 @@ const fetchPublications = async () => {
     const response = await axios.get(url);
     const articles = response.data.articles || [];
     fs.writeFileSync(
-      '../public/publications.json',
+      'public/publications.json',
       JSON.stringify(articles, null, 2)
     );
     console.log('✅ Publications saved via SerpAPI');
