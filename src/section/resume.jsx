@@ -18,17 +18,26 @@ const Resume = () => {
     return lower.includes('university') || lower.includes('πανεπιστήμιο');
   };
 
+  const sanitizeText = (text) => {
+    if (!text) return '';
+    // Remove unwanted characters but keep parentheses, dashes, spaces, and quotes
+    return text.replace(/[^\w\s\-()"Α-Ωα-ωΆ-ώ]/g, '').trim(); // keeps Greek too
+  };
+
   const formatPublicationName = (pub, year) => {
     if (!pub.publication) return '';
+    let base = pub.publication.split(',')[0].trim();
+    base = base.replace(/^(20\d{2})\s*/g, ''); // removes year at the beginning
+    base = base.replace(/\s*(20\d{2})$/g, ''); // removes year at the end
 
-    const base = pub.publication.split(',')[0].trim();
-
+    // Trim after removing numbers
+    base = base.trim();
     if (isUniversity(base)) {
-      if (year === '2020') return `${base} (Undergrad Thesis)`;
-      if (year === '2022') return `${base} (Grad Thesis)`;
+      if (year === '2020') return `${sanitizeText(base)} (BSc Thesis)`;
+      if (year === '2022') return `${sanitizeText(base)} (MSc Thesis)`;
     }
 
-    return base;
+    return sanitizeText(base);
   };
 
   const grouped = publications.reduce((acc, pub) => {
@@ -210,13 +219,13 @@ const Resume = () => {
                   <h3 className='d_timeline-title'>{year}</h3>
                   {grouped[year].map((pub, i) => {
                     const publicationTitle = formatPublicationName(pub, year);
+                    const title = sanitizeText(pub.title);
                     return (
                       <p className='d_timeline-text' key={i}>
                         {publicationTitle && (
                           <span className='d_title'>{publicationTitle}</span>
                         )}
-                        <br />
-                        <span className='d_company'>
+                        <span className=''>
                           <a
                             href={pub.link}
                             target='_blank'
@@ -228,12 +237,10 @@ const Resume = () => {
                               marginBottom: '10px',
                             }}
                           >
-                            "{pub.title}"
+                            "{title}"
                           </a>
-                          <br />
                           {pub.cited_by?.value != null && (
                             <>
-                              <br />
                               <strong>Citations:</strong> {pub.cited_by.value}
                             </>
                           )}
