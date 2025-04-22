@@ -36,7 +36,15 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          node scripts/rename_auto.js
+             NODE_PATH=node_modules node scripts/rename_auto.js
+
+      - name: 💾 Commit renamed files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/img/renamed/*
+          git commit -m "🤖 Auto-renamed certificates via Gemini" || echo "No changes to commit"
+          git push
 
       - name: Deploy to GitHub Pages
         env:
