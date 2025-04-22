@@ -31,6 +31,9 @@ jobs:
       - name: 🧪 Confirm @google/genai is installed
         run: yarn list --pattern @google/genai
 
+      - name: 🧶 Force install @google/genai in CI
+        run: yarn add @google/genai@^0.9.0
+
 
       - name: 🔐 Run rename script with Gemini
         env:
