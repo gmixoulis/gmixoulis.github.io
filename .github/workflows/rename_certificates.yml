@@ -1,0 +1,31 @@
+name: Auto Rename Certificates
+
+on:
+  push:
+    paths:
+      - 'public/img/certificates/**'
+      - 'scripts/rename_auto.js'
+      - '.github/workflows/rename-certificates.yml'
+
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+    environment: github-pages
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🧰 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: 📦 Install dependencies
+        run: yarn install
+
+      - name: 🔐 Run rename script with Gemini
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          node scripts/rename_auto.js
