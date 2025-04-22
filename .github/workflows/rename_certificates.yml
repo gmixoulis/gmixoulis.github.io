@@ -14,19 +14,26 @@ jobs:
     environment: github-pages
 
     steps:
-      - name: 📥 Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: 🧹 Clean up yarn cache (just in case)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 🧹 Clean node_modules and Yarn cache
         run: |
+          rm -rf node_modules yarn.lock
           yarn cache clean
-          rm -rf node_modules
 
-      - name: 📦 Install dependencies using Yarn
-        run: yarn install --frozen-lockfile
+      - name: 📦 Reinstall dependencies from scratch
+        run: |
+          yarn install --verbose
 
-      - name: 🧪 Confirm @google/genai exists
+      - name: 🧪 Confirm genai exists
         run: yarn list --pattern @google/genai
+
 
       - name: 🔐 Run rename script with Gemini
         env:
