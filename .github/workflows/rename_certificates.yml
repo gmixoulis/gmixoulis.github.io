@@ -6,6 +6,7 @@ on:
       - 'public/img/certificates/**'
       - 'scripts/rename_auto.js'
       - '.github/workflows/rename-certificates.yml'
+  workflow_dispatch:
 
 jobs:
   rename:
