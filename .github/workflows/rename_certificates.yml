@@ -22,16 +22,13 @@ jobs:
         with:
           node-version: '18'
 
-      - name: 🧹 Clean node_modules and Yarn cache
-        run: |
-          rm -rf node_modules yarn.lock
-          yarn cache clean
+      - name: 🧹 Clean yarn cache
+        run: yarn cache clean
 
-      - name: 📦 Reinstall dependencies from scratch
-        run: |
-          yarn install --verbose
+      - name: 📦 Install dependencies using Yarn
+        run: yarn install --frozen-lockfile
 
-      - name: 🧪 Confirm genai exists
+      - name: 🧪 Confirm @google/genai is installed
         run: yarn list --pattern @google/genai
 
 
