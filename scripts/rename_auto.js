@@ -1,3 +1,4 @@
+require('module').Module._initPaths(); // Adds NODE_PATH automatically
 const fs = require('fs');
 const path = require('path');
 const mime = require('mime-types');
