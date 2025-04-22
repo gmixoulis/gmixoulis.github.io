@@ -39,7 +39,7 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-             NODE_PATH=node_modules node rename_auto.js
+             NODE_PATH=node_modules node scripts/rename_auto.js
 
       - name: 💾 Commit renamed files
         run: |
