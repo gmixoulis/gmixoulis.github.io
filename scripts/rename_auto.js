@@ -67,7 +67,7 @@ const renameWithGemini = async (filename) => {
     - 1Master Degree
 
      If the document is Move Bootcamp  classify it as:
-    - Move Sui 1st Thessaloniki Bootacamp  Award
+    - Move Sui first Thessaloniki Bootacamp  Award
   
     
     If it's an **English language proficiency certificate**, use:
