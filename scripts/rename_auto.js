@@ -17,21 +17,18 @@ const originalImagesFolder = path.resolve(
   '../public/img/certificates'
 );
 const renamedImagesFolder = path.resolve(__dirname, '../public/img/renamed');
+console.log(renamedImagesFolder)
 const modelName = 'gemini-2.0-flash-lite';
 
-// Ensure renamed folder exists and clean it up
-if (!fs.existsSync(renamedImagesFolder)) {
-  fs.mkdirSync(renamedImagesFolder, { recursive: true });
-} else {
-  const files = fs.readdirSync(renamedImagesFolder);
-  for (const file of files) {
-    const filePath = path.join(renamedImagesFolder, file);
-    if (fs.statSync(filePath).isFile()) {
-      fs.unlinkSync(filePath);
-    }
-  }
-  console.log('🧹 Cleaned up renamed folder before renaming begins.');
+// 1. Remove the folder and all its contents if it exists
+if (fs.existsSync(renamedImagesFolder)) {
+  fs.rmSync(renamedImagesFolder, { recursive: true, force: true });
+  console.log('🧹 Deleted entire renamed folder.');
 }
+
+// 2. Recreate the folder
+fs.mkdirSync(renamedImagesFolder, { recursive: true });
+console.log('📁 Recreated renamed folder.');
 
 // Utility to convert text to Title-Case-Hyphenated format
 const formatPart = (str) => {
@@ -68,6 +65,10 @@ const renameWithGemini = async (filename) => {
     If the document is an official **degree** (e.g. Bachelor or Master), classify it as:
     - 1Bachelor Degree
     - 1Master Degree
+
+     If the document is Move Bootcamp  classify it as:
+    - Move Sui 1st Thessaloniki Bootacamp  Award
+  
     
     If it's an **English language proficiency certificate**, use:
     - English Certificate
