@@ -141,7 +141,7 @@ const Resume = () => {
                 </div>
               </li>
               <li className='d_timeline-item'>
-                <h3 className='d_timeline-title'>2018 - 2021</h3>
+                <h3 className='d_timeline-title'> October 2018</h3>
                 <div className='d_timeline-text'>
                   <span className='d_title'>Web Developer</span>
                   <span className='d_company'>MKI Hellas / Volunteer </span>
@@ -318,3 +318,4 @@ const Resume = () => {
 };
 
 export default Resume;
+
