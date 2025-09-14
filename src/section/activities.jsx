@@ -10,7 +10,9 @@ const slides = [
     {image:"./img/gallery/gym.png",title:"Workout"},
     {image:"./img/gallery/news.png",title:"Keep updated with the latest news"},
     {image:"./img/gallery/languages.png",title:"Learn Foreign Languages"},
-    {image:"./img/gallery/anime.png",title:"Watch Anime"}
+    {image:"./img/gallery/anime.png",title:"Watch Anime"},
+	{image:"./img/gallery/theatre.png",title:"Theatre Acting and Watching Theatre"},
+	{image:"./img/gallery/protest.png",title:"Active Citizen / Politiized"}
 ]
 
 const Activites = () => {
