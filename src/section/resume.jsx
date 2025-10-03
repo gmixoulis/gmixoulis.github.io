@@ -72,9 +72,27 @@ const Resume = () => {
                   <span className='d_company'>Sidroco Holdings LTD</span>
                   <ul>
                     <li>
-                      Develop research ideas and proposals for European
-                      programs. Coordinate and manage European programs. Develop
-                      cutting-edge blockchain-based technologies
+                     Spearheaded blockchain-driven innovation, delivering NFT marketplace for 5G technologies and advanced dashboards, while contributing to Horizon/MSCA/KA2 proposals that secured EU funding and elevated the company’s research portfolio.
+Coordinated, managed, and disseminated multinational European projects, ensuring compliance, visibility, and impactful presence through presentations, workshops, and international events.
+Designed and deployed practical platforms (e.g., Hyperledger Fabric prototypes, Moodle LMS for Erasmus+) that transformed proposals into real, demonstrable technological outputs.
+                    </li>
+                  </ul>
+                </div>
+              </li>
+               <li className='d_timeline-item'>
+                <h3 className='d_timeline-title'>2023 - 2025</h3>
+                <div className='d_timeline-text'>
+                  <span className='d_title'>
+                    Lecturer &amp; Academic Partner
+                  </span>
+                  <span className='d_company'>University of Derby / Mediterranean College </span>
+                  <ul>
+                    <li>
+                     Delivered engaging courses in Networks & Security, Web Scripting, and Application Development, equipping students with practical coding, networking, and cryptography skills through hands-on labs.
+
+Championed inclusivity and fairness in assessment, supporting diverse learners and guiding students through oral exams, projects, and personalized feedback.
+
+Actively represented the institution in events and public speaking on Web3 and edge technologies, enhancing the college’s reputation and student exposure to cutting-edge fields.
                     </li>
                   </ul>
                 </div>
@@ -88,10 +106,11 @@ const Resume = () => {
                   <span className='d_company'>University of Nicosia / IFF</span>
                   <ul>
                     <li>
-                      Develop Flask based Application. Use of Gulp.js, NestJS
-                      with app routing and Jqurey. Coordinate the front-end
-                      team. Use Shell Scripts and Docker containers. Develop
-                      Research Papers. Develop NFT markeplace (Web3).{' '}
+                     Led frontend development on large-scale applications (Next.js, Flask, NestJS, Docker), driving agile sprints with Asana/Trello while documenting best practices to improve long-term maintainability.
+
+Delivered a Web3-based NFT marketplace, bridging blockchain and user-centric design, demonstrating research-to-production translation.
+
+Coordinated cross-functional teams, optimizing workflows with shell scripting and Docker pipelines, ensuring delivery of robust, scalable systems under tight deadlines.
                     </li>
                   </ul>
                 </div>
@@ -318,4 +337,5 @@ const Resume = () => {
 };
 
 export default Resume;
+
 
