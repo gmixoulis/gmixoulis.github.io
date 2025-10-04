@@ -294,7 +294,7 @@ Coordinated cross-functional teams, optimizing workflows with shell scripting an
                 </p>
               </li>
               <li className='d_timeline-item'>
-                <h3 className='d_timeline-title'>2020 - 2022</h3>
+                <h3 className='d_timeline-title'>2020 - 2021</h3>
                 <p className='d_timeline-text'>
                   <span className='d_title'> Basic Research 2020-21 </span>
                   <span className='d_company'>
@@ -337,5 +337,6 @@ Coordinated cross-functional teams, optimizing workflows with shell scripting an
 };
 
 export default Resume;
+
 
 
