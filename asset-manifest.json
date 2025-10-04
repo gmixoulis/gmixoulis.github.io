@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.37de738e.css",
-    "main.js": "/static/js/main.f9f214ff.js",
+    "main.js": "/static/js/main.9acb0821.js",
     "static/js/453.0e1f74eb.chunk.js": "/static/js/453.0e1f74eb.chunk.js",
     "static/media/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg": "/static/media/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.29a6ec0687ef20dcfa4d.jpg",
     "static/media/eudem.polsci.auth.gr.PNG": "/static/media/eudem.polsci.auth.gr.c59e58307a74fed7907d.PNG",
@@ -57,11 +57,11 @@
     "static/media/et-line.ttf": "/static/media/et-line.cc7129c849c81d254698.ttf",
     "index.html": "/index.html",
     "main.37de738e.css.map": "/static/css/main.37de738e.css.map",
-    "main.f9f214ff.js.map": "/static/js/main.f9f214ff.js.map",
+    "main.9acb0821.js.map": "/static/js/main.9acb0821.js.map",
     "453.0e1f74eb.chunk.js.map": "/static/js/453.0e1f74eb.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.37de738e.css",
-    "static/js/main.f9f214ff.js"
+    "static/js/main.9acb0821.js"
   ]
 }
