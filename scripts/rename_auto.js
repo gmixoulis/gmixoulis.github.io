@@ -18,7 +18,7 @@ const originalImagesFolder = path.resolve(
 );
 const renamedImagesFolder = path.resolve(__dirname, '../public/img/renamed');
 console.log(renamedImagesFolder)
-const modelName = 'gemini-2.5-flash-lite';
+const modelName = 'gemini-3-flash-preview';
 
 // 1. Remove the folder and all its contents if it exists
 if (fs.existsSync(renamedImagesFolder)) {
