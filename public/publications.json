@@ -6,7 +6,7 @@
     "authors": "N Nousias, G Tsakalidis, G Michoulis, S Petridou, K Vergidis",
     "publication": "Simulation Modelling Practice and Theory 121, 102642, 2022",
     "cited_by": {
-      "value": 30,
+      "value": 31,
       "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=4344624537370951382",
       "serpapi_link": "https://serpapi.com/search.json?cites=4344624537370951382&engine=google_scholar&hl=en",
       "cites_id": "4344624537370951382"
@@ -42,6 +42,19 @@
     "year": "2023"
   },
   {
+    "title": "Data security for smart cities",
+    "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=nk0lq8YAAAAJ&citation_for_view=nk0lq8YAAAAJ:ufrVoPGSRksC",
+    "citation_id": "nk0lq8YAAAAJ:ufrVoPGSRksC",
+    "authors": "C Eleftheriadis, G Michoulis, E Fountoukidis, M Tzana, A Lytos, T Lagkas, ...",
+    "cited_by": {
+      "value": 1,
+      "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11452609828945763407",
+      "serpapi_link": "https://serpapi.com/search.json?cites=11452609828945763407&engine=google_scholar&hl=en",
+      "cites_id": "11452609828945763407"
+    },
+    "year": "2025"
+  },
+  {
     "title": "FraMark: A Blockchain Marketplace for a 5G Network Management using Fractional NFTs",
     "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=nk0lq8YAAAAJ&citation_for_view=nk0lq8YAAAAJ:YsMSGLbcyi4C",
     "citation_id": "nk0lq8YAAAAJ:YsMSGLbcyi4C",
@@ -65,6 +78,17 @@
       "value": null
     },
     "year": "2025"
+  },
+  {
+    "title": "3rd Women in Bioinformatics & Data Science LA Conference Booklet",
+    "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=nk0lq8YAAAAJ&citation_for_view=nk0lq8YAAAAJ:_FxGoFyzp5QC",
+    "citation_id": "nk0lq8YAAAAJ:_FxGoFyzp5QC",
+    "authors": "A Rueda",
+    "publication": "Zenodo (CERN European Organization for Nuclear Research), https://zenodo.org …, 2022",
+    "cited_by": {
+      "value": null
+    },
+    "year": "2022"
   },
   {
     "title": "A Gender Equality Observatory on Scientific Research",
