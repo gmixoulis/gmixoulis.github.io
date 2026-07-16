@@ -5,31 +5,37 @@ on:
     branches:
       - main
   schedule:
-      - cron: '0 0 1 * *'
+    - cron: '0 0 1 * *'
   workflow_dispatch:
-    
+
+permissions:
+  contents: write
+
 jobs:
   update:
     runs-on: ubuntu-latest
     environment: github-pages
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install
-        
+        run: yarn install --frozen-lockfile || yarn install
+
       - name: Run fetch script
         env:
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          SERPAPI_MAX_RETRIES: '6'
+          SERPAPI_TIMEOUT_MS: '60000'
         run: node scripts/fetchPublications.js
-
 
       - name: Commit publications.json update
         run: |
@@ -39,7 +45,6 @@ jobs:
           git diff --cached --quiet || git commit -m "📚 Auto-update publications"
           git push
 
-          
       - name: Deploy to GitHub Pages
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}

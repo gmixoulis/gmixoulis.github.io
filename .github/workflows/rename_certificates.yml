@@ -5,51 +5,56 @@ on:
     paths:
       - 'public/img/certificates/**'
       - 'scripts/rename_auto.js'
-      - '.github/workflows/rename-certificates.yml'
+      - '.github/workflows/rename_certificates.yml'
   workflow_dispatch:
+
+# Minimal permissions: only what the bot needs to commit + push.
+permissions:
+  contents: write
 
 jobs:
   rename:
     runs-on: ubuntu-latest
     environment: github-pages
+    timeout-minutes: 45
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
+          cache: 'yarn'
 
-      - name: 🧹 Clean yarn cache
-        run: yarn cache clean
+      - name: 📦 Install dependencies
+        run: yarn install --frozen-lockfile || yarn install
 
-      - name: 📦 Install dependencies using Yarn
-        run: yarn install 
-
-      - name: 🧪 Confirm @google/genai is installed
-        run: yarn list --pattern @google/genai
-
-      - name: 🧶 Force install @google/genai in CI
-        run: yarn add @google/genai@^0.9.0
-
+      - name: 🧶 Ensure @google/genai is installed (recent version with httpOptions)
+        run: yarn add @google/genai
 
       - name: 🔐 Run rename script with Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: |
-             NODE_PATH=node_modules node scripts/rename_auto.js
+          # Tunables (defaults live in the script; override here if needed)
+          GEMINI_CONCURRENCY: '3'
+          GEMINI_PASSES: '3'
+          GEMINI_MAX_RETRIES: '6'
+          GEMINI_TIMEOUT_MS: '90000'
+        run: node scripts/rename_auto.js
 
-      - name: 💾 Commit renamed files
+      - name: 💾 Commit renamed files + progress manifest
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/img/renamed/*
-          git commit -m "🤖 Auto-renamed certificates via Gemini" || echo "No changes to commit"
-          git push
+          git add public/img/renamed .cert-manifest.json
+          git diff --cached --quiet || git commit -m "🤖 Auto-renamed certificates via Gemini"
+          git push || echo "Nothing to push"
 
-      - name: Deploy to GitHub Pages
+      - name: 🚀 Deploy to GitHub Pages
+        if: success()
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: yarn deploy
