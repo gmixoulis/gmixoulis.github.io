@@ -64,6 +64,30 @@ const Resume = () => {
             <h3 className='s_border'>Experiences</h3>
             <ul className='d_timeline'>
               <li className='d_timeline-item'>
+                <h3 className='d_timeline-title'>05 / 2026 - Present</h3>
+                <div className='d_timeline-text'>
+                  <span className='d_title'>
+                    Web3 Full-Stack Developer
+                  </span>
+                  <span className='d_company'>Cyberscope by TAC</span>
+                  <ul>
+                    <li>
+                      Building and maintaining end-to-end Web3 products, from
+                      smart contracts and on-chain integrations to the React/Next.js
+                      frontends and Node services that sit in front of them.
+
+                      Contributing to blockchain security tooling and audit
+                      workflows, turning review findings into reliable,
+                      well-tested full-stack features.
+
+                      Shipping across the stack &mdash; Solidity, ethers/viem,
+                      TypeScript, and cloud deployment &mdash; while keeping
+                      DX and code quality high for a fast-moving security team.
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li className='d_timeline-item'>
                 <h3 className='d_timeline-title'>2024 - 2026</h3>
                 <div className='d_timeline-text'>
                   <span className='d_title'>
