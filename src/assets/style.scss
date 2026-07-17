@@ -1571,3 +1571,73 @@ video.pop {
     line-height: normal !important;
   }
 }
+
+/* paginated timeline blocks (resume) */
+.paginated-timeline {
+  .d_timeline {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+    padding-right: 8px;
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 3px;
+    }
+  }
+}
+
+/* fix: hide default AliceCarousel button containers and dots */
+.alice-carousel {
+  .alice-carousel__prev-btn,
+  .alice-carousel__next-btn {
+    display: none !important;
+  }
+  .alice-carousel__dots {
+    display: none !important;
+  }
+  .alice-carousel__stage {
+    overflow: hidden;
+  }
+}
+
+/* custom carousel overlay arrows */
+.carousel-wrapper {
+  position: relative;
+  .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(207, 31, 31, 0.85);
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    z-index: 10;
+    transition: background 0.2s ease;
+    &:hover {
+      background: #cf1f1f;
+    }
+    &.carousel-arrow--prev {
+      left: -12px;
+    }
+    &.carousel-arrow--next {
+      right: -12px;
+    }
+  }
+}
+
+/* fix: prevent horizontal overflow from parallax + carousel */
+.home {
+  overflow-x: hidden;
+}

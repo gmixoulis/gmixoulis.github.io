@@ -1,0 +1,32 @@
+name: Socket Supply Chain Security
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  socket:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Socket CLI
+        run: npm install -g socket
+
+      - name: Run Socket scan
+        env:
+          SOCKET_TOKEN: ${{ secrets.SOCKET_TOKEN }}
+          SOCKET_ORG: ${{ secrets.SOCKET_ORG }}
+        run: socket ci --org "$SOCKET_ORG" --token "$SOCKET_TOKEN" .
