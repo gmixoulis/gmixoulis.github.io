@@ -1,5 +1,5 @@
 import React from 'react';
-import Typed from 'react-typed';
+import Typed from '../components/Typed';
 const Hero: React.FC = () => (
   <div className='v-center'><div className='container'><div className='row'>
     <div className='col-12'>
