@@ -22,17 +22,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'yarn'
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: 📦 Install dependencies
-        run: yarn install --frozen-lockfile || yarn install
+        run: bun install --frozen-lockfile
 
       - name: 🧶 Ensure @google/genai is installed (recent version with httpOptions)
-        run: yarn add @google/genai
+        run: bun add @google/genai
 
       - name: 🔐 Run rename script with Gemini
         env:
@@ -49,12 +46,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/img/renamed .cert-manifest.json
+          git add public/img/renamed 2>/dev/null || true
+          [ -f .cert-manifest.json ] && git add .cert-manifest.json || true
           git diff --cached --quiet || git commit -m "🤖 Auto-renamed certificates via Gemini"
           git push || echo "Nothing to push"
 
-      - name: 🚀 Deploy to GitHub Pages
-        if: success()
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: yarn deploy
+      # Pages deployment is handled by deploy.yml, which fires on every
+      # push to master (including the commit above), so no separate
+      # gh-pages deploy step is needed here.

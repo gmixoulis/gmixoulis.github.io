@@ -21,14 +21,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'yarn'
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile || yarn install
+        run: bun install --frozen-lockfile
+
+      - name: Ensure axios is installed (used by fetch script)
+        run: bun add axios
 
       - name: Run fetch script
         env:
@@ -41,11 +41,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/publications.json
+          [ -f public/publications.json ] && git add public/publications.json || true
           git diff --cached --quiet || git commit -m "📚 Auto-update publications"
-          git push
+          git push || echo "Nothing to push"
 
-      - name: Deploy to GitHub Pages
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: yarn deploy
+      # Pages deployment is handled by deploy.yml on every push to master.
