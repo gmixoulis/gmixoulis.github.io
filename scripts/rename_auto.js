@@ -1,11 +1,11 @@
-require('module').Module._initPaths(); // Adds NODE_PATH automatically
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 const {
   GoogleGenAI,
   createUserContent,
   createPartFromUri,
 } = require('@google/genai');
+const { withRetry, sanitizeForLog } = require('./lib/retry');
 
 // ---------------------------------------------------------------------------
 // Configuration (all overridable via env in CI)
@@ -28,15 +28,8 @@ const ai = new GoogleGenAI({
 });
 
 // ---------------------------------------------------------------------------
-// Small utilities
-// ---------------------------------------------------------------------------
-const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
-// exponential backoff with full jitter, capped at MAX_BACKOFF_MS
-const backoffFor = (attempt) =>
-  Math.min(MAX_BACKOFF_MS, BASE_BACKOFF_MS * 2 ** attempt) +
-  Math.floor(Math.random() * 2000);
-
 // MIME lookup without an external dependency (we only handle image types)
+// ---------------------------------------------------------------------------
 const MIME_BY_EXT = {
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
@@ -46,40 +39,6 @@ const MIME_BY_EXT = {
 };
 const lookupMime = (filePath) =>
   MIME_BY_EXT[path.extname(filePath).toLowerCase()] || 'image/jpeg';
-
-// Treat anything that is likely to succeed on a retry as transient.
-const isTransient = (err) => {
-  const msg = String((err && err.message) || err || '');
-  const code = Number((err && (err.status || err.code)) || 0);
-  return (
-    [408, 429, 500, 502, 503, 504].includes(code) ||
-    /429|rate.?limit|quota|resource.?exhaust|500|502|503|504|internal|unavailable|deadline|timeout|aborted|econnreset|enotfound|etimedout|socket hang up|fetch failed|network/i.test(
-      msg
-    )
-  );
-};
-
-// Retry a single async operation with exponential backoff + jitter.
-async function withRetry(label, fn) {
-  let lastErr;
-  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    try {
-      return await fn(attempt);
-    } catch (err) {
-      lastErr = err;
-      if (!isTransient(err) || attempt === MAX_RETRIES) throw err;
-      const wait = backoffFor(attempt);
-      console.warn(
-        `  ⚠️  ${label} failed (attempt ${attempt + 1}/${MAX_RETRIES + 1}): ` +
-          `${(err && err.message) || err}. Retrying in ${Math.round(
-            wait / 1000
-          )}s...`
-      );
-      await sleep(wait);
-    }
-  }
-  throw lastErr;
-}
 
 // Run async tasks with a bounded concurrency pool.
 async function pool(items, limit, worker) {
@@ -317,7 +276,7 @@ async function run() {
       try {
         return await renameWithGemini(filename, manifest);
       } catch (err) {
-        console.error(`❌ ${filename}: ${(err && err.message) || err}`);
+        console.error(`❌ ${filename}: ${sanitizeForLog(err?.message ?? err)}`);
         failures.push(filename);
         return { filename, error: true };
       }
