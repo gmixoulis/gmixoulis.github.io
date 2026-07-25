@@ -29,7 +29,9 @@ const fetchPublications = async () => {
     );
     const articles = response.data?.articles || [];
     fs.writeFileSync(OUT_FILE, JSON.stringify(articles, null, 2));
-    console.log(`✅ Publications saved via SerpAPI (${articles.length} articles)`);
+    // Count omitted from the log: articles come from a remote response and
+    // SonarCloud flags logging remote-controlled data (S5145).
+    console.log('✅ Publications saved via SerpAPI');
   } catch (err) {
     const status = err?.response?.status;
     console.error(
