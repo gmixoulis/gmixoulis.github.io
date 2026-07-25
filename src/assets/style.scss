@@ -1674,8 +1674,8 @@ video.pop {
 .activity-card {
   border-radius: 8px;
   overflow: hidden;
-  background: #fff;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  background: #101d34; /* dark blue card */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
   flex: 1 1 0%; /* stretch to fill the slide so every card matches the tallest */
@@ -1685,7 +1685,7 @@ video.pop {
     width: 100%;
     height: 200px;
     object-fit: contain; /* show the whole image, don't crop heads */
-    background: #f6f7f9;
+    background: #16263f; /* slightly lighter navy frame around the photo */
     flex: 0 0 auto;
   }
   .activity-card__title {
@@ -1693,7 +1693,7 @@ video.pop {
     padding: 12px 14px;
     font-size: 15px;
     font-weight: 600;
-    color: #333;
+    color: #fff; /* white text on dark blue */
     text-align: center;
     display: flex;
     align-items: center;
