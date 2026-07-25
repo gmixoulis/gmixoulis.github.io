@@ -22,3 +22,10 @@ yarn-error.log*
 
 # bun
 .bun/
+
+# pnpm (using bun.lock as primary lockfile)
+pnpm-lock.yaml
+.pnpm-store/
+
+# pnpm workspace config (using bun; overrides live in package.json)
+pnpm-workspace.yaml
