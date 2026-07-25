@@ -1624,6 +1624,11 @@ video.pop {
     flex-basis: 25%; /* 4 per view */
   }
 }
+/* equal-height activity cards on every breakpoint: the slide is a flex
+   container so the card stretches to the row's tallest slide */
+.embla--activities .embla__slide {
+  display: flex;
+}
 
 /* square media: guarantees width == height regardless of source ratio */
 .square-media {
@@ -1665,26 +1670,31 @@ video.pop {
   }
 }
 
-/* activity cards (original look: white card, fixed-height cover image, title below) */
+/* activity cards: white card, whole image visible, equal height across the row */
 .activity-card {
   border-radius: 8px;
   overflow: hidden;
   background: #fff;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0%; /* stretch to fill the slide so every card matches the tallest */
+  min-width: 0;
   .activity-card__img {
     display: block;
     width: 100%;
     height: 200px;
     object-fit: contain; /* show the whole image, don't crop heads */
     background: #f6f7f9;
+    flex: 0 0 auto;
   }
   .activity-card__title {
+    flex: 1 1 auto; /* take the remaining space -> all cards end up the same height */
     padding: 12px 14px;
     font-size: 15px;
     font-weight: 600;
     color: #333;
     text-align: center;
-    min-height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
