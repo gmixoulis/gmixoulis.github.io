@@ -14,15 +14,17 @@ const slides = [
 const Activities: React.FC = () => {
   const cards = slides.map((s) => (
     <div className='activity-card' key={s.image}>
-      <img className='square-media' src={s.image} alt={s.title} loading='lazy' />
+      <img className='activity-card__img' src={s.image} alt={s.title} loading='lazy' />
       <div className='activity-card__title'>{s.title}</div>
     </div>
   ));
 
   return (
     <Section id='activities' title='Extracurricular Activities' bgImage='/img/background/5.jpg'>
-      <div className='col-md-10 m-auto'>
-        <Carousel slides={cards} autoplayDelay={3000} className='embla--activities' />
+      <div className='row'>
+        <div className='col-md-10 text-center m-auto'>
+          <Carousel slides={cards} autoplayDelay={3000} className='embla--activities' />
+        </div>
       </div>
     </Section>
   );

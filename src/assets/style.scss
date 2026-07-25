@@ -1661,19 +1661,25 @@ video.pop {
   }
 }
 
-/* activity cards */
+/* activity cards (original look: white card, fixed-height cover image, title below) */
 .activity-card {
   border-radius: 8px;
   overflow: hidden;
   background: #fff;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  .activity-card__img {
+    display: block;
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+  }
   .activity-card__title {
     padding: 12px 14px;
     font-size: 15px;
     font-weight: 600;
     color: #333;
     text-align: center;
-    min-height: 60px;
+    min-height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
