@@ -25,8 +25,24 @@ jobs:
       - name: Install Socket CLI
         run: npm install -g socket
 
+      - name: Check for Socket token
+        id: check
+        env:
+          SOCKET_TOKEN: ${{ secrets.SOCKET_TOKEN }}
+        run: |
+          if [ -n "$SOCKET_TOKEN" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Run Socket scan
+        if: steps.check.outputs.enabled == 'true'
         env:
           SOCKET_TOKEN: ${{ secrets.SOCKET_TOKEN }}
           SOCKET_ORG: ${{ secrets.SOCKET_ORG }}
         run: socket ci --org "$SOCKET_ORG" --token "$SOCKET_TOKEN" .
+
+      - name: Skip (no Socket token configured)
+        if: steps.check.outputs.enabled != 'true'
+        run: echo "::notice::Socket scan skipped — add SOCKET_TOKEN and SOCKET_ORG secrets (Settings → Secrets and variables → Actions) to enable supply-chain scanning."
