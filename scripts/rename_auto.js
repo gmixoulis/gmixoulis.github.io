@@ -33,6 +33,34 @@ const DEEPSEEK_TIMEOUT_MS = Number(process.env.DEEPSEEK_TIMEOUT_MS || 60000);
 // layer below is the hard guarantee that always succeeds.
 const DEEPSEEK_PASSES = Number(process.env.DEEPSEEK_PASSES || 1);
 
+// Ollama fallback (text-only, runs locally = free). Tried BEFORE DeepSeek so
+// we prefer the free local model when available. Labels from the filename
+// (Ollama has no cloud vision here). Uses the official `ollama` JS SDK against
+// a local Ollama server (http://localhost:11434 by default); for Ollama Cloud
+// set OLLAMA_HOST + OLLAMA_HEADERS (JSON, e.g. an Authorization bearer). The
+// stage self-skips if the SDK is not installed or the server is unreachable.
+const OLLAMA_ENABLED = String(process.env.OLLAMA_ENABLED || 'true').toLowerCase() !== 'false';
+const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen3:1.7b';
+const OLLAMA_TIMEOUT_MS = Number(process.env.OLLAMA_TIMEOUT_MS || 60000);
+const OLLAMA_PASSES = Number(process.env.OLLAMA_PASSES || 1);
+let _ollamaClient = null;
+let _ollamaAvailable = null; // tri-state: null=unknown, true, false
+function getOllamaClient() {
+  if (_ollamaClient) return _ollamaClient;
+  let Ollama;
+  try {
+    // ollama ships a CJS build, so require() works from this CommonJS script.
+    Ollama = require('ollama').Ollama;
+  } catch {
+    _ollamaAvailable = false;
+    return null;
+  }
+  const headers = process.env.OLLAMA_HEADERS ? JSON.parse(process.env.OLLAMA_HEADERS) : undefined;
+  _ollamaClient = new Ollama({ host: OLLAMA_HOST, headers });
+  return _ollamaClient;
+}
+
 const originalImagesFolder = path.resolve(__dirname, '../public/img/certificates');
 const renamedImagesFolder = path.resolve(__dirname, '../public/img/renamed');
 const manifestPath = path.resolve(__dirname, '../.cert-manifest.json');
@@ -311,6 +339,69 @@ function classifyWithHeuristic(filename) {
 }
 
 // ---------------------------------------------------------------------------
+// Ollama classifier (text-only, free/local). Same filename-labeling task as
+// DeepSeek but preferred because it costs nothing when a local server exists.
+// Quick connectivity preflight so we don't per-file-timeout on a dead server.
+async function ollamaReachable() {
+  if (_ollamaAvailable !== null) return _ollamaAvailable;
+  if (!OLLAMA_ENABLED) { _ollamaAvailable = false; return false; }
+  const client = getOllamaClient();
+  if (!client) { _ollamaAvailable = false; return false; }
+  try {
+    // Raw fetch to /api/tags (what client.list() calls internally) so we can
+    // attach a real AbortSignal timeout (list() does not accept one).
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), Math.min(OLLAMA_TIMEOUT_MS, 8000));
+    const headers = process.env.OLLAMA_HEADERS ? JSON.parse(process.env.OLLAMA_HEADERS) : undefined;
+    const res = await fetch(`${OLLAMA_HOST}/api/tags`, { signal: controller.signal, headers });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    _ollamaAvailable = true;
+    return true;
+  } catch (err) {
+    console.warn(
+      `  ⚠️  Ollama not reachable at ${OLLAMA_HOST}: ${sanitizeForLog(err?.message ?? err)}. ` +
+        `Skipping Ollama stage.`
+    );
+    _ollamaAvailable = false;
+    return false;
+  }
+}
+
+async function classifyWithOllama(filename) {
+  const client = getOllamaClient();
+  if (!client) throw new Error('Ollama SDK unavailable');
+  const response = await client.chat({
+    model: OLLAMA_MODEL,
+    stream: false,
+    think: false, // disable qwen3 reasoning for speed on this trivial task
+    options: { temperature: 0 },
+    messages: [
+      {
+        role: 'system',
+        content:
+          'You label academic/professional certificate files from their filename. ' +
+          'Reply in EXACTLY two lines: "Certificate Type: <value>" and "Topic: <value>". ' +
+          'Use only these types when appropriate: 1Bachelor Degree, 1Master Degree, ' +
+          'English Certificate, Certificate of Completion, Certificate of Participation, ' +
+          'Certificate of Achievement, Award, Move Sui first Thessaloniki Bootcamp Award. ' +
+          'Clean English only, no Greek, no dates, max 6 words for the topic.',
+      },
+      {
+        role: 'user',
+        content: `Filename: ${filename}\nGuess the certificate type and topic.`,
+      },
+    ],
+  });
+  const text = response?.message?.content || '';
+  const parsed = parseCertificateResponse(text);
+  if (!parsed.titleRaw || !parsed.altRaw) {
+    throw new Error('Ollama response did not contain the expected fields');
+  }
+  return parsed;
+}
+
+// ---------------------------------------------------------------------------
 // Shared finalize: take raw {titleRaw, altRaw} and produce the renamed file.
 // ---------------------------------------------------------------------------
 const seenPairs = new Map();
@@ -384,34 +475,33 @@ async function renameWithGemini(filename, manifest) {
   return finalizeRename(filename, titleRaw, altRaw, manifest);
 }
 
-// Per-file pipeline using DeepSeek (fallback), with heuristic as the inner
-// guarantee so this function can never leave a file unrenamed.
-async function renameWithFallback(filename, manifest) {
+// Per-file pipeline using Ollama (free/local fallback). Throws on failure so
+// the caller can route the file to the next stage (DeepSeek); it does NOT
+// silently fall back to the heuristic here.
+async function renameWithOllama(filename, manifest) {
   if (manifest[filename]) {
     console.log(`⏭️  ${filename} already processed, skipping`);
     return { filename, skipped: true };
   }
-
-  let parsed;
-  let source;
-  try {
-    parsed = await classifyWithDeepSeek(filename);
-    source = 'deepseek';
-  } catch (err) {
-    console.warn(
-      `  ⚠️  DeepSeek failed for ${filename}: ${sanitizeForLog(err?.message ?? err)}. ` +
-        `Using filename heuristic.`
-    );
-    parsed = classifyWithHeuristic(filename);
-    source = 'heuristic';
-  }
-
+  const parsed = await classifyWithOllama(filename);
   const result = await finalizeRename(filename, parsed.titleRaw, parsed.altRaw, manifest);
-  return { ...result, source };
+  return { ...result, source: 'ollama' };
+}
+
+// Per-file pipeline using DeepSeek (cheap cloud fallback). Throws on failure so
+// the caller can route the file to the final heuristic guarantee stage.
+async function renameWithDeepSeek(filename, manifest) {
+  if (manifest[filename]) {
+    console.log(`⏭️  ${filename} already processed, skipping`);
+    return { filename, skipped: true };
+  }
+  const parsed = await classifyWithDeepSeek(filename);
+  const result = await finalizeRename(filename, parsed.titleRaw, parsed.altRaw, manifest);
+  return { ...result, source: 'deepseek' };
 }
 
 // ---------------------------------------------------------------------------
-// Main: Gemini passes -> DeepSeek fallback pass -> heuristic guarantee.
+// Main: Gemini passes -> Ollama fallback -> DeepSeek fallback -> heuristic guarantee.
 // ---------------------------------------------------------------------------
 async function run() {
   if (!process.env.GEMINI_API_KEY) {
@@ -463,33 +553,52 @@ async function run() {
     );
   }
 
-  // ---- Stage 2: DeepSeek fallback (+ heuristic guarantee) ---------------
+  // ---- Stage 2: Ollama fallback (free/local) ---------------------------
+  if (pending.length && (await ollamaReachable())) {
+    let ollamaPass = 0;
+    while (pending.length && ollamaPass < OLLAMA_PASSES) {
+      ollamaPass++;
+      console.log(
+        `\n=== Ollama fallback ${ollamaPass}/${OLLAMA_PASSES} (${OLLAMA_MODEL}): ` +
+          `${pending.length} files ===`
+      );
+      const stillFailing = [];
+      const results = await pool(pending, CONCURRENCY, async (filename) => {
+        try {
+          return await renameWithOllama(filename, manifest);
+        } catch (err) {
+          console.error(`❌ ${filename}: ${sanitizeForLog(err?.message ?? err)}`);
+          stillFailing.push(filename);
+          return { filename, error: true };
+        }
+      });
+      pending = stillFailing;
+      console.log(
+        `Ollama pass ${ollamaPass} done: ` +
+          `${results.filter((r) => !r.error && !r.skipped).length} ok, ` +
+          `${stillFailing.length} still failing`
+      );
+    }
+  } else if (pending.length) {
+    console.log('\n⏭️  Ollama stage skipped (unavailable or disabled).');
+  }
+
+  // ---- Stage 3: DeepSeek fallback (cheap cloud) ------------------------
   let deepseekPass = 0;
   while (pending.length && deepseekPass < DEEPSEEK_PASSES) {
     deepseekPass++;
     console.log(
-      `\n=== DeepSeek fallback ${deepseekPass}/${DEEPSEEK_PASSES}: ` +
+      `\n=== DeepSeek fallback ${deepseekPass}/${DEEPSEEK_PASSES} (${DEEPSEEK_MODEL}): ` +
         `${pending.length} files ===`
     );
     const stillFailing = [];
     const results = await pool(pending, CONCURRENCY, async (filename) => {
       try {
-        return await renameWithFallback(filename, manifest);
+        return await renameWithDeepSeek(filename, manifest);
       } catch (err) {
-        // renameWithFallback already has an inner heuristic, so this should
-        // be extremely rare (e.g. disk error). Force a heuristic rename as a
-        // last resort so we still don't lose the file.
-        try {
-          const parsed = classifyWithHeuristic(filename);
-          const r = await finalizeRename(filename, parsed.titleRaw, parsed.altRaw, manifest);
-          return { ...r, source: 'heuristic-forced' };
-        } catch (err2) {
-          console.error(
-            `❌ ${filename}: ${sanitizeForLog(err2?.message ?? err2)}`
-          );
-          stillFailing.push(filename);
-          return { filename, error: true };
-        }
+        console.error(`❌ ${filename}: ${sanitizeForLog(err?.message ?? err)}`);
+        stillFailing.push(filename);
+        return { filename, error: true };
       }
     });
     pending = stillFailing;
@@ -500,7 +609,7 @@ async function run() {
     );
   }
 
-  // ---- Stage 3: hard heuristic guarantee for anything left --------------
+  // ---- Stage 4: hard heuristic guarantee for anything left --------------
   if (pending.length) {
     console.log(
       `\n🛟 Heuristic guarantee for ${pending.length} remaining files`
@@ -540,4 +649,5 @@ module.exports = {
   formatPart,
   parseCertificateResponse,
   classifyWithHeuristic,
+  ollamaReachable,
 };
