@@ -65,13 +65,16 @@ jobs:
           # Primary vision model (image-capable, cheapest/fastest).
           GEMINI_MODEL: 'gemini-2.5-flash-lite'
           GEMINI_CONCURRENCY: '3'
-          GEMINI_PASSES: '3'
-          GEMINI_MAX_RETRIES: '6'
+          # Per-image cascade: each model is retried this many times before
+          # falling through to the next (Google -> Ollama -> DeepSeek -> heuristic).
+          GEMINI_MAX_RETRIES: '10'
           GEMINI_TIMEOUT_MS: '90000'
-          # DeepSeek fallback for files Gemini could not finish (text-only,
-          # labels from filename). Optional but recommended.
+          # Ollama retry budget (per image).
+          OLLAMA_MAX_RETRIES: '10'
+          # DeepSeek = final API fallback (per-image retries).
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           DEEPSEEK_MODEL: 'deepseek-v4-flash'  # cheapest; thinking disabled in script
+          DEEPSEEK_MAX_RETRIES: '10'
           # Ollama fallback (tried before DeepSeek). If OLLAMA_API_KEY is set the
           # script uses Ollama Cloud (https://ollama.com, model gemma3:4b);
           # otherwise it uses the local server bootstrapped above (qwen3:1.7b).
@@ -90,7 +93,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add public/img/renamed 2>/dev/null || true
           [ -f .cert-manifest.json ] && git add .cert-manifest.json || true
-          git diff --cached --quiet || git commit -m "🤖 Auto-renamed certificates via Gemini"
+          git diff --cached --quiet || git commit -m "🤖 Auto-renamed certificates via Gemini -> Ollama -> DeepSeek"
           git push || echo "Nothing to push"
 
       # Pages deployment is handled by deploy.yml, which fires on every
