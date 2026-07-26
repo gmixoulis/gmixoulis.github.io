@@ -404,6 +404,63 @@ function classifyWithHeuristic(filename) {
 // Shared finalize: take raw {titleRaw, altRaw} and produce the renamed file.
 // ---------------------------------------------------------------------------
 const seenPairs = new Map();
+// Final filenames already taken (seeded from the manifest/reconciled folder) so
+// two different sources can never be written to the same renamed filename.
+const usedFileNames = new Set();
+
+// Reconcile the renamed folder with the manifest so it can NEVER accumulate
+// duplicates across runs:
+//  1. drop manifest entries whose source file no longer exists (and their file),
+//  2. delete any renamed file that is not a current manifest target (stale dups
+//     left behind when a previous run classified a file differently),
+//  3. re-create any manifest target that is missing in the folder.
+// After this, the folder contains exactly one file per valid manifest entry.
+function reconcileRenamedFolder(manifest, allFiles) {
+  const allFilesSet = new Set(allFiles);
+  let removed = 0;
+  let restored = 0;
+
+  // 1. prune manifest entries for missing sources
+  for (const src of Object.keys(manifest)) {
+    if (!allFilesSet.has(src)) {
+      const stale = path.join(renamedImagesFolder, manifest[src]);
+      try { fs.unlinkSync(stale); } catch {}
+      delete manifest[src];
+      removed++;
+    }
+  }
+  if (removed) saveManifest(manifest);
+
+  const targets = new Set(Object.values(manifest));
+
+  // 2. delete renamed files that are not a current manifest target
+  let existing = [];
+  try { existing = fs.readdirSync(renamedImagesFolder); } catch {}
+  for (const f of existing) {
+    if (!targets.has(f)) {
+      try { fs.unlinkSync(path.join(renamedImagesFolder, f)); removed++; } catch {}
+    }
+  }
+
+  // 3. re-create missing manifest targets + seed usedFileNames
+  for (const [src, target] of Object.entries(manifest)) {
+    const srcPath = path.join(originalImagesFolder, src);
+    const tgtPath = path.join(renamedImagesFolder, target);
+    usedFileNames.add(target);
+    if (fs.existsSync(srcPath) && !fs.existsSync(tgtPath)) {
+      fs.copyFileSync(srcPath, tgtPath);
+      restored++;
+    }
+  }
+
+  if (removed || restored) {
+    console.log(
+      `🧹 Reconciled renamed folder: ${removed} stale duplicate(s) removed, ` +
+        `${restored} missing file(s) restored from manifest.`
+    );
+  }
+  return { removed, restored };
+}
 
 async function finalizeRename(filename, titleRaw, altInitial, manifest) {
   const filePath = path.join(originalImagesFolder, filename);
@@ -450,8 +507,18 @@ async function finalizeRename(filename, titleRaw, altInitial, manifest) {
     alt = formatPart(altDedup);
   }
 
-  const newFileName = `${title}_${alt}${ext}`;
+  // Filesystem-level uniqueness guard: never overwrite an existing renamed
+  // file (from the manifest or a sibling in this run). Append -2, -3, ... before
+  // the extension until we find a free name.
+  const base = `${title}_${alt}`;
+  let newFileName = `${base}${ext}`;
+  let dedupIdx = 2;
+  while (usedFileNames.has(newFileName) || fs.existsSync(path.join(renamedImagesFolder, newFileName))) {
+    newFileName = `${base}-${dedupIdx}${ext}`;
+    dedupIdx++;
+  }
   const newFilePath = path.join(renamedImagesFolder, newFileName);
+  usedFileNames.add(newFileName);
 
   fs.copyFileSync(filePath, newFilePath);
   manifest[filename] = newFileName;
@@ -563,6 +630,11 @@ async function run() {
   const allFiles = fs
     .readdirSync(originalImagesFolder)
     .filter((file) => /\.(jpg|jpeg|png|webp|gif)$/i.test(file));
+
+  // Always reconcile first: removes stale duplicates from prior runs and
+  // restores any missing manifest targets, so the folder is clean even when
+  // there is nothing new to classify.
+  reconcileRenamedFolder(manifest, allFiles);
 
   let pending = allFiles.filter((f) => !manifest[f]);
   console.log(
