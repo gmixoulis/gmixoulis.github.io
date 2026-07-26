@@ -386,7 +386,7 @@ function classifyWithHeuristic(filename) {
   }
 
   const topic = base
-    .replace(/[_\-]+/g, ' ')
+    .replace(/[_-]+/g, ' ')
     .replace(/[^a-zA-Z0-9 ]+/g, '')
     .trim()
     .split(' ')

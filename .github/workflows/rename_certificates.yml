@@ -30,34 +30,8 @@ jobs:
       - name: 🧶 Ensure @google/genai is installed (recent version with httpOptions)
         run: bun add @google/genai --ignore-scripts
 
-      - name: 🧶 Ensure ollama SDK is installed (used as a free local fallback)
+      - name: 🧶 Ensure ollama SDK is installed (Ollama Cloud fallback)
         run: bun add ollama --ignore-scripts
-
-      - name: 🦙 Detect Ollama backend (cloud vs local)
-        id: ollama_backend
-        env:
-          OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
-        run: |
-          if [ -n "$OLLAMA_API_KEY" ]; then
-            echo "mode=cloud" >> "$GITHUB_OUTPUT"
-            echo "Using Ollama Cloud (https://ollama.com)."
-          else
-            echo "mode=local" >> "$GITHUB_OUTPUT"
-            echo "No Ollama Cloud key -> will run a local Ollama server."
-          fi
-
-      - name: 🦙 Set up local Ollama (free, no key needed)
-        # Only when NOT using Ollama Cloud. continue-on-error so a failed
-        # install/pull just skips the Ollama stage in the script (it falls
-        # back to DeepSeek automatically). Disable Ollama entirely with the
-        # repo variable OLLAMA_ENABLED=false.
-        if: ${{ steps.ollama_backend.outputs.mode == 'local' && vars.OLLAMA_ENABLED != 'false' }}
-        continue-on-error: true
-        run: |
-          curl -fsSL https://ollama.com/install.sh | sh
-          nohup ollama serve > /tmp/ollama.log 2>&1 &
-          sleep 3
-          ollama pull "${{ vars.OLLAMA_MODEL || 'qwen3:1.7b' }}"
 
       - name: 🔐 Run rename script (Gemini -> Ollama -> DeepSeek -> heuristic)
         env:
@@ -75,11 +49,11 @@ jobs:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           DEEPSEEK_MODEL: 'deepseek-v4-flash'  # cheapest; thinking disabled in script
           DEEPSEEK_MAX_RETRIES: '10'
-          # Ollama fallback (tried before DeepSeek). If OLLAMA_API_KEY is set the
-          # script uses Ollama Cloud (https://ollama.com, model gemma3:4b);
-          # otherwise it uses the local server bootstrapped above (qwen3:1.7b).
-          # Leave OLLAMA_HOST/OLLAMA_MODEL unset to accept those auto-defaults,
-          # or set the OLLAMA_MODEL repo variable to override (e.g. gemma3:4b).
+          # Ollama fallback (tried before DeepSeek). In CI, Ollama Cloud is used
+          # when OLLAMA_API_KEY is set (https://ollama.com, model gemma3:4b);
+          # otherwise the Ollama stage self-skips and the cascade goes to DeepSeek.
+          # (Local Ollama still works if you run `ollama serve` yourself and leave
+          # the key unset.) OLLAMA_HOST/OLLAMA_MODEL override the auto-defaults.
           OLLAMA_ENABLED: ${{ vars.OLLAMA_ENABLED || 'true' }}
           OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
           OLLAMA_HOST: ${{ vars.OLLAMA_HOST }}
