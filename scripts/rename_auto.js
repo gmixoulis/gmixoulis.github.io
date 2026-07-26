@@ -33,19 +33,41 @@ const DEEPSEEK_TIMEOUT_MS = Number(process.env.DEEPSEEK_TIMEOUT_MS || 60000);
 // layer below is the hard guarantee that always succeeds.
 const DEEPSEEK_PASSES = Number(process.env.DEEPSEEK_PASSES || 1);
 
-// Ollama fallback (text-only, runs locally = free). Tried BEFORE DeepSeek so
-// we prefer the free local model when available. Labels from the filename
-// (Ollama has no cloud vision here). Uses the official `ollama` JS SDK against
-// a local Ollama server (http://localhost:11434 by default); for Ollama Cloud
-// set OLLAMA_HOST + OLLAMA_HEADERS (JSON, e.g. an Authorization bearer). The
-// stage self-skips if the SDK is not installed or the server is unreachable.
+// Ollama fallback (text-only). Tried BEFORE DeepSeek so we prefer Ollama
+// (free locally, or cheap via Ollama Cloud) over paying DeepSeek. Labels from
+// the filename (no vision). Two modes, chosen automatically by the presence of
+// the OLLAMA_API_KEY secret:
+//   - Cloud:  host https://ollama.com, Authorization: Bearer <key>, default
+//             model gemma3:4b. No local install needed -> great for CI.
+//   - Local:  host http://localhost:11434, no auth, default model qwen3:1.7b.
+//             Requires `ollama serve` + a pulled model (the workflow does this
+//             when no cloud key is set).
+// OLLAMA_HOST / OLLAMA_MODEL / OLLAMA_HEADERS override the auto defaults. The
+// stage self-skips if the SDK is missing or the server is unreachable.
 const OLLAMA_ENABLED = String(process.env.OLLAMA_ENABLED || 'true').toLowerCase() !== 'false';
-const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen3:1.7b';
+const OLLAMA_API_KEY = process.env.OLLAMA_API_KEY || '';
+const OLLAMA_CLOUD = !!OLLAMA_API_KEY;
+const OLLAMA_HOST =
+  process.env.OLLAMA_HOST || (OLLAMA_CLOUD ? 'https://ollama.com' : 'http://localhost:11434');
+const OLLAMA_MODEL =
+  process.env.OLLAMA_MODEL || (OLLAMA_CLOUD ? 'gemma3:4b' : 'qwen3:1.7b');
 const OLLAMA_TIMEOUT_MS = Number(process.env.OLLAMA_TIMEOUT_MS || 60000);
 const OLLAMA_PASSES = Number(process.env.OLLAMA_PASSES || 1);
 let _ollamaClient = null;
 let _ollamaAvailable = null; // tri-state: null=unknown, true, false
+
+// Build auth headers: Bearer key (cloud) merged with any explicit OLLAMA_HEADERS.
+function ollamaHeaders() {
+  let h = {};
+  if (OLLAMA_API_KEY) h.Authorization = `Bearer ${OLLAMA_API_KEY}`;
+  if (process.env.OLLAMA_HEADERS) {
+    try {
+      h = { ...h, ...JSON.parse(process.env.OLLAMA_HEADERS) };
+    } catch {}
+  }
+  return Object.keys(h).length ? h : undefined;
+}
+
 function getOllamaClient() {
   if (_ollamaClient) return _ollamaClient;
   let Ollama;
@@ -56,8 +78,7 @@ function getOllamaClient() {
     _ollamaAvailable = false;
     return null;
   }
-  const headers = process.env.OLLAMA_HEADERS ? JSON.parse(process.env.OLLAMA_HEADERS) : undefined;
-  _ollamaClient = new Ollama({ host: OLLAMA_HOST, headers });
+  _ollamaClient = new Ollama({ host: OLLAMA_HOST, headers: ollamaHeaders() });
   return _ollamaClient;
 }
 
@@ -352,8 +373,10 @@ async function ollamaReachable() {
     // attach a real AbortSignal timeout (list() does not accept one).
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), Math.min(OLLAMA_TIMEOUT_MS, 8000));
-    const headers = process.env.OLLAMA_HEADERS ? JSON.parse(process.env.OLLAMA_HEADERS) : undefined;
-    const res = await fetch(`${OLLAMA_HOST}/api/tags`, { signal: controller.signal, headers });
+    const res = await fetch(`${OLLAMA_HOST}/api/tags`, {
+      signal: controller.signal,
+      headers: ollamaHeaders(),
+    });
     clearTimeout(timer);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     _ollamaAvailable = true;

@@ -33,11 +33,25 @@ jobs:
       - name: 🧶 Ensure ollama SDK is installed (used as a free local fallback)
         run: bun add ollama --ignore-scripts
 
-      - name: 🦙 Set up Ollama (free local fallback)
-        # On by default; disable with repo variable OLLAMA_ENABLED=false.
-        # continue-on-error so a failed install/pull just skips the Ollama
-        # stage in the script (it falls back to DeepSeek automatically).
-        if: ${{ vars.OLLAMA_ENABLED != 'false' }}
+      - name: 🦙 Detect Ollama backend (cloud vs local)
+        id: ollama_backend
+        env:
+          OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
+        run: |
+          if [ -n "$OLLAMA_API_KEY" ]; then
+            echo "mode=cloud" >> "$GITHUB_OUTPUT"
+            echo "Using Ollama Cloud (https://ollama.com)."
+          else
+            echo "mode=local" >> "$GITHUB_OUTPUT"
+            echo "No Ollama Cloud key -> will run a local Ollama server."
+          fi
+
+      - name: 🦙 Set up local Ollama (free, no key needed)
+        # Only when NOT using Ollama Cloud. continue-on-error so a failed
+        # install/pull just skips the Ollama stage in the script (it falls
+        # back to DeepSeek automatically). Disable Ollama entirely with the
+        # repo variable OLLAMA_ENABLED=false.
+        if: ${{ steps.ollama_backend.outputs.mode == 'local' && vars.OLLAMA_ENABLED != 'false' }}
         continue-on-error: true
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
@@ -58,10 +72,15 @@ jobs:
           # labels from filename). Optional but recommended.
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           DEEPSEEK_MODEL: 'deepseek-v4-flash'  # cheapest; thinking disabled in script
-          # Ollama free/local fallback (tried before DeepSeek).
+          # Ollama fallback (tried before DeepSeek). If OLLAMA_API_KEY is set the
+          # script uses Ollama Cloud (https://ollama.com, model gemma3:4b);
+          # otherwise it uses the local server bootstrapped above (qwen3:1.7b).
+          # Leave OLLAMA_HOST/OLLAMA_MODEL unset to accept those auto-defaults,
+          # or set the OLLAMA_MODEL repo variable to override (e.g. gemma3:4b).
           OLLAMA_ENABLED: ${{ vars.OLLAMA_ENABLED || 'true' }}
-          OLLAMA_HOST: 'http://localhost:11434'
-          OLLAMA_MODEL: ${{ vars.OLLAMA_MODEL || 'qwen3:1.7b' }}
+          OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
+          OLLAMA_HOST: ${{ vars.OLLAMA_HOST }}
+          OLLAMA_MODEL: ${{ vars.OLLAMA_MODEL }}
         run: node scripts/rename_auto.js
 
       - name: 💾 Commit renamed files + progress manifest
