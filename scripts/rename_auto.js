@@ -10,13 +10,28 @@ const { withRetry, sanitizeForLog } = require('./lib/retry');
 // ---------------------------------------------------------------------------
 // Configuration (all overridable via env in CI)
 // ---------------------------------------------------------------------------
-const MODEL_NAME = process.env.GEMINI_MODEL || 'gemini-3-flash-preview';
+// Primary vision model: Gemini 2.5 Flash-Lite (cheapest, fastest, image-capable).
+const MODEL_NAME = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
 const MAX_RETRIES = Number(process.env.GEMINI_MAX_RETRIES || 6); // per HTTP call
 const REQUEST_TIMEOUT_MS = Number(process.env.GEMINI_TIMEOUT_MS || 90000); // 90s per call
 const CONCURRENCY = Number(process.env.GEMINI_CONCURRENCY || 3); // parallel files
 const PASSES = Number(process.env.GEMINI_PASSES || 3); // retry failed files in passes
 const BASE_BACKOFF_MS = Number(process.env.GEMINI_BACKOFF_MS || 5000);
 const MAX_BACKOFF_MS = Number(process.env.GEMINI_MAX_BACKOFF_MS || 120000);
+
+// DeepSeek fallback (text-only, OpenAI-compatible). Runs ONLY for files that
+// Gemini could not process after all passes, so we never leave a certificate
+// unnamed. DeepSeek has no vision, so it labels from the original filename.
+// Uses deepseek-v4-flash (cheapest model) with thinking DISABLED for the
+// lowest cost & latency on this trivial filename-labeling task.
+const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || '';
+const DEEPSEEK_MODEL = process.env.DEEPSEEK_MODEL || 'deepseek-v4-flash';
+const DEEPSEEK_BASE_URL =
+  process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com';
+const DEEPSEEK_TIMEOUT_MS = Number(process.env.DEEPSEEK_TIMEOUT_MS || 60000);
+// One fallback pass is enough (text calls are cheap & fast); the heuristic
+// layer below is the hard guarantee that always succeeds.
+const DEEPSEEK_PASSES = Number(process.env.DEEPSEEK_PASSES || 1);
 
 const originalImagesFolder = path.resolve(__dirname, '../public/img/certificates');
 const renamedImagesFolder = path.resolve(__dirname, '../public/img/renamed');
@@ -116,9 +131,10 @@ Use clear English only. Do not include Greek or date ranges.
 `;
 
 // ---------------------------------------------------------------------------
-// Per-file processing
+// Classifiers
 // ---------------------------------------------------------------------------
-async function classifyImage(filePath, mimeType) {
+// PRIMARY: Gemini vision classification.
+async function classifyWithGemini(filePath, mimeType) {
   const upload = await withRetry(`upload ${path.basename(filePath)}`, () =>
     ai.files.upload({ file: filePath, config: { mimeType } })
   );
@@ -136,20 +152,10 @@ async function classifyImage(filePath, mimeType) {
   );
 
   const text = (response.text || '').trim();
-  const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
-
-  let titleRaw = null;
-  let altRaw = null;
-  for (const line of lines) {
-    const [key, ...rest] = line.split(':');
-    if (!rest.length) continue;
-    const value = rest.join(':').trim();
-    if (/certificate type/i.test(key)) titleRaw = value;
-    if (/topic/i.test(key)) altRaw = value;
-  }
+  const parsed = parseCertificateResponse(text);
 
   // Fallback when Gemini didn't follow the requested format.
-  if (!titleRaw || !altRaw) {
+  if (!parsed.titleRaw || !parsed.altRaw) {
     const fallbackResponse = await withRetry(
       `fallback ${path.basename(filePath)}`,
       () =>
@@ -162,30 +168,158 @@ async function classifyImage(filePath, mimeType) {
         })
     );
     const fallback = (fallbackResponse.text || '').trim() || 'Certificate';
-    titleRaw = titleRaw || fallback;
-    altRaw = altRaw || fallback;
+    parsed.titleRaw = parsed.titleRaw || fallback;
+    parsed.altRaw = parsed.altRaw || fallback;
   }
 
+  return parsed;
+}
+
+// Parse "Certificate Type: x\nTopic: y" into { titleRaw, altRaw }.
+function parseCertificateResponse(text) {
+  const lines = String(text || '')
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean);
+  let titleRaw = null;
+  let altRaw = null;
+  for (const line of lines) {
+    const [key, ...rest] = line.split(':');
+    if (!rest.length) continue;
+    const value = rest.join(':').trim();
+    if (/certificate type/i.test(key)) titleRaw = value;
+    if (/topic/i.test(key)) altRaw = value;
+  }
   return { titleRaw, altRaw };
 }
 
-async function renameWithGemini(filename, manifest) {
-  const filePath = path.join(originalImagesFolder, filename);
-  const mimeType = lookupMime(filePath);
-  const ext = path.extname(filename).toLowerCase();
-
-  // Resumability: skip files we already successfully renamed in a prior run.
-  if (manifest[filename]) {
-    console.log(`⏭️  ${filename} already processed, skipping`);
-    return { filename, skipped: true };
+// FALLBACK 1: DeepSeek (text-only). Labels from the original filename since it
+// cannot see the image. Returns { titleRaw, altRaw } or throws on failure.
+async function classifyWithDeepSeek(filename) {
+  if (!DEEPSEEK_API_KEY) {
+    throw new Error('DEEPSEEK_API_KEY not set');
   }
 
-  const { titleRaw, altRaw: altInitial } = await classifyImage(
-    filePath,
-    mimeType
-  );
+  // deepseek-v4-flash defaults to thinking mode (enabled). Disable it for the
+  // cheapest/fastest path on this trivial classification. Also keep max_tokens
+  // small since we only need two short lines.
+  const body = {
+    model: DEEPSEEK_MODEL,
+    thinking: { type: 'disabled' },
+    messages: [
+      {
+        role: 'system',
+        content:
+          'You label academic/professional certificate files from their filename. ' +
+          'Reply in EXACTLY two lines: "Certificate Type: <value>" and "Topic: <value>". ' +
+          'Use only these types when appropriate: 1Bachelor Degree, 1Master Degree, ' +
+          'English Certificate, Certificate of Completion, Certificate of Participation, ' +
+          'Certificate of Achievement, Award, Move Sui first Thessaloniki Bootcamp Award. ' +
+          'Clean English only, no Greek, no dates, max 6 words for the topic.',
+      },
+      {
+        role: 'user',
+        content: `Filename: ${filename}\nGuess the certificate type and topic.`,
+      },
+    ],
+    temperature: 0,
+    max_tokens: 80,
+    stream: false,
+  };
 
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), DEEPSEEK_TIMEOUT_MS);
+  try {
+    const res = await fetch(`${DEEPSEEK_BASE_URL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      const errText = await res.text().catch(() => '');
+      throw new Error(`DeepSeek HTTP ${res.status}: ${sanitizeForLog(errText)}`);
+    }
+    const data = await res.json();
+    const text =
+      data?.choices?.[0]?.message?.content ||
+      data?.choices?.[0]?.text ||
+      '';
+    const parsed = parseCertificateResponse(text);
+    if (!parsed.titleRaw || !parsed.altRaw) {
+      throw new Error('DeepSeek response did not contain the expected fields');
+    }
+    return parsed;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// FALLBACK 2 (hard guarantee): deterministic keyword heuristic from the
+// filename. Never throws, never needs a network call. Ensures every file ends
+// up renamed even if both Gemini and DeepSeek are unavailable.
+function classifyWithHeuristic(filename) {
+  const base = path.basename(filename, path.extname(filename));
+  const name = base.toLowerCase();
+
+  const rules = [
+    { test: /master/, title: '1Master Degree', topic: 'Master Degree' },
+    {
+      test: /uom|bachelor|diploma/,
+      title: '1Bachelor Degree',
+      topic: 'Bachelor Degree',
+    },
+    {
+      test: /move.?sui|bootcamp/,
+      title: 'Move Sui first Thessaloniki Bootcamp Award',
+      topic: 'Move Sui Bootcamp Thessaloniki',
+    },
+    { test: /ecpe|english|proficiency|cpe|ecce/, title: 'English Certificate', topic: 'English Proficiency' },
+    { test: /attendance|attend/, title: 'Certificate of Attendance', topic: 'Attendance' },
+    { test: /participation/, title: 'Certificate of Participation', topic: 'Participation' },
+    { test: /achievement/, title: 'Certificate of Achievement', topic: 'Achievement' },
+    { test: /award/, title: 'Award', topic: 'Award' },
+    { test: /mooc/, title: 'Certificate of Completion', topic: 'MOOC Course' },
+    { test: /cloud/, title: 'Certificate of Completion', topic: 'Cloud Engineering' },
+    { test: /cvml/, title: 'Certificate of Completion', topic: 'CVML' },
+    { test: /hydrobot/, title: 'Certificate of Participation', topic: 'Hydrobot' },
+    { test: /pepsico/, title: 'Certificate of Completion', topic: 'Pepsico' },
+    { test: /bebaisi|verification/, title: 'Certificate of Completion', topic: 'Verification' },
+  ];
+
+  for (const r of rules) {
+    if (r.test.test(name)) return { titleRaw: r.title, altRaw: r.topic };
+  }
+
+  // Generic: title-case the filename tokens.
+  const topic = base
+    .replace(/[_\-]+/g, ' ')
+    .replace(/[^a-zA-Z0-9 ]+/g, '')
+    .trim()
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 6)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+  return {
+    titleRaw: 'Certificate of Completion',
+    altRaw: topic || 'Certificate',
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Shared finalize: take raw {titleRaw, altRaw} and produce the renamed file.
+// ---------------------------------------------------------------------------
+const seenPairs = new Map();
+
+async function finalizeRename(filename, titleRaw, altInitial, manifest) {
+  const filePath = path.join(originalImagesFolder, filename);
+  const ext = path.extname(filename).toLowerCase();
   const baseName = path.basename(filename, ext).toLowerCase();
+
   let titleRaw2 = titleRaw;
   let altRaw = altInitial;
   if (baseName.includes('master')) titleRaw2 = '1Master Degree';
@@ -236,11 +370,49 @@ async function renameWithGemini(filename, manifest) {
   return { filename, newFileName };
 }
 
-// ---------------------------------------------------------------------------
-// Main: multiple passes until everything succeeds (or passes are exhausted)
-// ---------------------------------------------------------------------------
-const seenPairs = new Map();
+// Per-file pipeline using Gemini (primary).
+async function renameWithGemini(filename, manifest) {
+  const filePath = path.join(originalImagesFolder, filename);
+  const mimeType = lookupMime(filePath);
 
+  if (manifest[filename]) {
+    console.log(`⏭️  ${filename} already processed, skipping`);
+    return { filename, skipped: true };
+  }
+
+  const { titleRaw, altRaw } = await classifyWithGemini(filePath, mimeType);
+  return finalizeRename(filename, titleRaw, altRaw, manifest);
+}
+
+// Per-file pipeline using DeepSeek (fallback), with heuristic as the inner
+// guarantee so this function can never leave a file unrenamed.
+async function renameWithFallback(filename, manifest) {
+  if (manifest[filename]) {
+    console.log(`⏭️  ${filename} already processed, skipping`);
+    return { filename, skipped: true };
+  }
+
+  let parsed;
+  let source;
+  try {
+    parsed = await classifyWithDeepSeek(filename);
+    source = 'deepseek';
+  } catch (err) {
+    console.warn(
+      `  ⚠️  DeepSeek failed for ${filename}: ${sanitizeForLog(err?.message ?? err)}. ` +
+        `Using filename heuristic.`
+    );
+    parsed = classifyWithHeuristic(filename);
+    source = 'heuristic';
+  }
+
+  const result = await finalizeRename(filename, parsed.titleRaw, parsed.altRaw, manifest);
+  return { ...result, source };
+}
+
+// ---------------------------------------------------------------------------
+// Main: Gemini passes -> DeepSeek fallback pass -> heuristic guarantee.
+// ---------------------------------------------------------------------------
 async function run() {
   if (!process.env.GEMINI_API_KEY) {
     console.error('❌ GEMINI_API_KEY is not set');
@@ -266,11 +438,14 @@ async function run() {
     return;
   }
 
+  console.log(`\n🌐 Primary model: ${MODEL_NAME}`);
+
+  // ---- Stage 1: Gemini passes -------------------------------------------
   let pass = 0;
   let failures = [];
   while (pending.length && pass < PASSES) {
     pass++;
-    console.log(`\n=== Pass ${pass}/${PASSES}: ${pending.length} files ===`);
+    console.log(`\n=== Gemini Pass ${pass}/${PASSES}: ${pending.length} files ===`);
     failures = [];
     const results = await pool(pending, CONCURRENCY, async (filename) => {
       try {
@@ -288,9 +463,64 @@ async function run() {
     );
   }
 
+  // ---- Stage 2: DeepSeek fallback (+ heuristic guarantee) ---------------
+  let deepseekPass = 0;
+  while (pending.length && deepseekPass < DEEPSEEK_PASSES) {
+    deepseekPass++;
+    console.log(
+      `\n=== DeepSeek fallback ${deepseekPass}/${DEEPSEEK_PASSES}: ` +
+        `${pending.length} files ===`
+    );
+    const stillFailing = [];
+    const results = await pool(pending, CONCURRENCY, async (filename) => {
+      try {
+        return await renameWithFallback(filename, manifest);
+      } catch (err) {
+        // renameWithFallback already has an inner heuristic, so this should
+        // be extremely rare (e.g. disk error). Force a heuristic rename as a
+        // last resort so we still don't lose the file.
+        try {
+          const parsed = classifyWithHeuristic(filename);
+          const r = await finalizeRename(filename, parsed.titleRaw, parsed.altRaw, manifest);
+          return { ...r, source: 'heuristic-forced' };
+        } catch (err2) {
+          console.error(
+            `❌ ${filename}: ${sanitizeForLog(err2?.message ?? err2)}`
+          );
+          stillFailing.push(filename);
+          return { filename, error: true };
+        }
+      }
+    });
+    pending = stillFailing;
+    console.log(
+      `DeepSeek pass ${deepseekPass} done: ` +
+        `${results.filter((r) => !r.error && !r.skipped).length} ok, ` +
+        `${stillFailing.length} still failing`
+    );
+  }
+
+  // ---- Stage 3: hard heuristic guarantee for anything left --------------
+  if (pending.length) {
+    console.log(
+      `\n🛟 Heuristic guarantee for ${pending.length} remaining files`
+    );
+    const stillFailing = [];
+    for (const filename of pending) {
+      try {
+        const parsed = classifyWithHeuristic(filename);
+        await finalizeRename(filename, parsed.titleRaw, parsed.altRaw, manifest);
+      } catch (err) {
+        console.error(`❌ ${filename}: ${sanitizeForLog(err?.message ?? err)}`);
+        stillFailing.push(filename);
+      }
+    }
+    pending = stillFailing;
+  }
+
   if (pending.length) {
     console.error(
-      `\n🛑 ${pending.length} certificates could not be processed after ${PASSES} passes:`
+      `\n🛑 ${pending.length} certificates could not be processed:`
     );
     pending.forEach((f) => console.error(`   - ${f}`));
     process.exit(1);
@@ -298,7 +528,16 @@ async function run() {
   console.log('\n🎉 All certificates cleaned, translated, renamed, and sorted.');
 }
 
-run().catch((err) => {
-  console.error('Fatal:', err);
-  process.exit(1);
-});
+// Export pure helpers for unit testing. When run directly, execute the pipeline.
+if (require.main === module) {
+  run().catch((err) => {
+    console.error('Fatal:', err);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  formatPart,
+  parseCertificateResponse,
+  classifyWithHeuristic,
+};

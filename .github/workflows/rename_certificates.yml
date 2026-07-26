@@ -30,14 +30,19 @@ jobs:
       - name: 🧶 Ensure @google/genai is installed (recent version with httpOptions)
         run: bun add @google/genai --ignore-scripts
 
-      - name: 🔐 Run rename script with Gemini
+      - name: 🔐 Run rename script (Gemini 2.5 Flash-Lite + DeepSeek fallback)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          # Tunables (defaults live in the script; override here if needed)
+          # Primary vision model (image-capable, cheapest/fastest).
+          GEMINI_MODEL: 'gemini-2.5-flash-lite'
           GEMINI_CONCURRENCY: '3'
           GEMINI_PASSES: '3'
           GEMINI_MAX_RETRIES: '6'
           GEMINI_TIMEOUT_MS: '90000'
+          # DeepSeek fallback for files Gemini could not finish (text-only,
+          # labels from filename). Optional but recommended.
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          DEEPSEEK_MODEL: 'deepseek-v4-flash'  # cheapest; thinking disabled in script
         run: node scripts/rename_auto.js
 
       - name: 💾 Commit renamed files + progress manifest
