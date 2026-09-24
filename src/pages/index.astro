@@ -1,0 +1,46 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { HeroTurbo } from '@/components/site/HeroTurbo';
+import { AboutSection } from '@/components/site/AboutSection';
+import { WorkPan } from '@/components/site/WorkPan';
+import { ProofSection } from '@/components/site/ProofSection';
+import { ContactSection } from '@/components/site/ContactSection';
+
+const certModules = import.meta.glob<{ default: string }>(
+  '../../public/img/renamed/*.{png,jpg,jpeg,PNG,JPG,JPEG}',
+  { eager: true, query: '?url', import: 'default' },
+);
+
+const certs = Object.entries(certModules).map(([path, src]) => {
+  const file = path.split('/').pop()!.replace(/\.(png|jpe?g|PNG|JPE?G)$/i, '');
+  const [kind, ...rest] = file.split('_');
+  return {
+    src: String(src),
+    kind: kind.replace(/-/g, ' '),
+    title: rest.join(' ').replace(/-/g, ' ') || kind,
+  };
+});
+
+const projectModules = import.meta.glob<{ default: string }>(
+  '../../public/img/portfolio/*.{png,gif,PNG,jpg,jpeg,JPG}',
+  { eager: true, query: '?url', import: 'default' },
+);
+
+const projects = Object.entries(projectModules).map(([path, src]) => {
+  const host = path
+    .split('/')
+    .pop()!
+    .replace(/\.(png|gif|PNG|jpe?g|JPG)$/i, '');
+  return { src: String(src), host };
+});
+---
+
+<BaseLayout>
+  <main>
+    <HeroTurbo client:load />
+    <AboutSection client:visible />
+    <WorkPan client:visible />
+    <ProofSection client:visible certs={certs} projects={projects} />
+    <ContactSection client:visible />
+  </main>
+</BaseLayout>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>A · Soft ink — George Michoulis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,400&family=Yuji+Boku&family=Zen+Kurenaido&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./tokens.css" />
+    <style>
+      body {
+        background:
+          radial-gradient(ellipse 80% 50% at 70% 20%, var(--g-08), transparent 55%),
+          radial-gradient(ellipse 60% 40% at 10% 80%, var(--g-05), transparent 50%),
+          var(--white);
+      }
+
+      .hero {
+        position: relative;
+        min-height: calc(100dvh - 2.5rem);
+        display: grid;
+        align-items: end;
+        padding: clamp(3rem, 10vh, 6rem) var(--pad-x) clamp(3rem, 8vh, 5rem);
+        overflow: visible;
+      }
+
+      .hero-enso {
+        position: absolute;
+        right: clamp(0.5rem, 4vw, 3rem);
+        top: 42%;
+        transform: translateY(-50%);
+        width: min(42vw, 380px);
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      @media (max-width: 719px) {
+        .hero-enso {
+          right: 50%;
+          transform: translate(50%, -50%);
+          top: 28%;
+          width: min(70vw, 280px);
+          opacity: 0.35;
+        }
+      }
+
+      .hero-copy {
+        position: relative;
+        z-index: 2;
+        max-width: 36rem;
+      }
+
+      .brand-name {
+        font-size: clamp(2.75rem, 8vw, 5.5rem);
+        margin-bottom: 1.25rem;
+      }
+
+      .hero .thesis {
+        margin-bottom: 1.5rem;
+      }
+
+      .hero .roles {
+        margin-bottom: 2rem;
+      }
+
+      .wash-band {
+        height: clamp(4rem, 12vh, 7rem);
+        background: linear-gradient(
+          180deg,
+          transparent,
+          var(--g-05) 40%,
+          var(--g-08) 70%,
+          transparent
+        );
+        opacity: 0.9;
+      }
+
+      .about {
+        max-width: 40rem;
+      }
+
+      .about-grid {
+        display: grid;
+        gap: 2.5rem;
+        margin-top: 2.5rem;
+      }
+
+      @media (min-width: 720px) {
+        .about-grid {
+          grid-template-columns: 1fr auto;
+          align-items: start;
+        }
+      }
+
+      .seal-block {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        padding-top: 0.5rem;
+      }
+
+      .seal-caption {
+        font-family: var(--font-brush-hand);
+        font-size: 0.85rem;
+        color: var(--ink-faint);
+      }
+
+      .kanji-seal {
+        font-family: var(--font-brush-display);
+        font-size: 3.5rem;
+        line-height: 1;
+        color: var(--ink);
+        opacity: 0.88;
+      }
+
+      .pillars {
+        display: grid;
+        gap: 2rem;
+        max-width: 52rem;
+      }
+
+      @media (min-width: 720px) {
+        .pillars {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 2.5rem;
+        }
+      }
+
+      .pillar h3 {
+        font-family: var(--font-display);
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem;
+      }
+
+      .pillar p {
+        margin: 0;
+        color: var(--ink-muted);
+        font-size: 0.95rem;
+      }
+
+      .chapter-mark {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .chapter-mark .jp {
+        font-family: var(--font-brush-display);
+        font-size: 1.35rem;
+        opacity: 0.75;
+      }
+
+      .footer-ma {
+        padding: 4rem var(--pad-x) 5rem;
+        text-align: center;
+      }
+
+      .footer-ma .brush-divider {
+        margin: 0 auto 1.5rem;
+      }
+
+      .about + .section .brush-divider {
+        margin: 0 auto;
+      }
+
+      .font-swap {
+        padding: 1.25rem var(--pad-x) 3rem;
+        border-top: 1px solid var(--rule);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="draft-chrome">
+      <a href="./index.html">← Japan drafts</a>
+      <span class="draft-badge">A · Soft ink</span>
+    </header>
+
+    <section class="hero" aria-label="Hero">
+      <div
+        class="hero-enso enso-wrap"
+        data-enso
+        data-enso-variant="day"
+        data-enso-size="420"
+        data-enso-seed="11"
+        data-enso-label="Enso — Zen circle"
+      ></div>
+      <div class="hero-copy">
+        <h1 class="brand-name">
+          <span class="given">George</span>
+          <span class="family">Michoulis</span>
+        </h1>
+        <p class="thesis">
+          Blockchain developer and researcher. Smart contracts, graph-based ML, and full-stack
+          Web3 systems.
+        </p>
+        <ul class="roles">
+          <li>Blockchain</li>
+          <li>Full-Stack</li>
+          <li>Data Science</li>
+          <li>Web3</li>
+          <li>Machine Learning</li>
+          <li>Research</li>
+        </ul>
+        <div class="cta-row">
+          <a class="cta cta-primary" href="#about">About</a>
+          <a class="cta cta-ghost" href="mailto:gmixoulis@gmail.com">Contact</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="wash-band" aria-hidden="true"></div>
+    <hr class="hairline" />
+
+    <section class="section about" id="about">
+      <div class="chapter-mark">
+        <span class="jp" aria-hidden="true">間</span>
+        <p class="section-label">Notebook · About</p>
+      </div>
+      <h2 class="section-title">Quiet density. Room to breathe.</h2>
+      <div class="about-grid">
+        <p class="section-lead">
+          Based in Thessaloniki · Remote. BSc Applied Informatics (University of Macedonia) on
+          Ethereum credential verification. MSc Data and Web Science (Aristotle University) on
+          graph-embedding methods for blockchain fraud detection, funded by DeepMind.
+        </p>
+        <aside class="seal-block">
+          <img
+            class="seal-fuku"
+            src="/img/ui/fuku-brush.png"
+            width="120"
+            height="80"
+            alt="福 — brush calligraphy reference"
+          />
+          <span class="seal-caption">福 · seal (optional, small)</span>
+        </aside>
+      </div>
+    </section>
+
+    <div class="section" style="padding-top: 0">
+      <span class="brush-divider" aria-hidden="true"></span>
+    </div>
+
+    <section class="section" id="work">
+      <p class="section-label">Lab plates</p>
+      <h2 class="section-title">Research · Build · Teach</h2>
+      <div class="pillars" style="margin-top: 2rem">
+        <article class="pillar">
+          <h3>Research</h3>
+          <p>
+            Publications and startup work on ledger effectiveness, improvement areas, and
+            practical change across blockchain systems.
+          </p>
+        </article>
+        <article class="pillar">
+          <h3>Build</h3>
+          <p>
+            Web3 (NFTs, DeFi), data science with graph embeddings, and shipping across Solidity,
+            TypeScript, and cloud.
+          </p>
+        </article>
+        <article class="pillar">
+          <h3>Teach</h3>
+          <p>
+            Lecturer in networks, security, and application development. Public speaking on Web3
+            and edge tech.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer-ma">
+      <span class="brush-divider" aria-hidden="true"></span>
+      <p class="font-note" style="margin: 0">
+        Thessaloniki · Remote ·
+        <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+      </p>
+    </footer>
+
+    <p class="font-swap font-note">
+      Fonts: Shippori Mincho (brand) · Yuji Boku (seals — <em>swap to KokuryuSou via Adobe Fonts web project</em>) ·
+      Zen Kurenaido (hand — <em>swap to Harukaze Brush</em>).
+    </p>
+
+    <script src="./enso.js"></script>
+  </body>
+</html>

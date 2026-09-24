@@ -1,0 +1,50 @@
+---
+import { getCollection, render } from 'astro:content';
+import GardenLayout from '@/layouts/GardenLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('garden', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' });
+---
+
+<GardenLayout title={`${post.data.title} — Zen Garden`} description={post.data.description} progress>
+  <article>
+    <header class="z-post-head">
+      <div class="z-tatami" aria-hidden="true"></div>
+      <img class="z-tree z-reveal" style="--i:4" src="/img/ink/parts/tree-right.png" alt="" aria-hidden="true" />
+      <div class="z-wrap" style="position: relative">
+        <p class="z-meta z-reveal">
+          <a href="/garden/" style="text-decoration: none">Zen Garden</a> · {fmt(post.data.date)}
+        </p>
+        {post.data.kanji && (
+          <span class="z-seal z-reveal" style="--i:1" aria-hidden="true">{post.data.kanji}</span>
+        )}
+        <h1 class="z-display z-reveal" style="--i:2">{post.data.title}</h1>
+        <img class="z-band z-reveal" style="--i:3" src="/img/ink/parts/band-b.png" alt="" aria-hidden="true" />
+        {post.data.description && <p class="z-reveal" style="--i:3">{post.data.description}</p>}
+      </div>
+    </header>
+
+    <div class="z-wrap">
+      <hr class="z-cut" />
+      <div class="z-prose">
+        <Content />
+      </div>
+      <hr class="z-cut" />
+      <footer class="z-plate" aria-hidden="true">
+        <img class="z-plate-swirl z-reveal" src="/img/ink/parts/swirl.png" alt="" />
+        <img class="z-plate-img z-reveal" style="--i:2" src="/img/ink/calligraphy.png" alt="" />
+        <img class="z-plate-koi z-reveal" style="--i:4" src="/img/ink/parts/koi.png" alt="" />
+      </footer>
+      <footer class="z-foot">
+        <a href="/garden/" class="z-meta" style="text-decoration: none">← Return to the garden</a>
+      </footer>
+    </div>
+  </article>
+</GardenLayout>

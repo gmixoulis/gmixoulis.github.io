@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Japan drafts — A Soft ink · B Projection · C Neo-Tokyo · D Kabuki</title>
+    <meta
+      name="description"
+      content="Review gallery: four Japanese design approaches (A–D) for the George Michoulis portfolio."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,400&family=Yuji+Boku&family=Zen+Kurenaido&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./tokens.css" />
+    <style>
+      .index-hero {
+        padding: clamp(3.5rem, 12vh, 6.5rem) var(--pad-x) 2.5rem;
+        max-width: 42rem;
+      }
+
+      .index-hero h1 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: clamp(2rem, 5vw, 3rem);
+        letter-spacing: -0.03em;
+        line-height: 1.12;
+        margin: 0 0 1rem;
+      }
+
+      .index-hero p {
+        max-width: 34rem;
+        color: var(--ink-muted);
+        margin: 0;
+      }
+
+      .gallery {
+        display: grid;
+        gap: 1px;
+        background: var(--rule);
+        border-top: 1px solid var(--rule);
+        border-bottom: 1px solid var(--rule);
+      }
+
+      @media (min-width: 900px) {
+        .gallery {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .approach {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 1.75rem;
+        min-height: 16rem;
+        padding: clamp(1.75rem, 4vw, 2.5rem) var(--pad-x);
+        background: var(--bg);
+      }
+
+      .approach.tone-noir {
+        background: var(--black);
+        color: var(--cream);
+      }
+
+      .approach.tone-noir .kicker,
+      .approach.tone-noir .blurb {
+        color: #a3a3a3;
+      }
+
+      .approach.tone-noir .open {
+        color: var(--cream);
+        border-bottom-color: var(--accent);
+      }
+
+      .approach.tone-fusion {
+        /* unused in gallery — fusion lives in .combo below */
+        display: none;
+      }
+
+      .approach.tone-kabuki {
+        background: var(--black);
+        color: var(--white);
+        border-top: 4px solid var(--accent);
+      }
+
+      .approach.tone-kabuki .kicker {
+        color: #8a8680;
+      }
+
+      .approach.tone-kabuki .blurb {
+        color: #c8c4bc;
+      }
+
+      .approach.tone-kabuki .open {
+        color: var(--white);
+        border-bottom-color: var(--accent);
+      }
+
+      .hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem 1.5rem;
+        margin: 1.25rem 0 0;
+        font-family: var(--font-meta);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+      }
+
+      .hero-meta a {
+        color: var(--ink-muted);
+        text-decoration: none;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .hero-meta a:hover {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+
+      .approach .kicker {
+        font-family: var(--font-meta);
+        font-size: 0.7rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        margin: 0 0 0.65rem;
+      }
+
+      .approach h2 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: clamp(1.55rem, 3vw, 1.9rem);
+        letter-spacing: -0.02em;
+        margin: 0 0 0.65rem;
+        line-height: 1.15;
+      }
+
+      .approach .jp-hint {
+        font-family: var(--font-brush-display);
+        font-size: 1.35rem;
+        opacity: 0.55;
+        margin-left: 0.35rem;
+      }
+
+      .approach .blurb {
+        margin: 0;
+        max-width: 28rem;
+        color: var(--ink-muted);
+        font-size: 0.98rem;
+        line-height: 1.55;
+      }
+
+      .approach .open {
+        align-self: flex-start;
+        font-family: var(--font-meta);
+        font-size: 0.85rem;
+        letter-spacing: 0.04em;
+        text-decoration: none;
+        border-bottom: 1px solid var(--accent);
+        padding-bottom: 0.1rem;
+      }
+
+      .approach .open:hover {
+        color: var(--accent);
+      }
+
+      .combo {
+        padding: 2rem var(--pad-x) 2.5rem;
+        border-bottom: 1px solid var(--rule);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem 2rem;
+        background: var(--g-02);
+      }
+
+      .combo .label {
+        font-family: var(--font-meta);
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        margin: 0 0 0.35rem;
+      }
+
+      .combo h2 {
+        font-family: var(--font-display);
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 0 0 0.35rem;
+      }
+
+      .combo p {
+        margin: 0;
+        max-width: 32rem;
+        color: var(--ink-muted);
+        font-size: 0.92rem;
+      }
+
+      .combo a {
+        font-family: var(--font-meta);
+        font-size: 0.85rem;
+        text-decoration: none;
+        border-bottom: 1px solid var(--rule);
+        padding-bottom: 0.1rem;
+        white-space: nowrap;
+      }
+
+      .license {
+        padding: var(--pad-y) var(--pad-x);
+        max-width: 48rem;
+      }
+
+      .license h2 {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        margin: 0 0 1rem;
+      }
+
+      .license h3 {
+        font-family: var(--font-meta);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        margin: 1.75rem 0 0.5rem;
+      }
+
+      .license p,
+      .license li {
+        color: var(--ink-muted);
+        font-size: 0.95rem;
+      }
+
+      .license ul {
+        padding-left: 1.1rem;
+        margin: 0.4rem 0 0;
+      }
+
+      .samples {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-top: 1.5rem;
+      }
+
+      .sample .label {
+        font-family: var(--font-meta);
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        margin-bottom: 0.35rem;
+      }
+
+      .sample .yuji {
+        font-family: var(--font-brush-display);
+        font-size: 2.5rem;
+        line-height: 1;
+      }
+
+      .sample .zen {
+        font-family: var(--font-brush-hand);
+        font-size: 1.75rem;
+        line-height: 1.2;
+      }
+
+      .sample .ship {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+
+      .footer-note {
+        padding: 2rem var(--pad-x) 3rem;
+        font-size: 0.8rem;
+        color: var(--ink-faint);
+      }
+
+      .enso-preview {
+        position: absolute;
+        right: clamp(1rem, 6vw, 4rem);
+        top: 50%;
+        transform: translateY(-42%);
+        width: min(32vw, 240px);
+        opacity: 0.45;
+        pointer-events: none;
+      }
+
+      @media (max-width: 720px) {
+        .enso-preview {
+          display: none;
+        }
+      }
+
+      .index-hero-wrap {
+        position: relative;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="draft-chrome">
+      <a href="/">← Live site</a>
+      <span class="draft-badge">Drafts · Japan · A–D</span>
+    </header>
+
+    <div class="index-hero-wrap">
+      <div
+        class="enso-preview"
+        data-enso
+        data-enso-variant="wash"
+        data-enso-size="240"
+        aria-hidden="true"
+      ></div>
+      <header class="index-hero">
+        <p class="section-label">Design review · static HTML</p>
+        <h1>Four approaches. Pick a direction.</h1>
+        <p>
+          Polished first-viewport pitches for <strong>George Michoulis</strong>. Each page is a
+          complete draft — brand-first, thesis from profile, enso / brush / 福 used with taste.
+        </p>
+        <p class="hero-meta">
+          <span>Fonts: Kokuryu / Harukaze = Adobe / stand-in</span>
+          <a href="#fonts">Licensing + assets</a>
+        </p>
+      </header>
+    </div>
+
+    <nav class="gallery" aria-label="Four Japan approaches">
+      <article class="approach">
+        <div>
+          <p class="kicker">Approach A</p>
+          <h2>Soft ink <span class="jp-hint" aria-hidden="true">間</span></h2>
+          <p class="blurb">
+            Garden day — whitest white, darkest black, gray washes, ma. Quiet density; enso as
+            atmosphere, 福 as a small seal.
+          </p>
+        </div>
+        <a class="open" href="./a-soft-ink.html">Open draft →</a>
+      </article>
+
+      <article class="approach tone-noir">
+        <div>
+          <p class="kicker">Approach B</p>
+          <h2>Projection room <span class="jp-hint" aria-hidden="true">映</span></h2>
+          <p class="blurb">
+            Letterbox noir, cream type, dossier chapters. Quiet cinema — enso in darkness, reel
+            slate brand plate.
+          </p>
+        </div>
+        <a class="open" href="./b-projection.html">Open draft →</a>
+      </article>
+
+      <article class="approach">
+        <div>
+          <p class="kicker">Approach C</p>
+          <h2>Neo-Tokyo lite <span class="jp-hint" aria-hidden="true">線</span></h2>
+          <p class="blurb">
+            Vertical experience rail + thin vermilion ticks only. Structure without neon —
+            enso as a vermilion mark, never cyberpunk kitsch.
+          </p>
+        </div>
+        <a class="open" href="./c-neo-tokyo-lite.html">Open draft →</a>
+      </article>
+
+      <article class="approach tone-kabuki">
+        <div>
+          <p class="kicker">Approach D</p>
+          <h2>Kabuki <span class="jp-hint" aria-hidden="true">幕</span></h2>
+          <p class="blurb">
+            Traditional theater aesthetic — hanging scrolls, woodblock script texture, shishi
+            (獅子) lion, doll / bunraku silhouette. Black, white, thin vermilion — not a stage poster.
+          </p>
+        </div>
+        <a class="open" href="./d-kabuki.html">Open draft →</a>
+      </article>
+    </nav>
+
+    <aside class="combo">
+      <div>
+        <p class="label">Recommended · Projection × Neo-Tokyo</p>
+        <h2>Fusion</h2>
+        <p>
+          Projection-room letterbox / cream-on-noir DNA × Neo-Tokyo vertical rail + thin vermilion
+          ticks · quiet sumi enso (no glow) · scroll parallax · contrast-safe type. Primary pick to review.
+        </p>
+      </div>
+      <a href="./fusion.html">Open fusion →</a>
+    </aside>
+
+    <div style="padding: 2.5rem var(--pad-x) 0; text-align: center">
+      <span class="brush-divider" aria-hidden="true" style="margin: 0 auto"></span>
+    </div>
+
+    <section class="license" id="fonts">
+      <h2>Font licensing notes</h2>
+      <p>
+        No Adobe Typekit / Fonts kit ID is present in this repository. Commercial face files
+        (Kokuryu / KokuryuSou, Harukaze Brush) are <strong>not</strong> embedded. Drafts use
+        free Google Fonts stand-ins, labeled for production swap.
+      </p>
+
+      <h3>Intended commercial faces</h3>
+      <ul>
+        <li>
+          <strong>Kokuryu / KokuryuSou</strong> (Adobe Fonts, Showashotai) —
+          <a href="https://fonts.adobe.com/fonts/kokuryu" rel="noopener">fonts.adobe.com/fonts/kokuryu</a>
+          — brush dragon energy for seals / atmospheric JP type.
+          <br /><span class="font-note">Swap path: add Adobe Fonts web project → load kit → replace --font-brush-display</span>
+        </li>
+        <li>
+          <strong>Harukaze Brush</strong> —
+          <a href="https://www.allfreefonts.co/harukaze-brush-font/" rel="noopener">allfreefonts.co/harukaze-brush-font</a>
+          — brush hand for short inscriptions.
+          <br /><span class="font-note">Swap path: license/host legally → replace --font-brush-hand</span>
+        </li>
+      </ul>
+
+      <h3>Free stand-ins (shipping now)</h3>
+      <ul>
+        <li><strong>Yuji Boku</strong> → KokuryuSou stand-in (brush display / seals)</li>
+        <li><strong>Zen Kurenaido</strong> → Harukaze Brush stand-in (hand inscription)</li>
+        <li><strong>Shippori Mincho</strong> → Latin + JP display for the name lockup</li>
+        <li><strong>Source Sans 3 + Noto Sans JP</strong> → body / meta</li>
+      </ul>
+
+      <div class="samples" aria-label="Font samples">
+        <div class="sample">
+          <div class="label">Yuji Boku · Kokuryu stand-in</div>
+          <div class="yuji">龍</div>
+        </div>
+        <div class="sample">
+          <div class="label">Zen Kurenaido · Harukaze stand-in</div>
+          <div class="zen">What is this?</div>
+        </div>
+        <div class="sample">
+          <div class="label">Shippori Mincho · brand</div>
+          <div class="ship">George Michoulis</div>
+        </div>
+      </div>
+
+      <h3>Assets</h3>
+      <p>
+        Enso: <code>enso-sumi.png</code> via <code>enso.js</code>. Brush divider:
+        <code>brush-stroke.png</code> (wired as <code>.brush-divider</code> /
+        <code>.brush-rule</code>). 福 seal: <code>/img/ui/fuku-brush.png</code>.
+      </p>
+    </section>
+
+    <p class="footer-note">
+      Self-contained under <code>/drafts/japan/</code> (dev: trailing slash rewrites to
+      <code>index.html</code>). Live site and <code>/play</code> untouched.
+    </p>
+
+    <script src="./enso.js"></script>
+  </body>
+</html>

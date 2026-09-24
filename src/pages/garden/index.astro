@@ -1,0 +1,82 @@
+---
+import { getCollection } from 'astro:content';
+import GardenLayout from '@/layouts/GardenLayout.astro';
+
+const posts = (await getCollection('garden', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: '2-digit' });
+/** Rake lines hugging the enso (viewBox 600, enso centred). */
+const rakes = [262, 282, 302];
+---
+
+<GardenLayout
+  title="Zen Garden — George Michoulis"
+  description="Personal notes: graphs, code, walks, and whatever else gets raked into the sand."
+>
+  <div class="z-wrap">
+    <section class="z-hero" aria-labelledby="garden-title">
+      <img class="z-branch z-reveal" style="--i:5" src="/img/ink/parts/branch.png" alt="" aria-hidden="true" />
+      <img class="z-crane z-reveal" style="--i:7" src="/img/ink/parts/crane.png" alt="" aria-hidden="true" />
+      <div class="z-hero-copy">
+        <div class="z-tick z-reveal"></div>
+        <p class="z-meta z-reveal" style="--i:1">Personal notes · 禅庭</p>
+        <h1 id="garden-title" class="z-display z-reveal" style="--i:2">
+          Zen Garden
+        </h1>
+        <p class="z-reveal" style="--i:3">
+          Whatever I feel like keeping. The stones stay; the sand gets raked
+          again each morning.
+        </p>
+      </div>
+
+      <div class="z-stone" aria-hidden="true">
+        <svg class="z-sand" viewBox="0 0 600 600">
+          {rakes.map((r, i) => (
+            <circle cx="300" cy="300" r={r} pathLength="1" style={`--i:${i}`} />
+          ))}
+        </svg>
+        <img class="z-sun" src="/img/ink/parts/sun-brush.png" alt="" />
+        <div class="z-enso"></div>
+        <img class="z-dragonfly z-reveal" style="--i:6" src="/img/ink/parts/dragonfly.png" alt="" />
+        <span class="z-hanko" aria-hidden="true">禅庭</span>
+        <span class="z-splat" style="--x:8%;--y:82%;--s:7px"></span>
+        <span class="z-splat" style="--x:14%;--y:88%;--s:3px"></span>
+        <span class="z-splat z-splat--red" style="--x:88%;--y:12%;--s:5px"></span>
+        <span class="z-splat" style="--x:93%;--y:20%;--s:2px"></span>
+      </div>
+
+    </section>
+
+    <hr class="z-cut" />
+
+    <ol class="z-entries">
+      {posts.map((post, i) => (
+        <li class="z-entry z-reveal" style={`--i:${i % 4}`}>
+          <a href={`/garden/${post.id}/`}>
+            <span class="z-seal" aria-hidden="true">{post.data.kanji ?? '・'}</span>
+            <span class="z-meta">{fmt(post.data.date)}</span>
+            <h2 class="z-display">{post.data.title}</h2>
+            {post.data.description && <p>{post.data.description}</p>}
+            {post.data.tags.length > 0 && (
+              <span class="z-tags z-meta">
+                {post.data.tags.map((t) => <span>#{t}</span>)}
+              </span>
+            )}
+          </a>
+          <hr class="z-cut" style="margin-top: clamp(1.75rem, 4vh, 2.75rem)" />
+        </li>
+      ))}
+    </ol>
+
+    {posts.length === 0 && <p class="z-meta" style="padding: 3rem 0">Nothing raked yet.</p>}
+
+    <figure class="z-river z-reveal" aria-hidden="true">
+      <div class="z-river-band"></div>
+      <figcaption class="z-meta">神奈川沖浪裏 · Hokusai, c. 1831</figcaption>
+    </figure>
+
+  </div>
+</GardenLayout>
+

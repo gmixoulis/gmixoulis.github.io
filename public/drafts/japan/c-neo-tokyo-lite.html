@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>C · Neo-Tokyo lite — George Michoulis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,400&family=Yuji+Boku&family=Zen+Kurenaido&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./tokens.css" />
+    <style>
+      body {
+        background: var(--white);
+      }
+
+      main {
+        padding-right: clamp(0, 4vw, 3rem);
+      }
+
+      .hero {
+        min-height: calc(100dvh - 2.5rem);
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: center;
+        gap: 2rem;
+        padding: clamp(3rem, 10vh, 6rem) var(--pad-x);
+        position: relative;
+      }
+
+      @media (min-width: 900px) {
+        .hero {
+          grid-template-columns: 1.1fr 0.9fr;
+        }
+      }
+
+      .brand-name {
+        font-size: clamp(2.6rem, 7vw, 4.75rem);
+        margin-bottom: 1.1rem;
+      }
+
+      .hero .thesis {
+        margin-bottom: 1.35rem;
+      }
+
+      .hero .roles {
+        margin-bottom: 1.75rem;
+      }
+
+      .accent-rule {
+        width: 2.5rem;
+        height: 1px;
+        background: var(--accent);
+        margin: 0 0 1.5rem;
+      }
+
+      /* Thin vermilion rail ticks — active marker lifts slightly */
+      .rail a {
+        transition: background 0.25s ease, height 0.3s ease, transform 0.3s ease;
+      }
+
+      .rail a[aria-current="true"],
+      .rail a.is-active {
+        transform: translateX(-2px);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .rail a {
+          transition: none;
+        }
+
+        .rail a[aria-current="true"],
+        .rail a.is-active {
+          transform: none;
+        }
+      }
+
+      .hero-visual {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-height: 16rem;
+      }
+
+      .hero-visual .enso-tick {
+        position: absolute;
+        width: min(100%, 340px);
+        opacity: 0.9;
+      }
+
+      .corner-mark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: 3rem;
+        background: var(--accent);
+      }
+
+      .corner-mark::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3rem;
+        height: 1px;
+        background: var(--accent);
+      }
+
+      .chapter {
+        max-width: 40rem;
+        scroll-margin-top: 4rem;
+      }
+
+      .chapter + .chapter {
+        border-top: 1px solid var(--rule);
+      }
+
+      .chapter .tick {
+        display: inline-block;
+        width: 0.55rem;
+        height: 1px;
+        background: var(--accent);
+        margin-right: 0.55rem;
+        vertical-align: middle;
+      }
+
+      .timeline {
+        margin-top: 1.75rem;
+        display: grid;
+        gap: 1.25rem;
+      }
+
+      .row {
+        display: grid;
+        gap: 0.25rem;
+      }
+
+      @media (min-width: 560px) {
+        .row {
+          grid-template-columns: 7.5rem 1fr;
+          gap: 1rem;
+        }
+      }
+
+      .row .when {
+        font-family: var(--font-meta);
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        color: var(--ink-faint);
+        padding-top: 0.3rem;
+      }
+
+      .row h3 {
+        font-family: var(--font-display);
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .row p {
+        margin: 0.2rem 0 0;
+        color: var(--ink-muted);
+        font-size: 0.92rem;
+      }
+
+      .font-swap {
+        padding: 1.25rem var(--pad-x) 3rem;
+        border-top: 1px solid var(--rule);
+        margin-right: var(--rail-w);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="draft-chrome">
+      <a href="./index.html">← Japan drafts</a>
+      <span class="draft-badge">C · Neo-Tokyo lite</span>
+    </header>
+
+    <nav class="rail" aria-label="Experience rail">
+      <a href="#hero" aria-current="true"><span>Brand</span></a>
+      <a href="#about"><span>About</span></a>
+      <a href="#work"><span>Work</span></a>
+      <a href="#contact"><span>Contact</span></a>
+    </nav>
+
+    <main>
+      <section class="hero" id="hero" aria-label="Hero">
+        <div>
+          <div class="accent-rule" aria-hidden="true"></div>
+          <h1 class="brand-name">
+            <span class="given">George</span>
+            <span class="family">Michoulis</span>
+          </h1>
+          <p class="thesis">
+            Blockchain developer and researcher. Smart contracts, graph-based ML, and full-stack
+            Web3 systems.
+          </p>
+          <ul class="roles">
+            <li>Blockchain</li>
+            <li>Full-Stack</li>
+            <li>Data Science</li>
+            <li>Web3</li>
+            <li>ML</li>
+            <li>Research</li>
+          </ul>
+          <div class="cta-row">
+            <a class="cta cta-primary" href="#work">Work</a>
+            <a class="cta cta-ghost" href="#contact">Contact</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="corner-mark" aria-hidden="true"></div>
+          <div
+            class="enso-tick enso-wrap"
+            data-enso
+            data-enso-variant="tick"
+            data-enso-size="300"
+            data-enso-seed="7"
+            data-enso-label="Enso tick — vermilion"
+          ></div>
+        </div>
+      </section>
+
+      <section class="section chapter" id="about">
+        <p class="section-label"><span class="tick" aria-hidden="true"></span>01 · About</p>
+        <h2 class="section-title">Structure without neon.</h2>
+        <p class="section-lead">
+          Based in Thessaloniki · Remote. BSc Applied Informatics (UOM) on Ethereum credentials.
+          MSc Data and Web Science (AUTH) on graph embeddings for blockchain fraud detection —
+          DeepMind Scholarship. Thin vermilion for the active tick only — never fills, never glow.
+        </p>
+      </section>
+
+      <section class="section chapter" id="work">
+        <p class="section-label"><span class="tick" aria-hidden="true"></span>02 · Work</p>
+        <h2 class="section-title">Selected experience</h2>
+        <div class="timeline">
+          <div class="row">
+            <span class="when">05 / 2026 — Now</span>
+            <div>
+              <h3>Web3 Full-Stack Developer · Cyberscope by TAC</h3>
+              <p>Contracts, on-chain integrations, React/Next, security tooling.</p>
+            </div>
+          </div>
+          <div class="row">
+            <span class="when">2024 — 2026</span>
+            <div>
+              <h3>Blockchain Developer &amp; Researcher · Sidroco</h3>
+              <p>NFT marketplace, Hyperledger Fabric, Erasmus+ LMS, EU projects.</p>
+            </div>
+          </div>
+          <div class="row">
+            <span class="when">2022 — 2024</span>
+            <div>
+              <h3>Blockchain &amp; Full-Stack · University of Nicosia / IFF</h3>
+              <p>Large-scale Next.js / NestJS / Docker and a Web3 NFT marketplace.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div style="padding: 0 var(--pad-x); margin-right: var(--rail-w)">
+        <span class="brush-divider" aria-hidden="true" style="margin: 0 auto"></span>
+      </div>
+
+      <section class="section chapter" id="contact">
+        <p class="section-label"><span class="tick" aria-hidden="true"></span>03 · Contact</p>
+        <h2 class="section-title">Quiet close</h2>
+        <p class="section-lead">
+          Thessaloniki · Remote<br />
+          <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+        </p>
+      </section>
+    </main>
+
+    <p class="font-swap font-note">
+      No neon · no sakura. Fonts: Shippori Mincho · Yuji Boku (<em>swap to KokuryuSou via Adobe Fonts web project</em>) ·
+      Zen Kurenaido (<em>swap to Harukaze Brush</em>).
+    </p>
+
+    <script src="./enso.js"></script>
+    <script>
+      (function () {
+        const links = Array.from(document.querySelectorAll(".rail a"));
+        const sections = links
+          .map(function (a) {
+            return document.querySelector(a.getAttribute("href"));
+          })
+          .filter(Boolean);
+
+        function sync() {
+          let current = sections[0];
+          const y = window.scrollY + window.innerHeight * 0.35;
+          for (const s of sections) {
+            if (s.offsetTop <= y) current = s;
+          }
+          links.forEach(function (a) {
+            const on = a.getAttribute("href") === "#" + current.id;
+            a.toggleAttribute("aria-current", on);
+            a.classList.toggle("is-active", on);
+          });
+        }
+
+        window.addEventListener("scroll", sync, { passive: true });
+        sync();
+      })();
+    </script>
+  </body>
+</html>

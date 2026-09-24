@@ -1,0 +1,45 @@
+---
+import '../styles/global.css';
+import { SiteNav } from '@/components/site/SiteNav';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const title = Astro.props.title ?? 'George Michoulis';
+const description =
+  Astro.props.description ??
+  'Blockchain developer, researcher, and full-stack Web3 engineer.';
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#1a1b22" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{title}</title>
+    <slot name="head" />
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('gm-theme') || 'system';
+          var dark =
+            t === 'dark' ||
+            (t === 'system' &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.classList.toggle('dark', dark);
+          document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="min-h-dvh">
+    <SiteNav client:load />
+    <slot />
+  </body>
+</html>
