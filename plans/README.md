@@ -9,7 +9,7 @@ by the orchestrator, who reviews every diff and commits. Execute in order unless
 |------|-------|----------|--------|------------|--------|
 | 001 | Zen Garden → best-practice blog (tags, images, RSS, per-post SEO) | P1 | M | — | DONE |
 | 002 | Canonical domain, sitemap, robots.txt, built-in CSP | P1 | M | 001 | DONE |
-| 003 | Delete dead game/UI code; "Play" button in nav | P2 | S | — | TODO |
+| 003 | Delete dead game/UI code; "Play" button in nav | P2 | S | — | DONE |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (one-line reason) | REJECTED (one-line rationale)
 

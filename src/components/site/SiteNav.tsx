@@ -58,16 +58,14 @@ export function SiteNav() {
               {l.label}
             </a>
           ))}
-          <a
-            href={playLink.href}
-            className="font-mono text-xs text-muted-foreground/70 uppercase transition-colors hover:text-foreground"
-            title="Ledger Run — experimental platformer resume"
-          >
-            {playLink.label}
-          </a>
         </nav>
 
         <div className="flex items-center gap-2">
+          <Button asChild size="sm" variant="outline" className="rounded-none">
+            <a href={playLink.href} aria-label="Play Ledger Run, my CV as a platformer">
+              ▶ Play
+            </a>
+          </Button>
           <ThemeToggle />
           <Button asChild size="sm" className="hidden rounded-none sm:inline-flex">
             <a href="/#contact">Contact</a>
@@ -90,6 +88,20 @@ export function SiteNav() {
                 <SheetTitle className="font-mono text-sm uppercase">Index</SheetTitle>
               </SheetHeader>
               <div className="mt-8 flex flex-col gap-4 border-t border-foreground/15 pt-6">
+                <Button
+                  asChild
+                  size="sm"
+                  variant="outline"
+                  className="w-full rounded-none"
+                >
+                  <a
+                    href={playLink.href}
+                    aria-label="Play Ledger Run, my CV as a platformer"
+                    onClick={() => setOpen(false)}
+                  >
+                    ▶ Play
+                  </a>
+                </Button>
                 {links.map((l) => (
                   <a
                     key={l.href}
@@ -100,14 +112,6 @@ export function SiteNav() {
                     {l.label}
                   </a>
                 ))}
-                <a
-                  href={playLink.href}
-                  className="font-mono text-sm text-muted-foreground uppercase"
-                  title="Ledger Run — experimental platformer resume"
-                  onClick={() => setOpen(false)}
-                >
-                  {playLink.label}
-                </a>
               </div>
             </SheetContent>
           </Sheet>
