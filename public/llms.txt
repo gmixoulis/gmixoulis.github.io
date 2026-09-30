@@ -1,0 +1,41 @@
+# George Michoulis
+
+> George Michoulis (Greek: Γεώργιος Μιχούλης; also published as Georgios Michoulis) is a blockchain developer and researcher based in Thessaloniki, Greece. He builds smart contracts and full-stack Web3 products, publishes research on blockchain verification, governance and 5G marketplaces, and has lectured in networks, security and application development.
+
+- Website: https://george-michoulis.com/
+- Email: gmixoulis@gmail.com
+- ORCID: https://orcid.org/0000-0002-5139-448X
+- Google Scholar: https://scholar.google.com/citations?user=nk0lq8YAAAAJ (56 citations, h-index 3, as of September 2026)
+- GitHub: https://github.com/gmixoulis
+- LinkedIn: https://www.linkedin.com/in/george-michoulis/
+- X: https://twitter.com/GeorgeMicou
+
+## Work
+- Web3 Full-Stack Developer, Cyberscope by TAC (May 2026 – present): end-to-end Web3 products, smart contracts, on-chain integrations, React/Next.js frontends and security tooling.
+- Blockchain Developer & Researcher, Sidroco Holdings Ltd (2024 – 2026): an NFT marketplace for 5G networks, Hyperledger Fabric prototypes, an Erasmus+ Moodle LMS, and EU research projects including the Horizon Europe NANCY project.
+- Lecturer & Academic Partner, University of Derby / Mediterranean College (2023 – 2025): Networks & Security, Web Scripting, Application Development.
+- Blockchain & Full-Stack Developer, University of Nicosia, Institute For the Future (2022 – 2024): large Next.js, NestJS, Flask and Docker applications, and a Web3 NFT marketplace.
+- Freelance WordPress developer (2018 – 2021), including sites for Aristotle University of Thessaloniki's Jean Monnet Chair and Center for European Legal Culture.
+
+## Education
+- MSc in Data and Web Science, Aristotle University of Thessaloniki (2020 – 2022), funded by a DeepMind scholarship. Thesis: "Graph Embedding and Node Features for Drug-Target Interaction Prediction" (DOI 10.26262/heal.auth.ir.338875).
+- BSc in Applied Informatics, University of Macedonia (2015 – 2020). Thesis on verifying academic qualifications with blockchain.
+
+## Selected publications
+- Benchmarking blockchain technologies for agricultural applications. IEEE DCOSS-IoT 2026. https://doi.org/10.1109/DCOSS-IoT69657.2026.00085
+- Data security for smart cities. Chapter in Enabling Technologies for Sustainable Smart Cities, IET, 2025. https://doi.org/10.1049/PBBE009E_ch8
+- Unlocking 5G network slicing: a comprehensive survey on blockchain marketplace utilizing NFTs, AI, and advanced resource management. IEEE ICCE 2025. https://doi.org/10.1109/ICCE63647.2025.10929953
+- FraMark: a blockchain marketplace for a 5G network management using fractional NFTs. IEEE WSCE 2024. https://doi.org/10.1109/WSCE65107.2024.00009
+- Exploring decentralized governance: a framework applied to Compound Finance. MARBLE 2023, Springer. https://doi.org/10.1007/978-3-031-48731-6_9
+- A process-aware approach for blockchain-based verification of academic qualifications. Simulation Modelling Practice and Theory 121 (2022). https://doi.org/10.1016/j.simpat.2022.102642
+- Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe. BALCOR 2020.
+
+## Awards
+- DeepMind Scholarship, Aristotle University of Thessaloniki (2020 – 2022)
+- 3rd place, Infinitech Hackathon, Crowdpolicy (June 2022)
+- 1st place, Basic Research Awards 2020-21, University of Macedonia, for the VerDe verification dApp
+
+## On this site
+- [Home](https://george-michoulis.com/): profile, experience, research, certificates and projects
+- [Zen Garden](https://george-michoulis.com/garden/): blog posts (RSS: https://george-michoulis.com/garden/rss.xml)
+- [Ledger Run](https://george-michoulis.com/play/): a playable platformer version of this CV

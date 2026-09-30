@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 /**
@@ -57,9 +58,40 @@ function publicDirIndex() {
 }
 
 export default defineConfig({
-  site: 'https://gmixoulis.github.io',
+  site: 'https://george-michoulis.com',
   outDir: 'build',
-  integrations: [react()],
+  integrations: [
+    react(),
+    sitemap({
+      filter: (page) => !page.includes('/drafts/'),
+      customPages: ['https://george-michoulis.com/play/'],
+    }),
+  ],
+  // CSP is emitted as a <meta> at the end of <head>; BaseLayout's inline theme bootstrap runs before it
+  // (no-flash pattern), so it needs no hash. Keep that script above the meta, or add its hash to scriptDirective.
+  security: {
+    csp: {
+      algorithm: 'SHA-256',
+      directives: [
+        "default-src 'self'",
+        "img-src 'self' data:",
+        "font-src 'self' https://fonts.gstatic.com",
+        "connect-src 'self'",
+        "frame-src https://widgets.sociablekit.com",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+        "upgrade-insecure-requests",
+      ],
+      styleDirective: {
+        resources: [
+          "'self'",
+          'https://fonts.googleapis.com',
+          { resource: "'unsafe-inline'", kind: 'attribute' },
+        ],
+      },
+    },
+  },
   vite: {
     plugins: [tailwindcss(), publicDirIndex()],
   },
