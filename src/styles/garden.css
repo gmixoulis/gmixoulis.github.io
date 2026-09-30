@@ -415,3 +415,57 @@
 .z-koi-small { width: 3rem; height: auto; opacity: 0.85; }
 .dark .z-crane, .dark .z-dragonfly, .dark .z-torii, .dark .z-plate-swirl, .dark .z-plate-koi, .dark .z-band, .dark .z-koi-small { filter: invert(1) brightness(0.95); }
 .dark .z-branch, .dark .z-tree { filter: invert(1) hue-rotate(180deg) brightness(0.95); }
+
+/* ——— Tag links, cover figure, prev/next (Plan 001 additions) ——— */
+.z-taglist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.9rem;
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+.z-taglist a {
+  display: inline-block;
+  position: static;
+  font-family: var(--z-font-meta);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--z-ink-faint);
+  text-decoration: none;
+}
+.z-taglist a::before { display: none; }
+.z-taglist a:hover { color: var(--z-accent); }
+.z-taglist a:focus-visible { outline: 1px solid var(--z-accent); outline-offset: 3px; }
+
+.z-cover {
+  margin: clamp(1.5rem, 4vh, 2.5rem) auto 0;
+  max-width: var(--z-measure);
+}
+.z-cover img { width: 100%; height: auto; display: block; }
+
+.z-prevnext {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2rem 0 0;
+}
+.z-prevnext a {
+  font-family: var(--z-font-meta);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+}
+.z-prevnext a:hover { color: var(--z-accent); }
+.z-prevnext a:focus-visible { outline: 1px solid var(--z-accent); outline-offset: 3px; }
+@media (max-width: 640px) {
+  .z-prevnext { flex-direction: column; }
+}
+
+/* List thumbnails: fixed box, cropped (never stretched). */
+.z-thumb { display: block; width: 160px; height: 100px; object-fit: cover; margin-top: 0.75rem; }
+/* Transparent sumi artwork vanishes on dark paper: in dark mode, mount covers and thumbnails on a paper plate. */
+.dark .garden .z-cover img,
+.dark .garden .z-thumb { background: var(--z-ink); border-radius: 2px; }
+.dark .garden .z-cover img { padding: clamp(0.75rem, 3vw, 2rem); box-sizing: border-box; }

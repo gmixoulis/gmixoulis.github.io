@@ -5,12 +5,42 @@ import { SiteNav } from '@/components/site/SiteNav';
 interface Props {
   title?: string;
   description?: string;
+  canonical?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  ogImage?: string;
+  noindex?: boolean;
+  jsonLd?: object | object[];
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
+  rss?: boolean;
 }
 
-const title = Astro.props.title ?? 'George Michoulis';
+const {
+  title: titleProp,
+  description: descriptionProp,
+  canonical,
+  ogType = 'website',
+  ogImage,
+  noindex,
+  jsonLd,
+  publishedTime,
+  modifiedTime,
+  tags,
+  rss,
+} = Astro.props;
+
+const title = titleProp ?? 'George Michoulis';
 const description =
-  Astro.props.description ??
+  descriptionProp ??
   'Blockchain developer, researcher, and full-stack Web3 engineer.';
+
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
+const ldJson = jsonLd
+  ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]).map((obj) =>
+      JSON.stringify(obj).replace(/</g, '\\u003c'),
+    )
+  : [];
 ---
 
 <!doctype html>
@@ -23,6 +53,27 @@ const description =
     <meta name="theme-color" content="#1a1b22" />
     <link rel="icon" href="/favicon.ico" />
     <title>{title}</title>
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="George Michoulis" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:creator" content="@GeorgeMicou" />
+    {ogType === 'article' && publishedTime && (
+      <meta property="article:published_time" content={publishedTime} />
+    )}
+    {ogType === 'article' && modifiedTime && (
+      <meta property="article:modified_time" content={modifiedTime} />
+    )}
+    {ogType === 'article' && tags && tags.map((t) => <meta property="article:tag" content={t} />)}
+    {noindex && <meta name="robots" content="noindex" />}
+    {rss && (
+      <link rel="alternate" type="application/rss+xml" title="Zen Garden" href="/garden/rss.xml" />
+    )}
+    {ldJson.map((s) => <script type="application/ld+json" set:html={s} />)}
     <slot name="head" />
     <script is:inline>
       (function () {

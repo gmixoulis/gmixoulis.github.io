@@ -3,6 +3,8 @@ title: One stroke, no corrections
 date: 2026-09-01
 description: What the ensō taught me about shipping.
 tags: [craft]
+cover: ./enso.png
+coverAlt: "A single brushed ensō circle in black sumi ink, left open where the brush ran dry."
 kanji: 円
 ---
 

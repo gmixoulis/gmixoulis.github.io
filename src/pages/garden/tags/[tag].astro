@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets';
+import GardenLayout from '@/layouts/GardenLayout.astro';
+import { getPosts, tagCounts, tagHref, fmtDate, readingMinutes } from '@/lib/garden';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return tagCounts(posts).map(({ tag }) => ({
+    params: { tag },
+    props: { tag, posts: posts.filter((p) => p.data.tags.includes(tag)) },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+const canonical = new URL(tagHref(tag), Astro.site).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: `Posts tagged #${tag}`,
+  url: canonical,
+};
+---
+
+<GardenLayout
+  title={`Posts tagged #${tag} — Zen Garden`}
+  description={`Zen Garden posts tagged #${tag}.`}
+  canonical={canonical}
+  jsonLd={jsonLd}
+>
+  <div class="z-wrap">
+    <header style="padding: clamp(3rem, 10vh, 5.5rem) 0 2rem">
+      <p class="z-meta">Zen Garden</p>
+      <h1 class="z-display" style="font-size: clamp(2.2rem, 5.5vw, 3.6rem); margin: 0.5rem 0 0">Posts tagged #{tag}</h1>
+      <p style="margin: 1rem 0 0; color: var(--z-ink-muted)">{posts.length} post{posts.length === 1 ? '' : 's'}</p>
+    </header>
+
+    <hr class="z-cut" />
+
+    <ol class="z-entries">
+      {posts.map((post, i) => (
+        <li class="z-entry z-reveal" style={`--i:${i % 4}`}>
+          <a href={`/garden/${post.id}/`}>
+            <span class="z-seal" aria-hidden="true">{post.data.kanji ?? '・'}</span>
+            <span class="z-meta">
+              <time datetime={post.data.date.toISOString()}>{fmtDate(post.data.date)}</time> · {readingMinutes(post.body)} min read
+            </span>
+            <h2 class="z-display">{post.data.title}</h2>
+            {post.data.description && <p>{post.data.description}</p>}
+            {post.data.cover && (
+              <Image class="z-thumb" src={post.data.cover} alt={post.data.coverAlt ?? ''} width={160} height={100} />
+            )}
+          </a>
+          {post.data.tags.length > 0 && (
+            <ul class="z-taglist">
+              {post.data.tags.map((t) => (
+                <li><a href={tagHref(t)} rel="tag">#{t}</a></li>
+              ))}
+            </ul>
+          )}
+          <hr class="z-cut" style="margin-top: clamp(1.75rem, 4vh, 2.75rem)" />
+        </li>
+      ))}
+    </ol>
+
+    <p class="z-meta" style="padding: 2rem 0 4rem">
+      <a href="/garden/" style="text-decoration: none">← All posts</a>
+    </p>
+  </div>
+</GardenLayout>

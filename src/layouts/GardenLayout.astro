@@ -6,8 +6,30 @@ interface Props {
   title: string;
   description?: string;
   progress?: boolean;
+  canonical?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  ogImage?: string;
+  noindex?: boolean;
+  jsonLd?: object | object[];
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
+  rss?: boolean;
 }
-const { title, description, progress = false } = Astro.props;
+const {
+  title,
+  description,
+  progress = false,
+  canonical,
+  ogType,
+  ogImage,
+  noindex,
+  jsonLd,
+  publishedTime,
+  modifiedTime,
+  tags,
+  rss = true,
+} = Astro.props;
 
 /** Hana petals drifting through the garden, sparse and slow, looping. */
 /** Ink kanji spread down the whole page: [char, x%, top in vh, size rem, tilt]. Faint, slow bob. */
@@ -33,7 +55,19 @@ const petals = [
 ];
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogType={ogType}
+  ogImage={ogImage}
+  noindex={noindex}
+  jsonLd={jsonLd}
+  publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
+  tags={tags}
+  rss={rss}
+>
   <Fragment slot="head">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
