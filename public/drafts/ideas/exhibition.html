@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>The Exhibition · George Michoulis</title>
+<meta name="description" content="George Michoulis, works 2015–2026: a small exhibition of certificates, websites and papers by a blockchain developer and researcher in Thessaloniki.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400&family=Schibsted+Grotesk:ital,wght@0,400..700;1,400..500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wall:#F3F2EE; --ink:#1D1C1A; --label:#5F5B54; --line:#CEC9BF;
+  --mat:#FFFFFF; --frame:#2A2824; --edge:transparent;
+  --tint:#E7E4DC; --here:#D8D3C6; --accent:#AE3521; --reading:#E4E6DF;
+  --gut:clamp(20px,7vw,120px);
+  --display:"Bodoni Moda","Didot","Bodoni 72",serif;
+  --sans:"Schibsted Grotesk","Helvetica Neue",Helvetica,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --wall:#1E1D1A; --ink:#EEE6D5; --label:#BDB39F; --line:#48443C;
+    --mat:#E6E2D8; --frame:#0B0A09; --edge:#4A463E;
+    --tint:#2B2925; --here:#3B3730; --accent:#E36A51; --reading:#24271F;
+  }
+  .mount img,.mount canvas{filter:brightness(.9)}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--wall);color:var(--ink);font:400 18px/1.6 var(--sans);overflow-x:hidden}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.2em}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+[hidden]{display:none!important}
+p{margin:0 0 1em}
+
+/* entrance wall */
+.entrance{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:112px var(--gut) 11vh}
+.back{position:absolute;top:22px;left:var(--gut);font-size:14px;color:var(--label);text-decoration:none}
+.back:hover{text-decoration:underline}
+h1{font:400 clamp(62px,12.6vw,182px)/.86 var(--display);letter-spacing:-.025em;margin:0}
+h1 span{display:block}
+h1 span+span{margin-left:.42em}
+.dates{font:italic 400 clamp(24px,2.7vw,36px)/1.2 var(--display);margin:.75em 0 0}
+.curator{max-width:31em;margin:1.6em 0 0;font-size:18px;line-height:1.6}
+
+/* rooms */
+.room{padding:22vh var(--gut) 6vh;scroll-margin-top:0}
+.wrap{max-width:960px}
+@media (min-width:1280px){.wrap{max-width:min(960px,calc(100vw - var(--gut) - 380px))}}
+h2{font:400 clamp(44px,5.6vw,80px)/1 var(--display);letter-spacing:-.015em;margin:0 0 .7em}
+.room-no{display:block;font:500 15px/1 var(--sans);letter-spacing:0;color:var(--label);margin-bottom:1.1em}
+h3{margin:0}
+.wall-text{max-width:33em;font-size:19px;line-height:1.65}
+.wall-text .lede{font-size:clamp(21px,2vw,25px);line-height:1.5}
+.sign{font:italic 400 22px/1 var(--display);margin-top:1.4em}
+
+/* room 2: chronology */
+.chrono{list-style:none;margin:10vh 0 0;padding:0;max-width:40em}
+.chrono li{margin:0 0 9vh}
+.chrono .yr{font:400 clamp(34px,3.6vw,50px)/1 var(--display);margin:0 0 .35em;font-variant-numeric:lining-nums}
+.chrono h3{font-size:20px;font-weight:600;line-height:1.35}
+.chrono .org{color:var(--label);margin:.15em 0 .5em}
+.chrono li p:last-child{margin:0}
+.chrono .aw{padding-left:clamp(0px,6vw,88px)}
+.chrono .aw .yr{font-size:clamp(24px,2.2vw,30px);font-style:italic}
+.chrono .aw h3{font-size:18px;font-weight:500}
+
+/* room 3: hung objects */
+.hang{margin-top:14vh}
+.obj{display:flex;flex-wrap:wrap;align-items:flex-end;gap:22px 40px;margin:0 0 19vh}
+.frame{flex:0 1 var(--w,680px);min-width:0;background:var(--mat);border:2px solid var(--frame);outline:1px solid var(--edge);padding:clamp(14px,3vw,38px)}
+.frame img{display:block;width:100%;height:auto}
+.port{--w:440px}.sq{--w:500px}.small{--w:560px}.wide{--w:700px}
+.label{flex:0 0 200px;font-size:14.5px;line-height:1.5;color:var(--label)}
+.label>span,.label>a{display:block}
+.label .t{color:var(--ink);font-weight:600;font-size:15.5px;line-height:1.35;margin-bottom:.35em}
+.label .note{color:var(--ink);margin-top:.6em}
+.label .no{margin-top:.9em}
+.label a{margin-top:.5em;color:var(--ink)}
+
+.storage{max-width:960px;margin-top:4vh;padding-top:6vh;border-top:1px solid var(--line)}
+.storage h3{font:400 clamp(30px,3vw,40px)/1.1 var(--display);margin-bottom:.5em}
+.storage>p{max-width:34em;color:var(--label)}
+.store{list-style:none;padding:0;margin:5vh 0 0;font-size:15.5px;line-height:1.4}
+@media (min-width:860px){.store{columns:2;column-gap:56px}}
+.store li{break-inside:avoid;display:grid;grid-template-columns:3.2em 1fr;padding:0 0 18px}
+.store .no{color:var(--label)}
+.store .k{grid-column:2;color:var(--label);font-size:14px}
+
+/* room 4: built works */
+.works{margin-top:14vh}
+.work{margin:0 0 20vh}
+.work.part{width:80%}
+.work.off{margin-left:20%}
+.mount{background:var(--mat);border:1px solid var(--line)}
+.mount img,.mount canvas{display:block;width:100%;height:auto}
+.work .label{max-width:30em;margin-top:22px}
+.work .label .note{max-width:30em}
+.play{font:inherit;font-size:14.5px;color:var(--ink);background:none;border:0;padding:0;margin-top:.7em;text-decoration:underline;text-underline-offset:.2em;cursor:pointer}
+
+/* reading room */
+.reading{background:var(--reading);padding-bottom:18vh}
+.cat{list-style:none;padding:0;margin:10vh 0 0;max-width:960px}
+.cat li{display:grid;grid-template-columns:minmax(0,33em) 1fr auto;align-items:end;column-gap:14px;padding:0 0 5vh}
+.cat .ti{font-weight:600;font-size:18px;line-height:1.4;display:block}
+.cat .v{display:block;color:var(--label);font-size:15.5px;margin-top:.25em}
+.cat .lead{border-bottom:2px dotted var(--line);margin-bottom:.6em;min-width:20px}
+.cat .n{text-align:right;font:400 46px/1 var(--display);font-variant-numeric:lining-nums}
+.cat .n small{display:block;font:400 13px/1.4 var(--sans);color:var(--label)}
+.aside{max-width:34em;color:var(--label);font-size:16px}
+
+/* exit */
+.exit{padding-bottom:10vh}
+.mail{font:400 clamp(28px,4.4vw,60px)/1.1 var(--display);margin:6vh 0;overflow-wrap:anywhere}
+.mail a{text-decoration-thickness:1px}
+.elsewhere{list-style:none;padding:0;margin:0 0 6vh;display:flex;flex-wrap:wrap;gap:8px 28px}
+.also{max-width:33em;color:var(--label)}
+.also a{color:var(--ink)}
+.colophon{margin-top:14vh;font-size:14px;color:var(--label)}
+
+/* floor plan (desktop) and room list (small screens) */
+.plan{display:none;position:fixed;right:28px;bottom:26px;width:250px;z-index:5;font-size:13.5px;color:var(--label)}
+.plan p{margin:0}
+.plan .plan-h{color:var(--ink);font-weight:600;margin-bottom:10px}
+.plan .status{margin-top:10px;min-height:1.6em}
+.plan svg{display:block;width:100%;height:auto;overflow:visible}
+.plan .rm{fill:transparent;transition:fill .2s}
+.plan a:hover .rm{fill:var(--tint)}
+.plan a.here .rm{fill:var(--here)}
+.plan a:focus-visible{outline:none}
+.plan a:focus-visible .rm{fill:var(--tint);stroke:var(--accent);stroke-width:2.5}
+.plan text{font:500 10.5px var(--sans);fill:var(--ink)}
+.plan .num{font:400 17px var(--display)}
+.plan .walls{fill:none;stroke:var(--ink);stroke-width:1.5;pointer-events:none}
+.plan .outer{stroke-width:3.2;stroke-linecap:square}
+.plan .route{fill:none;stroke:var(--label);stroke-width:1;stroke-dasharray:2 3;pointer-events:none}
+.plan .walked path{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-dasharray:1 1;stroke-dashoffset:1;transition:stroke-dashoffset .5s ease}
+.plan .walked path.on{stroke-dashoffset:0}
+.plan .dot{fill:var(--accent);transition:transform .5s ease;pointer-events:none}
+.directory{padding:0 var(--gut) 4vh;max-width:calc(24em + 2 * var(--gut))}
+.directory p{font-weight:600;margin-bottom:.4em}
+.directory ol{list-style:none;padding:0;margin:0}
+.directory a{display:flex;gap:14px;align-items:baseline;padding:9px 0;text-decoration:none;border-bottom:1px solid var(--line)}
+.directory a span{font:400 22px/1 var(--display);min-width:1.1em}
+.directory a[aria-current] {font-weight:600}
+@media (min-width:1280px){.plan{display:block}.directory{display:none}}
+
+@media (max-width:700px){
+  body{font-size:17px}
+  h1{font-size:19.4vw;letter-spacing:-.03em}
+  h1 span+span{margin-left:.2em}
+  .entrance{padding-bottom:9vh}
+  .room{padding-top:16vh}
+  .obj{margin-bottom:15vh}
+  .label{flex-basis:100%}
+  .port{--w:300px}
+  .work.part{width:100%}.work.off{margin-left:0}
+  .work{margin-bottom:14vh}
+  .cat li{grid-template-columns:1fr auto;column-gap:18px}
+  .cat .lead{display:none}
+  .cat .n{font-size:36px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="entrance" id="entrance">
+  <a class="back" href="index.html">← All ideas</a>
+  <h1><span>George</span><span>Michoulis</span></h1>
+  <p class="dates">Works, 2015–2026</p>
+  <p class="curator">I'm a blockchain developer and researcher in Thessaloniki. This show gathers what I've studied, built, taught and published since starting my first degree in 2015: smart contracts, graph-based machine learning and full-stack Web3 systems.</p>
+
+
+  <nav class="plan" aria-label="Floor plan">
+    <p class="plan-h">Floor plan</p>
+    <svg viewBox="-4 -4 248 336" aria-hidden="false">
+      <a href="#entrance" data-room="entrance" aria-label="Entrance"><rect class="rm" x="0" y="200" width="110" height="120"/><text x="10" y="222">Entrance</text></a>
+      <a href="#r1" data-room="r1" aria-label="Room 1, Introduction"><rect class="rm" x="0" y="100" width="110" height="100"/><text class="num" x="10" y="124">1</text><text x="10" y="141">Introduction</text></a>
+      <a href="#r2" data-room="r2" aria-label="Room 2, Practice"><rect class="rm" x="0" y="0" width="110" height="100"/><text class="num" x="10" y="24">2</text><text x="10" y="41">Practice</text></a>
+      <a href="#r3" data-room="r3" aria-label="Room 3, Evidence"><rect class="rm" x="110" y="0" width="130" height="190"/><text class="num" x="120" y="24">3</text><text x="120" y="41">Evidence</text></a>
+      <a href="#r4" data-room="r4" aria-label="Room 4, Built works"><rect class="rm" x="110" y="190" width="70" height="130"/><text class="num" x="118" y="290">4</text><text x="118" y="307">Built works</text></a>
+      <a href="#reading" data-room="reading" aria-label="Reading room"><rect class="rm" x="180" y="190" width="60" height="80"/><text x="186" y="208">Reading</text><text x="186" y="221">room</text></a>
+      <a href="#exit" data-room="exit" aria-label="Exit and enquiries"><rect class="rm" x="180" y="270" width="60" height="50"/><text x="234" y="300" text-anchor="end">Exit</text></a>
+      <path class="walls" d="M0 100H70M94 100H110M0 200H70M94 200H110M110 0V50M110 74V320M110 190H148M172 190H240M180 190V228M180 252V320M180 270H186M206 270H240"/>
+      <path class="walls outer" d="M0 0H240V320H206M186 320H94M70 320H0Z"/>
+      <path class="route" d="M82 332V62H160V240H196V332"/>
+      <g class="walked">
+        <path pathLength="1" d="M82 332V262"/>
+        <path pathLength="1" d="M82 262V150"/>
+        <path pathLength="1" d="M82 150V62"/>
+        <path pathLength="1" d="M82 62H160V125"/>
+        <path pathLength="1" d="M160 125V240"/>
+        <path pathLength="1" d="M160 240H196"/>
+        <path pathLength="1" d="M196 240V296"/>
+      </g>
+      <circle class="dot" r="5" cx="0" cy="0" style="transform:translate(82px,262px)"/>
+    </svg>
+    <p class="status" id="status">You are at the entrance.</p>
+  </nav>
+</header>
+
+<nav class="directory" aria-label="Rooms">
+  <p>Rooms</p>
+  <ol>
+    <li><a href="#r1" data-room="r1"><span>1</span>Introduction</a></li>
+    <li><a href="#r2" data-room="r2"><span>2</span>Practice</a></li>
+    <li><a href="#r3" data-room="r3"><span>3</span>Evidence</a></li>
+    <li><a href="#r4" data-room="r4"><span>4</span>Built works</a></li>
+    <li><a href="#reading" data-room="reading"><span>R</span>Reading room</a></li>
+    <li><a href="#exit" data-room="exit"><span>E</span>Exit and enquiries</a></li>
+  </ol>
+</nav>
+
+<main>
+  <section class="room" id="r1" aria-labelledby="h-r1">
+    <div class="wrap">
+      <h2 id="h-r1"><span class="room-no">Room 1</span>Introduction</h2>
+      <div class="wall-text">
+        <p class="lede">I'm George Michoulis, a blockchain developer and researcher based in Thessaloniki, Greece. I write smart contracts, use graph-based machine learning, and build full-stack Web3 systems. I work remotely.</p>
+        <p>I studied Applied Informatics at the University of Macedonia, and my thesis there was on verifying academic credentials with Ethereum. For my MSc in Data and Web Science at Aristotle University of Thessaloniki, funded by a DeepMind scholarship, I worked on graph-embedding methods for detecting fraud on blockchains.</p>
+        <p>The work has three sides. As a researcher, in papers and in startup work, I ask how effective ledgers are and what they change in practice. As a builder I make NFT and DeFi products and data science with graph embeddings, shipping in Solidity, TypeScript and the cloud. And I teach: I've lectured in networks, security and application development, and I speak in public about Web3 and edge technology.</p>
+        <p class="sign">G. M.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="room" id="r2" aria-labelledby="h-r2">
+    <div class="wrap">
+      <h2 id="h-r2"><span class="room-no">Room 2</span>Practice</h2>
+      <ol class="chrono">
+        <li><p class="yr">2015–2020</p><h3>BSc Applied Informatics</h3><p class="org">University of Macedonia</p><p>My thesis was on verifying academic credentials with Ethereum.</p></li>
+        <li class="aw"><p class="yr">2020–2021</p><h3>Basic Research grant</h3><p class="org">Award, University of Macedonia</p></li>
+        <li><p class="yr">2020–2022</p><h3>MSc Data and Web Science</h3><p class="org">Aristotle University of Thessaloniki</p><p>Funded by a DeepMind scholarship. I worked on graph-embedding methods for blockchain fraud detection.</p></li>
+        <li class="aw"><p class="yr">June 2022</p><h3>3rd place, Infinitech Hackathon</h3><p class="org">Award, Crowdpolicy</p></li>
+        <li><p class="yr">2022–2024</p><h3>Blockchain and full-stack developer</h3><p class="org">University of Nicosia / IFF</p><p>I built large Next.js, NestJS and Docker applications, and a Web3 NFT marketplace.</p></li>
+        <li><p class="yr">2023–2025</p><h3>Lecturer and academic partner</h3><p class="org">University of Derby / Mediterranean College</p><p>I taught Networks and Security, Web Scripting and Application Development, and set assessment with inclusivity first.</p></li>
+        <li><p class="yr">2024–2026</p><h3>Blockchain developer and researcher</h3><p class="org">Sidroco Holdings Ltd</p><p>An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ learning management system, and multinational EU projects.</p></li>
+        <li class="aw"><p class="yr">2025</p><h3>Move/Sui Bootcamp Thessaloniki award</h3><p class="org">Award. The certificate hangs in room 3 as object 3.10.</p></li>
+        <li><p class="yr">May 2026 to now</p><h3>Web3 full-stack developer</h3><p class="org">Cyberscope by TAC</p><p>I build Web3 products end to end: contracts, on-chain integrations, React and Next frontends, and security tooling.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="room" id="r3" aria-labelledby="h-r3">
+    <div class="wrap">
+      <h2 id="h-r3"><span class="room-no">Room 3</span>Evidence</h2>
+      <p class="wall-text">Ten documents from courses, programmes and awards, hung one at a time and large enough to read. Another 24 are listed in storage at the end of this room, and every one of them opens its full scan.</p>
+
+      <div class="hang">
+        <figure class="obj">
+          <div class="frame"><img src="../../img/renamed/Award_Academic-Achievement.jpg" width="2269" height="1593" loading="lazy" alt="Scan of a gold paper award certificate in Greek, with a coin emblem at the centre"></div>
+          <figcaption class="label"><span class="t">Academic achievement</span><span>Award</span><span>Paper document, scanned</span><a href="../../img/renamed/Award_Academic-Achievement.jpg">Full scan</a><span class="no">3.01</span></figcaption>
+        </figure>
+        <figure class="obj">
+          <div class="frame"><img src="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" width="2175" height="1439" loading="lazy" alt="Scan of a CCNA course certificate in Greek on peach paper, with stamps and signatures"></div>
+          <figcaption class="label"><span class="t">CCNA, Cisco Certified Network Associate</span><span>Certificate of completion</span><span>Paper document, scanned</span><a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg">Full scan</a><span class="no">3.02</span></figcaption>
+        </figure>
+        <figure class="obj port">
+          <div class="frame"><img src="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" width="1240" height="1755" loading="lazy" alt="Digitally signed copy of the MSc diploma in Data and Web Science from Aristotle University of Thessaloniki, in Greek"></div>
+          <figcaption class="label"><span class="t">Master degree, Data and Web Science</span><span>Degree certificate</span><span>Digitally signed document</span><span>2020–2022</span><span class="note">Aristotle University of Thessaloniki. Studies funded by a DeepMind scholarship.</span><a href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg">Full scan</a><span class="no">3.03</span></figcaption>
+        </figure>
+        <figure class="obj">
+          <div class="frame"><img src="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" width="1754" height="1241" loading="lazy" alt="University of Nicosia certificate of accomplishment for Introduction to Digital Currencies"></div>
+          <figcaption class="label"><span class="t">Introduction to digital currencies</span><span>Certificate of achievement</span><span>Digital certificate</span><a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg">Full scan</a><span class="no">3.04</span></figcaption>
+        </figure>
+        <figure class="obj">
+          <div class="frame"><img src="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" width="1755" height="1240" loading="lazy" alt="Aristotle University of Thessaloniki certificate of completion for a short course in machine learning and deep neural networks"></div>
+          <figcaption class="label"><span class="t">Machine learning and deep neural networks</span><span>Certificate of completion</span><span>Digital certificate</span><a href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg">Full scan</a><span class="no">3.05</span></figcaption>
+        </figure>
+        <figure class="obj">
+          <div class="frame"><img src="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" width="1650" height="1275" loading="lazy" alt="IEEE certificate of completion for the training How to Get Published with IEEE"></div>
+          <figcaption class="label"><span class="t">How to get published with IEEE</span><span>Certificate of completion</span><span>Digital certificate</span><a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg">Full scan</a><span class="no">3.06</span></figcaption>
+        </figure>
+        <figure class="obj wide">
+          <div class="frame"><img src="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg" width="1500" height="844" loading="lazy" alt="Certificate acknowledging completion of the NFT Talents program, with a green wave along the bottom edge"></div>
+          <figcaption class="label"><span class="t">NFT talents program</span><span>Certificate of completion</span><span>Digital certificate</span><a href="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg">Full scan</a><span class="no">3.07</span></figcaption>
+        </figure>
+        <figure class="obj small">
+          <div class="frame"><img src="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png" width="800" height="600" loading="lazy" alt="Certificate of completion for Advanced Ethical Hacking, in Greek, with a red and black border"></div>
+          <figcaption class="label"><span class="t">Advanced ethical hacking</span><span>Certificate of completion</span><span>Digital certificate</span><a href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png">Full scan</a><span class="no">3.08</span></figcaption>
+        </figure>
+        <figure class="obj">
+          <div class="frame"><img src="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" width="2342" height="1656" loading="lazy" alt="Certificate of completion naming a Certified Rust Developer"></div>
+          <figcaption class="label"><span class="t">Rust developer</span><span>Certificate of completion</span><span>Digital certificate</span><a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png">Full scan</a><span class="no">3.09</span></figcaption>
+        </figure>
+        <figure class="obj sq">
+          <div class="frame"><img src="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png" width="3543" height="3542" loading="lazy" alt="The words Move Bootcamp Thessaloniki in teal graffiti lettering"></div>
+          <figcaption class="label"><span class="t">Move Bootcamp Thessaloniki</span><span>Award, first Move/Sui bootcamp in Thessaloniki</span><span>Digital image</span><span>2025</span><a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png">Full scan</a><span class="no">3.10</span></figcaption>
+        </figure>
+      </div>
+
+      <section class="storage" aria-labelledby="h-store">
+        <h3 id="h-store">In storage</h3>
+        <p>The other 24 documents. Each title opens the full scan.</p>
+        <ol class="store">
+          <li><span class="no">S.01</span><a href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg">Bachelor degree, Computer Science</a><span class="k">Degree certificate</span></li>
+          <li><span class="no">S.02</span><a href="../../img/renamed/Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg">TOEIC listening and reading test</a><span class="k">Certificate of achievement</span></li>
+          <li><span class="no">S.03</span><a href="../../img/renamed/Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg">European Legal Culture program, Aristotle University of Thessaloniki</a><span class="k">Certificate of completion</span></li>
+          <li><span class="no">S.04</span><a href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png">Cloud engineering</a><span class="k">Certificate of completion</span></li>
+          <li><span class="no">S.05</span><a href="../../img/renamed/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg">Cybersecurity eLearning Academy</a><span class="k">Certificate of completion</span></li>
+          <li><span class="no">S.06</span><a href="../../img/renamed/Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg">Digital skills for tourism</a><span class="k">Certificate of completion</span></li>
+          <li><span class="no">S.07</span><a href="../../img/renamed/Certificate-Of-Completion_Discover-Customer.jpg">Discover customer</a><span class="k">Certificate of completion</span></li>
+          <li><span class="no">S.08</span><a href="../../img/renamed/Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png">Entrepreneurship, funding and development of new enterprises</a><span class="k">Certificate of completion</span></li>
+          <li><span class="no">S.09</span><a href="../../img/renamed/Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg">How to design and build a website</a><span class="k">Certificate of completion</span></li>
+          <li><span class="no">S.10</span><a href="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png">Networking essentials</a><span class="k">Certificate of completion</span></li>
+          <li><span class="no">S.11</span><a href="../../img/renamed/Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg">Software development for telecommunication networks</a><span class="k">Certificate of completion</span></li>
+          <li><span class="no">S.12</span><a href="../../img/renamed/Certificate-Of-Completion_The-Hour-Of-Code.jpg">The Hour of Code</a><span class="k">Certificate of completion</span></li>
+          <li><span class="no">S.13</span><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg">Blockchain for the legal industry: how is the…</a><span class="k">Certificate of participation</span></li>
+          <li><span class="no">S.14</span><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg">Blockchain in education: remote learning, social distancing and…</a><span class="k">Certificate of participation</span></li>
+          <li><span class="no">S.15</span><a href="../../img/renamed/Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg">Data analytics to strengthen healthcare cybersecurity</a><span class="k">Certificate of participation</span></li>
+          <li><span class="no">S.16</span><a href="../../img/renamed/Certificate-Of-Participation_EY-Cyber-Day.jpg">EY Cyber Day</a><span class="k">Certificate of participation</span></li>
+          <li><span class="no">S.17</span><a href="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg">GNU/Linux command line</a><span class="k">Certificate of participation</span></li>
+          <li><span class="no">S.18</span><a href="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg">Launch event, RippleX workshop</a><span class="k">Certificate of participation</span></li>
+          <li><span class="no">S.19</span><a href="../../img/renamed/Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png">Migma marketing kai brand</a><span class="k">Certificate of participation</span></li>
+          <li><span class="no">S.20</span><a href="../../img/renamed/Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg">Marine educational robotics, Hydrobot program</a><span class="k">Certificate of participation</span></li>
+          <li><span class="no">S.21</span><a href="../../img/renamed/Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg">Processing data in the fog: the example of…</a><span class="k">Certificate of participation</span></li>
+          <li><span class="no">S.22</span><a href="../../img/renamed/Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg">SKGcode project: creation of a real estate chatbot</a><span class="k">Certificate of participation</span></li>
+          <li><span class="no">S.23</span><a href="../../img/renamed/Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg">VeChain ToolChain: digital transformation of the healthcare industry</a><span class="k">Certificate of participation</span></li>
+          <li><span class="no">S.24</span><a href="../../img/renamed/English-Certificate_English-Certificate-English-Proficiency.jpg">English proficiency</a><span class="k">English certificate</span></li>
+        </ol>
+      </section>
+    </div>
+  </section>
+
+  <section class="room" id="r4" aria-labelledby="h-r4">
+    <div class="wrap">
+      <h2 id="h-r4"><span class="room-no">Room 4</span>Built works</h2>
+      <p class="wall-text">Seven websites I built, each shown as I captured it. The labels describe only what is on the screen.</p>
+
+      <div class="works">
+        <figure class="work">
+          <div class="mount"><img src="../../img/portfolio/verde.uom.gr.PNG" width="1840" height="907" loading="lazy" alt="VerDe contact page: website and email cards beside a map of the University of Macedonia area in Thessaloniki"></div>
+          <figcaption class="label"><span class="t">verde.uom.gr</span><span>Website, screenshot</span><span class="note">VerDe, the academic-credential verification system from my papers. The capture shows its contact page: website and email cards beside a map centred on the University of Macedonia.</span><span class="no">4.01</span></figcaption>
+        </figure>
+        <figure class="work">
+          <div class="mount"><img id="bbf-gif" src="../../img/portfolio/bbf-gui.ddns.net.gif" width="1377" height="956" alt="Blockchain Benchmarking Framework landing page: a violet isometric city of buildings and coin icons"><canvas id="bbf-still" width="1377" height="956" role="img" aria-label="Blockchain Benchmarking Framework landing page: a violet isometric city of buildings and coin icons" hidden></canvas></div>
+          <figcaption class="label"><span class="t">bbf-gui.ddns.net</span><span>Website, animated screen capture, 3.7-second loop</span><span class="note">Landing page of the Blockchain Benchmarking Framework, which it describes as aiming at the deployment and evaluation of different blockchain protocols. It links to BBF Core and BBF UI, and lists the University of Nicosia, Ripple and XRP Ledger as sponsors.</span><button class="play" id="bbf-play" type="button" aria-pressed="false" hidden>Play the recording</button><span class="no">4.02</span></figcaption>
+        </figure>
+        <figure class="work part">
+          <div class="mount"><img src="../../img/portfolio/accelerate.png" width="1910" height="998" loading="lazy" alt="University of Nicosia sign-in page with an email and password form beside an abstract composition of red and black circles"></div>
+          <figcaption class="label"><span class="t">accelerate.unic.ac.cy</span><span>Website, screenshot</span><span class="note">A University of Nicosia sign-in page, captured at the staging address stg.accelerate.unic.ac.cy: an email and password form beside a composition of red and black circles.</span><span class="no">4.03</span></figcaption>
+        </figure>
+        <figure class="work part off">
+          <div class="mount"><img src="../../img/portfolio/metau.unic.ac.cy.png" width="1698" height="943" loading="lazy" alt="University of Nicosia course site headed The future of education is now, with a Connect Wallet button"></div>
+          <figcaption class="label"><span class="t">metau.unic.ac.cy</span><span>Website, screenshot</span><span class="note">A University of Nicosia course site headed “The future of education is now”, with a Connect Wallet button and a section welcoming students to their classroom.</span><span class="no">4.04</span></figcaption>
+        </figure>
+        <figure class="work part">
+          <div class="mount"><img src="../../img/portfolio/celc.web.auth.gr.PNG" width="1600" height="936" loading="lazy" alt="Greek-language website of a centre for European legal culture, with a photograph of a stone arched bridge over a river"></div>
+          <figcaption class="label"><span class="t">celc.web.auth.gr</span><span>Website, screenshot</span><span class="note">The Greek-language site of the Centre for European Legal Culture: logo, a dark navigation bar and a photograph of a stone arched bridge reflected in a river.</span><span class="no">4.05</span></figcaption>
+        </figure>
+        <figure class="work part off">
+          <div class="mount"><img src="../../img/portfolio/eudem.polsci.auth.gr.PNG" width="1896" height="944" loading="lazy" alt="EUDEM Jean Monnet Chair website with a ring of stars logo and a slideshow of flags outside a glass building"></div>
+          <figcaption class="label"><span class="t">eudem.polsci.auth.gr</span><span>Website, screenshot</span><span class="note">The site of the EUDEM Jean Monnet Chair: a ring of stars as its logo, and a slideshow of flags outside a glass building, captioned “Institutions”.</span><span class="no">4.06</span></figcaption>
+        </figure>
+        <figure class="work part">
+          <div class="mount"><img src="../../img/portfolio/marlab.ode.uom.gr.PNG" width="1835" height="917" loading="lazy" alt="MarLab, Marketing Laboratory of the University of Macedonia, homepage with menu, banner image and news column"></div>
+          <figcaption class="label"><span class="t">marlab.ode.uom.gr</span><span>Website, screenshot</span><span class="note">The Marketing Laboratory (MarLab) at the University of Macedonia: a menu with a Log In button, a banner image, a welcome text and a news column.</span><span class="no">4.07</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="room reading" id="reading" aria-labelledby="h-rr">
+    <div class="wrap">
+      <h2 id="h-rr"><span class="room-no">Reading room</span>Papers</h2>
+      <p class="wall-text">Eight papers, most cited first. The 2020 paper introduces VerDe, whose website hangs in room 4.</p>
+      <ol class="cat">
+        <li><span><span class="ti">A process-aware approach for blockchain-based verification of academic qualifications</span><span class="v">Simulation Modelling Practice and Theory 121, 102642. 2022</span></span><span class="lead"></span><span class="n">32<small>citations</small></span></li>
+        <li><span><span class="ti">Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe</span><span class="v">XIV Balkan Conference on Operational Research. 2020</span></span><span class="lead"></span><span class="n">11<small>citations</small></span></li>
+        <li><span><span class="ti">Exploring decentralized governance: a framework applied to Compound Finance</span><span class="v">International Conference on Mathematical Research for Blockchain Economy. 2023</span></span><span class="lead"></span><span class="n">7<small>citations</small></span></li>
+        <li><span><span class="ti">FraMark: a blockchain marketplace for 5G network management using fractional NFTs</span><span class="v">7th World Symposium on Communication Engineering (WSCE). 2024</span></span><span class="lead"></span><span class="n">1<small>citation</small></span></li>
+        <li><span><span class="ti">Data security for smart cities</span><span class="v">2025</span></span><span class="lead"></span><span class="n">1<small>citation</small></span></li>
+        <li><span><span class="ti">Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management</span><span class="v">IEEE ICCE 2025. 2025</span></span><span class="lead"></span><span class="n">0<small>citations</small></span></li>
+        <li><span><span class="ti">Graph embedding and node features for drug-target interaction prediction</span><span class="v">Aristotle University of Thessaloniki, MSc work. 2022</span></span><span class="lead"></span><span class="n">0<small>citations</small></span></li>
+        <li><span><span class="ti">Blockchain in higher education: permissioned and permissionless approaches</span><span class="v">4th Summit on Gender Equality in Computing. 2022</span></span><span class="lead"></span><span class="n">0<small>citations</small></span></li>
+      </ol>
+      <p class="aside">Also on the shelf: two Greek-language theses on verifying academic titles with Ethereum, from 2020 and 2021. The full record is on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="room exit" id="exit" aria-labelledby="h-exit">
+  <div class="wrap">
+    <h2 id="h-exit"><span class="room-no">Exit</span>Enquiries</h2>
+    <p class="wall-text">If you'd like to talk about research, a Web3 build or teaching, email me. I'm in Thessaloniki and work remotely.</p>
+    <p class="mail"><a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a></p>
+    <ul class="elsewhere">
+      <li><a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a></li>
+      <li><a href="https://github.com/gmixoulis">GitHub</a></li>
+      <li><a href="https://twitter.com/GeorgeMicou">X</a></li>
+      <li><a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a></li>
+    </ul>
+    <p class="also">Before you leave: my <a href="../../garden/">Zen Garden</a> of personal notes, and <a href="../../play/">Ledger Run</a>, my résumé as a platform game.</p>
+    <p class="colophon">George Michoulis. Works, 2015–2026.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const ids = ['entrance', 'r1', 'r2', 'r3', 'r4', 'reading', 'exit'];
+  const names = ['at the entrance', 'in room 1, Introduction', 'in room 2, Practice', 'in room 3, Evidence', 'in room 4, Built works', 'in the reading room', 'at the exit'];
+  const dotAt = [[82, 262], [82, 150], [82, 62], [160, 125], [160, 240], [196, 240], [196, 296]];
+  const secs = ids.map(id => document.getElementById(id));
+  const links = document.querySelectorAll('[data-room]');
+  const legs = document.querySelectorAll('.walked path');
+  const dot = document.querySelector('.dot');
+  const status = document.getElementById('status');
+  let cur = -1, queued = false;
+  function update() {
+    queued = false;
+    const mid = innerHeight / 2;
+    let i = 0;
+    secs.forEach((s, k) => { if (s.getBoundingClientRect().top <= mid) i = k; });
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) i = ids.length - 1;
+    if (i === cur) return;
+    cur = i;
+    links.forEach(a => {
+      const here = a.dataset.room === ids[i];
+      a.classList.toggle('here', here);
+      here ? a.setAttribute('aria-current', 'location') : a.removeAttribute('aria-current');
+    });
+    legs.forEach((p, k) => p.classList.toggle('on', k <= i));
+    dot.style.transform = `translate(${dotAt[i][0]}px,${dotAt[i][1]}px)`;
+    status.textContent = `You are ${names[i]}.`;
+  }
+  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+  addEventListener('resize', update);
+  update();
+
+  // The BBF capture is a looping GIF: show its first frame still, play only on request.
+  const gif = document.getElementById('bbf-gif'), still = document.getElementById('bbf-still'), btn = document.getElementById('bbf-play');
+  const freeze = () => {
+    still.getContext('2d').drawImage(gif, 0, 0);
+    gif.hidden = true; still.hidden = false; btn.hidden = false;
+  };
+  gif.complete && gif.naturalWidth ? freeze() : gif.addEventListener('load', freeze, { once: true });
+  btn.addEventListener('click', () => {
+    const on = btn.getAttribute('aria-pressed') !== 'true';
+    btn.setAttribute('aria-pressed', String(on));
+    gif.hidden = !on; still.hidden = on;
+    btn.textContent = on ? 'Stop the recording' : 'Play the recording';
+  });
+})();
+</script>
+</body>
+</html>

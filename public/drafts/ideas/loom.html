@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The loom · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki. A hand loom weaves his work from 2015 to 2026, one row of weft for every month.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Alegreya+SC:wght@500&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<script>
+document.documentElement.classList.add('js');
+// If the loom never boots (no WebGL, CDN blocked), fall back to the text page.
+setTimeout(function(){var r=document.documentElement;if(!r.classList.contains('gl'))r.classList.add('nogl')},9000);
+</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<style>
+:root{--wall:#d6c7ab;--paper:#f3ecdd;--ink:#2b2119;--ink2:#58473a;--accent:#983023;--rule:rgba(43,33,25,.3);--grid:rgba(43,33,25,.055);--hl:rgba(152,48,35,.09);--thread:#5d3f27;
+--halo:0 0 2px var(--wall),0 0 4px var(--wall),0 0 9px var(--wall)}
+@media (prefers-color-scheme:dark){:root{--wall:#17110c;--paper:#221a13;--ink:#f0e5d0;--ink2:#c9b9a0;--accent:#ec9c86;--rule:rgba(240,229,208,.24);--grid:rgba(240,229,208,.045);--hl:rgba(236,156,134,.12);--thread:#dcc49e}}
+*{box-sizing:border-box}
+html{background:var(--wall);color:var(--ink)}
+body{margin:0;font:400 16px/1.5 Alegreya,Georgia,serif;background:var(--wall);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+
+/* corner marks */
+.top{position:fixed;left:0;right:0;top:0;z-index:6;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:12px 20px;pointer-events:none}
+.top>*{pointer-events:auto}
+.back{font-size:13.5px;color:var(--ink2);text-decoration:none;text-shadow:var(--halo)}
+.back:hover{color:var(--ink);text-decoration:underline}
+.mark h1{margin:5px 0 0;font:italic 500 26px/1.05 Alegreya,Georgia,serif;text-shadow:var(--halo)}
+.mark .sub{margin:3px 0 0;font-size:14.5px;color:var(--ink2);text-shadow:var(--halo)}
+.corner{display:flex;flex-direction:column;align-items:flex-end;gap:7px;padding-top:1px}
+.mail{font-size:15px;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-shadow:var(--halo)}
+.tbtn{display:none;background:var(--paper);border:1px solid var(--rule);border-radius:2px;padding:3px 11px 4px;font-size:14px;cursor:pointer}
+.gl .tbtn{display:inline-block}
+.tbtn:hover{border-color:var(--ink)}
+
+/* the workshop */
+#stage{position:fixed;inset:0;overflow:hidden;display:none}
+.gl #stage{display:block}
+#stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 95% at 62% 42%,transparent 55%,rgba(35,20,8,.22))}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;cursor:grab}
+#gl.drag{cursor:grabbing}
+#gl.over{cursor:pointer}
+#threadSvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4;overflow:visible}
+#threadPath{fill:none;stroke:var(--thread);stroke-width:1.4;stroke-linecap:round;opacity:0;transition:opacity .18s}
+.tagon #threadPath{opacity:.9}
+#pins{position:absolute;inset:0;pointer-events:none;z-index:3}
+.pin{position:absolute;left:0;top:0;width:30px;height:30px;margin:-15px 0 0 -15px;padding:0;border:0;border-radius:50%;background:none;pointer-events:auto;cursor:pointer;transition:opacity .25s}
+.pin.off{opacity:0;pointer-events:none}
+.pin svg{position:absolute;inset:0;width:30px;height:30px;overflow:visible}
+.pin path{fill:none;stroke:var(--c);stroke-width:2.6;stroke-linecap:round}
+.pin.paper:hover,.pin.name:hover{box-shadow:0 0 0 1.5px var(--ink2)}
+.chalk{position:absolute;left:0;top:0;z-index:2;font:700 18px/1 Kalam,cursive;color:var(--ink);text-shadow:var(--halo);white-space:nowrap;pointer-events:none;transition:opacity .3s}
+.chalk.off{opacity:0}
+.chalk small{display:block;font:400 13px/1.1 Kalam,cursive;color:var(--ink2)}
+
+/* the paper tag on a thread */
+.tagw{position:absolute;left:0;top:0;z-index:5;pointer-events:none;opacity:0;transition:opacity .16s;filter:drop-shadow(0 2px 2px rgba(30,18,8,.28)) drop-shadow(0 7px 14px rgba(30,18,8,.18))}
+.tagon .tagw{opacity:1}
+.tag{width:max-content;max-width:min(262px,calc(100vw - 36px));padding:10px 15px 11px 29px;color:#2b2119;font:400 15.5px/1.28 Kalam,cursive;
+background:radial-gradient(circle at 13px 50%,#2b2119 0 3.2px,#cdb88f 3.3px 5.6px,transparent 5.8px),linear-gradient(174deg,#f7efdc,#efe3c8);
+clip-path:polygon(15px 0,100% 0,100% 100%,15px 100%,0 50%);transform:rotate(var(--rot,-1.5deg))}
+.tagw.l .tag{padding:10px 29px 11px 15px;clip-path:polygon(0 0,calc(100% - 15px) 0,100% 50%,calc(100% - 15px) 100%,0 100%);
+background:radial-gradient(circle at calc(100% - 13px) 50%,#2b2119 0 3.2px,#cdb88f 3.3px 5.6px,transparent 5.8px),linear-gradient(174deg,#f7efdc,#efe3c8)}
+.tag p{margin:0}
+.tag .th{font-weight:700;line-height:1.2}
+.tag .tm{margin-top:3px;color:#5b4533;font-size:14.5px}
+.tag .tr+.tr{margin-top:7px;padding-top:6px;border-top:1px dashed rgba(43,33,25,.3)}
+
+/* woven end label */
+.endlabel{position:absolute;left:0;top:0;z-index:2;padding:8px 16px 9px;text-align:center;color:#f3e9d2;font:500 15.5px/1.2 'Alegreya SC',Georgia,serif;letter-spacing:.03em;
+background:repeating-linear-gradient(0deg,rgba(255,255,255,.06) 0 1px,transparent 1px 2px),repeating-linear-gradient(90deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px),#283754;
+outline:1px dashed rgba(243,233,210,.45);outline-offset:-4px;box-shadow:0 3px 8px rgba(20,12,4,.35);transition:opacity .4s}
+.endlabel.off{opacity:0;pointer-events:none}
+.endlabel a{color:#fbf3df;text-decoration-thickness:1px;text-underline-offset:3px}
+.endlabel small{display:block;margin-top:3px;font:italic 400 13px/1.2 Alegreya,Georgia,serif;letter-spacing:0;color:#ddd0b4}
+
+/* the draft card */
+.key{position:fixed;left:18px;bottom:18px;z-index:4;width:306px;max-height:calc(100vh - 150px);overflow:auto;display:none;border:1px solid var(--rule);border-radius:2px;
+background:linear-gradient(var(--grid) 1px,transparent 1px) 0 0/8px 8px,linear-gradient(90deg,var(--grid) 1px,transparent 1px) 0 0/8px 8px,var(--paper);box-shadow:0 10px 26px -14px rgba(40,24,10,.45)}
+.gl .key{display:block}
+.key summary{list-style:none;cursor:pointer;padding:11px 15px 7px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.key summary::-webkit-details-marker{display:none}
+.key summary::after{content:"–";color:var(--ink2);font-size:18px;line-height:1}
+.key details:not([open]) summary::after{content:"+"}
+.key h2{margin:0;font:italic 500 20px/1.1 Alegreya,Georgia,serif}
+.kbody{padding:0 15px 13px}
+.key p{margin:.45em 0;font-size:14.5px;line-height:1.38;color:var(--ink2)}
+.bands{list-style:none;margin:.5em 0 .6em;padding:0}
+.bands button{display:flex;align-items:center;gap:9px;width:calc(100% + 8px);margin:0 -4px;padding:3px 4px;border:0;border-radius:2px;background:none;text-align:left;font-size:14.5px;line-height:1.25;cursor:pointer}
+.bands button:hover{background:var(--hl)}
+.sw{flex:none;width:20px;height:12px;border-radius:1px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.2) 0 1px,transparent 1px 3px),repeating-linear-gradient(0deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px),var(--c)}
+.sw.gold{background:linear-gradient(90deg,#8a6a2a,#e8c877 45%,#9c7a33)}
+.bands .yr{margin-left:auto;padding-left:6px;font-size:13.5px;color:var(--ink2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.warpkey{display:flex;gap:3px;margin:.2em 0 .1em}
+.warpkey i{flex:1;height:7px;background:var(--c);border-radius:1px}
+.warpkey+p{margin-top:.25em}
+
+.zoom{position:fixed;right:18px;bottom:18px;z-index:4;display:none;flex-direction:column;gap:7px}
+.gl .zoom{display:flex}
+.zoom button{width:36px;height:36px;border:1px solid var(--rule);border-radius:50%;background:var(--paper);font-size:20px;line-height:1;cursor:pointer}
+.zoom button:hover{border-color:var(--ink)}
+.hint{position:fixed;left:50%;bottom:22px;z-index:3;margin:0;transform:translateX(-50%);display:none;font:italic 400 15.5px/1.3 Alegreya,Georgia,serif;color:var(--ink);text-shadow:var(--halo);white-space:nowrap;transition:opacity .7s;pointer-events:none}
+.gl .hint{display:block}
+.hint.gone{opacity:0}
+.spacer{height:0}
+
+/* the same record as plain text */
+.textview{max-width:700px;margin:0 auto;padding:128px 22px 90px}
+.js .textview{display:none}
+.nogl .textview,.reading .textview{display:block}
+.reading #stage,.reading .key,.reading .zoom,.reading .hint,.reading .spacer,.nogl .spacer{display:none!important}
+.textview h2{margin:0 0 .5em;font:italic 500 32px/1.12 Alegreya,Georgia,serif}
+.textview h3{margin:2em 0 .45em;font:700 20px/1.2 Alegreya,Georgia,serif}
+.textview p,.textview li,.textview dd{max-width:64ch}
+.textview dl{margin:0}
+.textview dt{margin-top:1em;font-weight:700}
+.textview dd{margin:.15em 0 0}
+.textview ul,.textview ol{padding-left:1.2em}
+.textview li{margin:.4em 0}
+.textview .muted{color:var(--ink2)}
+.nogl-msg{display:none}
+.nogl .nogl-msg{display:block}
+.certs{columns:2 260px;column-gap:28px}
+.certs li{break-inside:avoid}
+
+@media (max-width:640px){
+.top{padding:10px 14px}
+.mark h1{font-size:22px}
+.mark .sub{font-size:13.5px;max-width:190px}
+.mail{font-size:14px}
+.tbtn{font-size:13.5px}
+.key{left:12px;bottom:12px;width:calc(100% - 78px);max-height:58vh}
+.zoom{right:12px;bottom:12px}
+.hint{bottom:auto;top:auto;bottom:78px;width:calc(100% - 32px);white-space:normal;text-align:center;font-size:14.5px}
+.textview{padding-top:118px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="mark">
+    <a class="back" href="index.html">← All ideas</a>
+    <h1>George Michoulis</h1>
+    <p class="sub">Blockchain developer and researcher, Thessaloniki</p>
+  </div>
+  <div class="corner">
+    <a class="mail" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+    <button class="tbtn" id="textBtn" type="button" aria-pressed="false" aria-controls="textview">Read as text</button>
+  </div>
+</header>
+
+<main>
+  <div id="stage" role="region" aria-label="A hand loom weaving my work from 2015 to 2026. Scroll or hold Space to weave. The buttons below each open a tag for one band, paper or award on the cloth.">
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <div id="chalk" class="chalk off" aria-hidden="true"></div>
+    <div id="pins"></div>
+    <div class="endlabel off" id="endLabel">
+      <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+      <small>woven in Thessaloniki, 2015 – 2026</small>
+    </div>
+    <svg id="threadSvg" aria-hidden="true"><path id="threadPath" d=""/></svg>
+    <div class="tagw" id="tagw" aria-hidden="true"><div class="tag" id="tag"></div></div>
+  </div>
+
+  <aside class="key" aria-labelledby="keyH">
+    <details open id="keyDetails">
+      <summary><h2 id="keyH">Reading the cloth</h2></summary>
+      <div class="kbody">
+        <p>One row of weft for every month since January 2015. The newest rows are at the reed. Older ones roll onto the beam underneath, and you can drag the cloth to pull them back up.</p>
+        <ul class="bands" id="bands"></ul>
+        <div class="warpkey" aria-hidden="true"><i style="--c:#6d5642"></i><i style="--c:#7394b8"></i><i style="--c:#c47f68"></i><i style="--c:#98a866"></i></div>
+        <p>The four warp stripes are study, research, build and teach, left to right. Each one comes to the surface in the years it was active.</p>
+        <p>Diamonds are papers, bigger with more citations. Gold threads are awards.</p>
+      </div>
+    </details>
+  </aside>
+
+  <div class="zoom" role="group" aria-label="Zoom">
+    <button type="button" id="zin" aria-label="Move closer">+</button>
+    <button type="button" id="zout" aria-label="Step back">−</button>
+  </div>
+  <p class="hint" id="hint">Scroll to weave, or hold Space</p>
+
+  <section class="textview" id="textview" aria-labelledby="tvH">
+    <h2 id="tvH" tabindex="-1">The record, as plain text</h2>
+    <p class="nogl-msg muted">This browser couldn't draw the loom, so here is everything that was woven into the cloth.</p>
+    <p>I live in Thessaloniki, Greece, and work remotely. Since May 2026 I've been a Web3 full-stack developer at Cyberscope by TAC, where I build contracts, on-chain integrations, React and Next front ends, and security tooling.</p>
+
+    <h3>Work</h3>
+    <dl>
+      <dt>Cyberscope by TAC, Web3 full-stack developer, since May 2026</dt>
+      <dd>End-to-end Web3 products: contracts, on-chain integrations, React and Next front ends, security tooling.</dd>
+      <dt>Sidroco Holdings Ltd, blockchain developer and researcher, 2024 to 2026</dt>
+      <dd>An NFT marketplace for 5G networks, Hyperledger Fabric prototypes and an Erasmus+ learning management system.</dd>
+      <dt>University of Derby at Mediterranean College, lecturer and academic partner, 2023 to 2025</dt>
+      <dd>I taught Networks and Security, Web Scripting, and Application Development.</dd>
+      <dt>University of Nicosia / IFF, blockchain and full-stack developer, 2022 to 2024</dt>
+      <dd>Next.js, NestJS and Docker apps, and a Web3 NFT marketplace.</dd>
+    </dl>
+    <p>I've also given public talks on Web3 and edge tech.</p>
+
+    <h3>Study</h3>
+    <dl>
+      <dt>MSc Data and Web Science, Aristotle University of Thessaloniki, 2020 to 2022</dt>
+      <dd>Graph-embedding methods for detecting fraud on blockchains, funded by a DeepMind scholarship.</dd>
+      <dt>BSc Applied Informatics, University of Macedonia, 2015 to 2020</dt>
+      <dd>My thesis was on verifying academic credentials with Ethereum.</dd>
+    </dl>
+
+    <h3>Papers</h3>
+    <ol>
+      <li>A process-aware approach for blockchain-based verification of academic qualifications. <i>Simulation Modelling Practice and Theory</i> 121, 102642, 2022. Cited 32 times.</li>
+      <li>Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe. XIV Balkan Conference on Operational Research, 2020. Cited 11 times.</li>
+      <li>Exploring decentralized governance: a framework applied to Compound Finance. International Conference on Mathematical Research for Blockchain Economy, 2023. Cited 7 times.</li>
+      <li>FraMark: a blockchain marketplace for 5G network management using fractional NFTs. 7th World Symposium on Communication Engineering (WSCE), 2024. Cited once.</li>
+      <li>Data security for smart cities, 2025. Cited once.</li>
+      <li>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management. IEEE ICCE 2025.</li>
+      <li>Graph embedding and node features for drug–target interaction prediction. Aristotle University of Thessaloniki, MSc work, 2022.</li>
+      <li>Blockchain in higher education: permissioned and permissionless approaches. 4th Summit on Gender Equality in Computing, 2022.</li>
+    </ol>
+    <p>Two more theses, in Greek, on verifying academic titles with Ethereum (2020 and 2021). Citation counts come from <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+
+    <h3>Awards</h3>
+    <ul>
+      <li>DeepMind Scholarship, Aristotle University of Thessaloniki, 2020 to 2022</li>
+      <li>Basic Research grant, University of Macedonia, 2020 to 2021</li>
+      <li>Third place, Infinitech Hackathon, run by Crowdpolicy, June 2022</li>
+      <li>Move/Sui Bootcamp award, Thessaloniki, 2025</li>
+    </ul>
+
+    <h3>Sites I built</h3>
+    <p>VerDe at verde.uom.gr, my credential verification system, plus marlab.ode.uom.gr, celc.web.auth.gr, eudem.polsci.auth.gr, metau.unic.ac.cy and bbf-gui.ddns.net.</p>
+
+    <h3>Certificates</h3>
+    <p class="muted">Each title opens the scan.</p>
+    <ul class="certs">
+      <li><a href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg">BSc Applied Informatics degree</a></li>
+      <li><a href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg">MSc Data and Web Science degree</a></li>
+      <li><a href="../../img/renamed/Award_Academic-Achievement.jpg">Award for academic achievement</a></li>
+      <li><a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png">Move bootcamp Thessaloniki award</a></li>
+      <li><a href="../../img/renamed/English-Certificate_English-Certificate-English-Proficiency.jpg">English proficiency certificate</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg">TOEIC listening and reading test</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg">Introduction to digital currencies</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png">Advanced ethical hacking</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg">CCNA, Cisco Certified Network Associate</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png">Cloud engineering</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg">Cybersecurity e-learning academy</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg">Digital skills for tourism</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Discover-Customer.jpg">Discover customer</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png">Entrepreneurship, funding and development of new enterprises</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg">European legal culture program, Aristotle University of Thessaloniki</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg">How to design and build a website</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg">How to get published with IEEE</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg">Machine learning and deep neural networks</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg">NFT Talents program</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png">Networking essentials</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png">Rust developer</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg">Software development for telecommunication networks</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_The-Hour-Of-Code.jpg">The Hour of Code</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg">Blockchain for the legal industry…</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg">Blockchain in education, remote learning, social distancing and…</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg">Data analytics to strengthen healthcare cybersecurity</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_EY-Cyber-Day.jpg">EY Cyber Day</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg">GNU/Linux command line</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg">RippleX workshop launch event</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png">Migma marketing kai brand (in Greek)</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg">Marine educational robotics, Hydrobot program</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg">Processing data in the fog…</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg">SKGCode project, building a real-estate chatbot</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg">VeChain ToolChain, digital transformation of the healthcare industry</a></li>
+    </ul>
+
+    <h3>Elsewhere</h3>
+    <p>Email is quickest: <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>. I'm also on <a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a>, <a href="https://github.com/gmixoulis">GitHub</a> and <a href="https://twitter.com/GeorgeMicou">X</a>. On this site there's a <a href="../../garden/">Zen Garden</a> of notes and <a href="../../play/">Ledger Run</a>, a platformer version of this CV.</p>
+  </section>
+</main>
+<div class="spacer" id="spacer" aria-hidden="true"></div>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const $ = s => document.querySelector(s);
+const root = document.documentElement;
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const DARK = matchMedia('(prefers-color-scheme: dark)');
+const COARSE = matchMedia('(pointer: coarse)').matches;
+const SMALL = () => innerWidth <= 640;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const sstep = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+const hex = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+
+/* ---------------------------------------------------------------------------------------------
+   The draft. One texel column per warp end, one texel row per weft pick, like a weaver's
+   drawdown: RGB is the colour you see at that crossing, A says which thread is on top.
+   A: 255 warp on top · 192 gold warp on top · 128 gold weft on top · 64 brocade float · 0 weft on top
+--------------------------------------------------------------------------------------------- */
+const ENDS = 160, P = 0.0138, W = ENDS * P;          // warp ends, thread pitch (world units)
+const PPM = 4, MONTHS = 141;                         // Jan 2015 – Sep 2026, four picks a month
+const HEM = 6, NAME0 = HEM, NAMEH = 11, MONTH0 = NAME0 + NAMEH + 2;
+const END0 = MONTH0 + MONTHS * PPM, PICKS = END0 + 5;
+const INTRO = MONTH0;                                // the name band weaves itself on arrival
+const TW = ENDS + 1, TH = PICKS + 1;                 // extra column: pick's weft · extra row: warp colours
+const mIdx = (y, mo = 1) => (y - 2015) * 12 + mo - 1;
+const pickOf = m => MONTH0 + m * PPM;
+const monthAt = pk => Math.floor((pk - MONTH0) / PPM);
+const yearAt = pk => (pk < MONTH0 ? null : 2015 + Math.floor(clamp(monthAt(pk), 0, MONTHS - 1) / 12));
+
+const COL = { cream: '#e7ddc4', walnut: '#3a2a1f', label: '#efe4c8', dark: '#2a1d17', mCream: '#f1e8d2', mRed: '#9b2c22', gold: '#cda54f' };
+
+const STRANDS = [
+  { id: 'study', name: 'Study', col: '#6d5642', e0: 14, m0: mIdx(2015), m1: mIdx(2022, 12), yrs: '2015 – 2022', txt: 'A BSc and then an MSc, both in Thessaloniki.' },
+  { id: 'research', name: 'Research', col: '#7394b8', e0: 54, m0: mIdx(2020), m1: mIdx(2026, 12), yrs: '2020 – 2026', txt: 'Papers on credential verification, DeFi governance, 5G marketplaces and graph embeddings.' },
+  { id: 'build', name: 'Build', col: '#c47f68', e0: 94, m0: mIdx(2022), m1: 9999, yrs: 'since 2022', txt: 'Contracts, NFT marketplaces and full-stack apps, first at IFF, now at Cyberscope.' },
+  { id: 'teach', name: 'Teach', col: '#98a866', e0: 134, m0: mIdx(2023), m1: mIdx(2025, 12), yrs: '2023 – 2025', txt: 'Lecturing for the University of Derby at Mediterranean College, plus public talks on Web3 and edge tech.' },
+];
+const STRIPE = 12;
+
+const ROLES = [
+  { id: 'bsc', col: '#d0ae5a', m0: mIdx(2015), m1: mIdx(2020, 12), key: 'BSc, University of Macedonia', org: 'University of Macedonia', what: 'BSc Applied Informatics', yrs: '2015 – 2020', txt: 'My thesis was on verifying academic credentials with Ethereum.' },
+  { id: 'msc', col: '#4a6c9b', m0: mIdx(2020), m1: mIdx(2022, 12), key: 'MSc, Aristotle University', org: 'Aristotle University of Thessaloniki', what: 'MSc Data and Web Science', yrs: '2020 – 2022', txt: 'Graph-embedding methods for detecting fraud on blockchains, on a DeepMind scholarship.' },
+  { id: 'iff', col: '#a4492d', m0: mIdx(2022), m1: mIdx(2024, 12), key: 'University of Nicosia / IFF', org: 'University of Nicosia / IFF', what: 'Blockchain and full-stack developer', yrs: '2022 – 2024', txt: 'Next.js, NestJS and Docker apps, and a Web3 NFT marketplace.' },
+  { id: 'derby', col: '#5e7b47', m0: mIdx(2023), m1: mIdx(2025, 12), key: 'Derby / Mediterranean College', org: 'University of Derby at Mediterranean College', what: 'Lecturer and academic partner', yrs: '2023 – 2025', txt: 'I taught Networks and Security, Web Scripting, and Application Development.' },
+  { id: 'sidroco', col: '#2c3c60', m0: mIdx(2024), m1: mIdx(2026, 12), key: 'Sidroco Holdings', org: 'Sidroco Holdings', what: 'Blockchain developer and researcher', yrs: '2024 – 2026', txt: 'An NFT marketplace for 5G networks, Hyperledger Fabric prototypes and an Erasmus+ learning management system.' },
+  { id: 'cyber', col: '#b53a2b', m0: mIdx(2026, 5), m1: 9999, key: 'Cyberscope by TAC', org: 'Cyberscope by TAC', what: 'Web3 full-stack developer', yrs: 'since May 2026', txt: 'Contracts, on-chain integrations, React and Next front ends, security tooling.' },
+];
+
+// citations c (null for the Greek theses); u = where across the cloth the diamond sits
+const PAPERS = [
+  { y: 2020, c: 11, u: .5, t: 'Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe', v: 'XIV Balkan Conference on Operational Research' },
+  { y: 2020, c: null, u: .8, t: 'Thesis in Greek on verifying academic titles with Ethereum', v: 'Written in Greek' },
+  { y: 2021, c: null, u: .5, t: 'Second thesis in Greek on verifying academic titles with Ethereum', v: 'Written in Greek' },
+  { y: 2022, c: 32, u: .5, t: 'A process-aware approach for blockchain-based verification of academic qualifications', v: 'Simulation Modelling Practice and Theory 121, 102642' },
+  { y: 2022, c: 0, u: .22, t: 'Graph embedding and node features for drug–target interaction prediction', v: 'Aristotle University of Thessaloniki, MSc work' },
+  { y: 2022, c: 0, u: .78, t: 'Blockchain in higher education: permissioned and permissionless approaches', v: '4th Summit on Gender Equality in Computing' },
+  { y: 2023, c: 7, u: .5, t: 'Exploring decentralized governance: a framework applied to Compound Finance', v: 'Intl. Conference on Mathematical Research for Blockchain Economy' },
+  { y: 2024, c: 1, u: .5, t: 'FraMark: a blockchain marketplace for 5G network management using fractional NFTs', v: '7th World Symposium on Communication Engineering' },
+  { y: 2025, c: 1, u: .34, t: 'Data security for smart cities', v: null },
+  { y: 2025, c: 0, u: .66, t: 'Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management', v: 'IEEE ICCE 2025' },
+];
+PAPERS.forEach(p => {
+  p.r = p.c == null ? 2 : Math.round(2 + 7 * Math.sqrt(p.c / 32));
+  p.cp = pickOf(mIdx(p.y, 9)) + 2;                     // diamonds sit late in their year, clear of the gold picks
+  p.ce = Math.round(p.u * (ENDS - 1));
+});
+
+// span awards float gold on a selvedge through their years; every award starts with two gold picks
+const AWARDS = [
+  { id: 'deepmind', span: true, side: 1, m0: mIdx(2020), m1: mIdx(2022, 12), at: mIdx(2020), t: 'DeepMind Scholarship', o: 'Aristotle University of Thessaloniki', yrs: '2020 – 2022' },
+  { id: 'grant', span: true, side: 0, m0: mIdx(2020), m1: mIdx(2021, 12), at: mIdx(2020, 3), t: 'Basic Research grant', o: 'University of Macedonia', yrs: '2020 – 2021' },
+  { id: 'hack', span: false, at: mIdx(2022, 6), t: 'Third place, Infinitech Hackathon', o: 'Run by Crowdpolicy', yrs: 'June 2022' },
+  { id: 'sui', span: false, at: mIdx(2025, 4), t: 'Move/Sui Bootcamp award', o: 'Thessaloniki', yrs: '2025' },
+];
+const goldPick = new Map();
+AWARDS.forEach(a => { a.gold = [pickOf(a.at) + 1, pickOf(a.at) + 2]; a.gold.forEach(j => goldPick.set(j, a)); });
+
+// 5×7 jacquard alphabet, just the letters of the name
+const GLYPH = {
+  G: ['.###.', '#...#', '#....', '#.###', '#...#', '#...#', '.###.'], E: ['#####', '#....', '#....', '####.', '#....', '#....', '#####'],
+  O: ['.###.', '#...#', '#...#', '#...#', '#...#', '#...#', '.###.'], R: ['####.', '#...#', '#...#', '####.', '#.#..', '#..#.', '#...#'],
+  M: ['#...#', '##.##', '#.#.#', '#.#.#', '#...#', '#...#', '#...#'], I: ['.###.', '..#..', '..#..', '..#..', '..#..', '..#..', '.###.'],
+  C: ['.###.', '#...#', '#....', '#....', '#....', '#...#', '.###.'], H: ['#...#', '#...#', '#...#', '#####', '#...#', '#...#', '#...#'],
+  U: ['#...#', '#...#', '#...#', '#...#', '#...#', '#...#', '.###.'], L: ['#....', '#....', '#....', '#....', '#....', '#....', '#####'],
+  S: ['.###.', '#...#', '#....', '.###.', '....#', '#...#', '.###.'], ' ': ['...', '...', '...', '...', '...', '...', '...'],
+};
+const nameRows = Array.from({ length: 7 }, (_, r) => [...'GEORGE MICHOULIS'].map(ch => GLYPH[ch][r]).join('.'));
+const NW = nameRows[0].length, NX0 = Math.floor((ENDS - NW) / 2);
+
+const strandOfEnd = new Int8Array(ENDS).fill(-1);
+const warpHex = Array(ENDS).fill(COL.cream);
+STRANDS.forEach((s, k) => { for (let e = s.e0; e < s.e0 + STRIPE; e++) { strandOfEnd[e] = k; warpHex[e] = s.col; } });
+[0, 1, ENDS - 2, ENDS - 1].forEach(e => { warpHex[e] = COL.gold; });
+
+const rolesAt = m => ROLES.filter(r => m >= r.m0 && m <= r.m1);
+const draft = new Uint8Array(TW * TH * 4);
+const put = (e, j, rgb, a) => { const i = (j * TW + e) * 4; draft[i] = rgb[0]; draft[i + 1] = rgb[1]; draft[i + 2] = rgb[2]; draft[i + 3] = a; };
+const mixRGB = (a, b, t) => [0, 1, 2].map(i => Math.round(a[i] + (b[i] - a[i]) * t));
+const pickWeft = [], pickTwill = [];
+for (let j = 0; j < PICKS; j++) {
+  let kind = 'hem', weft = COL.cream, twill = false, m = -1;
+  if (j >= NAME0 && j < NAME0 + NAMEH) { kind = 'name'; weft = COL.walnut; }
+  else if (j >= MONTH0 && j < END0) { kind = 'month'; m = monthAt(j); const rs = rolesAt(m); weft = rs[j % rs.length].col; twill = rs.length > 1; }
+  const gold = goldPick.has(j);
+  if (gold) weft = COL.gold;
+  pickWeft[j] = weft; pickTwill[j] = twill;
+  const wRGB = hex(weft);
+  for (let e = 0; e < ENDS; e++) {
+    const k = strandOfEnd[e], ph = (e + j) % 4, edge = e < 2 || e >= ENDS - 2;
+    let top = twill ? ph < 2 : (e + j) % 2 === 0;               // plain weave alone, 2/2 twill where roles overlap
+    if (k >= 0 && kind === 'month') { const s = STRANDS[k]; top = m >= s.m0 && m <= s.m1 ? ph !== 0 : ph === 0; }
+    if (edge) top = kind === 'month' && AWARDS.some(a => a.span && a.side === (e < 2 ? 0 : 1) && m >= a.m0 && m <= a.m1);
+    if (gold) top = false;
+    if (kind === 'name') {
+      const r = j - NAME0 - 2, c = e - NX0;
+      const on = r >= 0 && r < 7 && c >= 0 && c < NW && nameRows[6 - r][c] === '#';
+      put(e, j, hex(on ? COL.label : COL.walnut), 0);
+    } else if (top) {
+      const wc = hex(warpHex[e]);
+      put(e, j, k >= 0 || edge || kind !== 'month' ? wc : mixRGB(wc, wRGB, .45), edge ? 192 : 255);
+    } else put(e, j, wRGB, gold ? 128 : 0);
+  }
+  put(ENDS, j, wRGB, gold ? 128 : 0);
+}
+for (let e = 0; e < ENDS; e++) put(e, PICKS, hex(warpHex[e]), 255);
+put(ENDS, PICKS, hex(COL.cream), 255);
+PAPERS.forEach(p => {
+  for (let dy = -p.r; dy <= p.r; dy++) for (let dx = -p.r; dx <= p.r; dx++) {
+    const d = Math.abs(dx) + Math.abs(dy); if (d > p.r) continue;
+    const ring = (p.r - d) % 3;
+    put(p.ce + dx, p.cp + dy, hex(ring === 0 ? COL.dark : ring === 1 ? COL.mCream : COL.mRed), 64);
+  }
+});
+
+/* ---------------------------------------------------------------------------------------------
+   What the tags say. Every item knows its rows (p0..p1), where to pin it and its facts.
+--------------------------------------------------------------------------------------------- */
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const cites = c => c == null ? '' : c === 0 ? 'No citations yet' : c === 1 ? 'Cited once' : `Cited ${c} times`;
+const ITEMS = [];
+const NAMEITEM = { kind: 'name', p0: NAME0, p1: NAME0 + NAMEH, pc: NAME0 + 5, u: .5, e0: NX0, e1: NX0 + NW,
+  html: '<p class="th">George Michoulis</p><p>Thessaloniki, Greece, working remotely</p><p class="tm">The first rows on the loom</p>',
+  aria: 'George Michoulis, woven into the first rows. Thessaloniki, Greece, working remotely.' };
+ITEMS.push(NAMEITEM);
+ROLES.forEach(r => {
+  r.item = { kind: 'role', role: r, p0: pickOf(r.m0), p1: pickOf(Math.min(r.m1, MONTHS - 1) + 1), pc: pickOf(r.m0) + 2, u: 0, e0: 0, e1: ENDS, c: r.col,
+    html: `<p class="th">${esc(r.org)}</p><p>${esc(r.what)}, ${r.yrs}</p><p class="tm">${esc(r.txt)}</p>`,
+    aria: `${r.org}, ${r.what}, ${r.yrs}. ${r.txt}` };
+  ITEMS.push(r.item);
+});
+[...PAPERS].sort((a, b) => a.y - b.y || a.u - b.u).forEach(p => {
+  p.item = { kind: 'paper', paper: p, p0: p.cp - p.r, p1: p.cp + p.r + 1, pc: p.cp, u: (p.ce + .5) / ENDS, e0: p.ce - p.r, e1: p.ce + p.r + 1,
+    html: `<p class="th">${esc(p.t)}</p><p class="tm">${[p.v, p.y].filter(Boolean).map(String).map(esc).join(', ')}${p.c == null ? '' : '. ' + cites(p.c)}</p>`,
+    aria: `Paper, ${p.y}: ${p.t}. ${p.v ? p.v + '. ' : ''}${cites(p.c)}` };
+  ITEMS.push(p.item);
+});
+AWARDS.forEach(a => {
+  a.item = { kind: 'award', award: a, p0: a.gold[0], p1: a.gold[1] + 1, pc: a.gold[0], u: a.side === 0 ? 0 : 1, e0: 0, e1: ENDS, c: '#c9a14a',
+    html: `<p class="th">${esc(a.t)}</p><p>${esc(a.o)}, ${a.yrs}</p><p class="tm">${a.span ? 'Gold weft where it began, and a gold selvedge through its years' : 'Two gold picks'}</p>`,
+    aria: `Award: ${a.t}, ${a.o}, ${a.yrs}.` };
+  ITEMS.push(a.item);
+});
+STRANDS.forEach(s => {
+  s.item = { kind: 'strand', p0: pickOf(s.m0), p1: pickOf(Math.min(s.m1, MONTHS - 1) + 1), pc: pickOf(s.m0) + 2, u: (s.e0 + STRIPE / 2) / ENDS, e0: s.e0, e1: s.e0 + STRIPE,
+    html: `<p class="th">${s.name}, ${s.yrs}</p><p class="tm">${esc(s.txt)}</p>` };
+});
+// hovering an overlap shows every role woven into that month
+const monthCache = new Map();
+function monthItem(m) {
+  const rs = rolesAt(m), key = rs.map(r => r.id).join('+');
+  if (rs.length === 1) return rs[0].item;
+  if (!monthCache.has(key)) {
+    let a = m, b = m;
+    while (a > 0 && rolesAt(a - 1).map(r => r.id).join('+') === key) a--;
+    while (b < MONTHS - 1 && rolesAt(b + 1).map(r => r.id).join('+') === key) b++;
+    monthCache.set(key, { kind: 'overlap', p0: pickOf(a), p1: pickOf(b + 1), pc: pickOf(a) + 2, u: 0, e0: 0, e1: ENDS,
+      html: rs.map(r => `<div class="tr"><p class="th">${esc(r.org)}</p><p>${esc(r.what)}, ${r.yrs}</p></div>`).join('') });
+  }
+  return monthCache.get(key);
+}
+function itemAt(e, pk) {
+  const j = Math.floor(pk);
+  if (j < 0 || j >= PICKS) return null;
+  for (const p of PAPERS) if (Math.abs(e - p.ce - .5) + Math.abs(pk - p.cp - .5) <= p.r + 1) return p.item;
+  if (goldPick.has(j)) return goldPick.get(j).item;
+  const m = monthAt(j);
+  if (j >= MONTH0 && j < END0) for (const a of AWARDS)
+    if (a.span && (a.side === 0 ? e < 2.5 : e > ENDS - 2.5) && m >= a.m0 && m <= a.m1) return a.item;
+  if (j >= NAME0 && j < NAME0 + NAMEH) return NAMEITEM;
+  if (j < MONTH0 || j >= END0) return null;
+  const k = strandOfEnd[clamp(Math.floor(e), 0, ENDS - 1)];
+  if (k >= 0 && m >= STRANDS[k].m0 && m <= STRANDS[k].m1) return STRANDS[k].item;
+  return monthItem(m);
+}

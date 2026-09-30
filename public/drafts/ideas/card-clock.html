@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Card on Thessaloniki time · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki. A card whose light follows the clock in Thessaloniki.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..600;1,8..60,300..500&display=swap" rel="stylesheet">
+<script>
+/* Runs before first paint so the card never flashes the wrong light.
+   Test hooks: ?hour=0..23 and ?day=mon..sun override the Athens clock. */
+(() => {
+  const q = new URLSearchParams(location.search);
+  const qh = parseInt(q.get('hour'), 10);
+  const qd = {mon:'Monday',tue:'Tuesday',wed:'Wednesday',thu:'Thursday',fri:'Friday',sat:'Saturday',sun:'Sunday'}[(q.get('day') || '').slice(0, 3).toLowerCase()];
+  const fmt = new Intl.DateTimeFormat('en-GB', {timeZone: 'Europe/Athens', weekday: 'long', hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZoneName: 'shortOffset'});
+  const root = document.documentElement;
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
+  const isDark = h => h >= 19 || h < 7;
+  let mode = 'auto';
+
+  function athens() {
+    const p = {};
+    for (const x of fmt.formatToParts(new Date())) p[x.type] = x.value;
+    const h = qh >= 0 && qh < 24 ? qh : +p.hour;
+    return {h, time: String(h).padStart(2, '0') + ':' + p.minute, day: qd || p.weekday, tz: p.timeZoneName};
+  }
+
+  function setTheme(t, fade) {
+    if (root.dataset.theme === t) return false;
+    const go = () => { root.dataset.theme = t; };
+    if (fade && document.startViewTransition && !calm.matches) document.startViewTransition(go);
+    else go();
+    return true;
+  }
+  setTheme(isDark(athens().h) ? 'dark' : 'light', false);
+
+  function render() {
+    const t = athens(), $ = s => document.querySelector(s);
+    const weekend = t.day === 'Saturday' || t.day === 'Sunday';
+    const night = t.h >= 23 || t.h < 7;
+    const time = $('.clock time');
+    time.textContent = time.dateTime = t.time;
+    $('.clock .on').textContent = weekend ? ' on ' + t.day : '';
+    $('.clock .state').textContent =
+      night ? (weekend ? "I'm probably asleep, and it's the weekend; replies may wait until Monday."
+                       : "I'm probably asleep; email me and I'll reply in the morning.")
+      : weekend ? "I'm probably away from my desk; replies may wait until Monday."
+      : t.h < 10 ? "I'm probably starting the day with email. Replies within a day."
+      : t.h < 19 ? "I'm probably working. Replies within a day."
+      : "I've probably stopped working for the day. Replies within a day.";
+    $('.tz').textContent = t.tz;
+    if (mode === 'auto' && setTheme(isDark(t.h) ? 'dark' : 'light', true))
+      $('#announce').textContent = isDark(t.h) ? 'Evening in Thessaloniki: the card switched to dark.' : 'Morning in Thessaloniki: the card switched to light.';
+  }
+  function loop() { render(); setTimeout(loop, 60500 - Date.now() % 60000); }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('.clock[hidden]').hidden = false;
+    document.querySelector('.fallback').hidden = true;
+    loop();
+    document.addEventListener('visibilitychange', () => document.hidden || render());
+    for (const r of document.querySelectorAll('input[name=light]'))
+      r.addEventListener('change', () => { mode = r.value; setTheme(mode === 'auto' ? (isDark(athens().h) ? 'dark' : 'light') : mode, true); });
+    const more = document.getElementById('more');
+    document.querySelector('a[href="#cv"]').addEventListener('click', () => { more.open = true; });
+    if (location.hash === '#cv' || location.hash === '#certificates') more.open = true;
+    if (location.hash === '#certificates') document.getElementById('certificates').open = true;
+  });
+})();
+</script>
+<style>
+:root{
+  --ground:#e8e7e3;--card:#fff;--ink:#0a0a0a;--muted:#5c5c5c;--rule:#dcdad5;--uline:#a8a59f;--accent:#c43c2c;
+  --edge:rgb(0 0 0/.06);--shadow:0 1px 1px rgb(0 0 0/.04),0 24px 48px -24px rgb(40 30 20/.38);
+  color-scheme:light;
+}
+[data-theme=dark]{
+  --ground:#0a0a0a;--card:#161514;--ink:#f2f0eb;--muted:#a5a29c;--rule:#2f2e2b;--uline:#5d5b56;--accent:#d9523f;
+  --edge:#252422;--shadow:0 32px 64px -28px #000;
+  color-scheme:dark;
+}
+[data-theme=dark] body{font-weight:370}
+[data-theme=dark] .card h1{font-weight:400}
+*{box-sizing:border-box}
+html{background:var(--ground)}
+body{
+  margin:0;min-height:100svh;display:flex;flex-direction:column;
+  background:var(--ground);color:var(--ink);
+  font:400 1.0625rem/1.5 "Source Serif 4",Georgia,serif;
+  --w:min(47rem,calc(100vw - 2rem));--pad:3.25rem;
+}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:1px}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+header{padding:1.25rem 1.5rem}
+.back{font-size:.875rem;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--ink);text-decoration:underline;text-underline-offset:.2em}
+
+main{flex:1;display:flex;flex-direction:column;align-items:center;padding:clamp(1rem,9vh,6rem) 0 3rem}
+
+/* The card: ID-1 proportions, landscape on wide screens, portrait on phones */
+.card{
+  width:var(--w);aspect-ratio:85.6/54;
+  background:var(--card);border-radius:2px;box-shadow:0 0 0 1px var(--edge),var(--shadow);
+  padding:var(--pad) var(--pad) calc(var(--pad)*.72);
+  display:grid;column-gap:2rem;
+  grid-template-columns:1fr auto;
+  grid-template-rows:auto auto 1fr auto auto;
+  grid-template-areas:"name place" "line line" ". ." "mail links" "clock clock";
+}
+.card h1{
+  grid-area:name;margin:0;
+  font-size:4.25rem;font-weight:430;line-height:.96;letter-spacing:-.025em;
+  font-variation-settings:"opsz" 60;
+}
+.place{grid-area:place;margin:.4rem 0 0;text-align:right;font-size:.875rem;line-height:1.5;color:var(--muted)}
+.line span{display:block;text-wrap:balance}
+.line{grid-area:line;margin:1.25rem 0 0;max-width:25em;font-size:1.25rem;line-height:1.4;color:var(--muted);font-variation-settings:"opsz" 20}
+.mail{
+  grid-area:mail;align-self:end;justify-self:start;
+  font-size:1.5rem;letter-spacing:-.01em;line-height:1.2;font-variation-settings:"opsz" 30;
+  text-decoration:underline;text-decoration-color:var(--accent);
+  text-decoration-thickness:1.5px;text-underline-offset:.24em;
+}
+.mail:hover{text-decoration-thickness:2.5px}
+.links{grid-area:links;align-self:end;display:flex;gap:1.35rem;margin:0;padding:0 0 .15rem;list-style:none;font-size:1rem}
+.links a{text-decoration:underline;text-decoration-color:var(--uline);text-decoration-thickness:1px;text-underline-offset:.28em}
+.links a:hover{text-decoration-color:var(--accent)}
+.clock{
+  grid-area:clock;margin:1.6rem 0 0;padding-top:.95rem;border-top:1px solid var(--rule);
+  font-size:1rem;line-height:1.45;font-style:italic;color:var(--muted);
+}
+.clock .at{font-style:normal;color:var(--ink)}
+.clock time{font-variant-numeric:tabular-nums lining-nums}
+
+/* One quiet click deeper */
+.more{width:var(--w);padding:0 var(--pad)}
+.more>summary{
+  list-style:none;cursor:pointer;display:inline-flex;align-items:baseline;gap:.6rem;
+  margin-top:1.4rem;padding:.3rem 0;
+}
+.more>summary::-webkit-details-marker{display:none}
+.more>summary::before{content:"+";display:inline-block;width:.7em;color:var(--accent);font-size:1.15em;line-height:1}
+.more[open]>summary::before{content:"\2212"}
+.more>summary .hint{color:var(--muted);font-style:italic}
+.more>summary:hover .word{text-decoration:underline;text-underline-offset:.22em;text-decoration-color:var(--accent)}
+
+.cv{scroll-margin-top:4.5rem;display:grid;grid-template-columns:1fr 1fr;gap:0 3rem;padding:1.5rem 0 .5rem}
+.cv section+section{margin-top:2rem}
+.cv h2{margin:0 0 .6rem;font-size:1rem;font-weight:400;font-style:italic;color:var(--muted)}
+.cv p{margin:0}
+.cv ol,.cv ul{list-style:none;margin:0;padding:0}
+.cv li{margin:0 0 .85rem;line-height:1.4}
+.yr{display:block;font-size:.875rem;color:var(--muted);font-variant-numeric:tabular-nums lining-nums}
+.d{display:block;font-size:.9375rem;color:var(--muted)}
+.cv a{text-decoration-color:var(--uline);text-underline-offset:.22em}
+.cv a:hover{text-decoration-color:var(--accent)}
+.cites{font-variant-numeric:lining-nums}
+
+.certs{grid-column:1/-1;margin-top:1.5rem;border-top:1px solid var(--rule);padding-top:1rem}
+.certs>summary{cursor:pointer;display:flex;align-items:baseline;gap:.6rem;padding:.2rem 0;list-style:none}
+.certs>summary::-webkit-details-marker{display:none}
+.certs>summary::before{content:"+";width:.7em;color:var(--accent)}
+.certs[open]>summary::before{content:"\2212"}
+.certs>summary h2{margin:0;font-size:1.0625rem;font-style:normal;color:var(--ink)}
+.certs>summary .hint{color:var(--muted);font-style:italic}
+.cert-cols{columns:2;column-gap:3rem;margin-top:1rem}
+.cert-cols h3{margin:0 0 .5rem;font-size:.9375rem;font-weight:400;font-style:italic;color:var(--muted);break-after:avoid}
+.cert-cols ol+h3{margin-top:1.4rem}
+.cert-cols li{break-inside:avoid;margin:0 0 .4rem;font-size:.9375rem;line-height:1.35}
+.elsewhere{grid-column:1/-1;margin-top:1.75rem}
+
+footer{
+  width:var(--w);margin:0 auto;padding:1.25rem var(--pad) 1.75rem;
+  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.5rem 2rem;
+  font-size:.875rem;color:var(--muted);
+}
+footer p{margin:0}
+.opts{display:flex;gap:.2rem;margin-right:-.5rem}
+.opts label{position:relative;padding:.3rem .5rem;cursor:pointer;border-radius:1px}
+.opts input{position:absolute;inset:0;margin:0;opacity:0;cursor:pointer}
+.opts label:has(:checked){color:var(--ink);text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:1.5px;text-underline-offset:.3em}
+.opts label:hover{color:var(--ink)}
+.opts label:has(:focus-visible){outline:2px solid var(--accent);outline-offset:1px}
+
+/* Signature: a slow cross-fade, like light changing in a room */
+::view-transition-old(root),::view-transition-new(root){animation-duration:.6s;animation-timing-function:cubic-bezier(.4,0,.2,1)}
+@media (prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root){animation:none}}
+
+/* Phones: the card turns portrait */
+@media (max-width:44rem){
+  body{--w:min(24rem,calc(100vw - 2rem));--pad:1.75rem}
+  header{padding:1rem}
+  main{padding:.5rem 0 1rem}
+  .card{
+    aspect-ratio:54/85.6;padding-bottom:calc(var(--pad)*.8);
+    grid-template-columns:1fr;
+    grid-template-rows:auto auto auto 1fr auto auto auto;
+    grid-template-areas:"place" "name" "line" "." "mail" "links" "clock";
+  }
+  .place{margin:0 0 2.1rem;text-align:left;font-size:.8125rem}
+  .card h1{font-size:3.3rem}
+  .line{font-size:1.125rem;margin-top:1rem}
+  .mail{font-size:1.3rem}
+  .links{margin-top:.9rem;gap:1.1rem}
+  .clock{margin-top:1.3rem;font-size:.9375rem}
+  .cv{grid-template-columns:1fr}
+  .cv>div+div{margin-top:1.15rem}
+  .cert-cols{columns:1}
+  footer{flex-direction:column;align-items:flex-start;padding:1rem var(--pad) 1.25rem}
+  .opts{margin-left:-.5rem}
+}
+</style>
+</head>
+<body>
+<header><a class="back" href="index.html">← All ideas</a></header>
+
+<main>
+  <div class="card">
+    <h1>George Michoulis</h1>
+    <p class="place">Thessaloniki, Greece<br>Working remotely · <span class="tz">Athens time</span></p>
+    <p class="line"><span>Blockchain developer and researcher.</span> <span>Smart contracts,&nbsp;graph&nbsp;ML, full-stack&nbsp;Web3.</span></p>
+    <a class="mail" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+    <ul class="links" aria-label="Profiles">
+      <li><a href="https://github.com/gmixoulis">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a></li>
+      <li><a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Scholar</a></li>
+      <li><a href="#cv">CV</a></li>
+    </ul>
+    <p class="clock" hidden><span class="at">It's <time>--:--</time><span class="on"></span> in Thessaloniki.</span> <span class="state"></span></p>
+    <p class="clock fallback">I live in Thessaloniki, on Athens time. Replies within a day.</p>
+  </div>
+
+  <details class="more" id="more">
+    <summary><span class="word">More</span> <span class="hint">work, study, papers</span></summary>
+    <div class="cv" id="cv">
+      <div>
+        <section>
+          <h2>Now</h2>
+          <p>Since May 2026 I've been a Web3 full-stack developer at Cyberscope by TAC. I build Web3 products end to end: contracts, on-chain integrations, React and Next frontends, and security tooling.</p>
+        </section>
+        <section>
+          <h2>Work</h2>
+          <ol>
+            <li><span class="yr">2026 – now</span>Web3 full-stack developer, Cyberscope by TAC</li>
+            <li><span class="yr">2024 – 2026</span>Blockchain developer and researcher, Sidroco Holdings Ltd<span class="d">An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ LMS</span></li>
+            <li><span class="yr">2023 – 2025</span>Lecturer and academic partner, University of Derby / Mediterranean College<span class="d">Networks and security, web scripting, application development</span></li>
+            <li><span class="yr">2022 – 2024</span>Blockchain and full-stack developer, University of Nicosia / IFF<span class="d">Next.js, NestJS and Docker apps, and a Web3 NFT marketplace</span></li>
+          </ol>
+        </section>
+      </div>
+      <div>
+        <section>
+          <h2>Study</h2>
+          <ol>
+            <li><span class="yr">2020 – 2022</span>MSc Data and Web Science, Aristotle University of Thessaloniki<span class="d">DeepMind scholarship. Graph embeddings for blockchain fraud detection.</span></li>
+            <li><span class="yr">2015 – 2020</span>BSc Applied Informatics, University of Macedonia<span class="d">Thesis on verifying academic credentials with Ethereum</span></li>
+          </ol>
+        </section>
+        <section>
+          <h2>Most-cited papers</h2>
+          <ol>
+            <li>A process-aware approach for blockchain-based verification of academic qualifications<span class="d">Simulation Modelling Practice and Theory, 2022 · <span class="cites">32</span> citations</span></li>
+            <li>Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe<span class="d">XIV Balkan Conference on Operational Research, 2020 · <span class="cites">11</span> citations</span></li>
+            <li>Exploring decentralized governance: a framework applied to Compound Finance<span class="d">Mathematical Research for Blockchain Economy, 2023 · <span class="cites">7</span> citations</span></li>
+          </ol>
+          <p>The rest are on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+        </section>
+      </div>
+      <details class="certs" id="certificates">
+        <summary><h2>34 certificates</h2> <span class="hint">the original scans</span></summary>
+        <div class="cert-cols">
+          <h3>Degrees and awards</h3>
+          <ol>
+            <li><a href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg">Master Degree, Data and Web Science</a></li>
+            <li><a href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg">Bachelor Degree, Computer Science</a></li>
+            <li><a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png">Move Bootcamp Thessaloniki</a></li>
+            <li><a href="../../img/renamed/Award_Academic-Achievement.jpg">Academic Achievement</a></li>
+          </ol>
+          <h3>Courses and tests completed</h3>
+          <ol>
+            <li><a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg">Introduction to Digital Currencies</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg">TOEIC Listening Reading Test</a></li>
+            <li><a href="../../img/renamed/English-Certificate_English-Certificate-English-Proficiency.jpg">English Proficiency</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png">Advanced Ethical Hacking</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg">Aristoteleio University of Thessaloniki European Legal Culture Program</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg">CCNA Cisco Certified Network Associate</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png">Cloud Engineering</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg">Cybersecurity ELearning Academy</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg">Digital Skills for Tourism</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_Discover-Customer.jpg">Discover Customer</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png">Entrepreneurship Funding and Development of New Enterprises</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg">How to Design Build a Website</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg">How to Get Published with IEEE</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg">Machine Learning and Deep Neural Networks</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg">NFT Talents Program</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png">Networking Essentials</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png">Rust Developer</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg">Software Development for Telecommunication Networks</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Completion_The-Hour-Of-Code.jpg">The Hour of Code</a></li>
+          </ol>
+          <h3>Certificates of participation</h3>
+          <ol>
+            <li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg">Blockchain for the Legal Industry: How Is the…</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg">Blockchain in Education: Remote Learning, Social Distancing and…</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg">Data Analytics to Strengthen Healthcare Cybersecurity</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Participation_EY-Cyber-Day.jpg">EY Cyber Day</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg">GNU/Linux Command Line</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg">Launch Event RippleX Workshop</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png">MIGMA Marketing kai Brand</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg">Marine Educational Robotics Hydrobot Program</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg">Processing Data in the Fog: the Example of…</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg">Skgcode Project Creation of a Real Estate Chatbot</a></li>
+            <li><a href="../../img/renamed/Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg">VeChain ToolChain Digital Transformation of the Healthcare Industry</a></li>
+          </ol>
+        </div>
+      </details>
+      <section class="elsewhere">
+        <h2>Elsewhere</h2>
+        <p>I keep notes in a <a href="../../garden/">Zen garden</a>, and <a href="../../play/">Ledger Run</a> is this CV as a small platformer.</p>
+      </section>
+    </div>
+  </details>
+</main>
+
+<footer>
+  <p id="light-note">The light on this card follows the clock in Thessaloniki, not your device.</p>
+  <div class="opts" role="radiogroup" aria-labelledby="light-note">
+    <label><input type="radio" name="light" value="light">Light</label>
+    <label><input type="radio" name="light" value="dark">Dark</label>
+    <label><input type="radio" name="light" value="auto" checked>Thessaloniki</label>
+  </div>
+  <p id="announce" class="sr" aria-live="polite"></p>
+</footer>
+</body>
+</html>

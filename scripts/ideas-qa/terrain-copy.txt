@@ -1,0 +1,275 @@
+=== MAP MODE (visible text) ===
+← All ideas
+George Michoulis
+
+A survey of 2015 – 2026
+
+Blockchain developer and researcher in Thessaloniki. This relief is plotted from my record: each paper is a peak as tall as its citations.
+
+gmixoulis@gmail.com
+Read as text
+Now: Cyberscope by TAC
+Web3 full-stack developer, since 05/2026
+gmixoulis@gmail.com
+Process-aware verification
+32 citations · 2022
+VerDe on Ethereum
+11 citations · 2020
+Decentralized governance
+7 citations · 2023
+FraMark
+1 citation · 2024
+Data security for smart cities
+1 citation · 2025
+5G network slicing survey
+0 citations · 2025
+Graph embedding for drug–target interaction
+0 citations · 2022
+Blockchain in higher education
+0 citations · 2022
+Sidroco Holdings
+2024 – 2026
+University of Nicosia · IFF
+2022 – 2024
+Mediterranean College
+University of Derby · 2023 – 2025
+BSc Applied Informatics
+University of Macedonia, 2015 – 2020
+MSc Data and Web Science
+Aristotle University of Thessaloniki, 2020 – 2022
+DeepMind Scholarship
+Aristotle University of Thessaloniki, 2020 – 2022
+Basic Research grant
+University of Macedonia, 2020 – 2021
+Infinitech Hackathon, 3rd place
+Crowdpolicy, June 2022
+Move/Sui Bootcamp award
+Thessaloniki, 2025
+unsurveyed
+Bachelor Degree Computer Science
+Cairn 1 of 34 · Bachelor Degree
+Master Degree Data And Web Science
+Cairn 2 of 34 · Master Degree
+Academic Achievement
+Cairn 3 of 34 · Award
+Introduction To Digital Currencies
+Cairn 4 of 34 · Certificate of Achievement
+TOEIC Listening Reading Test
+Cairn 5 of 34 · Certificate of Achievement
+Advanced Ethical Hacking
+Cairn 6 of 34 · Certificate of Completion
+Aristoteleio University Of Thessaloniki European Legal Culture Program
+Cairn 7 of 34 · Certificate of Completion
+CCNA Cisco Certified Network Associate
+Cairn 8 of 34 · Certificate of Completion
+Cloud Engineering
+Cairn 9 of 34 · Certificate of Completion
+Cybersecurity ELearning Academy
+Cairn 10 of 34 · Certificate of Completion
+Digital Skills For Tourism
+Cairn 11 of 34 · Certificate of Completion
+Discover Customer
+Cairn 12 of 34 · Certificate of Completion
+Entrepreneurship Funding And Development Of New Enterprises
+Cairn 13 of 34 · Certificate of Completion
+How To Design Build A Website
+Cairn 14 of 34 · Certificate of Completion
+How To Get Published With IEEE
+Cairn 15 of 34 · Certificate of Completion
+Machine Learning And Deep Neural Networks
+Cairn 16 of 34 · Certificate of Completion
+NFT Talents Program
+Cairn 17 of 34 · Certificate of Completion
+Networking Essentials
+Cairn 18 of 34 · Certificate of Completion
+Rust Developer
+Cairn 19 of 34 · Certificate of Completion
+Software Development For Telecommunication Networks
+Cairn 20 of 34 · Certificate of Completion
+The Hour Of Code
+Cairn 21 of 34 · Certificate of Completion
+Blockchain For The Legal Industry How Is The
+Cairn 22 of 34 · Certificate of Participation
+Blockchain In Education Remote Learning Social Distancing And
+Cairn 23 of 34 · Certificate of Participation
+Data Analytics To Strengthen Healthcare Cybersecurity
+Cairn 24 of 34 · Certificate of Participation
+EY Cyber Day
+Cairn 25 of 34 · Certificate of Participation
+GNULinux Command Line
+Cairn 26 of 34 · Certificate of Participation
+Launch Event RippleX Workshop
+Cairn 27 of 34 · Certificate of Participation
+MIGMA MARKETING KAI BRAND
+Cairn 28 of 34 · Certificate of Participation
+Marine Educational Robotics Hydrobot Program
+Cairn 29 of 34 · Certificate of Participation
+Processing Data In The Fog The Example Of
+Cairn 30 of 34 · Certificate of Participation
+Skgcode Project Creation Of A Real Estate Chatbot
+Cairn 31 of 34 · Certificate of Participation
+VeChain ToolChain Digital Transformation Of The Healthcare Industry
+Cairn 32 of 34 · Certificate of Participation
+English Certificate English Proficiency
+Cairn 33 of 34 · English Certificate
+Move Bootcamp Thessaloniki
+Cairn 34 of 34 · Move Sui First Thessaloniki Bootcamp Award
+2015
+2016
+2017
+2018
+2019
+2020
+2021
+2022
+2023
+2024
+2025
+2026
+now
+Key
+how to read the land
+Peak: a paper, as tall as its citations
+Ridge: a job, across its years
+River: a degree
+Cairn: a certificate (34, not by date)
+Trig point: an award
+Benchmark: now, and my email
+1 year
++
+−
+
+Drag to move across the years · scroll to fly lower · choose a name to go there
+
+Plotted from my CV, September 2026
+
+=== READ AS TEXT ===
+← All ideas
+George Michoulis
+
+A survey of 2015 – 2026
+
+Blockchain developer and researcher in Thessaloniki. This relief is plotted from my record: each paper is a peak as tall as its citations.
+
+gmixoulis@gmail.com
+The survey, as text
+
+This browser couldn't draw the 3D map, so here is everything on it as plain text.
+
+I'm George Michoulis. I live in Thessaloniki, Greece, and since May 2026 I've worked remotely as a Web3 full-stack developer at Cyberscope by TAC. Before that I built blockchain systems at Sidroco Holdings and the University of Nicosia, lectured for the University of Derby at Mediterranean College, and published research on verifying academic qualifications with blockchains.
+
+The benchmark: now
+
+Web3 full-stack developer at Cyberscope by TAC, since 05/2026: end-to-end Web3 products, contracts, on-chain integrations, React and Next frontends, and security tooling.
+
+Email is the quickest way to reach me: gmixoulis@gmail.com. I'm also on LinkedIn, GitHub, Google Scholar and X.
+
+Ridges: where I've worked
+Sidroco Holdings Ltd, blockchain developer and researcher, 2024 – 2026
+An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ learning management system, and multinational EU projects.
+University of Derby / Mediterranean College, lecturer and academic partner, 2023 – 2025
+I taught Networks & Security, Web Scripting and Application Development, with inclusivity-first assessment.
+University of Nicosia / IFF, blockchain and full-stack developer, 2022 – 2024
+Large Next.js, NestJS and Docker applications, and a Web3 NFT marketplace.
+Rivers: what I studied
+MSc Data and Web Science, Aristotle University of Thessaloniki, 2020 – 2022
+Graph-embedding methods for blockchain fraud detection, funded by a DeepMind scholarship.
+BSc Applied Informatics, University of Macedonia, 2015 – 2020
+My thesis was on verifying academic credentials with Ethereum.
+Peaks: what I've published
+
+On the map, each peak stands at the paper's year and is as tall as its citation count.
+
+A process-aware approach for blockchain-based verification of academic qualifications. Simulation Modelling Practice and Theory 121, 102642, 2022. Cited 32 times.
+Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe. XIV Balkan Conference on Operational Research, 2020. Cited 11 times.
+Exploring decentralized governance: a framework applied to Compound Finance. Intl. Conf. on Mathematical Research for Blockchain Economy, 2023. Cited 7 times.
+FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs. 7th World Symposium on Communication Engineering (WSCE), 2024. Cited once.
+Data security for smart cities. 2025. Cited once.
+Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management. IEEE ICCE 2025. Not cited yet.
+Graph Embedding and Node Features for Drug-Target Interaction Prediction. Aristotle University of Thessaloniki (MSc work), 2022. Not cited yet.
+Blockchain in Higher Education: permissioned and permissionless approaches. 4th Summit on Gender Equality in Computing, 2022. Not cited yet.
+
+Also two Greek-language theses on verifying academic titles with Ethereum, 2020 and 2021. The full list is on Google Scholar.
+
+Trig points: awards
+DeepMind Scholarship, Aristotle University of Thessaloniki, 2020 – 2022
+3rd place, Infinitech Hackathon (Crowdpolicy), June 2022
+Basic Research grant, University of Macedonia, 2020 – 2021
+Move/Sui Bootcamp award, Thessaloniki, 2025
+Cairns: 34 certificates
+
+Scans of each one open from the cairns on the map.
+
+Bachelor Degree Computer Science
+Bachelor Degree
+Master Degree Data And Web Science
+Master Degree
+Academic Achievement
+Award
+Introduction To Digital Currencies
+Certificate of Achievement
+TOEIC Listening Reading Test
+Certificate of Achievement
+Advanced Ethical Hacking
+Certificate of Completion
+Aristoteleio University Of Thessaloniki European Legal Culture Program
+Certificate of Completion
+CCNA Cisco Certified Network Associate
+Certificate of Completion
+Cloud Engineering
+Certificate of Completion
+Cybersecurity ELearning Academy
+Certificate of Completion
+Digital Skills For Tourism
+Certificate of Completion
+Discover Customer
+Certificate of Completion
+Entrepreneurship Funding And Development Of New Enterprises
+Certificate of Completion
+How To Design Build A Website
+Certificate of Completion
+How To Get Published With IEEE
+Certificate of Completion
+Machine Learning And Deep Neural Networks
+Certificate of Completion
+NFT Talents Program
+Certificate of Completion
+Networking Essentials
+Certificate of Completion
+Rust Developer
+Certificate of Completion
+Software Development For Telecommunication Networks
+Certificate of Completion
+The Hour Of Code
+Certificate of Completion
+Blockchain For The Legal Industry How Is The
+Certificate of Participation
+Blockchain In Education Remote Learning Social Distancing And
+Certificate of Participation
+Data Analytics To Strengthen Healthcare Cybersecurity
+Certificate of Participation
+EY Cyber Day
+Certificate of Participation
+GNULinux Command Line
+Certificate of Participation
+Launch Event RippleX Workshop
+Certificate of Participation
+MIGMA MARKETING KAI BRAND
+Certificate of Participation
+Marine Educational Robotics Hydrobot Program
+Certificate of Participation
+Processing Data In The Fog The Example Of
+Certificate of Participation
+Skgcode Project Creation Of A Real Estate Chatbot
+Certificate of Participation
+VeChain ToolChain Digital Transformation Of The Healthcare Industry
+Certificate of Participation
+English Certificate English Proficiency
+English Certificate
+Move Bootcamp Thessaloniki
+Move Sui First Thessaloniki Bootcamp Award
+Settlements: sites I've built
+
+verde.uom.gr (VerDe, the credential-verification system from my papers), celc.web.auth.gr, eudem.polsci.auth.gr, marlab.ode.uom.gr, metau.unic.ac.cy and bbf-gui.ddns.net.
+
+Elsewhere on this site: the Zen Garden, where I keep notes, and Ledger Run, this CV as a platformer.

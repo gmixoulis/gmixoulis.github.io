@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="en" class="nojs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Topography · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki: a relief map of 2015 to 2026, plotted from his jobs, degrees, papers and certificates.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&family=Spectral+SC:wght@500&display=swap" rel="stylesheet">
+<script>document.documentElement.className='js'</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}</script>
+<style>
+:root{--paper:#ece5d3;--panel:#f4efe3;--ink:#261d16;--ink2:#58473a;--sepia:#6b3f22;--water:#1d5688;--red:#9c3122;--rule:rgba(38,29,22,.5);--hc:#f1ebdd;
+--halo:0 0 2px var(--hc),0 0 2px var(--hc),0 0 4px var(--hc),0 0 7px var(--hc)}
+@media (prefers-color-scheme:dark){:root{--paper:#0a0f14;--panel:#0e151c;--ink:#f0e8d6;--ink2:#bcb19b;--sepia:#e9c47f;--water:#8fd2f2;--red:#f2917a;--rule:rgba(233,196,127,.4);--hc:#0a0f14}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink)}
+body{font:400 15px/1.45 Spectral,Georgia,serif;overflow:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.back{position:fixed;left:22px;top:13px;z-index:4;font-size:13px;color:var(--ink2);text-decoration:none;text-shadow:var(--halo)}
+.back:hover{color:var(--ink)}
+.cart{position:fixed;left:22px;top:42px;z-index:3;width:318px;padding:15px 18px 14px;background:var(--panel);border:1px solid var(--rule);outline:1px solid var(--rule);outline-offset:3px}
+.cart h1{margin:0;font:italic 600 44px/.95 'Cormorant Garamond',Georgia,serif}
+.cart .sub{margin:.55em 0 .75em;font:500 12.5px/1.2 'Spectral SC',Georgia,serif;letter-spacing:.17em;color:var(--sepia)}
+.cart .cap{margin:0;font-size:14px;line-height:1.42;color:var(--ink2)}
+.corner{position:fixed;right:22px;top:12px;z-index:7;display:flex;gap:18px;align-items:center}
+.mail{font-size:14.5px;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-shadow:var(--halo)}
+.tbtn{background:var(--panel);border:1px solid var(--rule);padding:5px 11px 6px;font-size:14px;cursor:pointer}
+.tbtn:hover{border-color:var(--ink)}
+#map{position:fixed;inset:0;touch-action:none;cursor:grab;overflow:hidden;user-select:none;-webkit-user-select:none}
+#map.drag{cursor:grabbing}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block}
+.marks{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.1s}
+.risen .marks{opacity:1}
+.mk{position:absolute;left:0;top:0;transition:opacity .25s;color:var(--ink)}
+.mk.off{opacity:0;transition:none}.mk.off *{pointer-events:none!important}
+.mk.dim{opacity:.42}
+.mk:hover,.mk:focus-within{z-index:2}.mk.sel{z-index:3}
+.sym{position:absolute;display:block;pointer-events:auto;cursor:pointer}
+.sym svg{display:block;width:100%;height:100%}
+.ld{position:absolute;left:0;height:1px;background:currentColor;transform-origin:0 0;pointer-events:none;opacity:.85}
+.tx{position:absolute;left:0;bottom:0;display:flex;flex-direction:column-reverse;align-items:flex-start;white-space:nowrap;pointer-events:auto;transition:opacity .25s}
+.hide .tx,.hide .ld{opacity:0;pointer-events:none}
+.flip .tx{align-items:flex-end;text-align:right}
+.nm{display:block;background:none;border:0;margin:0;padding:0 1px 2px;cursor:pointer;text-align:inherit;font:500 14px/1.2 Spectral,Georgia,serif;color:var(--ink);text-shadow:var(--halo)}
+.nm small{display:block;font:italic 400 12.5px/1.3 Spectral,Georgia,serif;color:var(--ink2)}
+.pk .nm,.tg .nm,.bm .nm,.cn .nm{border-bottom:1px solid currentColor}
+.sel .nm{border-bottom-color:var(--red)}
+.pk .sym{left:-5px;top:-6px;width:10px;height:9px}
+.pk .ld{top:-5px;width:26px;transform:rotate(-53deg)}.flip.pk .ld{transform:rotate(-127deg)}
+.pk.top .nm{font-size:16.5px}
+.tg .sym{left:-6px;top:-7px;width:12px;height:11px;color:var(--sepia)}
+.tg .ld{top:-6px;width:21px;transform:rotate(-41deg)}.flip.tg .ld{transform:rotate(-139deg)}
+.cn .sym{left:-7px;top:-8px;width:14px;height:14px;padding:3px;color:var(--ink2);opacity:.7}
+.cn:hover .sym,.cn.sel .sym{color:var(--ink);opacity:1}
+.cn .ld{top:-5px;width:17px;transform:rotate(-21deg)}.flip.cn .ld{transform:rotate(-159deg)}
+.cn .tx,.cn .ld{opacity:0;pointer-events:none}
+.cn:hover .tx,.cn:hover .ld,.cn:focus-within .tx,.cn:focus-within .ld,.cn.sel .tx,.cn.sel .ld{opacity:1;pointer-events:auto}
+.bm{color:var(--red)}
+.bm .sym{left:-7px;top:-7px;width:14px;height:14px}
+.bm .ld{top:-7px;width:37px;transform:rotate(-64deg)}.flip.bm .ld{transform:rotate(-116deg)}
+.bm .nm{color:var(--ink);border-bottom-color:var(--red)}
+.bm-mail{font:italic 500 16px/1.25 Spectral,Georgia,serif;color:var(--red);text-shadow:var(--halo);text-decoration:none;margin:0 1px 3px;pointer-events:auto}
+.bm-mail:hover{text-decoration:underline}
+.rg .tx,.rv .tx,.nt .tx{align-items:center;text-align:center}
+.rg .nm{font:500 13px/1.15 'Spectral SC',Georgia,serif;letter-spacing:.2em;color:var(--sepia)}
+.rg .nm small{letter-spacing:0;margin-top:2px}
+.rv .nm{font:italic 500 15px/1.15 Spectral,Georgia,serif;color:var(--water)}
+.rv .nm small{color:var(--water)}
+.nt .nm{font:italic 400 13px/1.2 Spectral,Georgia,serif;letter-spacing:.08em;color:var(--ink2);cursor:default}
+.more{white-space:normal;width:min(300px,calc(100vw - 40px));margin:0 0 8px;padding:10px 13px 11px;background:var(--panel);border:1px solid var(--rule);font:400 14px/1.45 Spectral,Georgia,serif;color:var(--ink);text-align:left;text-shadow:none}
+.more p{margin:0 0 .4em}.more p:last-child{margin:0}
+.more cite{font-style:italic}
+.more .meta{color:var(--ink2);font-size:13px}
+.more a{color:var(--red)}
+.more img{display:block;width:100%;height:auto;border:1px solid var(--rule);background:var(--paper)}
+.yr{position:absolute;left:0;top:0;font:500 12.5px/1 Spectral,Georgia,serif;font-variant-numeric:lining-nums;color:var(--ink2);text-shadow:var(--halo);white-space:nowrap}
+.yr.now{color:var(--red);font-style:italic}
+.yr.off{opacity:0}
+.key{position:fixed;left:22px;bottom:22px;z-index:3;width:258px;background:var(--panel);border:1px solid var(--rule);padding:8px 12px 10px}
+.keybtn{display:flex;gap:8px;align-items:baseline;width:100%;background:none;border:0;padding:0;cursor:pointer;font:italic 600 18px/1.2 'Cormorant Garamond',Georgia,serif;text-align:left}
+.keybtn span{font:italic 400 12.5px Spectral,Georgia,serif;color:var(--ink2)}
+.key:not(.open) #keyBody{display:none}
+#mini{display:block;width:100%;height:auto;aspect-ratio:1.8824;margin:7px 0 8px;border:1px solid var(--rule);cursor:crosshair}
+.legend{list-style:none;margin:0;padding:0;font-size:13px;line-height:1.3;color:var(--ink2)}
+.legend li{display:flex;gap:9px;align-items:center;margin:4px 0}
+.legend i{flex:0 0 18px;height:13px;display:flex;justify-content:center;align-items:center;color:var(--ink)}
+.legend i svg{max-width:18px;max-height:13px;width:100%;height:100%}
+.legend .l-rv{color:var(--water)}.legend .l-bm{color:var(--red)}.legend .l-tg,.legend .l-rg{color:var(--sepia)}
+.scale{display:flex;align-items:center;gap:9px;margin-top:8px;font:italic 400 12.5px Spectral,Georgia,serif;color:var(--ink2)}
+.scale .bar{display:block;height:5px;border:1px solid var(--ink);background:linear-gradient(90deg,var(--ink) 0 25%,transparent 25% 50%,var(--ink) 50% 75%,transparent 75%)}
+.scale[hidden]{display:none}
+.whole{margin-top:8px;background:none;border:1px solid var(--rule);padding:3px 9px 4px;font-size:13px;cursor:pointer;display:none}
+.zoom{position:fixed;right:22px;bottom:46px;z-index:3;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--rule)}
+.zoom button{width:36px;height:33px;background:none;border:0;padding:0;cursor:pointer;font:500 19px/1 Spectral,Georgia,serif}
+.zoom button+button{border-top:1px solid var(--rule)}
+.zoom svg{width:15px;height:15px;display:block;margin:auto}
+.credit{position:fixed;right:22px;bottom:16px;z-index:3;margin:0;font:italic 400 12.5px Spectral,Georgia,serif;color:var(--ink2);text-shadow:var(--halo)}
+.hint{position:fixed;left:50%;bottom:17px;transform:translateX(-50%);z-index:3;margin:0;font:italic 400 14px Spectral,Georgia,serif;color:var(--ink);text-shadow:var(--halo);white-space:nowrap;transition:opacity .9s;pointer-events:none}
+.hint.gone{opacity:0}
+.gaz{position:fixed;inset:0;z-index:6;overflow:auto;background:var(--paper);overscroll-behavior:contain}
+.gaz[hidden]{display:none}
+.gz{max-width:44rem;margin:0 auto;padding:84px 22px 72px;font-size:17px;line-height:1.6}
+.gz h2{margin:0 0 .5em;font:italic 600 46px/1 'Cormorant Garamond',Georgia,serif;outline:none}
+.gz h3{margin:2.1em 0 .55em;padding-top:.7em;border-top:1px solid var(--rule);font:italic 600 27px/1.1 'Cormorant Garamond',Georgia,serif}
+.gz p{margin:0 0 .9em}
+.gz dl{margin:0}.gz dt{font-weight:500}.gz dd{margin:0 0 1em;color:var(--ink2)}
+.gz ol,.gz ul{margin:0 0 1em;padding-left:1.25em}.gz li{margin:0 0 .55em}
+.gz cite{font-style:italic}
+.gz .certs{columns:2 17rem;column-gap:2rem;font-size:15px;line-height:1.4}
+.gz .certs li{break-inside:avoid;margin:0 0 .5em}.gz .certs span{display:block;color:var(--ink2);font-size:13.5px;font-style:italic}
+.gz .muted{color:var(--ink2)}
+.gz .tbtn{font-size:15px}
+.nogl-msg{display:none}
+.nojs .gaz,.nogl .gaz{display:block;position:static;overflow:visible}
+.nojs #map,.nojs .key,.nojs .zoom,.nojs .hint,.nojs .credit,.nogl #map,.nogl .key,.nogl .zoom,.nogl .hint,.nogl .credit,.nojs #textBtn,.nogl #textBtn,.nogl #gzBack,.nojs #gzBack{display:none}
+.nogl .nogl-msg{display:block}
+.reading .key,.reading .zoom,.reading .hint,.reading .credit,.reading .cart,.reading .back{visibility:hidden}
+.nojs .cart,.nogl .cart{position:static;margin:48px auto 0;width:auto;max-width:44rem}
+.nojs body,.nogl body{overflow:auto}
+@media (max-width:720px){
+.back{left:14px;top:9px}
+.cart{left:12px;right:12px;top:34px;width:auto;padding:10px 13px 10px}
+.cart h1{font-size:32px}
+.cart .sub{margin:.4em 0 .5em;font-size:11.5px}
+.cart .cap{font-size:13px;line-height:1.38}
+.corner{right:12px;top:5px}
+.tbtn{padding:3px 9px 4px;font-size:13.5px}
+.mail{position:fixed;right:14px;bottom:15px;font-size:14px}
+.key{left:12px;bottom:12px;width:auto;padding:5px 10px 6px}
+.key.open{width:250px;max-width:calc(100vw - 24px)}
+.keybtn{font-size:17px}
+.zoom,.credit{display:none}
+.whole{display:inline-block}
+.hint{bottom:50px;font-size:13px;white-space:normal;text-align:center;width:max-content;max-width:calc(100vw - 32px)}
+.gz{padding:64px 16px 56px;font-size:16px}
+.gz h2{font-size:38px}
+}
+@media (prefers-reduced-motion:reduce){.marks,.mk,.tx,.hint,.yr{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="index.html">← All ideas</a>
+  <div class="cart">
+    <h1>George Michoulis</h1>
+    <p class="sub">A survey of 2015 – 2026</p>
+    <p class="cap">Blockchain developer and researcher in Thessaloniki. This relief is plotted from my record: each paper is a peak as tall as its citations.</p>
+  </div>
+  <div class="corner">
+    <a class="mail" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+    <button class="tbtn" id="textBtn" aria-pressed="false" aria-controls="gaz">Read as text</button>
+  </div>
+</header>
+<main>
+  <div id="map" role="region" aria-label="Relief map of my work from 2015 to 2026. Drag or use the arrow keys to move; scroll or press plus and minus to zoom; choose a name to fly to it.">
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <div class="marks" id="marks"></div>
+  </div>
+  <aside class="key open" id="key" aria-label="Map key">
+    <button class="keybtn" id="keyBtn" aria-expanded="true" aria-controls="keyBody">Key <span>how to read the land</span></button>
+    <div id="keyBody">
+      <canvas id="mini" aria-hidden="true"></canvas>
+      <ul class="legend">
+        <li><i data-sym="pk"></i>Peak: a paper, as tall as its citations</li>
+        <li><i class="l-rg" data-sym="rg"></i>Ridge: a job, across its years</li>
+        <li><i class="l-rv" data-sym="rv"></i>River: a degree</li>
+        <li><i data-sym="cn"></i>Cairn: a certificate (34, not by date)</li>
+        <li><i class="l-tg" data-sym="tg"></i>Trig point: an award</li>
+        <li><i class="l-bm" data-sym="bm"></i>Benchmark: now, and my email</li>
+      </ul>
+      <div class="scale" id="scale"><span class="bar"></span><span class="lbl">1 year</span></div>
+      <button class="whole" id="whole2">Whole map</button>
+    </div>
+  </aside>
+  <div class="zoom" role="group" aria-label="Zoom">
+    <button id="zin" aria-label="Fly lower">+</button>
+    <button id="zout" aria-label="Fly higher">−</button>
+    <button id="whole" aria-label="Whole map"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 5V1.5H5M11 1.5h3.5V5M14.5 11v3.5H11M5 14.5H1.5V11" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></button>
+  </div>
+  <p class="hint" id="hint">Drag to move across the years · scroll to fly lower · choose a name to go there</p>
+
+  <section class="gaz" id="gaz" hidden aria-labelledby="gzh">
+    <div class="gz">
+      <h2 id="gzh" tabindex="-1">The survey, as text</h2>
+      <p class="nogl-msg muted">This browser couldn't draw the 3D map, so here is everything on it as plain text.</p>
+      <p>I'm George Michoulis. I live in Thessaloniki, Greece, and since May 2026 I've worked remotely as a Web3 full-stack developer at Cyberscope by TAC. Before that I built blockchain systems at Sidroco Holdings and the University of Nicosia, lectured for the University of Derby at Mediterranean College, and published research on verifying academic qualifications with blockchains.</p>
+
+      <h3>The benchmark: now</h3>
+      <p>Web3 full-stack developer at Cyberscope by TAC, since 05/2026: end-to-end Web3 products, contracts, on-chain integrations, React and Next frontends, and security tooling.</p>
+      <p>Email is the quickest way to reach me: <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>. I'm also on <a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a>, <a href="https://github.com/gmixoulis">GitHub</a>, <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a> and <a href="https://twitter.com/GeorgeMicou">X</a>.</p>
+
+      <h3>Ridges: where I've worked</h3>
+      <dl>
+        <dt>Sidroco Holdings Ltd, blockchain developer and researcher, 2024 – 2026</dt>
+        <dd>An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ learning management system, and multinational EU projects.</dd>
+        <dt>University of Derby / Mediterranean College, lecturer and academic partner, 2023 – 2025</dt>
+        <dd>I taught Networks &amp; Security, Web Scripting and Application Development, with inclusivity-first assessment.</dd>
+        <dt>University of Nicosia / IFF, blockchain and full-stack developer, 2022 – 2024</dt>
+        <dd>Large Next.js, NestJS and Docker applications, and a Web3 NFT marketplace.</dd>
+      </dl>
+
+      <h3>Rivers: what I studied</h3>
+      <dl>
+        <dt>MSc Data and Web Science, Aristotle University of Thessaloniki, 2020 – 2022</dt>
+        <dd>Graph-embedding methods for blockchain fraud detection, funded by a DeepMind scholarship.</dd>
+        <dt>BSc Applied Informatics, University of Macedonia, 2015 – 2020</dt>
+        <dd>My thesis was on verifying academic credentials with Ethereum.</dd>
+      </dl>
+
+      <h3>Peaks: what I've published</h3>
+      <p class="muted">On the map, each peak stands at the paper's year and is as tall as its citation count.</p>
+      <ol>
+        <li><cite>A process-aware approach for blockchain-based verification of academic qualifications.</cite> Simulation Modelling Practice and Theory 121, 102642, 2022. Cited 32 times.</li>
+        <li><cite>Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe.</cite> XIV Balkan Conference on Operational Research, 2020. Cited 11 times.</li>
+        <li><cite>Exploring decentralized governance: a framework applied to Compound Finance.</cite> Intl. Conf. on Mathematical Research for Blockchain Economy, 2023. Cited 7 times.</li>
+        <li><cite>FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs.</cite> 7th World Symposium on Communication Engineering (WSCE), 2024. Cited once.</li>
+        <li><cite>Data security for smart cities.</cite> 2025. Cited once.</li>
+        <li><cite>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management.</cite> IEEE ICCE 2025. Not cited yet.</li>
+        <li><cite>Graph Embedding and Node Features for Drug-Target Interaction Prediction.</cite> Aristotle University of Thessaloniki (MSc work), 2022. Not cited yet.</li>
+        <li><cite>Blockchain in Higher Education: permissioned and permissionless approaches.</cite> 4th Summit on Gender Equality in Computing, 2022. Not cited yet.</li>
+      </ol>
+      <p>Also two Greek-language theses on verifying academic titles with Ethereum, 2020 and 2021. The full list is on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+
+      <h3>Trig points: awards</h3>
+      <ul>
+        <li>DeepMind Scholarship, Aristotle University of Thessaloniki, 2020 – 2022</li>
+        <li>3rd place, Infinitech Hackathon (Crowdpolicy), June 2022</li>
+        <li>Basic Research grant, University of Macedonia, 2020 – 2021</li>
+        <li>Move/Sui Bootcamp award, Thessaloniki, 2025</li>
+      </ul>
+
+      <h3>Cairns: 34 certificates</h3>
+      <p class="muted">Scans of each one open from the cairns on the map.</p>
+      <ul class="certs" id="certs">
+<li data-f="1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg">Bachelor Degree Computer Science <span>Bachelor Degree</span></li>
+<li data-f="1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg">Master Degree Data And Web Science <span>Master Degree</span></li>
+<li data-f="Award_Academic-Achievement.jpg">Academic Achievement <span>Award</span></li>
+<li data-f="Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg">Introduction To Digital Currencies <span>Certificate of Achievement</span></li>
+<li data-f="Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg">TOEIC Listening Reading Test <span>Certificate of Achievement</span></li>
+<li data-f="Certificate-Of-Completion_Advanced-Ethical-Hacking.png">Advanced Ethical Hacking <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg">Aristoteleio University Of Thessaloniki European Legal Culture Program <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg">CCNA Cisco Certified Network Associate <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_Cloud-Engineering.png">Cloud Engineering <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg">Cybersecurity ELearning Academy <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg">Digital Skills For Tourism <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_Discover-Customer.jpg">Discover Customer <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png">Entrepreneurship Funding And Development Of New Enterprises <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg">How To Design Build A Website <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg">How To Get Published With IEEE <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg">Machine Learning And Deep Neural Networks <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_NFT-Talents-Program.jpg">NFT Talents Program <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_Networking-Essentials.png">Networking Essentials <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_Rust-Developer.png">Rust Developer <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg">Software Development For Telecommunication Networks <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Completion_The-Hour-Of-Code.jpg">The Hour Of Code <span>Certificate of Completion</span></li>
+<li data-f="Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg">Blockchain For The Legal Industry How Is The <span>Certificate of Participation</span></li>
+<li data-f="Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg">Blockchain In Education Remote Learning Social Distancing And <span>Certificate of Participation</span></li>
+<li data-f="Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg">Data Analytics To Strengthen Healthcare Cybersecurity <span>Certificate of Participation</span></li>
+<li data-f="Certificate-Of-Participation_EY-Cyber-Day.jpg">EY Cyber Day <span>Certificate of Participation</span></li>
+<li data-f="Certificate-Of-Participation_GNULinux-Command-Line.jpg">GNULinux Command Line <span>Certificate of Participation</span></li>
+<li data-f="Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg">Launch Event RippleX Workshop <span>Certificate of Participation</span></li>
+<li data-f="Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png">MIGMA MARKETING KAI BRAND <span>Certificate of Participation</span></li>
+<li data-f="Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg">Marine Educational Robotics Hydrobot Program <span>Certificate of Participation</span></li>
+<li data-f="Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg">Processing Data In The Fog The Example Of <span>Certificate of Participation</span></li>
+<li data-f="Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg">Skgcode Project Creation Of A Real Estate Chatbot <span>Certificate of Participation</span></li>
+<li data-f="Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg">VeChain ToolChain Digital Transformation Of The Healthcare Industry <span>Certificate of Participation</span></li>
+<li data-f="English-Certificate_English-Certificate-English-Proficiency.jpg">English Certificate English Proficiency <span>English Certificate</span></li>
+<li data-f="Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png">Move Bootcamp Thessaloniki <span>Move Sui First Thessaloniki Bootcamp Award</span></li>
+      </ul>
+
+      <h3>Settlements: sites I've built</h3>
+      <p>verde.uom.gr (VerDe, the credential-verification system from my papers), celc.web.auth.gr, eudem.polsci.auth.gr, marlab.ode.uom.gr, metau.unic.ac.cy and bbf-gui.ddns.net.</p>
+      <p class="muted">Elsewhere on this site: <a href="../../garden/">the Zen Garden</a>, where I keep notes, and <a href="../../play/">Ledger Run</a>, this CV as a platformer.</p>
+      <p><button class="tbtn" id="gzBack">Back to the map</button></p>
+    </div>
+  </section>
+</main>
+<footer class="credit">Plotted from my CV, September 2026</footer>
+
+<script>setTimeout(function(){if(!window.__topo){document.documentElement.classList.add('nogl');document.getElementById('gaz').hidden=false}},9000)</script>
+<script type="module">
+import * as THREE from 'three';
+THREE.ColorManagement.enabled = false;
+window.__topo = 1;
+const $ = s => document.querySelector(s);
+const html = document.documentElement;
+const qs = new URLSearchParams(location.search);
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const darkQ = matchMedia('(prefers-color-scheme: dark)');
+const coarse = matchMedia('(pointer: coarse)').matches;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const ss = (a, b, v) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+
+/* ---------- the survey: time runs along x, one world unit per year ---------- */
+const NOW = 2026 + 8.8 / 12;
+const X = y => y - 2020.8;
+const XMIN = X(2014.55), XMAX = X(2027.35), ZMIN = -3.4, ZMAX = 3.4, BASE = -.5;
+const W = XMAX - XMIN, D = ZMAX - ZMIN, NOWX = X(NOW);
+
+const RIDGES = [
+  { id: 'cy', y0: 2026.37, y1: NOW, z: -.95, h: 1.05, w: .5, seed: 4.1 },
+  { id: 'sid', y0: 2024, y1: 2026.37, z: -.45, h: .8, w: .55, seed: 1.3, name: 'Sidroco Holdings', yrs: '2024 – 2026', title: 'Blockchain developer & researcher', note: 'An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ LMS, and multinational EU projects.' },
+  { id: 'nic', y0: 2022, y1: 2024, z: -1.95, h: .72, w: .6, seed: 2.7, name: 'University of Nicosia · IFF', yrs: '2022 – 2024', title: 'Blockchain & full-stack developer', note: 'Large Next.js, NestJS and Docker apps, and a Web3 NFT marketplace.' },
+  { id: 'der', y0: 2023, y1: 2025, z: 1.95, h: .62, w: .55, seed: 3.3, name: 'Mediterranean College', yrs: 'University of Derby · 2023 – 2025', title: 'Lecturer & academic partner', note: 'I taught Networks & Security, Web Scripting and Application Development, with inclusivity-first assessment.' },
+];
+const PAPERS = [
+  { c: 32, y: 2022, px: 2022.45, z: -.45, short: 'Process-aware verification', title: 'A process-aware approach for blockchain-based verification of academic qualifications', venue: 'Simulation Modelling Practice and Theory 121, 102642' },
+  { c: 11, y: 2020, px: 2020.35, z: -.6, short: 'VerDe on Ethereum', title: 'Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe', venue: 'XIV Balkan Conference on Operational Research' },
+  { c: 7, y: 2023, px: 2023.4, z: .35, short: 'Decentralized governance', title: 'Exploring decentralized governance: a framework applied to Compound Finance', venue: 'Intl. Conf. on Mathematical Research for Blockchain Economy' },
+  { c: 1, y: 2024, px: 2024.6, z: -.3, short: 'FraMark', title: 'FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs', venue: '7th World Symposium on Communication Engineering (WSCE)' },
+  { c: 1, y: 2025, px: 2025.2, z: .65, short: 'Data security for smart cities', title: 'Data security for smart cities', venue: '' },
+  { c: 0, y: 2025, px: 2025.75, z: -.75, short: '5G network slicing survey', title: 'Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management', venue: 'IEEE ICCE 2025' },
+  { c: 0, y: 2022, px: 2021.75, z: 1.55, short: 'Graph embedding for drug–target interaction', title: 'Graph Embedding and Node Features for Drug-Target Interaction Prediction', venue: 'Aristotle University of Thessaloniki (MSc work)' },
+  { c: 0, y: 2022, px: 2022.9, z: 1.25, short: 'Blockchain in higher education', title: 'Blockchain in Higher Education: permissioned and permissionless approaches', venue: '4th Summit on Gender Equality in Computing' },
+].map((p, i) => ({ ...p, x: X(p.px), h: .26 + .058 * p.c, w: .36 + .15 * Math.sqrt(p.c), seed: i * 2.3 + .7 }));
+const AWARDS = [
+  { y: 2020.95, z: .05, name: 'DeepMind Scholarship', sub: 'Aristotle University of Thessaloniki, 2020 – 2022', note: 'It funded my MSc in Data and Web Science.' },
+  { y: 2020.45, z: 1.8, name: 'Basic Research grant', sub: 'University of Macedonia, 2020 – 2021' },
+  { y: 2022.45, z: 2.5, name: 'Infinitech Hackathon, 3rd place', sub: 'Crowdpolicy, June 2022' },
+  { y: 2025.6, z: 1.3, name: 'Move/Sui Bootcamp award', sub: 'Thessaloniki, 2025' },
+];
+const RIVER_CP = [[2014.55, 1.0], [2015.3, .62], [2016.2, 1.12], [2017.1, .55], [2018.0, .98], [2019.0, .42], [2019.9, .78], [2020.8, 1.08], [2021.5, .6], [2022.02, .78]];
+
+/* smooth river polyline (Catmull-Rom), with arc length */
+const RIV = [];
+{
+  const P = RIVER_CP.map(([y, z]) => [X(y), z]);
+  for (let i = 0; i < P.length - 1; i++) {
+    const p0 = P[Math.max(0, i - 1)], p1 = P[i], p2 = P[i + 1], p3 = P[Math.min(P.length - 1, i + 2)];
+    for (let k = 0; k < 10; k++) {
+      const t = k / 10, t2 = t * t, t3 = t2 * t;
+      const f = (a, b, c, d) => .5 * (2 * b + (-a + c) * t + (2 * a - 5 * b + 4 * c - d) * t2 + (-a + 3 * b - 3 * c + d) * t3);
+      RIV.push([f(p0[0], p1[0], p2[0], p3[0]), f(p0[1], p1[1], p2[1], p3[1])]);
+    }
+  }
+  RIV.push(P[P.length - 1]);
+}
+const RLEN = [0];
+for (let i = 1; i < RIV.length; i++) RLEN.push(RLEN[i - 1] + Math.hypot(RIV[i][0] - RIV[i - 1][0], RIV[i][1] - RIV[i - 1][1]));
+const RTOT = RLEN[RLEN.length - 1];
+const LAKE = { x: RIV[RIV.length - 1][0] + .12, z: RIV[RIV.length - 1][1] + .02, r: .26 };
+function riverAt(t) {
+  const s = t * RTOT; let i = 1; while (i < RLEN.length - 1 && RLEN[i] < s) i++;
+  const a = RIV[i - 1], b = RIV[i], f = (s - RLEN[i - 1]) / (RLEN[i] - RLEN[i - 1] || 1), dx = b[0] - a[0], dz = b[1] - a[1], l = Math.hypot(dx, dz) || 1;
+  return { x: a[0] + dx * f, z: a[1] + dz * f, nx: -dz / l, nz: dx / l };
+}
+const RB = RIV.reduce((b, [x, z]) => [Math.min(b[0], x), Math.max(b[1], x), Math.min(b[2], z), Math.max(b[3], z)], [9, -9, 9, -9]);
+function riverDist(x, z) {
+  if (Math.hypot(Math.max(RB[0] - x, 0, x - RB[1]), Math.max(RB[2] - z, 0, z - RB[3])) > 2.2) return [9, 1];
+  let best = 1e9, bt = 0;
+  for (let i = 1; i < RIV.length; i++) {
+    const a = RIV[i - 1], b = RIV[i], vx = b[0] - a[0], vz = b[1] - a[1], wx = x - a[0], wz = z - a[1];
+    const q = clamp((wx * vx + wz * vz) / (vx * vx + vz * vz), 0, 1), dx = wx - vx * q, dz = wz - vz * q, d = dx * dx + dz * dz;
+    if (d < best) { best = d; bt = (RLEN[i - 1] + q * (RLEN[i] - RLEN[i - 1])) / RTOT; }
+  }
+  return [Math.sqrt(best), bt];
+}
+
+/* deterministic noise */
+function hash(i, j) { let h = (Math.imul(i, 374761393) + Math.imul(j, 668265263)) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); h ^= h >>> 16; return (h >>> 0) / 4294967296; }
+function vn(x, y) {
+  const i = Math.floor(x), j = Math.floor(y), fx = x - i, fy = y - j;
+  const u = fx * fx * fx * (fx * (fx * 6 - 15) + 10), v = fy * fy * fy * (fy * (fy * 6 - 15) + 10);
+  const a = hash(i, j), b = hash(i + 1, j), c = hash(i, j + 1), d = hash(i + 1, j + 1);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+function fbm(x, y, o = 5) { let s = 0, a = .5, f = 1; for (let k = 0; k < o; k++) { s += a * vn(x * f + k * 17.3, y * f - k * 9.1); f *= 2.03; a *= .5; } return s / (1 - Math.pow(.5, o)); }
+function ridged(x, y, o = 4) { let s = 0, a = .5, f = 1; for (let k = 0; k < o; k++) { const n = 1 - Math.abs(vn(x * f + 31.7 * k, y * f + 11.3 * k) * 2 - 1); s += a * n * n; f *= 2.1; a *= .5; } return s; }
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const ridgeZ = (r, x) => r.z + .22 * Math.sin(x * 1.1 + r.seed) + .1 * Math.sin(x * 2.7 + r.seed * 2);
+
+/* the height function: every landform is a fact */
+function Hraw(x, z) {
+  const wx = x + .4 * (fbm(x * .4 + 3, z * .4, 3) - .5), wz = z + .4 * (fbm(x * .4, z * .4 + 7, 3) - .5);
+  let h = .17 + .26 * (fbm(wx * .5, wz * .5, 5) - .45);
+  for (const r of RIDGES) {
+    const x0 = X(r.y0), x1 = X(r.y1);
+    const e = ss(x0 - .45, x0 + .3, x) * (1 - ss(x1 - .3, x1 + .45, x));
+    if (e <= 0) continue;
+    const dz = (z - ridgeZ(r, x)) / r.w;
+    if (dz * dz > 9) continue;
+    h += r.h * e * Math.exp(-dz * dz * 1.5) * (.72 + .5 * ridged(x * 1.15 + r.seed, z * 1.15));
+  }
+  for (const p of PAPERS) {
+    const dx = x - p.x, dz = z - p.z, r2 = dx * dx + dz * dz;
+    if (r2 > 9 * p.w * p.w) continue;
+    const a = Math.atan2(dz, dx), ca = Math.cos(a), sa = Math.sin(a);
+    const spur = 1 + .42 * (fbm(ca * 1.7 + p.seed, sa * 1.7 + p.seed, 4) * 2 - 1) + .06 * Math.sin(a * 9 + 5 * fbm(ca + p.seed, sa, 2));
+    const r = Math.sqrt(r2) / (p.w * spur), c = Math.max(0, 1 - r * .85), g = Math.exp(-r * r * 1.5);
+    h += p.h * (g * .66 + c * c * c * .34) * (1 + .22 * (ridged(x * 3.1 + p.seed, z * 3.1) - .45) * ss(.1, .7, r));
+  }
+  h += (ridged(x * 2.6, z * 2.6) - .34) * (.04 + .06 * h) * ss(.22, .9, h);
+  const [d, t] = riverDist(x, z);
+  h += (.1 + .06 * fbm(x * 1.3, z * 1.3, 3)) * ss(.25, .75, d) * (1 - ss(1.1, 2.1, d)) * (1 - ss(X(2021.6), X(2022.4), x));
+  const bed = .035 + .075 * (1 - t);
+  h = bed + (h - bed) * Math.pow(ss(.03, .5, d), 1.1);
+  const ld = Math.hypot(x - LAKE.x, (z - LAKE.z) * 1.35);
+  if (ld < LAKE.r * 2.2) h = lerp(.02, h, ss(LAKE.r * .7, LAKE.r * 2.2, ld));
+  const f = ss(NOWX + .15, NOWX + .8, x);
+  return h + (.13 + .06 * fbm(x * .8, z * .8, 3) - h) * f * .8;
+}
+
+/* ---------- grid ---------- */
+const small = () => innerWidth <= 720;
+const NX = small() || coarse ? 128 : 256, NZ = Math.round(NX * D / W);
+const HG = new Float32Array((NX + 1) * (NZ + 1));
+let maxH = 0;
+for (let j = 0; j <= NZ; j++) for (let i = 0; i <= NX; i++) {
+  const h = Hraw(XMIN + i / NX * W, ZMIN + j / NZ * D); HG[j * (NX + 1) + i] = h; if (h > maxH) maxH = h;
+}
+const inside = (x, z) => x >= XMIN && x <= XMAX && z >= ZMIN && z <= ZMAX;
+function H(x, z) {
+  const fx = clamp((x - XMIN) / W * NX, 0, NX - 1e-4), fz = clamp((z - ZMIN) / D * NZ, 0, NZ - 1e-4);
+  const i = fx | 0, j = fz | 0, u = fx - i, v = fz - j, r = NX + 1;
+  const a = HG[j * r + i], b = HG[j * r + i + 1], c = HG[(j + 1) * r + i], d = HG[(j + 1) * r + i + 1];
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+function summit(x, z, rad = .2) { let bx = x, bz = z, bh = -1; for (let i = -6; i <= 6; i++) for (let j = -6; j <= 6; j++) { const px = x + i * rad / 6, pz = z + j * rad / 6, h = H(px, pz); if (h > bh) { bh = h; bx = px; bz = pz; } } return [bx, bh, bz]; }
+
+/* ---------- palettes (one source for GLSL, minimap and CSS-matched backgrounds) ---------- */
+const HYPS = {
+  light: [[0, '#cbd4c1'], [.18, '#dde0c5'], [.36, '#eadfbd'], [.55, '#e8cc9d'], [.72, '#dcac7c'], [.88, '#c98864'], [1, '#b56f55']],
+  dark: [[0, '#0b151b'], [.3, '#112029'], [.55, '#1a2830'], [.78, '#2b2b2c'], [1, '#433127']],
+};
+const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
+const v3 = h => `vec3(${hex(h).map(v => v.toFixed(3)).join(',')})`;
+const glRamp = (n, st) => `vec3 ${n}(float t){vec3 c=${v3(st[0][1])};${st.slice(1).map((s, i) => `c=mix(c,${v3(s[1])},smoothstep(${st[i][0].toFixed(3)},${s[0].toFixed(3)},t));`).join('')}return c;}`;
+const rampJS = (st, t) => { let c = hex(st[0][1]); for (let i = 1; i < st.length; i++) { const k = ss(st[i - 1][0], st[i][0], t), d = hex(st[i][1]); c = c.map((v, q) => v + (d[q] - v) * k); } return c; };
+const THEME = {
+  light: { line: '#6e4526', wall: '#d9ccb0', stone: '#8d8577', neat: 'rgba(70,48,30,.55)', unsurv: 'rgba(236,229,211,.74)', hatch: 'rgba(88,62,40,.26)', now: '#a3372a', bank: 'rgba(110,150,185,.18)', water: '#3c79b0', lake: '#7aa7cf', rim: '#3c79b0', minic: 'rgba(38,29,22,.8)' },
+  dark: { line: '#eac27a', wall: '#10181f', stone: '#6e685e', neat: 'rgba(231,194,124,.38)', unsurv: 'rgba(10,15,20,.76)', hatch: 'rgba(231,194,124,.16)', now: '#f2917a', bank: 'rgba(90,180,230,.07)', water: '#6fcaf4', lake: '#0f3a52', rim: '#6fcaf4', minic: 'rgba(240,232,214,.85)' },
+};
+let dark = darkQ.matches, T = dark ? THEME.dark : THEME.light;
+
+/* ---------- symbols ---------- */
+const SYM = {
+  pk: '<svg viewBox="0 0 10 9"><path d="M5 0 10 9H0z" fill="currentColor"/></svg>',
+  tg: '<svg viewBox="0 0 12 11"><path d="M6 1 11 10H1z" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="6" cy="7" r="1.3" fill="currentColor"/></svg>',
+  cn: '<svg viewBox="0 0 10 10" fill="currentColor"><ellipse cx="5" cy="8.3" rx="4" ry="1.5"/><ellipse cx="5" cy="5.3" rx="3" ry="1.3"/><ellipse cx="5" cy="2.6" rx="1.9" ry="1.1"/></svg>',
+  bm: '<svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M7 0v14M0 7h14" stroke="currentColor" stroke-width="1.2"/></svg>',
+  rg: '<svg viewBox="0 0 18 9"><path d="M1 8 5 3.5 8 5.5 12 1 17 8" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>',
+  rv: '<svg viewBox="0 0 18 8"><path d="M1 5c3-4 5 2 8-1s5-3 8 0" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
+};
+document.querySelectorAll('[data-sym]').forEach(e => e.innerHTML = SYM[e.dataset.sym]);
+
+/* ---------- text view ---------- */
+const gaz = $('#gaz'), textBtn = $('#textBtn');
+function setReading(on) {
+  gaz.hidden = !on; document.body.classList.toggle('reading', on);
+  textBtn.setAttribute('aria-pressed', on); textBtn.textContent = on ? 'Back to the map' : 'Read as text';
+  if (on) { gaz.scrollTop = 0; $('#gzh').focus(); } else { textBtn.focus(); request(); }
+}
+textBtn.onclick = () => setReading(gaz.hidden);
+$('#gzBack').onclick = () => setReading(false);
+
+/* ---------- renderer ---------- */
+let renderer = null;
+try { if (!qs.has('nogl') && document.createElement('canvas').getContext('webgl2')) renderer = new THREE.WebGLRenderer({ canvas: $('#gl'), antialias: true, powerPreference: 'high-performance' }); } catch (e) { renderer = null; }
+/* no WebGL: the text survey is the page; stop here without throwing */
+if (!renderer) { html.classList.add('nogl'); gaz.hidden = false; await new Promise(() => {}); }
+const DPR = Math.min(devicePixelRatio || 1, small() ? 1.5 : 2);
+renderer.setPixelRatio(DPR);
+const scene = new THREE.Scene();
+const FOV = 30;
+const cam = new THREE.PerspectiveCamera(FOV, innerWidth / innerHeight, .05, 160);
+const target = new THREE.Vector3();
+
+/* printed layer: graticule, rivers, lake, the survey line of today */
+const ovc = document.createElement('canvas');
+ovc.width = NX >= 256 ? 2048 : 1024; ovc.height = Math.round(ovc.width * D / W);
+const ovTex = new THREE.CanvasTexture(ovc);
+ovTex.flipY = false; ovTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+function drawOverlay() {
+  const g = ovc.getContext('2d'), cw = ovc.width, ch = ovc.height, k = cw / W, s = cw / 2048;
+  const U = x => (x - XMIN) * k, V = z => (z - ZMIN) * k;
+  g.clearRect(0, 0, cw, ch);
+  const nx = U(NOWX);
+  g.fillStyle = T.unsurv; g.fillRect(nx, 0, cw - nx, ch);
+  g.save(); g.beginPath(); g.rect(nx, 0, cw - nx, ch); g.clip(); g.strokeStyle = T.hatch; g.lineWidth = 1.2 * s;
+  for (let q = -ch; q < cw; q += 13 * s) { g.beginPath(); g.moveTo(q, ch); g.lineTo(q + ch, 0); g.stroke(); }
+  g.restore();
+  g.save(); g.strokeStyle = T.now; g.lineWidth = 3 * s; g.setLineDash([16 * s, 8 * s, 3 * s, 8 * s]); g.beginPath(); g.moveTo(nx, 12 * s); g.lineTo(nx, ch - 12 * s); g.stroke(); g.restore();
+  g.lineCap = g.lineJoin = 'round';
+  g.strokeStyle = T.bank; g.lineWidth = .34 * k; g.beginPath(); RIV.forEach(([x, z], i) => i ? g.lineTo(U(x), V(z)) : g.moveTo(U(x), V(z))); g.stroke();
+  if (dark) { g.shadowColor = T.water; g.shadowBlur = 12 * s; }
+  g.strokeStyle = T.water;
+  for (let i = 1; i < RIV.length; i++) { g.lineWidth = lerp(2.2, 8.5, i / RIV.length) * s; g.beginPath(); g.moveTo(U(RIV[i - 1][0]), V(RIV[i - 1][1])); g.lineTo(U(RIV[i][0]), V(RIV[i][1])); g.stroke(); }
+  g.beginPath(); g.ellipse(U(LAKE.x), V(LAKE.z), LAKE.r * k, LAKE.r / 1.35 * k, 0, 0, 7); g.fillStyle = T.lake; g.fill(); g.lineWidth = 2.5 * s; g.strokeStyle = T.rim; g.stroke();
+  g.shadowBlur = 0;
+  g.strokeStyle = T.neat; g.lineWidth = 3 * s; g.strokeRect(8 * s, 8 * s, cw - 16 * s, ch - 16 * s); g.lineWidth = 1.2 * s; g.strokeRect(17 * s, 17 * s, cw - 34 * s, ch - 34 * s);
+  ovTex.needsUpdate = true;
+}
+
+/* terrain mesh */
+const geo = new THREE.BufferGeometry();
+{
+  const n = (NX + 1) * (NZ + 1), pos = new Float32Array(n * 3), uv = new Float32Array(n * 2), idx = [];
+  for (let j = 0; j <= NZ; j++) for (let i = 0; i <= NX; i++) {
+    const k = j * (NX + 1) + i; pos[k * 3] = XMIN + i / NX * W; pos[k * 3 + 1] = HG[k]; pos[k * 3 + 2] = ZMIN + j / NZ * D; uv[k * 2] = i / NX; uv[k * 2 + 1] = j / NZ;
+    if (i < NX && j < NZ) { const a = k, b = k + 1, c = k + NX + 1, d = c + 1; idx.push(a, c, b, b, c, d); }
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); geo.setIndex(idx); geo.computeVertexNormals();
+}
+const U = {
+  uRise: { value: RM ? 1 : 0 }, uSun: { value: new THREE.Vector3() }, uBg: { value: new THREE.Color() }, uLine: { value: new THREE.Color() },
+  uWall: { value: new THREE.Color() }, uStone: { value: new THREE.Color() }, uCam: { value: cam.position }, uDark: { value: 0 }, uMaxH: { value: maxH },
+  uFogN: { value: 10 }, uFogF: { value: 40 }, uNowX: { value: NOWX }, uMap: { value: ovTex }, uHalf: { value: new THREE.Vector2(W / 2, D / 2) }, uOff: { value: new THREE.Vector2() },
+};
+const ISO = `float iso(float v,float w){float fw=fwidth(v);if(fw<1e-6)return 0.;float f=abs(fract(v-.5)-.5)/fw;return 1.-smoothstep(w*.5-.5,w*.5+.5,f);}`;
+const FOG = `col=mix(col,uBg,smoothstep(uFogN,uFogF,distance(vP,uCam))*.82);`;
+const terrain = new THREE.Mesh(geo, new THREE.ShaderMaterial({
+  uniforms: U,
+  vertexShader: `uniform float uRise;varying vec3 vP;varying vec3 vN;varying vec2 vUv;
+void main(){vec3 p=position;p.y*=uRise;vN=normalize(vec3(normal.x*uRise,normal.y,normal.z*uRise));vP=p;vUv=uv;gl_Position=projectionMatrix*viewMatrix*vec4(p,1.);}`,
+  fragmentShader: `uniform vec3 uSun,uBg,uCam,uLine;uniform float uDark,uMaxH,uFogN,uFogF,uNowX;uniform sampler2D uMap;varying vec3 vP;varying vec3 vN;varying vec2 vUv;
+${glRamp('hypL', HYPS.light)}${glRamp('hypD', HYPS.dark)}${ISO}
+void main(){
+ vec3 n=normalize(vN);float h=vP.y;float t=pow(clamp(h/uMaxH,0.,1.),.6);
+ vec3 base=mix(hypL(t),hypD(t),uDark);
+ float dl=(dot(n,uSun)-uSun.y)*(.75+1.4*t);
+ vec3 sh=mix(vec3(.6,.63,.75),vec3(.36,.43,.62),uDark),li=mix(vec3(1.1,1.06,.97),vec3(1.9,1.8,1.62),uDark);
+ vec3 col=base*(dl<0.?mix(vec3(1.),sh,clamp(-dl,0.,1.)):mix(vec3(1.),li,clamp(dl,0.,1.)));
+ float v1=h*10.,v5=h*2.,fw1=fwidth(v1),fw5=fwidth(v5);
+ float mi=iso(v1,1.)*(1.-smoothstep(.22,.5,fw1)),ma=iso(v5,1.55)*(1.-smoothstep(.3,.75,fw5));
+ float sv=1.-smoothstep(uNowX,uNowX+.04,vP.x);
+ float la=max(mi*mix(.36,.34,uDark),ma*mix(.8,.95,uDark))*sv*mix(1.,.5+.8*t,uDark);
+ col=mix(col,uLine,la);
+ float gr=iso(vP.x+.8,1.1)*step(${X(2014.9).toFixed(2)},vP.x)*step(vP.x,${X(2026.5).toFixed(2)})*step(abs(vP.z),${(D / 2 - .14).toFixed(2)})*step(.42,fract(vP.z*2.2));
+ col=mix(col,uLine,gr*mix(.42,.3,uDark)*sv);
+ if(uDark>.5&&fw5>1e-6){float d5=abs(fract(v5-.5)-.5)/fw5;col+=uLine*exp(-d5*d5/7.)*.2*sv*(1.-smoothstep(.3,.75,fw5));}
+ vec4 ov=texture2D(uMap,vUv);col=mix(col,ov.rgb,ov.a);
+ ${FOG}gl_FragColor=vec4(col,1.);}`,
+}));
+scene.add(terrain);
+
+/* the cut faces of the relief model: contours continue as strata */
+{
+  const pos = [], nrm = [], top = [], idx = [];
+  const edge = (pts, nx, nz) => {
+    const o = pos.length / 3;
+    pts.forEach(([x, z, h]) => { pos.push(x, h, z, x, BASE, z); nrm.push(nx, 0, nz, nx, 0, nz); top.push(1, 0); });
+    for (let i = 0; i < pts.length - 1; i++) { const a = o + i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+  };
+  const row = j => Array.from({ length: NX + 1 }, (_, i) => [XMIN + i / NX * W, ZMIN + j / NZ * D, HG[j * (NX + 1) + i]]);
+  const col = i => Array.from({ length: NZ + 1 }, (_, j) => [XMIN + i / NX * W, ZMIN + j / NZ * D, HG[j * (NX + 1) + i]]);
+  edge(row(NZ), 0, 1); edge(row(0), 0, -1); edge(col(0), -1, 0); edge(col(NX), 1, 0);
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('normal', new THREE.Float32BufferAttribute(nrm, 3)); g.setAttribute('aTop', new THREE.Float32BufferAttribute(top, 1)); g.setIndex(idx);
+  scene.add(new THREE.Mesh(g, new THREE.ShaderMaterial({
+    uniforms: U, side: THREE.DoubleSide,
+    vertexShader: `attribute float aTop;uniform float uRise;varying vec3 vP;varying vec3 vN;void main(){vec3 p=position;if(aTop>.5)p.y*=uRise;vP=p;vN=normal;gl_Position=projectionMatrix*viewMatrix*vec4(p,1.);}`,
+    fragmentShader: `uniform vec3 uSun,uBg,uCam,uLine,uWall;uniform float uDark,uFogN,uFogF,uNowX;varying vec3 vP;varying vec3 vN;${ISO}
+void main(){float y=vP.y;vec3 col=uWall*(.9+.28*dot(normalize(vN),uSun));
+ float up=step(-.015,y),a=max(iso(y*10.,1.)*.28,iso(y*2.,1.3)*.62)*up*(1.-smoothstep(uNowX,uNowX+.04,vP.x));
+ col=mix(col,uLine,a*mix(1.,.8,uDark));col*=mix(1.,.86,1.-smoothstep(${BASE.toFixed(2)},0.,y));
+ ${FOG}gl_FragColor=vec4(col,1.);}`,
+  })));
+}
+/* the table it sits on, with a soft cast shadow */
+{
+  const g = new THREE.PlaneGeometry(90, 90); g.rotateX(-Math.PI / 2); g.translate(0, BASE - .002, 0);
+  scene.add(new THREE.Mesh(g, new THREE.ShaderMaterial({
+    uniforms: U,
+    vertexShader: `varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*viewMatrix*vec4(position,1.);}`,
+    fragmentShader: `uniform vec3 uBg;uniform vec2 uHalf,uOff;uniform float uDark;varying vec3 vP;
+float sdb(vec2 p,vec2 b){vec2 d=abs(p)-b;return length(max(d,0.))+min(max(d.x,d.y),0.);}
+void main(){float d=sdb(vP.xz-uOff,uHalf);float s=exp(-max(d,0.)*1.7)*mix(.2,.5,uDark)*step(0.,d+.6);gl_FragColor=vec4(uBg*(1.-s),1.);}`,
+  })));
+}
+/* cairns: one small stack of stones per certificate */
+const CERTS = [...document.querySelectorAll('#certs li')].map(li => ({ title: li.firstChild.textContent.trim(), kind: li.querySelector('span').textContent, file: li.dataset.f }));
+const rnd = mulberry(7);
+const CAIRNS = CERTS.map((c, i) => {
+  const p = riverAt(.02 + .96 * (i + .5) / CERTS.length), side = i % 2 ? 1 : -1, off = side * (.2 + rnd() * .24);
+  const x = p.x + p.nx * off, z = p.z + p.nz * off;
+  return { ...c, x, z, rot: rnd() * 6.28, sc: .8 + rnd() * .45 };
+});
+let cairnMesh;
+{
+  const parts = [[.045, .026, .04, .016], [.034, .021, .03, .052], [.022, .017, .02, .082]];
+  const pos = [], nrm = [];
+  for (const [sx, sy, sz, y] of parts) {
+    const g = new THREE.IcosahedronGeometry(1, 1); g.scale(sx, sy, sz); g.translate(0, y, 0); g.computeVertexNormals();
+    pos.push(...g.attributes.position.array); nrm.push(...g.attributes.normal.array);
+  }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('normal', new THREE.Float32BufferAttribute(nrm, 3));
+  cairnMesh = new THREE.InstancedMesh(g, new THREE.ShaderMaterial({
+    uniforms: U,
+    vertexShader: `varying vec3 vN;varying vec3 vP;void main(){vec4 w=instanceMatrix*vec4(position,1.);vN=normalize(mat3(instanceMatrix)*normal);vP=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}`,
+    fragmentShader: `uniform vec3 uSun,uStone,uBg,uCam;uniform float uFogN,uFogF;varying vec3 vN;varying vec3 vP;void main(){vec3 col=uStone*(.5+.75*max(dot(normalize(vN),uSun),0.));${FOG}gl_FragColor=vec4(col,1.);}`,
+  }), CAIRNS.length);
+  const m = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3();
+  CAIRNS.forEach((c, i) => { q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), c.rot); s.setScalar(c.sc); m.compose(new THREE.Vector3(c.x, H(c.x, c.z) - .006, c.z), q, s); cairnMesh.setMatrixAt(i, m); });
+  cairnMesh.visible = RM; scene.add(cairnMesh);
+}
+/* the benchmark: a ranging pole on the summit of now */
+const NOWR = RIDGES[0];
+const BM = summit(X((NOWR.y0 + NOWR.y1) / 2), ridgeZ(NOWR, X((NOWR.y0 + NOWR.y1) / 2)), .3);
+const pole = new THREE.Mesh(new THREE.CylinderGeometry(.007, .007, .3, 10), new THREE.ShaderMaterial({
+  uniforms: { ...U, uRed: { value: new THREE.Color('#b8321f') } },
+  vertexShader: `varying float vy;varying vec3 vP;void main(){vy=position.y;vec4 w=modelMatrix*vec4(position,1.);vP=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}`,
+  fragmentShader: `uniform vec3 uRed,uBg,uCam;uniform float uFogN,uFogF;varying float vy;varying vec3 vP;void main(){vec3 col=fract(vy*12.5+.5)<.5?uRed:vec3(.95,.93,.88);${FOG}gl_FragColor=vec4(col,1.);}`,
+}));
+pole.position.set(BM[0], BM[1] + .15, BM[2]); pole.visible = RM; scene.add(pole);
+
+function applyTheme() {
+  dark = darkQ.matches; T = dark ? THEME.dark : THEME.light;
+  const bg = getComputedStyle(html).getPropertyValue('--paper').trim() || (dark ? '#0a0f14' : '#ece5d3');
+  U.uBg.value.set(bg); U.uLine.value.set(T.line); U.uWall.value.set(T.wall); U.uStone.value.set(T.stone); U.uDark.value = dark ? 1 : 0;
+  renderer.setClearColor(U.uBg.value, 1);
+  drawOverlay(); buildMini(); request();
+}
+
+/* ---------- camera: a damped survey flight ---------- */
+const P0 = 56 * Math.PI / 180, P1 = 21 * Math.PI / 180;
+let az = 0, dMax = 20; const dMin = 2.9;
+const OV = { tx: 0, tz: 0 }, S = { tx: 0, tz: 0, zoom: 0 }, G = { tx: 0, tz: 0, zoom: 0 };
+let fly = null, touched = false;
+const dist = z => dMax * Math.pow(dMin / dMax, z);
+const pitchOf = z => lerp(P0, P1, ss(0, 1, z));
+const vv = new THREE.Vector3();
+function place(tx, tz, d, pitch, ty) {
+  const c = Math.cos(pitch) * d, dx = Math.sin(az) * c, dz = Math.cos(az) * c;
+  let cy = ty + Math.sin(pitch) * d;
+  /* never look through a mountain: rise until the line of sight clears the land */
+  for (let i = 1; i <= 12; i++) { const f = i / 12, x = tx + dx * f, z = tz + dz * f; if (inside(x, z)) cy = Math.max(cy, ty + (H(x, z) + .09 - ty) / f); }
+  cam.position.set(tx + dx, cy, tz + dz);
+  cam.lookAt(tx, ty, tz); cam.updateMatrixWorld();
+}
+function pose() {
+  const ty = lerp(.3, H(S.tx, S.tz) + .04, ss(.05, .7, S.zoom));
+  target.set(S.tx, ty, S.tz);
+  place(S.tx, S.tz, dist(S.zoom), pitchOf(S.zoom), ty);
+  const d = cam.position.distanceTo(target);
+  U.uFogN.value = d * .7; U.uFogF.value = d * 3.2;
+  const L = new THREE.Vector3(-.82, .5, .16).normalize(), r = [Math.cos(az), -Math.sin(az)], b = [Math.sin(az), Math.cos(az)];
+  U.uSun.value.set(L.x * r[0] + L.z * b[0], L.y, L.x * r[1] + L.z * b[1]);
+  U.uOff.value.set(-U.uSun.value.x * .9, -U.uSun.value.z * .9);
+}
+function fit() {
+  const vw = innerWidth, vh = innerHeight;
+  renderer.setSize(vw, vh, false); cam.aspect = vw / vh; cam.updateProjectionMatrix();
+  az = vw / vh < .8 ? Math.PI / 2 : 0;
+  const mob = small(), cart = $('.cart').getBoundingClientRect();
+  const topPx = mob ? cart.bottom + 10 : 64, botPx = mob ? 70 : 44;
+  const B = { x: mob ? .95 : .9, top: 1 - 2 * topPx / vh, bot: -1 + 2 * botPx / vh };
+  const pts = [];
+  for (const x of [XMIN, XMAX]) for (const z of [ZMIN, ZMAX]) for (const y of [BASE, .45]) pts.push(new THREE.Vector3(x, y, z));
+  const top = PAPERS[0]; pts.push(new THREE.Vector3(top.x, maxH, top.z));
+  const cx = (XMIN + XMAX) / 2, fx = -Math.sin(az), fz = -Math.cos(az);
+  let shift = 0, d = 20;
+  const box = dd => { place(cx + fx * shift, fz * shift, dd, P0, .3); const a = [9, -9, 9, -9]; for (const p of pts) { vv.copy(p).project(cam); a[0] = Math.min(a[0], vv.x); a[1] = Math.max(a[1], vv.x); a[2] = Math.min(a[2], vv.y); a[3] = Math.max(a[3], vv.y); } return a; };
+  for (let pass = 0; pass < 4; pass++) {
+    let lo = 3, hi = 120;
+    for (let i = 0; i < 32; i++) { const m = (lo + hi) / 2, a = box(m); (a[1] - a[0] <= 2 * B.x && a[3] - a[2] <= B.top - B.bot) ? hi = m : lo = m; }
+    d = hi; const a = box(d);
+    shift += ((a[2] + a[3]) / 2 - (B.top + B.bot) / 2) * d * Math.tan(FOV * Math.PI / 360) / Math.sin(P0);
+  }
+  dMax = d; OV.tx = cx + fx * shift; OV.tz = fz * shift;
+  if (!touched) { Object.assign(S, OV, { zoom: 0 }); Object.assign(G, S); }
+  clampG(); measureUI(); buildMini(); request();
+}
+function clampG() {
+  G.zoom = clamp(G.zoom, 0, 1);
+  const k = ss(0, .3, G.zoom);
+  G.tx = clamp(G.tx, lerp(OV.tx, XMIN + .3, k), lerp(OV.tx, XMAX - .3, k));
+  G.tz = clamp(G.tz, lerp(OV.tz, ZMIN + .3, k), lerp(OV.tz, ZMAX - .3, k));
+}
+function flyTo(x, z, zoom) {
+  touched = true;
+  const b = { tx: clamp(x, XMIN + .3, XMAX - .3), tz: clamp(z, ZMIN + .3, ZMAX - .3), zoom };
+  if (RM) { Object.assign(S, b); Object.assign(G, b); request(); return; }
+  const dd = Math.hypot(b.tx - S.tx, b.tz - S.tz);
+  fly = { t0: performance.now(), dur: 1150 + 750 * Math.min(1, dd / 7), a: { ...S }, b, arc: Math.min(.3, dd * .045) };
+  request();
+}
+function overview() { touched = true; flyTo(OV.tx, OV.tz, 0); }
+
+/* ---------- marks: surveyor's annotations anchored to the land ---------- */
+const marksEl = $('#marks'), marks = [];
+let sel = null;
+function addMark(o) {
+  const el = document.createElement('div'); el.className = 'mk ' + o.kind + (o.cls ? ' ' + o.cls : '');
+  const id = 'n' + marks.length, lead = !['rg', 'rv', 'nt'].includes(o.kind);
+  el.innerHTML = (lead ? `<span class="sym" aria-hidden="true">${SYM[o.kind]}</span><span class="ld" aria-hidden="true"></span>` : '') +
+    `<div class="tx">${o.plain ? `<span class="nm">${o.name}</span>` : `<button class="nm" aria-expanded="false" aria-controls="${id}">${o.name}${o.sub ? `<small>${o.sub}</small>` : ''}</button>`}${o.extra || ''}${o.more ? `<div class="more" id="${id}" hidden>${o.more}</div>` : ''}</div>`;
+  marksEl.appendChild(el);
+  const y = o.y ?? H(o.x, o.z) + (o.dy || 0);
+  const m = { ...o, el, tx: el.querySelector('.tx'), btn: el.querySelector('button.nm'), more: el.querySelector('.more'), p: new THREE.Vector3(o.x, y, o.z), w: 0, h: 0, st: '', key: '', lead };
+  if (m.btn) {
+    m.btn.onclick = () => select(m);
+    m.btn.addEventListener('focus', () => { if (m.el.classList.contains('off') || m.el.classList.contains('hide')) flyTo(m.fx ?? m.x, m.fz ?? m.z, Math.max(m.fzoom, .45)); });
+    const sym = el.querySelector('.sym'); if (sym) sym.onclick = () => select(m);
+  }
+  marks.push(m); return m;
+}
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const cite = c => c === 1 ? '1 citation' : c + ' citations';
+/* benchmark first: it carries the email */
+addMark({
+  kind: 'bm', pri: 100, minZ: 0, x: BM[0], z: BM[2], y: BM[1] + .3, lift: 40, fzoom: .6,
+  name: 'Now: Cyberscope by TAC', sub: 'Web3 full-stack developer, since 05/2026',
+  extra: '<a class="bm-mail" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>',
+  more: `<p>End-to-end Web3 products: contracts, on-chain integrations, React and Next frontends, security tooling.</p><p class="meta">Write to me at <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>. I'm also on <a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a>, <a href="https://github.com/gmixoulis">GitHub</a>, <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a> and <a href="https://twitter.com/GeorgeMicou">X</a>.</p>`,
+});
+PAPERS.forEach((p, i) => {
+  const [x, h, z] = summit(p.x, p.z, .18);
+  addMark({
+    kind: 'pk', cls: i === 0 ? 'top' : '', pri: 60 + p.c, minZ: p.c >= 7 ? 0 : p.c ? .16 : .3, x, z, y: h + .005, lift: 26, fzoom: p.c >= 7 ? .52 : .66,
+    name: esc(p.short), sub: `${cite(p.c)} · ${p.y}`,
+    more: `<p><cite>${esc(p.title)}</cite></p><p class="meta">${p.venue ? esc(p.venue) + ', ' : ''}${p.y}. ${p.c ? 'Cited ' + (p.c === 1 ? 'once' : p.c + ' times') : 'Not cited yet'}.</p>`,
+  });
+});
+RIDGES.slice(1).forEach((r, i) => {
+  const xm = X((r.y0 + Math.min(r.y1, 2026)) / 2), zm = ridgeZ(r, xm);
+  addMark({ kind: 'rg', pri: 82 - i, minZ: 0, x: xm, z: zm, dy: .03, lift: 7, fzoom: .42, name: esc(r.name), sub: r.yrs, more: `<p><b>${esc(r.title)}</b>, ${r.yrs}</p><p>${esc(r.note)}</p>` });
+});
+{
+  const b = riverAt(.3), m = riverAt(.83);
+  addMark({ kind: 'rv', pri: 76, minZ: 0, x: b.x, z: b.z, lift: 8, fzoom: .45, name: 'BSc Applied Informatics', sub: 'University of Macedonia, 2015 – 2020', more: '<p>My thesis was on verifying academic credentials with Ethereum.</p>' });
+  addMark({ kind: 'rv', pri: 75, minZ: 0, x: m.x, z: m.z, lift: 8, fzoom: .45, name: 'MSc Data and Web Science', sub: 'Aristotle University of Thessaloniki, 2020 – 2022', more: '<p>Graph-embedding methods for blockchain fraud detection, funded by a DeepMind scholarship.</p>' });
+}
+AWARDS.forEach(a => addMark({ kind: 'tg', pri: 50, minZ: .18, x: X(a.y), z: a.z, lift: 20, fzoom: .6, name: esc(a.name), sub: esc(a.sub), more: `<p>${esc(a.sub)}.${a.note ? ' ' + a.note : ''}</p>` }));
+addMark({ kind: 'nt', plain: true, pri: 20, minZ: .05, x: (NOWX + XMAX) / 2 + .05, z: -2.4, lift: 0, name: 'unsurveyed' });
+CAIRNS.forEach((c, i) => addMark({
+  kind: 'cn', pri: 5, minZ: 0, x: c.x, z: c.z, dy: .1, lift: 12, fzoom: .8, name: esc(c.title), sub: `Cairn ${i + 1} of 34 · ${esc(c.kind)}`,
+  more: ' ', scan: c.file, alt: 'Scan of the certificate: ' + c.title,
+}));
+marks.forEach(m => { m.fx = m.x; m.fz = m.z; });
+const order = marks.slice().sort((a, b) => b.pri - a.pri);
+
+function measure(m) { m.w = m.tx.offsetWidth; m.h = m.tx.offsetHeight; }
+function select(m) {
+  touched = true; hideHint();
+  if (sel) { sel.el.classList.remove('sel'); sel.btn.setAttribute('aria-expanded', 'false'); if (sel.more) sel.more.hidden = true; measure(sel); }
+  if (sel === m) { sel = null; request(); return; }
+  sel = m; m.el.classList.add('sel'); m.btn.setAttribute('aria-expanded', 'true');
+  if (m.more) {
+    m.more.hidden = false;
+    if (m.scan && !m.more.querySelector('img')) {
+      const img = new Image(); img.alt = m.alt; img.onload = () => { measure(m); request(); };
+      img.src = '../../img/renamed/' + m.scan; m.more.replaceChildren(img);
+    }
+  }
+  measure(m); flyTo(m.fx, m.fz, m.fzoom);
+}
+function deselect() { if (sel) select(sel); }
+
+/* year ruler along the map margin */
+const ruler = [];
+for (let yr = 2015; yr <= 2026; yr++) ruler.push({ x: X(yr), t: String(yr) });
+ruler.push({ x: NOWX, t: 'now', now: 1 });
+ruler.forEach(r => { r.el = document.createElement('span'); r.el.className = 'yr off' + (r.now ? ' now' : ''); r.el.textContent = r.t; r.el.setAttribute('aria-hidden', 'true'); marksEl.appendChild(r.el); });
+
+let uiRects = [];
+function measureUI() {
+  uiRects = ['.cart', '.key', '.zoom', '.corner', '.back', '.credit', '.mail'].map(s => $(s)?.getBoundingClientRect()).filter(r => r && r.width).map(r => [r.left - 6, r.top - 6, r.right + 6, r.bottom + 6]);
+  marks.forEach(measure);
+  ruler.forEach(r => { r.w = r.el.offsetWidth; r.h = r.el.offsetHeight; });
+}
+const hit = (a, list) => list.some(r => a[0] < r[2] && a[2] > r[0] && a[1] < r[3] && a[3] > r[1]);
+function occluded(p) {
+  const o = cam.position;
+  for (let i = 2; i < 22; i++) {
+    const t = i / 23, x = o.x + (p.x - o.x) * t, z = o.z + (p.z - o.z) * t;
+    if (inside(x, z) && H(x, z) > o.y + (p.y - o.y) * t + .015) return true;
+  }
+  return false;
+}
+function setState(m, st) { if (m.st !== st) { m.el.classList.remove('off', 'hide', 'dim'); if (st) m.el.classList.add(...st.split(' ')); m.st = st; } }
+function updateMarks() {
+  const vw = innerWidth, vh = innerHeight, z = S.zoom, placed = uiRects.slice();
+  const list = sel ? [sel, ...order.filter(m => m !== sel)] : order;
+  for (const m of list) {
+    vv.copy(m.p).project(cam);
+    const sx = (vv.x + 1) * .5 * vw, sy = (1 - vv.y) * .5 * vh;
+    const on = vv.z < 1 && sx > -20 && sx < vw + 20 && sy > -20 && sy < vh + 20;
+    let st = on ? '' : 'off', o = 0, flip = false;
+    if (on) {
+      const isSel = m === sel, txt = m.kind !== 'cn' || isSel;
+      if (!isSel && z < m.minZ) st = 'hide';
+      const cands = m.lead ? (sx + 16 + m.w > vw - 12 ? [-16 - m.w, 16] : [16, -16 - m.w]) : [-m.w / 2];
+      let ok = false;
+      for (const c of cands) {
+        o = Math.max(12 - sx, Math.min(vw - 12 - sx - m.w, c)); flip = m.lead && c < 0;
+        if (st || !txt) break;
+        const r = [sx + o, sy - m.lift - m.h, sx + o + m.w, sy - m.lift];
+        if (r[1] < 2 && !isSel) continue;
+        if (isSel || !hit(r, placed)) { placed.push([r[0] - 6, r[1] - 3, r[2] + 6, r[3] + 3]); ok = true; break; }
+      }
+      if (!st && txt && !ok) st = 'hide';
+      if (!isSel && st !== 'hide' && m.kind !== 'nt' && occluded(m.p)) st = st ? st + ' dim' : 'dim';
+    }
+    if (on && m.lead && m.pri >= 40) placed.push([sx - 9, sy - 12, sx + 9, sy + 6]);
+    setState(m, st);
+    m.el.classList.toggle('flip', flip);
+    const key = on ? `${sx.toFixed(1)},${sy.toFixed(1)},${o.toFixed(1)}` : 'off';
+    if (key !== m.key) { m.key = key; if (on) { m.el.style.transform = `translate3d(${sx.toFixed(1)}px,${sy.toFixed(1)}px,0)`; m.tx.style.transform = `translate(${o.toFixed(1)}px,${-m.lift}px)`; } }
+  }
+  /* ruler: where each year line meets the bottom margin (or the left one when the map is turned) */
+  const turned = az !== 0, mY = vh - (small() ? 96 : 60), mX = 26;
+  for (const r of ruler) {
+    let prev = null, pos = null, crossed = false;
+    for (let k = 0; k <= 28; k++) {
+      const zz = ZMIN + k / 28 * D; vv.set(r.x, H(r.x, zz), zz).project(cam);
+      if (vv.z > 1) break;
+      const cur = [(vv.x + 1) * .5 * vw, (1 - vv.y) * .5 * vh];
+      if (turned ? cur[0] <= mX : cur[1] >= mY) {
+        if (prev) { const f = turned ? (prev[0] - mX) / (prev[0] - cur[0]) : (mY - prev[1]) / (cur[1] - prev[1]); pos = [lerp(prev[0], cur[0], f), lerp(prev[1], cur[1], f)]; crossed = true; }
+        break;
+      }
+      prev = cur; pos = cur;
+    }
+    let ok = !!pos;
+    if (ok) {
+      const x = turned ? (crossed ? 8 : Math.max(6, pos[0] - r.w - 8)) : pos[0] - r.w / 2, y = turned ? pos[1] - r.h / 2 : (crossed ? pos[1] - r.h / 2 : pos[1] + 8);
+      ok = x > 4 && x + r.w < vw - 4 && y > 4 && y + r.h < vh - 4 && !hit([x, y, x + r.w, y + r.h], placed);
+      if (ok) r.el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
+    }
+    r.el.classList.toggle('off', !ok);
+  }
+}
+
+/* ---------- key: minimap and scale ---------- */
+const mini = $('#mini'), mctx = mini.getContext('2d');
+let miniBase = null;
+function buildMini() {
+  const dpr = Math.min(devicePixelRatio || 1, 2), cw = Math.round(mini.clientWidth * dpr), ch = Math.round(mini.clientHeight * dpr);
+  if (!cw || !ch) return;
+  mini.width = cw; mini.height = ch;
+  miniBase = document.createElement('canvas'); miniBase.width = cw; miniBase.height = ch;
+  const g = miniBase.getContext('2d'), img = g.createImageData(cw, ch), st = dark ? HYPS.dark : HYPS.light, e = W / cw;
+  const L = [-.55, .6, -.58], ln = Math.hypot(...L), line = hex(T.line);
+  for (let j = 0; j < ch; j++) for (let i = 0; i < cw; i++) {
+    const x = XMIN + (i + .5) * e, z = ZMIN + (j + .5) / ch * D, h = H(x, z);
+    const nx = -(H(x + e, z) - H(x - e, z)) / (2 * e) * 1.6, nz = -(H(x, z + e) - H(x, z - e)) / (2 * e) * 1.6, nl = Math.hypot(nx, 1, nz);
+    const lam = (nx * L[0] + L[1] + nz * L[2]) / (nl * ln), f = 1 + (lam - L[1] / ln) * (dark ? 1.4 : .9);
+    let c = rampJS(st, Math.pow(Math.max(0, h) / maxH, .6)).map(v => v * f);
+    const q = h * 4, fr = Math.abs(q - Math.round(q)), gr = Math.hypot(nx, nz) * 4 * e / 1.6;
+    if (fr < gr * .7 && x < NOWX) c = c.map((v, k) => lerp(v, line[k], dark ? .38 : .4));
+    const o = (j * cw + i) * 4; img.data[o] = c[0] * 255; img.data[o + 1] = c[1] * 255; img.data[o + 2] = c[2] * 255; img.data[o + 3] = 255;
+  }
+  g.putImageData(img, 0, 0);
+  g.drawImage(ovc, 0, 0, cw, ch);
+}
+const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -.25), hitP = new THREE.Vector3();
+function groundAt(nx, ny, y = .25) {
+  plane.constant = -y; ray.setFromCamera({ x: nx, y: ny }, cam);
+  const d = ray.ray.direction, o = ray.ray.origin;
+  if (d.y > -1e-3) return o.clone().addScaledVector(d, 60);
+  const t = Math.min(60, (y - o.y) / d.y); return o.clone().addScaledVector(d, t);
+}
+function drawMini() {
+  if (!miniBase || !$('#key').classList.contains('open')) return;
+  const cw = mini.width, ch = mini.height, k = cw / W;
+  mctx.drawImage(miniBase, 0, 0);
+  mctx.save(); mctx.beginPath();
+  [[-1, -1], [1, -1], [1, 1], [-1, 1]].forEach(([a, b], i) => { const p = groundAt(a, b); const px = (p.x - XMIN) * k, py = (p.z - ZMIN) * k; i ? mctx.lineTo(px, py) : mctx.moveTo(px, py); });
+  mctx.closePath(); mctx.fillStyle = dark ? 'rgba(240,232,214,.1)' : 'rgba(38,29,22,.08)'; mctx.fill();
+  mctx.lineWidth = Math.max(1, cw / 230); mctx.strokeStyle = T.minic; mctx.stroke();
+  const tx = (S.tx - XMIN) * k, tz = (S.tz - ZMIN) * k, r = cw / 60;
+  mctx.beginPath(); mctx.moveTo(tx - r, tz); mctx.lineTo(tx + r, tz); mctx.moveTo(tx, tz - r); mctx.lineTo(tx, tz + r); mctx.stroke();
+  mctx.restore();
+}
+mini.addEventListener('click', e => {
+  const r = mini.getBoundingClientRect();
+  flyTo(XMIN + (e.clientX - r.left) / r.width * W, ZMIN + (e.clientY - r.top) / r.height * D, Math.max(G.zoom, .4)); hideHint();
+});
+const scaleEl = $('#scale'), bar = scaleEl.querySelector('.bar'), lbl = scaleEl.querySelector('.lbl');
+const UNITS = [[2, '2 years'], [1, '1 year'], [.5, '6 months'], [.25, '3 months'], [1 / 12, '1 month']];
+function updateScale() {
+  scaleEl.hidden = az !== 0; if (az !== 0) return;
+  const a = vv.set(target.x - .5, target.y, target.z).project(cam).x, b = vv.set(target.x + .5, target.y, target.z).project(cam).x;
+  const px = Math.abs(b - a) * .5 * innerWidth, u = UNITS.find(u => px * u[0] <= 120) || UNITS[UNITS.length - 1];
+  bar.style.width = (px * u[0]).toFixed(0) + 'px'; lbl.textContent = u[1];
+}
+
+/* ---------- loop: render only while something moves ---------- */
+let raf = 0, last = 0, t0 = 0;
+function request() { if (!raf && !document.hidden && gaz.hidden) raf = requestAnimationFrame(tick); }
+function tick(t) {
+  raf = 0; if (!t0) t0 = t;
+  const dt = Math.min(64, t - (last || t)); last = t;
+  let busy = false;
+  if (qs.has('rise')) { U.uRise.value = +qs.get('rise'); document.body.classList.add('risen'); }
+  else if (U.uRise.value < 1) {
+    const p = Math.min(1, (t - t0) / 2200); U.uRise.value = 1 - Math.pow(1 - p, 3); busy = p < 1;
+    if (p >= .72 && !document.body.classList.contains('risen')) document.body.classList.add('risen');
+    if (p >= 1) { cairnMesh.visible = pole.visible = true; }
+  }
+  if (fly) {
+    const p = Math.min(1, (t - fly.t0) / fly.dur), e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+    S.tx = lerp(fly.a.tx, fly.b.tx, e); S.tz = lerp(fly.a.tz, fly.b.tz, e); S.zoom = Math.max(0, lerp(fly.a.zoom, fly.b.zoom, e) - fly.arc * Math.sin(Math.PI * p));
+    Object.assign(G, S); if (p >= 1) fly = null; busy = true;
+  } else if (RM) Object.assign(S, G);
+  else {
+    const k = 1 - Math.exp(-dt / 110); let dmax = 0;
+    for (const q of ['tx', 'tz', 'zoom']) { S[q] += (G[q] - S[q]) * k; dmax = Math.max(dmax, Math.abs(G[q] - S[q])); }
+    if (dmax > 2e-4) busy = true; else Object.assign(S, G);
+  }
+  pose(); renderer.render(scene, cam); updateMarks(); drawMini(); updateScale();
+  if (busy) request();
+}
+document.addEventListener('visibilitychange', request);
+
+/* ---------- input: drag pans, wheel and pinch zoom, keys too ---------- */
+const mapEl = $('#map'), hint = $('#hint');
+if (coarse || small()) hint.textContent = coarse ? 'Drag to move · pinch to fly lower · tap a name' : 'Drag to move · scroll to fly lower · pick a name';
+function hideHint() { hint.classList.add('gone'); }
+const ptrs = new Map(); let drag = null, moved = false, pinch = null, vel = [0, 0, 0];
+function panBy(dx, dy) {
+  const d = dist(S.zoom), upp = 2 * d * Math.tan(FOV * Math.PI / 360) / innerHeight, sp = Math.sin(pitchOf(S.zoom));
+  const mx = -dx * upp, my = dy * upp / sp, rx = Math.cos(az), rz = -Math.sin(az), fx = -Math.sin(az), fz = -Math.cos(az);
+  const ddx = rx * mx + fx * my, ddz = rz * mx + fz * my;
+  if (G.zoom < .3) G.zoom = Math.min(.3, G.zoom + (Math.abs(dx) + Math.abs(dy)) * .0015);
+  G.tx += ddx; G.tz += ddz; clampG(); return [ddx, ddz];
+}
+mapEl.addEventListener('pointerdown', e => {
+  if (e.pointerType === 'mouse' && e.button !== 0) return;
+  touched = true; ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (fly) { fly = null; Object.assign(G, S); }
+  vel = [0, 0, 0];
+  if (ptrs.size === 1) { drag = { x: e.clientX, y: e.clientY }; moved = false; }
+  else if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), z: G.zoom }; drag = null; moved = true; }
+});
+addEventListener('pointermove', e => {
+  const p = ptrs.get(e.pointerId); if (!p) return;
+  const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
+  if (pinch && ptrs.size === 2) { const [a, b] = [...ptrs.values()]; G.zoom = clamp(pinch.z + Math.log(Math.hypot(a.x - b.x, a.y - b.y) / pinch.d) / Math.log(dMax / dMin), 0, 1); clampG(); request(); hideHint(); return; }
+  if (!drag) return;
+  if (!moved && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 5) return;
+  if (!moved) { moved = true; mapEl.classList.add('drag'); try { mapEl.setPointerCapture(e.pointerId); } catch (_) {} hideHint(); }
+  const [ddx, ddz] = panBy(dx, dy), now = e.timeStamp, dtm = Math.max(1, now - (vel[2] || now - 16));
+  vel = [lerp(vel[0], ddx / dtm, .5), lerp(vel[1], ddz / dtm, .5), now];
+  request();
+});
+function endPtr(e) {
+  if (!ptrs.has(e.pointerId)) return;
+  ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null;
+  if (!ptrs.size) {
+    if (drag && moved && !RM && e.timeStamp - vel[2] < 80) { G.tx += vel[0] * 220; G.tz += vel[1] * 220; clampG(); request(); }
+    drag = null; mapEl.classList.remove('drag');
+  }
+}
+addEventListener('pointerup', endPtr); addEventListener('pointercancel', endPtr);
+mapEl.addEventListener('click', e => {
+  if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; return; }
+  if (!e.target.closest('.mk')) deselect();
+}, true);
+mapEl.addEventListener('wheel', e => {
+  e.preventDefault(); touched = true; hideHint();
+  if (fly) { fly = null; Object.assign(G, S); }
+  const dy = (e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY) * (e.ctrlKey ? 3 : 1);
+  const z0 = G.zoom, z1 = clamp(z0 - dy * .0011, 0, 1); if (z1 === z0) return;
+  const p = groundAt(e.clientX / innerWidth * 2 - 1, 1 - e.clientY / innerHeight * 2, target.y), r = dist(z1) / dist(z0);
+  if (inside(p.x, p.z)) { G.tx = p.x + (G.tx - p.x) * r; G.tz = p.z + (G.tz - p.z) * r; }
+  G.zoom = z1; clampG(); request();
+}, { passive: false });
+function zoomBy(d) { touched = true; if (fly) { fly = null; Object.assign(G, S); } G.zoom += d; clampG(); request(); hideHint(); }
+$('#zin').onclick = () => zoomBy(.14); $('#zout').onclick = () => zoomBy(-.14);
+$('#whole').onclick = $('#whole2').onclick = () => { deselect(); overview(); };
+addEventListener('keydown', e => {
+  if (!gaz.hidden) { if (e.key === 'Escape') setReading(false); return; }
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key, step = 70; let used = true;
+  if (k === 'ArrowLeft') panBy(step, 0); else if (k === 'ArrowRight') panBy(-step, 0);
+  else if (k === 'ArrowUp') panBy(0, step); else if (k === 'ArrowDown') panBy(0, -step);
+  else if (k === '+' || k === '=') zoomBy(.1); else if (k === '-' || k === '_') zoomBy(-.1);
+  else if (k === '0' || k === 'Home') overview(); else if (k === 'Escape') deselect(); else used = false;
+  if (used) { e.preventDefault(); touched = true; if (fly && k.startsWith('Arrow')) fly = null; hideHint(); request(); }
+});
+const keyEl = $('#key'), keyBtn = $('#keyBtn');
+keyBtn.onclick = () => { const o = !keyEl.classList.contains('open'); keyEl.classList.toggle('open', o); keyBtn.setAttribute('aria-expanded', o); measureUI(); buildMini(); request(); };
+if (small()) { keyEl.classList.remove('open'); keyBtn.setAttribute('aria-expanded', 'false'); }
+
+addEventListener('resize', () => { fit(); });
+darkQ.addEventListener('change', applyTheme);
+if (qs.has('sel')) setTimeout(() => { const m = marks[+qs.get('sel')]; if (m) select(m); }, 100);
+
+applyTheme(); fit();
+if (RM) document.body.classList.add('risen');
+document.fonts.ready.then(() => { measureUI(); request(); });
+</script>
+</body>
+</html>

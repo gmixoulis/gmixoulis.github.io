@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Three formats · George Michoulis</title>
+<meta name="description" content="George Michoulis's CV as a typeset page, plain text or JSON, all rendered from one JSON Resume object.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style id="css">
+:root{
+  --bg:#fbfbf8;--ink:#161512;--muted:#57534d;--faint:#6d6962;--rule:#dcd9d1;--accent:#b0362a;
+  --s:#983122;--n:#1f5a86;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#121210;--ink:#ece8df;--muted:#aea99f;--faint:#8f8a80;--rule:#302e2a;--accent:#e3806a;
+  --s:#e8a08b;--n:#8dc2e6;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 var(--serif)}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.2em}
+a:hover{text-decoration-color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{max-width:48rem;margin:0 auto;padding:0 clamp(1rem,4vw,2rem)}
+.back{display:inline-block;margin-top:1.25rem;font:.8125rem/1.5 var(--mono);color:var(--muted);text-decoration:none}
+.back:hover{color:var(--ink)}
+
+header{padding:clamp(2.75rem,11vh,6.5rem) 0 2rem}
+h1{font-size:clamp(2.5rem,1rem + 5.2vw,5rem);line-height:.98;font-weight:600;letter-spacing:-.028em;margin:0 0 1.1rem;text-wrap:balance;view-transition-name:name}
+.lede{font-size:clamp(1.0625rem,1rem + .4vw,1.25rem);margin:0;color:var(--ink)}
+.links{margin:.35rem 0 0;color:var(--muted)}
+.sep{color:var(--faint)}
+.nw{white-space:nowrap}
+
+.bar{position:sticky;top:0;z-index:5;view-transition-name:bar;background:var(--bg);display:flex;flex-wrap:wrap;align-items:center;gap:.4rem 1.25rem;padding:.6rem 0;border-bottom:1px solid var(--rule)}
+.switch{display:flex;align-items:center;font:500 .9375rem/1 var(--mono)}
+.switch span{color:var(--faint);padding:0 .45rem}
+.switch button{font:inherit;color:var(--faint);background:none;border:0;border-bottom:2px solid transparent;padding:.55rem .15rem .4rem;cursor:pointer}
+.switch button:hover{color:var(--ink)}
+.switch button[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.meta{flex:1 1 12rem;margin:0;text-align:right;font:.75rem/1.4 var(--mono);color:var(--faint)}
+.said #meta{display:none}
+#status{color:var(--ink)}
+.acts{display:flex;gap:.5rem}
+.act{font:500 .8125rem/1 var(--mono);color:var(--ink);background:none;border:1px solid var(--rule);border-radius:0;padding:.55rem .7rem;text-decoration:none;cursor:pointer;white-space:nowrap}
+.act:hover{border-color:var(--ink)}
+
+#doc{padding:2.5rem 0 4rem;min-height:70vh;view-transition-name:doc}
+
+.summary{font-size:clamp(1.125rem,1rem + .45vw,1.3125rem);line-height:1.55;margin:0;text-wrap:pretty}
+.cv h2{font-size:1.5rem;line-height:1.2;font-weight:600;letter-spacing:-.012em;margin:3.25rem 0 1.25rem}
+.entry{margin:0 0 1.5rem}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;column-gap:1.5rem}
+.cv h3{font-size:1.125rem;line-height:1.35;font-weight:600;margin:0;text-wrap:balance}
+.when{font-size:.9375rem;color:var(--muted);font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
+.org{margin:0;font-style:italic;color:var(--muted)}
+.entry p{margin:.3rem 0 0;max-width:36em;text-wrap:pretty}
+.entry .org{margin:0}
+.pubs{margin:0;padding-left:2rem}
+.pubs li{margin:0 0 1.05rem;padding-left:.25rem}
+.pubs li::marker{font:500 .8125rem var(--mono);color:var(--faint)}
+.pubs .m{display:block;font-size:.9375rem;color:var(--muted)}
+.proj{margin:0}
+.proj dt{font:500 .875rem/1.5 var(--mono);margin-top:1rem}
+.proj dt:first-child{margin-top:0}
+.proj dd{margin:.1rem 0 0;color:var(--muted)}
+.run{margin:0;line-height:1.75}
+
+pre{margin:0;font:400 .9375rem/1.6 var(--mono);font-variant-ligatures:none}
+.txt{position:relative;white-space:pre;overflow-x:auto}
+.txt::after{content:"";position:absolute;top:0;bottom:0;left:calc(var(--cols) * 1ch);border-left:1px dashed var(--rule)}
+.json{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.875rem;color:var(--faint);counter-reset:ln}
+.ln{display:block;position:relative;padding-left:calc((var(--i) + 7) * 1ch);text-indent:-2ch}
+.ln::before{counter-increment:ln;content:counter(ln);position:absolute;left:0;width:3ch;text-align:right;text-indent:0;color:var(--faint)}
+.k{color:var(--ink)}.s{color:var(--s)}.n{color:var(--n)}
+
+footer{border-top:1px solid var(--rule);padding:1.5rem 0 3rem;color:var(--muted);font-size:.9375rem}
+footer p{margin:0 0 .75rem;max-width:38em;text-wrap:pretty}
+code{font:.875em var(--mono);white-space:nowrap}
+
+::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation-duration:.2s;animation-timing-function:cubic-bezier(.2,0,0,1)}
+@media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
+@media (max-width:640px){
+  .meta{order:3;flex-basis:100%;text-align:left}
+  .fn{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .acts{margin-left:auto}
+  .act{padding:.65rem .6rem}
+  pre{font-size:.8125rem}
+  .json{font-size:.78rem}
+  .cv h2{margin-top:2.75rem}
+}
+@media print{.back,.bar,footer{display:none}#doc{padding:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← All ideas</a>
+  <header>
+    <h1 id="name">George Michoulis</h1>
+    <div id="lede"><p class="lede">Blockchain developer and researcher · Thessaloniki, Greece</p></div>
+  </header>
+  <main>
+    <div class="bar" id="bar">
+      <div class="switch" role="group" aria-label="Format">
+        <button type="button" data-view="page" aria-pressed="true">page</button><span aria-hidden="true">·</span><button type="button" data-view="text" aria-pressed="false">text</button><span aria-hidden="true">·</span><button type="button" data-view="json" aria-pressed="false">json</button>
+      </div>
+      <p class="meta"><span id="meta"></span><span id="status" role="status"></span></p>
+      <div class="acts">
+        <button type="button" class="act" id="copy">Copy</button>
+        <a class="act" id="dl" download="cv.html">Download<span class="fn"> cv.html</span></a>
+      </div>
+    </div>
+    <div id="doc"><noscript><p>This prototype builds the CV with JavaScript. Please turn it on to see the page, text and JSON versions.</p></noscript></div>
+  </main>
+  <footer>
+    <p>All three versions come from one JSON Resume object in this page, so the page, the text and the JSON can't disagree. GitHub Pages only serves static files and can't do content negotiation. In production I'd publish the same object as static <code>/cv.txt</code> and <code>/cv.json</code>, so that <code>curl -L george-michoulis.com/cv.txt</code> prints this CV. Those files don't exist yet.</p>
+    <p>Also on this site: <a href="../../garden/">Zen Garden</a>, my notes, and <a href="../../play/">Ledger Run</a>, a résumé you can play.</p>
+  </footer>
+</div>
+<script>
+// One source of truth (JSON Resume v1.0.0). Every view below is rendered from it.
+const cv = {
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "George Michoulis",
+    "label": "Blockchain developer and researcher",
+    "email": "gmixoulis@gmail.com",
+    "url": "https://george-michoulis.com",
+    "summary": "I build and study blockchain systems. I write smart contracts and ship full-stack Web3 products, from NFTs to DeFi, across Solidity, TypeScript and the cloud. My research asks how well ledgers work in practice and what they change, and my data-science work uses graph embeddings. I've lectured in networks, security and application development, and I speak about Web3 and edge tech. I'm based in Thessaloniki and work remotely.",
+    "location": { "city": "Thessaloniki", "countryCode": "GR" },
+    "profiles": [
+      { "network": "LinkedIn", "username": "george-michoulis", "url": "https://www.linkedin.com/in/george-michoulis/" },
+      { "network": "GitHub", "username": "gmixoulis", "url": "https://github.com/gmixoulis" },
+      { "network": "X", "username": "GeorgeMicou", "url": "https://twitter.com/GeorgeMicou" },
+      { "network": "Google Scholar", "url": "https://scholar.google.com/citations?user=nk0lq8YAAAAJ" }
+    ]
+  },
+  "work": [
+    { "name": "Cyberscope by TAC", "position": "Web3 Full-Stack Developer", "startDate": "2026-05",
+      "summary": "I build Web3 products end to end: smart contracts, on-chain integrations, React and Next.js front ends, and security tooling." },
+    { "name": "Sidroco Holdings Ltd", "position": "Blockchain Developer & Researcher", "startDate": "2024", "endDate": "2026",
+      "summary": "I built an NFT marketplace for 5G networks, Hyperledger Fabric prototypes and an Erasmus+ learning management system, working across multinational EU projects." },
+    { "name": "University of Derby / Mediterranean College", "position": "Lecturer & Academic Partner", "startDate": "2023", "endDate": "2025",
+      "summary": "I taught Networks & Security, Web Scripting and Application Development, and designed assessment with inclusivity first." },
+    { "name": "University of Nicosia / IFF", "position": "Blockchain & Full-Stack Developer", "startDate": "2022", "endDate": "2024",
+      "summary": "I built large Next.js, NestJS and Docker applications and a Web3 NFT marketplace." }
+  ],
+  "education": [
+    { "institution": "Aristotle University of Thessaloniki", "studyType": "MSc", "area": "Data and Web Science", "startDate": "2020", "endDate": "2022",
+      "summary": "Graph-embedding methods for blockchain fraud detection. Funded by a DeepMind scholarship." },
+    { "institution": "University of Macedonia", "studyType": "BSc", "area": "Applied Informatics", "startDate": "2015", "endDate": "2020",
+      "summary": "Thesis on verifying academic credentials with Ethereum." }
+  ],
+  "awards": [
+    { "title": "Move/Sui Bootcamp Thessaloniki award", "date": "2025" },
+    { "title": "3rd place, Infinitech Hackathon", "date": "2022-06", "awarder": "Crowdpolicy" },
+    { "title": "DeepMind Scholarship", "date": "2020", "awarder": "Aristotle University of Thessaloniki", "summary": "Funded my MSc, 2020–2022." },
+    { "title": "Basic Research grant", "date": "2020", "awarder": "University of Macedonia", "summary": "Held 2020–2021." }
+  ],
+  "certificates": [
+    { "name": "Cisco Certified Network Associate (CCNA) course" },
+    { "name": "Advanced Ethical Hacking" },
+    { "name": "Cloud Engineering" },
+    { "name": "Rust Developer" },
+    { "name": "Machine Learning and Deep Neural Networks" },
+    { "name": "Introduction to Digital Currencies" },
+    { "name": "NFT Talents Program" },
+    { "name": "Cybersecurity eLearning Academy" },
+    { "name": "Software Development for Telecommunication Networks" },
+    { "name": "Networking Essentials" },
+    { "name": "How to Get Published with IEEE" }
+  ],
+  "publications": [
+    { "name": "A process-aware approach for blockchain-based verification of academic qualifications", "publisher": "Simulation Modelling Practice and Theory 121, 102642", "releaseDate": "2022", "citations": 32 },
+    { "name": "Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe", "publisher": "XIV Balkan Conference on Operational Research", "releaseDate": "2020", "citations": 11 },
+    { "name": "Exploring decentralized governance: a framework applied to Compound Finance", "publisher": "International Conference on Mathematical Research for Blockchain Economy", "releaseDate": "2023", "citations": 7 },
+    { "name": "FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs", "publisher": "7th World Symposium on Communication Engineering (WSCE)", "releaseDate": "2024", "citations": 1 },
+    { "name": "Data security for smart cities", "releaseDate": "2025", "citations": 1 },
+    { "name": "Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management", "publisher": "IEEE ICCE 2025", "releaseDate": "2025", "citations": 0 },
+    { "name": "Graph Embedding and Node Features for Drug-Target Interaction Prediction", "publisher": "Aristotle University of Thessaloniki (MSc work)", "releaseDate": "2022", "citations": 0 },
+    { "name": "Blockchain in Higher Education: permissioned and permissionless approaches", "publisher": "4th Summit on Gender Equality in Computing", "releaseDate": "2022", "citations": 0 },
+    { "name": "Two Greek-language theses on academic-title verification with Ethereum", "summary": "2020 and 2021" }
+  ],
+  "projects": [
+    { "name": "verde.uom.gr", "description": "VerDe, the academic-credential verification system from my papers." },
+    { "name": "bbf-gui.ddns.net", "description": "Landing site for the Blockchain Benchmarking Framework, which deploys and evaluates different blockchain protocols." },
+    { "name": "metau.unic.ac.cy", "description": "A University of Nicosia course site for delivering a course on-chain and in the metaverse, with a Connect Wallet sign-in." },
+    { "name": "accelerate.unic.ac.cy", "description": "A University of Nicosia web platform with its own sign-in." },
+    { "name": "celc.web.auth.gr", "description": "The Greek-language site of the Centre for European Legal Culture." },
+    { "name": "eudem.polsci.auth.gr", "description": "The site of the EUDEM Jean Monnet Chair." },
+    { "name": "marlab.ode.uom.gr", "description": "The site of the Marketing Laboratory (MarLab) at the University of Macedonia." },
+    { "name": "Ledger Run", "description": "A platformer you play through as a résumé.", "url": "https://george-michoulis.com/play/" }
+  ]
+};
+
+/* ---------- shared helpers ---------- */
+const ENT = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" };
+const esc = s => String(s).replace(/[&<>"]/g, c => ENT[c]);
+const SEP = '<span class="sep" aria-hidden="true">&nbsp;· </span>';
+const MON = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");
+const when = d => { const [y, m] = d.split("-"); return m ? `${MON[m - 1]} ${y}` : y; };
+const range = (a, b) => `${when(a)} – ${b ? when(b) : "present"}`;
+const place = b => `${b.location.city}, ${new Intl.DisplayNames(["en"], { type: "region" }).of(b.location.countryCode)}`;
+const cited = n => n === 1 ? "cited once" : `cited ${n} times`;
+const pubBits = p => [p.publisher, p.releaseDate || p.summary, p.citations && cited(p.citations)].filter(Boolean);
+
+/* ---------- view 1: page (HTML) ---------- */
+const lede = b => `<p class="lede">${esc(b.label)} · ${esc(place(b))}</p><p class="links"><a href="mailto:${esc(b.email)}">${esc(b.email)}</a>${
+  b.profiles.map(p => `${SEP}<a href="${esc(p.url)}">${esc(p.network)}</a>`).join("")}</p>`;
+
+function toPage(cv) {
+  const sec = (t, body) => `<section><h2>${t}</h2>${body}</section>`;
+  const entry = (title, date, org, text) => `<div class="entry"><div class="head"><h3>${esc(title)}</h3><span class="when">${esc(date)}</span></div>${
+    org ? `<p class="org">${esc(org)}</p>` : ""}${text ? `<p>${esc(text)}</p>` : ""}</div>`;
+  return `<p class="summary">${esc(cv.basics.summary)}</p>` +
+    sec("Experience", cv.work.map(w => entry(w.position, range(w.startDate, w.endDate), w.name, w.summary)).join("")) +
+    sec("Education", cv.education.map(e => entry(`${e.studyType} ${e.area}`, range(e.startDate, e.endDate), e.institution, e.summary)).join("")) +
+    sec("Publications", `<ol class="pubs">${cv.publications.map(p => `<li>${esc(p.name)}<span class="m">${
+      pubBits(p).map((s, i) => i === 0 && p.publisher ? `<i>${esc(s)}</i>` : `<span class="nw">${esc(s)}</span>`).join(" · ")}</span></li>`).join("")}</ol>`) +
+    sec("Awards", cv.awards.map(a => entry(a.title, when(a.date), a.awarder, a.summary)).join("")) +
+    sec("Projects", `<dl class="proj">${cv.projects.map(p => `<dt>${p.url ? `<a href="${esc(p.url)}">${esc(p.name)}</a>` : esc(p.name)}</dt><dd>${esc(p.description)}</dd>`).join("")}</dl>`) +
+    sec("Certificates", `<p class="run">${cv.certificates.map(c => esc(c.name)).join(SEP)}</p>`);
+}
+
+const htmlFile = cv => `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(cv.basics.name)} · CV</title>
+${document.querySelector('link[href*="css2"]').outerHTML}
+<style>${document.getElementById("css").textContent}</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1>${esc(cv.basics.name)}</h1>${lede(cv.basics)}</header>
+<main><article class="cv">${toPage(cv)}</article></main>
+</div>
+</body>
+</html>
+`;
+
+/* ---------- view 2: text (72 columns in the file, reflowed on narrow screens) ---------- */
+const COLS = 72;
+function wrap(text, width, indent = 0, first = " ".repeat(indent)) {
+  const pad = " ".repeat(indent), out = [];
+  let line = first, fresh = true;
+  for (let word of String(text).split(/[ \n]+/).filter(Boolean)) { // U+00A0 glues words together
+    for (;;) {
+      const room = width - line.length - (fresh ? 0 : 1);
+      if (word.length <= room) { line += (fresh ? "" : " ") + word; fresh = false; break; }
+      if (!fresh) { out.push(line); line = pad; fresh = true; continue; }
+      const cut = Math.max(1, room); // a single word wider than the column: hard-break it
+      out.push(line + word.slice(0, cut)); word = word.slice(cut); line = pad;
+    }
+  }
+  if (!fresh || !out.length) out.push(line);
+  return out.map(l => l.replace(/\u00a0/g, " "));
+}
+const row = (l, r, w) => l.length + 2 + r.length <= w ? l + " ".repeat(w - l.length - r.length) + r : [...wrap(l, w), r.padStart(w)];
+
+function toText(cv, w = COLS) {
+  const b = cv.basics, out = [];
+  const add = (...xs) => xs.forEach(x => out.push(...[].concat(x)));
+  const head = t => add("", "", t, "-".repeat(t.length));
+  const list = (items, fn) => items.forEach((x, i) => { if (i) add(""); fn(x, i); });
+  add(row(b.name, "Curriculum vitae", w), wrap(`${b.label} · ${place(b)}`, w), wrap(`${b.email} · ${b.url}`, w), "=".repeat(w));
+  head("About"); add(wrap(b.summary, w));
+  head("Experience");
+  list(cv.work, x => add(row(x.position, range(x.startDate, x.endDate), w), wrap(x.name, w), wrap(x.summary, w, 4)));
+  head("Education");
+  list(cv.education, x => add(row(`${x.studyType} ${x.area}`, range(x.startDate, x.endDate), w), wrap(x.institution, w), wrap(x.summary, w, 4)));
+  head("Publications");
+  const glue = s => s.length > 16 ? s : s.replace(/ /g, "\u00a0");
+  list(cv.publications, (p, i) => add(wrap(p.name, w, 5, `[${i + 1}]`.padEnd(5)), wrap(pubBits(p).map(glue).join(" · "), w, 5)));
+  head("Awards");
+  list(cv.awards, a => { add(row(a.title, when(a.date), w)); if (a.awarder || a.summary) add(wrap([a.awarder, a.summary].filter(Boolean).join(". "), w, 4)); });
+  head("Projects");
+  list(cv.projects, p => add(wrap(p.name, w), wrap(p.url ? `${p.description} ${p.url}` : p.description, w, 4)));
+  head("Certificates");
+  cv.certificates.forEach(c => add(wrap(c.name, w, 2, "- ")));
+  head("Elsewhere");
+  b.profiles.forEach(p => add(wrap(p.url, w, 16, p.network.padEnd(16))));
+  return out.join("\n") + "\n";
+}
+
+/* ---------- view 3: JSON ---------- */
+const toJSON = cv => JSON.stringify(cv, null, 2) + "\n";
+const TOKEN = /("(?:\\.|[^"\\])*")(\s*:)?|\b(?:true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/g;
+const highlight = json => json.replace(/[&<>]/g, c => ENT[c])
+  .replace(TOKEN, (m, str, colon) => str ? `<span class="${colon ? "k" : "s"}">${str}</span>${colon || ""}` : `<span class="n">${m}</span>`)
+  .split("\n").slice(0, -1)
+  .map(line => { const i = line.search(/\S|$/); return `<span class="ln" style="--i:${i}">${line.slice(i)}</span>`; }).join("");
+
+/* ---------- the three files ---------- */
+const FILES = {
+  page: { name: "cv.html", type: "text/html", body: () => htmlFile(cv) },
+  text: { name: "cv.txt", type: "text/plain", body: () => toText(cv) },
+  json: { name: "cv.json", type: "application/json", body: () => toJSON(cv) }
+};
+
+/* ---------- UI ---------- */
+const $ = id => document.getElementById(id);
+const doc = $("doc"), bar = $("bar"), dl = $("dl"), metaEl = $("meta"), status = $("status");
+const buttons = [...document.querySelectorAll(".switch button")];
+const kB = n => `${(n / 1000).toFixed(1)} kB`;
+let view, cols = COLS, file, sayTimer;
+
+$("name").textContent = cv.basics.name;
+$("lede").innerHTML = lede(cv.basics);
+
+function fitCols(pre) {
+  const probe = document.createElement("span");
+  probe.textContent = "0".repeat(20); pre.append(probe);
+  const ch = probe.getBoundingClientRect().width / 20; probe.remove();
+  return Math.max(32, Math.min(COLS, Math.floor((pre.clientWidth - 2) / ch)));
+}
+function renderText() {
+  const pre = doc.querySelector(".txt");
+  cols = fitCols(pre);
+  pre.style.setProperty("--cols", cols);
+  pre.textContent = toText(cv, cols);
+  updateMeta();
+}
+function render() {
+  doc.dataset.view = view;
+  if (view === "page") doc.innerHTML = `<article class="cv">${toPage(cv)}</article>`;
+  if (view === "json") doc.innerHTML = `<pre class="json" aria-label="CV as JSON">${highlight(toJSON(cv))}</pre>`;
+  if (view === "text") { doc.innerHTML = `<pre class="txt" aria-label="CV as plain text"></pre>`; renderText(); }
+}
+function updateMeta() {
+  const cut = view === "text" ? ` · ${COLS} cols${cols < COLS ? ` (${cols} here)` : ""}` : "";
+  metaEl.textContent = `${file.name} · ${FILES[view].type}${cut} · ${kB(file.size)}`;
+}
+function updateFile() {
+  const f = FILES[view], text = f.body(), blob = new Blob([text], { type: `${f.type};charset=utf-8` });
+  if (dl.href.startsWith("blob:")) URL.revokeObjectURL(dl.href);
+  file = { name: f.name, text, size: blob.size };
+  dl.href = URL.createObjectURL(blob);
+  dl.download = f.name;
+  dl.querySelector(".fn").textContent = ` ${f.name}`;
+}
+function show(v) {
+  if (v === view) return;
+  const swap = () => {
+    view = v;
+    buttons.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === v)));
+    updateFile(); render(); updateMeta();
+  };
+  // Deep in the document? Jump back to its start first, so the fade happens in place.
+  const top = doc.getBoundingClientRect().top + scrollY - bar.offsetHeight;
+  if (scrollY > top) scrollTo(0, top);
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (view && document.startViewTransition && !still) document.startViewTransition(swap);
+  else swap();
+}
+function say(msg) {
+  status.textContent = msg; bar.classList.add("said");
+  clearTimeout(sayTimer);
+  sayTimer = setTimeout(() => { status.textContent = ""; bar.classList.remove("said"); }, 4000);
+}
+
+const fromHash = () => { const h = location.hash.slice(1); return h === "text" || h === "json" ? h : "page"; };
+buttons.forEach(b => b.addEventListener("click", () => {
+  show(b.dataset.view);
+  history.replaceState(null, "", b.dataset.view === "page" ? location.pathname + location.search : `#${b.dataset.view}`);
+}));
+addEventListener("hashchange", () => show(fromHash()));
+$("copy").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(file.text); say(`Copied ${file.name} to the clipboard.`); }
+  catch { say("This browser blocked the copy. Download works instead."); }
+});
+dl.addEventListener("click", () => say(`Downloading ${file.name}, ${kB(file.size)}.`));
+addEventListener("resize", () => { if (view === "text" && fitCols(doc.querySelector(".txt")) !== cols) renderText(); });
+document.fonts.ready.then(() => { if (view === "text") renderText(); });
+
+show(fromHash());
+</script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emaki · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki, told as an ink handscroll.">
+<meta name="color-scheme" content="light dark">
+<script>document.documentElement.className='js'</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Shippori+Mincho:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wall:#dcd5c8;--silk:#333e56;--gold:#a88a52;--paper:#f6f0e4;--ink:#1e1b17;--muted:#5b5248;--mist:#ede4d0;
+  --seal:#bf3a1e;--seal-t:#fdf5e8;--wood:#553620;--wood-hi:#7b5335;--wood-lo:#3a2414;--knob:#2a1b12;
+  --inkf:brightness(1);--photo:none;--shade:rgba(50,30,10,.4);
+}
+@media (prefers-color-scheme:dark){:root{
+  --wall:#0b0b0d;--silk:#141821;--gold:#4a3d27;--paper:#23201c;--ink:#ede4d1;--muted:#b2a792;--mist:#2a2621;
+  --seal:#b4412a;--seal-t:#fbeede;--wood:#2f2117;--wood-hi:#4a3521;--wood-lo:#1d140d;--knob:#150f0a;
+  --inkf:invert(.86) hue-rotate(180deg);--photo:brightness(.8) contrast(1.05);--shade:rgba(0,0,0,.85);
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--wall);color:var(--ink);font:400 1.25rem/1.56 "EB Garamond",Georgia,serif;font-variant-numeric:oldstyle-nums}
+img{display:block;max-width:100%;height:auto}
+h1,h2,h3,dt{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-weight:600;margin:0}
+p,ul,ol,dl,dd,figure{margin:0}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.22em;text-decoration-color:var(--muted)}
+a:hover{text-decoration-color:var(--ink);text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:2px}
+.back{position:absolute;top:14px;left:18px;font-size:1rem;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--ink)}
+
+/* the object: rollers, silk mount, paper */
+.scroll{max-width:1000px;margin:52px auto 76px;padding:0 22px}
+.rod{position:relative;height:18px;border-radius:4px;background:var(--wood);box-shadow:inset 0 3px var(--wood-hi),inset 0 -5px var(--wood-lo)}
+.rod::before,.rod::after{content:"";position:absolute;top:-7px;width:20px;height:32px;border-radius:7px;background:var(--knob);box-shadow:inset 0 4px var(--wood-hi),inset 0 -3px #000}
+.rod::before{left:-19px}.rod::after{right:-19px}
+.mount{padding:44px 52px 60px;background:var(--silk) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M-2 2l4-4M0 8l8-8M6 10l4-4' stroke='%23fff' stroke-opacity='.08' stroke-width='1.4'/%3E%3C/svg%3E");box-shadow:0 34px 60px -34px var(--shade)}
+.paper{--pad:72px;container-type:inline-size;position:relative;overflow:hidden;background:var(--paper);border:solid var(--gold);border-width:14px 4px;padding:64px var(--pad) 72px}
+
+/* shared parts */
+.scene{position:relative}
+.mark{display:flex;align-items:center;gap:.7em;font-style:italic;font-size:1.05rem;color:var(--muted);margin-bottom:.9rem}
+.seal{display:inline-grid;place-items:center;flex:none;width:2.05rem;height:2.1rem;border-radius:3px 6px 2px 5px;background:var(--seal);color:var(--seal-t);font:700 1.15rem/1 "Shippori Mincho",serif;font-style:normal;transform:rotate(-2deg)}
+h2{font-size:clamp(1.9rem,4.2vw,2.55rem);line-height:1.15;letter-spacing:.005em;margin-bottom:1.4rem}
+h3{font-size:1.45rem;line-height:1.25;font-weight:500;margin-bottom:.7rem}
+.kotoba p+p{margin-top:.9em}
+.when{font-style:italic;color:var(--muted);font-size:1.05rem;margin-bottom:.35rem}
+.ink{filter:var(--inkf)}
+.mat{padding:7px;background:var(--silk) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M-2 2l4-4M0 8l8-8M6 10l4-4' stroke='%23fff' stroke-opacity='.08' stroke-width='1.4'/%3E%3C/svg%3E")}
+.mat img{border:2px solid var(--gold);filter:var(--photo);width:100%}
+figcaption{font-size:1rem;line-height:1.4;color:var(--muted);margin-top:.55rem}
+figcaption b{font-weight:500;font-style:italic;color:var(--ink)}
+.kasumi{position:relative;height:52px;margin:0 calc(-1*var(--pad))}
+.kasumi::before,.kasumi::after{content:"";position:absolute;height:20px;background:var(--mist)}
+.kasumi::before{left:0;top:0;width:58%;border-radius:0 40px 12px 0}
+.kasumi::after{right:0;top:30px;width:46%;border-radius:12px 0 0 40px}
+
+/* opening */
+.opening{display:grid;grid-template-columns:1fr auto;align-items:end;column-gap:24px}
+.where{grid-column:1/-1;font-style:italic;color:var(--muted);font-size:1.1rem}
+h1{grid-column:1/-1;font-size:clamp(2.6rem,19.5cqi,8.1rem);line-height:.98;letter-spacing:-.012em;margin:.28em 0 .42em}
+h1 span{display:block}
+h1 .seal{display:inline-grid;vertical-align:top;margin:.2em 0 0 .45em;width:auto;height:auto;padding:.28em .2em;font-size:.2em;line-height:1.05;writing-mode:vertical-rl;text-orientation:upright;letter-spacing:.08em;border-radius:4px 2px 5px 3px}
+.line{font-size:1.45rem;line-height:1.45;max-width:23ch;padding-bottom:.6rem}
+.crane{width:214px;margin:0 -8px -12px 0}
+
+/* about */
+.about{margin-top:0}
+.about .kotoba{max-width:25em}
+.branch{position:absolute;top:-24px;right:calc(-1*var(--pad) - 30px);width:340px}
+.sides{margin-top:4rem}
+.sides div{max-width:25em}
+.sides div+div{margin-top:2.2rem}
+.sides div:nth-child(2){margin-left:17%}
+.sides div:nth-child(3){margin-left:34%}
+dt{font-size:1.5rem;font-weight:500;margin-bottom:.2rem}
+
+/* work */
+.work{margin-top:clamp(120px,16vw,190px)}
+.role{display:grid;grid-template-columns:repeat(12,1fr);column-gap:20px;align-items:start}
+.r1{margin-top:3.5rem}
+.r1 .ink{grid-column:1/4;width:150px;margin-top:-10px}
+.r1 .kotoba{grid-column:5/13;padding-top:3rem}
+.r2{margin-top:clamp(110px,14vw,170px)}
+.r2 .kotoba{grid-column:1/8;grid-row:1;padding-top:5rem}
+.r2 .ink{grid-column:9/13;grid-row:1;width:230px;justify-self:end;margin-right:-20px}
+.r3{margin-top:clamp(100px,13vw,150px)}
+.r3 .ink{grid-column:1/6;width:350px;max-width:none;margin-left:calc(-1*var(--pad) - 24px)}
+.r3 .kotoba{grid-column:7/13;padding-top:1rem}
+.r4{margin-top:clamp(110px,14vw,170px)}
+.r4 .kotoba{grid-column:2/9;grid-row:1;padding-top:2.2rem}
+.r4 .ink{grid-column:10/13;grid-row:1;width:112px}
+
+/* study */
+.study{margin-top:clamp(120px,15vw,180px);display:grid;grid-template-columns:repeat(12,1fr);column-gap:20px}
+.study .ink{grid-column:1/5;grid-row:1/3;width:190px;margin-top:5.5rem}
+.study .head,.study .kotoba{grid-column:5/13}
+.degree+.degree{margin-top:1.6rem}
+.degree h3{margin-bottom:.15rem}
+.prizes{margin-top:2.8rem}
+.prizes h3{font-size:1.2rem}
+.prizes ul{list-style:none;padding:0}
+.prizes li{padding-left:1.1em;text-indent:-1.1em}
+.prizes li::before{content:"·";display:inline-block;width:1.1em;text-indent:0;color:var(--muted)}
+
+/* wave interlude */
+.wave-band{margin:clamp(110px,14vw,170px) calc(-1*var(--pad)) 0}
+.wave{--inkf:contrast(1.15) brightness(1.1);width:100%;mix-blend-mode:multiply;-webkit-mask-image:linear-gradient(#000 68%,transparent);mask-image:linear-gradient(#000 68%,transparent)}
+.wave-band figcaption{padding:0 var(--pad);text-align:right;font-size:.95rem;margin-top:-.4rem}
+@media (prefers-color-scheme:dark){.wave{--inkf:invert(.88) contrast(1.1);mix-blend-mode:lighten}}
+
+/* papers */
+.papers{margin-top:clamp(90px,11vw,130px)}
+.papers .intro{max-width:30em}
+.papers ol{list-style:none;padding:0;margin-top:2.8rem}
+.papers li{display:grid;grid-template-columns:5.2rem 1fr;column-gap:1.2rem}
+.papers li+li{margin-top:1.9rem}
+.cites{grid-row:1/3;text-align:right;font:500 2.1rem/1 "Shippori Mincho",serif;padding-top:.1rem}
+.cites small{display:block;font:italic 400 .9rem/1.3 "EB Garamond",serif;color:var(--muted);margin-top:.3rem}
+.cites.zero{color:var(--muted)}
+.papers cite{font:500 1.22rem/1.35 "Shippori Mincho",serif}
+.venue{font-style:italic;color:var(--muted);font-size:1.08rem;margin-top:.25rem}
+.papers .coda{margin:2.6rem 0 0 6.4rem;max-width:30em}
+
+/* certificates */
+.certs{margin-top:clamp(120px,15vw,180px)}
+.certs .head{margin-left:auto;max-width:27em}
+.wall{columns:3;column-gap:24px;margin-top:2.6rem}
+.wall figure{break-inside:avoid;margin-bottom:26px}
+.wall figure:nth-child(2){margin-top:44px}
+.onfile{margin-top:2.6rem}
+.onfile h3{font-size:1.2rem}
+.onfile ul{columns:2;column-gap:36px;padding:0;list-style:none;font-size:1.05rem;line-height:1.4}
+.onfile li{break-inside:avoid;padding:.2rem 0}
+.onfile li i{color:var(--muted)}
+
+/* projects */
+.built{margin-top:clamp(120px,15vw,180px)}
+.built .intro{max-width:26em}
+.sites{display:grid;grid-template-columns:repeat(12,1fr);column-gap:22px;row-gap:3.2rem;margin-top:2.8rem;align-items:start}
+.sites figure:nth-child(1){grid-column:1/9}
+.sites figure:nth-child(2){grid-column:5/13}
+.sites figure:nth-child(3){grid-column:1/7}
+.sites figure:nth-child(4){grid-column:7/13;margin-top:5rem}
+.sites figure:nth-child(5){grid-column:1/5}
+.sites figure:nth-child(6){grid-column:5/9;margin-top:2.5rem}
+.sites figure:nth-child(7){grid-column:9/13;margin-top:5rem}
+
+/* colophon */
+.colophon{position:relative;margin-top:clamp(100px,12vw,150px);padding-bottom:1rem}
+.enso{position:absolute;top:-10px;right:calc(-1*var(--pad) + 8px);width:360px}
+.colophon .kotoba{position:relative;max-width:23em}
+.mail{font:600 clamp(1.3rem,3.6vw,1.9rem)/1.3 "Shippori Mincho",serif;margin-top:1.2rem;overflow-wrap:anywhere}
+.links{display:flex;flex-wrap:wrap;gap:.3rem 1.4rem;list-style:none;padding:0;margin-top:1.4rem}
+.quiet{color:var(--muted);font-size:1.05rem;margin-top:2.4rem;max-width:26em}
+.sign{display:flex;align-items:center;justify-content:flex-end;gap:.8rem;margin-top:4.5rem;font-style:italic}
+.sign .seal{width:auto;height:auto;padding:.3em .22em;font-size:.95rem;writing-mode:vertical-rl;text-orientation:upright;letter-spacing:.06em}
+
+/* the ink soaks in once as its scene enters; seals are pressed after */
+.js .ink{opacity:0;filter:var(--inkf) blur(8px);transition:opacity .6s cubic-bezier(.2,.6,.3,1),filter .6s cubic-bezier(.2,.6,.3,1)}
+.js .in .ink{opacity:1;filter:var(--inkf) blur(0)}
+.js .scene .seal{opacity:0;transform:scale(1.35) rotate(-6deg);transition:opacity .2s .3s,transform .28s .3s cubic-bezier(.3,1.5,.5,1)}
+.js .in .seal{opacity:1;transform:rotate(-2deg)}
+@media (prefers-reduced-motion:reduce){
+  .js .ink,.js .scene .seal{opacity:1;transition:none}
+  .js .ink{filter:var(--inkf)}
+  .js .scene .seal{transform:rotate(-2deg)}
+}
+
+/* phone: the mount shrinks to thin edges, the paper fills the screen */
+@media (max-width:760px){
+  body{font-size:1.14rem}
+  .scroll{margin:44px 0 30px;padding:0 11px}
+  .rod{height:13px}
+  .rod::before,.rod::after{width:12px;height:23px;top:-5px}
+  .rod::before{left:-10px}.rod::after{right:-10px}
+  .mount{padding:22px 6px 30px}
+  .paper{--pad:22px;border-width:9px 2px;padding:40px var(--pad) 48px}
+  .opening{grid-template-columns:1fr}
+  .line{font-size:1.25rem;max-width:none}
+  .crane{width:140px;justify-self:end;margin:1rem -4px 0 0}
+  .about .kotoba{padding-top:120px}
+  .branch{width:220px;top:-6px;right:-50px}
+  .sides div:nth-child(2){margin-left:7%}
+  .sides div:nth-child(3){margin-left:14%}
+  .role,.study{display:block}
+  .role .ink,.study .ink{max-width:60%}
+  .r1 .ink{width:112px}
+  .r1 .kotoba{padding-top:1.2rem}
+  .r2 .kotoba{padding-top:0}
+  .r2 .ink{width:150px;margin:1.6rem -8px 0 auto}
+  .r3 .ink{width:230px;max-width:none;margin-left:-40px}
+  .r3 .kotoba,.r4 .kotoba{padding-top:1.2rem}
+  .r4 .ink{width:84px;margin:0 0 0 auto}
+  .r4 .kotoba{padding-top:0}
+  .study .ink{width:130px;margin:0 0 1.4rem auto}
+  .papers li{grid-template-columns:3.1rem 1fr;column-gap:.9rem}
+  .cites{font-size:1.6rem}
+  .cites small{font-size:.8rem}
+  .papers .coda{margin-left:0}
+  .wall{columns:2;column-gap:14px}
+  .wall figure:nth-child(2){margin-top:30px}
+  .onfile ul{columns:1;font-size:1rem;line-height:1.5}
+  .onfile li{display:inline;padding:0}
+  .onfile li:not(:last-child)::after{content:" · ";color:var(--muted)}
+  .sites{display:block}
+  .sites figure+figure{margin-top:2.4rem}
+  .sites figure:nth-child(odd){margin-right:9%}
+  .sites figure:nth-child(even){margin-left:9%}
+  .sites figure{margin-top:0 !important}
+  .enso{position:relative;top:auto;right:auto;width:190px;margin:0 -30px 1rem auto}
+  .sign{margin-top:3rem}
+}
+</style>
+</head>
+<body>
+<a class="back" href="index.html">← All ideas</a>
+
+<div class="scroll">
+<div class="rod" aria-hidden="true"></div>
+<div class="mount">
+<div class="paper">
+
+<header class="opening scene">
+  <p class="where">Thessaloniki, Greece · I work remotely</p>
+  <h1><span>George<span class="seal" aria-hidden="true">ΓΜ</span></span><span>Michoulis</span></h1>
+  <p class="line">I’m a blockchain developer and researcher. I write smart contracts, work on graph-based machine learning, and build full-stack Web3 systems.</p>
+  <img class="ink crane" src="../../img/ink/parts/crane.png" alt="" width="178" height="278">
+</header>
+
+<div class="kasumi" aria-hidden="true" style="margin-block:clamp(80px,11vw,130px)"></div>
+
+<main>
+<section class="scene about" aria-labelledby="h-about">
+  <img class="ink branch" src="../../img/ink/parts/branch.png" alt="" width="256" height="192">
+  <div class="kotoba">
+    <div class="mark"><span class="seal" aria-hidden="true">序</span>the first scene</div>
+    <h2 id="h-about">Where I come from</h2>
+    <p>I live in Thessaloniki. I did my BSc in Applied Informatics at the University of Macedonia, with a thesis on verifying academic credentials on Ethereum.</p>
+    <p>Then came an MSc in Data and Web Science at the Aristotle University of Thessaloniki, funded by a DeepMind scholarship. My research there was on graph-embedding methods for detecting fraud on blockchains.</p>
+    <p>My work has three sides.</p>
+  </div>
+  <dl class="sides">
+    <div><dt>Research</dt><dd>Papers and startup work on how effective ledgers are, and on what they change in practice across blockchain systems.</dd></div>
+    <div><dt>Build</dt><dd>Web3 products, including NFTs and DeFi, and data science with graph embeddings. I ship in Solidity and TypeScript, and on the cloud.</dd></div>
+    <div><dt>Teach</dt><dd>I lecture in networks, security and application development, and I give public talks on Web3 and edge technology.</dd></div>
+  </dl>
+</section>
+
+<section class="work" aria-labelledby="h-work">
+  <div class="scene">
+    <div class="mark"><span class="seal" aria-hidden="true">業</span>four scenes of work</div>
+    <h2 id="h-work">Where I’ve worked</h2>
+  </div>
+
+  <div class="scene role r1">
+    <img class="ink" src="../../img/ink/parts/koi.png" alt="" width="114" height="118">
+    <div class="kotoba">
+      <p class="when">the second scene · May 2026 to now</p>
+      <h3>Web3 full-stack developer, Cyberscope by TAC</h3>
+      <p>I build Web3 products end to end: the contracts, the on-chain integrations, the React and Next frontends, and the security tooling around them.</p>
+    </div>
+  </div>
+
+  <div class="scene role r2">
+    <div class="kotoba">
+      <p class="when">the third scene · 2024 to 2026</p>
+      <h3>Blockchain developer and researcher, Sidroco Holdings Ltd</h3>
+      <p>I built an NFT marketplace for 5G networks and prototypes on Hyperledger Fabric, and worked on an Erasmus+ learning management system, all inside multinational EU projects.</p>
+    </div>
+    <img class="ink" src="../../img/ink/parts/bamboo.png" alt="" width="174" height="275" loading="lazy">
+  </div>
+
+  <div class="scene role r3">
+    <img class="ink" src="../../img/ink/parts/tree-right.png" alt="" width="296" height="264" loading="lazy">
+    <div class="kotoba">
+      <p class="when">the fourth scene · 2023 to 2025</p>
+      <h3>Lecturer and academic partner, University of Derby / Mediterranean College</h3>
+      <p>I taught Networks and Security, Web Scripting and Application Development, and I designed assessments with inclusivity first.</p>
+    </div>
+  </div>
+
+  <div class="scene role r4">
+    <div class="kotoba">
+      <p class="when">the fifth scene · 2022 to 2024</p>
+      <h3>Blockchain and full-stack developer, University of Nicosia / IFF</h3>
+      <p>I built large Next.js, NestJS and Docker applications, and a Web3 NFT marketplace.</p>
+    </div>
+    <img class="ink" src="../../img/ink/parts/dragonfly.png" alt="" width="109" height="106" loading="lazy">
+  </div>
+</section>
+
+<section class="scene study" aria-labelledby="h-study">
+  <img class="ink" src="../../img/ink/parts/fuji-sun.png" alt="" width="145" height="134" loading="lazy">
+  <div class="head">
+    <div class="mark"><span class="seal" aria-hidden="true">学</span>the sixth scene</div>
+    <h2 id="h-study">What I studied</h2>
+  </div>
+  <div class="kotoba">
+    <div class="degree"><h3>MSc Data and Web Science</h3><p>Aristotle University of Thessaloniki, 2020 to 2022, on a DeepMind scholarship.</p></div>
+    <div class="degree"><h3>BSc Applied Informatics</h3><p>University of Macedonia, 2015 to 2020. My thesis was on verifying academic credentials with Web3.</p></div>
+    <div class="prizes">
+      <h3>Along the way</h3>
+      <ul>
+        <li>DeepMind Scholarship, Aristotle University of Thessaloniki, 2020–2022</li>
+        <li>Third place, Infinitech Hackathon by Crowdpolicy, June 2022</li>
+        <li>Basic Research grant, University of Macedonia, 2020–2021</li>
+        <li>Award at the Move/Sui Bootcamp in Thessaloniki, 2025</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<figure class="scene wave-band">
+  <img class="ink wave" src="../../img/ink/parts/great-wave.jpg" alt="" width="1800" height="588" loading="lazy">
+  <figcaption>Katsushika Hokusai, <i>The Great Wave off Kanagawa</i>, public domain</figcaption>
+</figure>
+
+<section class="scene papers" aria-labelledby="h-papers">
+  <div class="mark"><span class="seal" aria-hidden="true">文</span>the seventh scene</div>
+  <h2 id="h-papers">What I’ve written</h2>
+  <p class="intro">Eight papers, from verifying degrees on Ethereum to marketplaces for 5G network slices. The number beside each title is how many times it has been cited.</p>
+  <ol>
+    <li><span class="cites">32<small>citations</small></span><cite>A process-aware approach for blockchain-based verification of academic qualifications</cite><p class="venue">Simulation Modelling Practice and Theory 121, 102642 · 2022</p></li>
+    <li><span class="cites">11<small>citations</small></span><cite>Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe</cite><p class="venue">XIV Balkan Conference on Operational Research · 2020</p></li>
+    <li><span class="cites">7<small>citations</small></span><cite>Exploring decentralized governance: a framework applied to Compound Finance</cite><p class="venue">Intl. Conference on Mathematical Research for Blockchain Economy · 2023</p></li>
+    <li><span class="cites">1<small>citation</small></span><cite>FraMark: a blockchain marketplace for 5G network management using fractional NFTs</cite><p class="venue">7th World Symposium on Communication Engineering (WSCE) · 2024</p></li>
+    <li><span class="cites">1<small>citation</small></span><cite>Data security for smart cities</cite><p class="venue">2025</p></li>
+    <li><span class="cites zero">0<small>not yet cited</small></span><cite>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management</cite><p class="venue">IEEE ICCE 2025 · 2025</p></li>
+    <li><span class="cites zero">0<small>not yet cited</small></span><cite>Graph embedding and node features for drug-target interaction prediction</cite><p class="venue">Aristotle University of Thessaloniki, MSc work · 2022</p></li>
+    <li><span class="cites zero">0<small>not yet cited</small></span><cite>Blockchain in higher education: permissioned and permissionless approaches</cite><p class="venue">4th Summit on Gender Equality in Computing · 2022</p></li>
+  </ol>
+  <p class="coda">I also wrote two Greek-language theses on verifying academic titles with Ethereum, in 2020 and 2021. The current list is on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">my Google Scholar profile</a>.</p>
+</section>
+
+<section class="scene certs" aria-labelledby="h-certs">
+  <div class="head">
+    <div class="mark"><span class="seal" aria-hidden="true">証</span>the eighth scene</div>
+    <h2 id="h-certs">Certificates, mounted</h2>
+    <p>Six of the degrees and certificates I keep on file, mounted as scans. The rest are listed by name below.</p>
+  </div>
+  <div class="wall">
+    <figure><div class="mat"><img src="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" alt="Scan of the MSc degree in Data and Web Science" width="1240" height="1755" loading="lazy"></div><figcaption><b>Master’s degree</b>, Data and Web Science</figcaption></figure>
+    <figure><div class="mat"><img src="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" alt="Scan of the CCNA certificate of completion, in Greek" width="2175" height="1439" loading="lazy"></div><figcaption><b>CCNA</b>, Cisco Certified Network Associate</figcaption></figure>
+    <figure><div class="mat"><img src="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" alt="Scan of the bachelor’s degree" width="1742" height="2460" loading="lazy"></div><figcaption><b>Bachelor’s degree</b></figcaption></figure>
+    <figure><div class="mat"><img src="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" alt="Scan of the Machine Learning and Deep Neural Networks certificate" width="1755" height="1240" loading="lazy"></div><figcaption><b>Machine learning and deep neural networks</b></figcaption></figure>
+    <figure><div class="mat"><img src="../../img/renamed/Award_Academic-Achievement.jpg" alt="Scan of an academic achievement award, in Greek" width="2269" height="1593" loading="lazy"></div><figcaption><b>Academic achievement award</b></figcaption></figure>
+    <figure><div class="mat"><img src="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" alt="Scan of the How to Get Published with IEEE certificate" width="1650" height="1275" loading="lazy"></div><figcaption><b>How to get published with IEEE</b></figcaption></figure>
+  </div>
+  <div class="onfile">
+    <h3>Also on file</h3>
+    <ul>
+      <li>Introduction to digital currencies <i>· achievement</i></li>
+      <li>TOEIC listening and reading test <i>· achievement</i></li>
+      <li>English proficiency <i>· certificate</i></li>
+      <li>Move Bootcamp Thessaloniki <i>· award</i></li>
+      <li>Advanced ethical hacking</li>
+      <li>Cloud engineering</li>
+      <li>Rust developer</li>
+      <li>Networking essentials</li>
+      <li>Cybersecurity e-learning academy</li>
+      <li>Software development for telecommunication networks</li>
+      <li>NFT Talents program</li>
+      <li>How to design and build a website</li>
+      <li>The Hour of Code</li>
+      <li>Digital skills for tourism</li>
+      <li>Discover customer</li>
+      <li>Entrepreneurship: funding and development of new enterprises</li>
+      <li>European Legal Culture program, Aristotle University of Thessaloniki</li>
+      <li>Blockchain for the legal industry: how is the… <i>· participation</i></li>
+      <li>Blockchain in education: remote learning, social distancing and… <i>· participation</i></li>
+      <li>Data analytics to strengthen healthcare cybersecurity <i>· participation</i></li>
+      <li>VeChain ToolChain: digital transformation of the healthcare industry <i>· participation</i></li>
+      <li>Processing data in the fog: the example of… <i>· participation</i></li>
+      <li>Launch event, RippleX workshop <i>· participation</i></li>
+      <li>EY Cyber Day <i>· participation</i></li>
+      <li>GNU/Linux command line <i>· participation</i></li>
+      <li>SKGcode project: creation of a real estate chatbot <i>· participation</i></li>
+      <li>Marine educational robotics, Hydrobot program <i>· participation</i></li>
+      <li>MIGMA marketing kai brand <i>· participation</i></li>
+    </ul>
+  </div>
+</section>
+
+<section class="scene built" aria-labelledby="h-built">
+  <div class="mark"><span class="seal" aria-hidden="true">作</span>the ninth scene</div>
+  <h2 id="h-built">Sites I’ve built</h2>
+  <p class="intro">Screenshots of sites I built, each labelled with its address.</p>
+  <div class="sites">
+    <figure><div class="mat"><img src="../../img/portfolio/verde.uom.gr.PNG" alt="VerDe website, contact page with a map of the University of Macedonia" width="1840" height="907" loading="lazy"></div><figcaption><b>verde.uom.gr</b> · VerDe, the credential verification system from my papers, here on its contact page.</figcaption></figure>
+    <figure><div class="mat"><img src="../../img/portfolio/metau.unic.ac.cy.png" alt="University of Nicosia page headed The future of education is now, with a Connect Wallet button" width="1698" height="943" loading="lazy"></div><figcaption><b>metau.unic.ac.cy</b> · A University of Nicosia course site with a Connect Wallet button and a classroom in the metaverse.</figcaption></figure>
+    <figure><div class="mat"><img src="../../img/portfolio/bbf-gui.ddns.net.gif" alt="Blockchain Benchmarking Framework landing page with an isometric city illustration" width="1377" height="956" loading="lazy"></div><figcaption><b>bbf-gui.ddns.net</b> · The Blockchain Benchmarking Framework, for deploying and evaluating blockchain protocols.</figcaption></figure>
+    <figure><div class="mat"><img src="../../img/portfolio/accelerate.png" alt="University of Nicosia sign-in page beside an abstract drawing with a red circle" width="1910" height="998" loading="lazy"></div><figcaption><b>dlg.accelerate.unic.ac.cy</b> · A University of Nicosia sign-in page.</figcaption></figure>
+    <figure><div class="mat"><img src="../../img/portfolio/marlab.ode.uom.gr.PNG" alt="MarLab homepage, Marketing Laboratory of the University of Macedonia" width="1835" height="917" loading="lazy"></div><figcaption><b>marlab.ode.uom.gr</b> · MarLab, the University of Macedonia’s marketing laboratory.</figcaption></figure>
+    <figure><div class="mat"><img src="../../img/portfolio/eudem.polsci.auth.gr.PNG" alt="EUDEM Jean Monnet Chair homepage with a photo of flags" width="1896" height="944" loading="lazy"></div><figcaption><b>eudem.polsci.auth.gr</b> · The EUDEM Jean Monnet Chair.</figcaption></figure>
+    <figure><div class="mat"><img src="../../img/portfolio/celc.web.auth.gr.PNG" alt="Greek homepage of the Centre for European Legal Culture with a photo of a stone bridge" width="1600" height="936" loading="lazy"></div><figcaption><b>celc.web.auth.gr</b> · The Centre for European Legal Culture, in Greek.</figcaption></figure>
+  </div>
+</section>
+</main>
+
+<div class="kasumi" aria-hidden="true" style="margin-top:clamp(90px,11vw,140px)"></div>
+
+<footer class="scene colophon" aria-labelledby="h-end">
+  <img class="ink enso" src="../../img/ui/enso-sumi.png" alt="" width="1024" height="1024" loading="lazy">
+  <div class="kotoba">
+    <div class="mark"><span class="seal" aria-hidden="true">跋</span>the colophon</div>
+    <h2 id="h-end">Write to me</h2>
+    <p>The scroll ends here. If you want to talk about a smart contract, a paper or a course, email me.</p>
+    <p class="mail"><a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a></p>
+    <ul class="links">
+      <li><a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a></li>
+      <li><a href="https://github.com/gmixoulis">GitHub</a></li>
+      <li><a href="https://twitter.com/GeorgeMicou">X</a></li>
+      <li><a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a></li>
+    </ul>
+    <p class="quiet">Also on this site: the <a href="../../garden/">Zen Garden</a>, where I keep personal notes, and <a href="../../play/">Ledger Run</a>, my résumé as a platformer.</p>
+  </div>
+  <p class="sign">George Michoulis, Thessaloniki <span class="seal" aria-hidden="true">ΓΜ</span></p>
+</footer>
+
+</div>
+</div>
+<div class="rod" aria-hidden="true"></div>
+</div>
+
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{rootMargin:'0px 0px -12% 0px'});
+document.querySelectorAll('.scene').forEach(s=>io.observe(s));
+</script>
+</body>
+</html>

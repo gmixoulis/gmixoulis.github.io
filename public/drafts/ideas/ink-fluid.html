@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ink in water · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki. Smart contracts, graph-based ML and full-stack Web3 systems.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f2ede3;--prgb:242,237,227;--ink:#1a1714;--ink2:#433d36;--muted:#665e54;--verm:#bf3219;
+  --hair:rgba(26,23,20,.16);--mat:#fbf9f4;
+  --disp:'Bodoni Moda','Didot','Times New Roman',serif;--sans:'Instrument Sans','Helvetica Neue',Helvetica,sans-serif;
+  --gut:clamp(16px,4vw,56px);--ease:cubic-bezier(.2,.7,.1,1);
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#0d0c0b;--prgb:13,12,11;--ink:#efe8da;--ink2:#cbc2b2;--muted:#9d9486;--verm:#f2694a;
+  --hair:rgba(239,232,218,.16);--mat:#1b1917;
+}}
+*{box-sizing:border-box}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.62 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+img{max-width:100%;display:block}
+:focus-visible{outline:2px solid var(--verm);outline-offset:4px;border-radius:2px}
+h1,h2,h3{font-weight:500;margin:0}
+p{margin:0}
+#fluid{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+.nogl #fluid{display:none}
+.nogl .hero::before{content:"";position:absolute;left:50%;bottom:4vh;width:min(62vw,520px);aspect-ratio:1;translate:-50% 0;background:url(../../img/ui/enso-sumi.png) center/contain no-repeat;opacity:.13}
+@media (prefers-color-scheme:dark){.nogl .hero::before{filter:invert(1)}}
+main,footer{position:relative;z-index:1}
+.wrap{max-width:1320px;margin:0 auto;padding:0 var(--gut)}
+.skip{position:absolute;left:-999px;top:8px;z-index:30;background:var(--ink);color:var(--paper);padding:8px 12px}
+.skip:focus{left:8px}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:18px;padding:14px var(--gut);transition:background-color .5s,box-shadow .5s}
+.nav.solid{background:rgba(var(--prgb),.9);box-shadow:0 1px 0 var(--hair)}
+.back{font-size:13px;color:var(--muted);text-decoration:none;white-space:nowrap}
+.back:hover{color:var(--ink)}
+.brand{font:500 19px/1 var(--disp);text-decoration:none;opacity:0;transform:translateY(6px);transition:opacity .5s,transform .5s var(--ease);white-space:nowrap}
+.brand i{font-style:italic}
+.solid .brand{opacity:1;transform:none}
+.nav nav{margin-left:auto}
+.nav ul{display:flex;gap:clamp(11px,2.2vw,34px);margin:0;padding:0;list-style:none}
+.nav ul a{position:relative;font-size:14px;font-weight:500;text-decoration:none;color:var(--muted);transition:color .3s}
+.nav ul a:hover,.nav ul a[aria-current]{color:var(--ink)}
+.nav ul a::after{content:"";position:absolute;left:50%;bottom:-8px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--verm);transform:scale(0);transition:transform .45s var(--ease)}
+.nav ul a[aria-current]::after{transform:scale(1)}
+
+/* scrim: a sheet of paper floating over the water, feathered at the edges */
+.sc{--a:.86;background:rgba(var(--prgb),var(--a));box-shadow:0 0 40px 26px rgba(var(--prgb),var(--a))}
+@media (prefers-color-scheme:dark){.sc{--a:.92}}
+
+/* hero */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;align-items:center;text-align:center;padding:clamp(92px,12vh,150px) var(--gut) 0}
+.loc,.cue,.hint{text-shadow:0 0 14px var(--paper),0 0 4px var(--paper)}
+.loc{font-size:14px;color:var(--muted);letter-spacing:.01em}
+h1{font-family:var(--disp);font-size:clamp(3.3rem,10.4vw,10.6rem);line-height:.95;letter-spacing:-.025em;margin:.16em 0 .24em;position:relative;font-variation-settings:"opsz" 96}
+h1 .w{display:inline-block;overflow:hidden;vertical-align:bottom;padding:0 .04em .08em}
+h1 .w>span{display:inline-block}
+h1 em{font-weight:400}
+.seal{position:absolute;top:.08em;right:-.32em;width:clamp(16px,1.9vw,30px)}
+.hero .line{max-width:37rem;font-size:clamp(1.05rem,1.45vw,1.22rem);line-height:1.5;color:var(--ink2);text-shadow:0 0 18px rgba(var(--prgb),.9)}
+.acts{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:28px}
+.btn{position:relative;display:inline-flex;align-items:center;gap:.7em;padding:16px 26px;font:600 15px/1 var(--sans);text-decoration:none;color:var(--ink);border:1px solid var(--ink);border-radius:2px;overflow:hidden;isolation:isolate;transition:color .4s var(--ease),border-color .4s}
+.btn::before{content:"";position:absolute;inset:-2px;z-index:-1;background:var(--ink);border-radius:50% 50% 0 0/40% 40% 0 0;transform:translateY(102%);transition:transform .55s var(--ease),border-radius .55s var(--ease)}
+.btn:hover{color:var(--paper)}
+.btn:hover::before{transform:none;border-radius:0}
+.btn.pri{background:var(--ink);color:var(--paper)}
+.btn.pri::before{background:var(--verm)}
+.btn.pri:hover{border-color:var(--verm)}
+.btn span{transition:transform .4s var(--ease)}
+.btn:hover span{transform:translateX(3px)}
+.cue{position:absolute;left:var(--gut);bottom:26px;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)}
+.cue::before{content:"";width:1px;height:38px;background:currentColor;opacity:.6}
+.hint{position:absolute;right:var(--gut);bottom:26px;font-size:13px;color:var(--muted);max-width:14rem;text-align:right}
+
+/* sections */
+.sec{position:relative;padding:clamp(110px,16vh,190px) 0}
+.col{max-width:40rem}
+.col.wide{max-width:47rem}
+h2{font-family:var(--disp);font-size:clamp(2.7rem,6.2vw,5.6rem);line-height:.98;letter-spacing:-.02em;margin-bottom:.45em;font-variation-settings:"opsz" 96}
+h2 em{font-weight:400}
+.lead{font-size:clamp(1.15rem,1.6vw,1.38rem);line-height:1.5;color:var(--ink);margin-bottom:1.1em}
+.col>p{color:var(--ink2);margin-bottom:1em}
+.sides{margin:2.4em 0 0;padding:0}
+.sides div{display:grid;grid-template-columns:8.5rem 1fr;gap:18px;padding:18px 0;border-top:1px solid var(--hair)}
+.sides dt{font:italic 500 1.65rem/1.1 var(--disp)}
+.sides dd{margin:0;color:var(--ink2)}
+
+.jobs,.edu,.papers,.awards{list-style:none;margin:0;padding:0}
+.job{display:grid;grid-template-columns:9.5rem 1fr;gap:6px 28px;padding:26px 0;border-top:1px solid var(--hair)}
+.when{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:.5em}
+.job h3{font:500 clamp(1.45rem,2.2vw,1.9rem)/1.15 var(--disp)}
+.at{display:block;font:600 15px/1.4 var(--sans);margin:.35em 0 .45em;color:var(--verm)}
+.job p{color:var(--ink2)}
+.sub{font:italic 500 1.6rem/1.2 var(--disp);margin:2.4em 0 .6em}
+.edu li{display:grid;grid-template-columns:9.5rem 1fr;gap:4px 28px;padding:14px 0;border-top:1px solid var(--hair);color:var(--ink2)}
+.edu b{color:var(--ink);font-weight:600}
+
+.papers li{display:grid;grid-template-columns:7.5rem 1fr;gap:28px;padding:24px 0;border-top:1px solid var(--hair);align-items:start}
+.cites{text-align:right;font-family:var(--disp);font-variation-settings:"opsz" 96}
+.cites b{display:block;font-weight:400;font-size:clamp(3.2rem,5.4vw,5rem);line-height:.8;letter-spacing:-.03em;font-variant-numeric:lining-nums}
+.cites small{display:block;font:500 12px/1 var(--sans);color:var(--muted);margin-top:10px}
+.papers h3{font:500 clamp(1.12rem,1.5vw,1.3rem)/1.35 var(--sans);letter-spacing:-.005em}
+.papers p{color:var(--muted);font-size:15px;margin-top:6px}
+.note{margin-top:22px;color:var(--muted);font-size:15px}
+.arrow{font-weight:600;text-decoration:none;background:linear-gradient(var(--verm),var(--verm)) 0 100%/0 1px no-repeat;transition:background-size .45s var(--ease);padding-bottom:2px}
+.arrow:hover{background-size:100% 1px}
+
+.head{max-width:44rem;margin-bottom:44px}
+.head p{color:var(--ink2)}
+.awards{margin-top:18px}
+.awards li{padding:9px 0;border-top:1px solid var(--hair);color:var(--ink2)}
+.awards b{color:var(--ink);font-weight:600}
+.certs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:38px 28px}
+.certs a{display:block;text-decoration:none}
+.certs figure{margin:0 0 14px;aspect-ratio:4/3;background:var(--mat);padding:12px;box-shadow:0 1px 0 var(--hair),0 22px 40px -28px rgba(0,0,0,.45);transition:transform .5s var(--ease),box-shadow .5s}
+.certs img{width:100%;height:100%;object-fit:contain}
+.certs a:hover figure{transform:translateY(-6px) rotate(-.6deg);box-shadow:0 1px 0 var(--hair),0 30px 50px -26px rgba(0,0,0,.5)}
+.ct{display:block;font-weight:600;font-size:15px;line-height:1.35}
+.ck{display:block;font-size:13px;color:var(--muted);margin-top:3px}
+.more{margin-top:40px;cursor:pointer;background:none}
+.projects{list-style:none;margin:0;padding:6px 2px 22px;display:grid;grid-auto-flow:column;grid-auto-columns:min(80vw,540px);gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:var(--hair) transparent}
+.projects li{scroll-snap-align:start}
+.projects figure{margin:0 0 16px;aspect-ratio:16/10;overflow:hidden;background:var(--mat);box-shadow:0 1px 0 var(--hair),0 26px 44px -30px rgba(0,0,0,.5)}
+.projects img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform 1.1s var(--ease)}
+.projects li:hover img{transform:scale(1.035)}
+.host{font:italic 500 1.45rem/1.2 var(--disp)}
+.projects p:last-child{color:var(--ink2);font-size:15px;margin-top:6px;max-width:30rem}
+.gap{height:clamp(90px,14vh,150px)}
+
+.contact{min-height:100svh;text-align:center;padding-top:clamp(100px,15vh,170px)}
+.contact .wrap>p{color:var(--ink2);max-width:30rem;margin:0 auto}
+.mail{display:inline-block;margin:.5em 0 .6em;font:italic 400 clamp(2rem,6.4vw,5.6rem)/1.1 var(--disp);letter-spacing:-.02em;text-decoration:none;background:linear-gradient(var(--verm),var(--verm)) 0 96%/0 2px no-repeat;transition:background-size .7s var(--ease);overflow-wrap:anywhere}
+.mail:hover{background-size:100% 2px}
+.links{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 30px}
+.links a{font-weight:600;font-size:15px}
+.quiet{margin-top:26px!important;font-size:15px;color:var(--muted)!important}
+footer{padding:0 0 30px}
+footer .wrap{text-shadow:0 0 12px var(--paper);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 30px;font-size:13px;color:var(--muted)}
+
+@media (max-width:1000px){.certs{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:760px){
+  body{font-size:16px}
+  .back{font-size:12px}
+  .brand{display:none}
+  .nav{gap:10px;padding:12px 16px}
+  .nav ul{gap:12px}
+  .nav ul a{font-size:13px}
+  .hero{padding-top:116px}
+  h1{font-size:17.5vw;margin:.2em 0 .3em}
+  h1 .w{display:block}
+  .seal{top:auto;bottom:.22em;right:-.4em}
+  .acts{margin-top:26px}
+  .btn{padding:15px 22px}
+  .hint{display:none}
+  .sc{box-shadow:0 0 26px 18px rgba(var(--prgb),var(--a))}
+  .sides div,.job,.edu li{grid-template-columns:1fr}
+  .when{padding-top:0}
+  .papers li{grid-template-columns:4.6rem 1fr;gap:16px}
+  .certs{grid-template-columns:repeat(2,1fr);gap:28px 16px}
+  .certs figure{padding:8px}
+  .ct{font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important}.hint{display:none}}
+.nogl .hint{display:none}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav" id="nav">
+  <a class="back" href="index.html">← All ideas</a>
+  <a class="brand" href="#top">George <i>Michoulis</i></a>
+  <nav aria-label="Sections"><ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#papers">Papers</a></li>
+    <li><a href="#proof">Proof</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul></nav>
+</header>
+<canvas id="fluid" aria-hidden="true"></canvas>
+
+<main id="main">
+  <section class="hero" id="top" data-sec="top">
+    <p class="loc">Thessaloniki, Greece · working remotely</p>
+    <h1 aria-label="George Michoulis"><span class="w" aria-hidden="true"><span>George</span></span> <span class="w" aria-hidden="true"><span><em>Michoulis</em></span></span><img class="seal" src="../../img/ink/parts/seal-ko.png" alt=""></h1>
+    <p class="line">Blockchain developer and researcher. I build smart contracts, graph-based machine learning and full-stack Web3 systems.</p>
+    <div class="acts">
+      <a class="btn pri mag" href="#contact">Contact <span aria-hidden="true">→</span></a>
+      <a class="btn mag" href="#work">See work <span aria-hidden="true">↓</span></a>
+    </div>
+    <p class="cue">Scroll</p>
+    <p class="hint" id="hint">Move your cursor to stir the water.</p>
+  </section>
+
+  <section class="sec" id="about" data-sec="about" aria-labelledby="h-about">
+    <div class="wrap"><div class="col sc">
+      <h2 id="h-about" data-rv>About</h2>
+      <p class="lead" data-rv>I'm George, a blockchain developer and researcher based in Thessaloniki. I write smart contracts, study graph-based machine learning, and build Web3 systems from the contract to the frontend.</p>
+      <p data-rv>I studied Applied Informatics at the University of Macedonia, where my thesis verified academic credentials on Ethereum. My MSc in Data and Web Science at the Aristotle University of Thessaloniki, funded by a DeepMind scholarship, looked at graph-embedding methods for detecting fraud on blockchains.</p>
+      <dl class="sides">
+        <div data-rv><dt>Research</dt><dd>Publications and startup work on how effective ledgers are, and what they change in practice across blockchain systems.</dd></div>
+        <div data-rv><dt>Build</dt><dd>Web3 products (NFTs, DeFi), data science with graph embeddings, shipped in Solidity, TypeScript and the cloud.</dd></div>
+        <div data-rv><dt>Teach</dt><dd>Lecturing in networks, security and application development, and speaking in public about Web3 and edge tech.</dd></div>
+      </dl>
+    </div></div>
+  </section>
+
+  <section class="sec" id="work" data-sec="work" aria-labelledby="h-work">
+    <div class="wrap"><div class="col wide sc">
+      <h2 id="h-work" data-rv>Experience</h2>
+      <ol class="jobs">
+        <li class="job"><p class="when">05/2026 – present</p><div><h3>Web3 Full-Stack Developer</h3><span class="at">Cyberscope by TAC</span><p>End-to-end Web3 products: contracts, on-chain integrations, React and Next frontends, and security tooling.</p></div></li>
+        <li class="job"><p class="when">2024 – 2026</p><div><h3>Blockchain Developer &amp; Researcher</h3><span class="at">Sidroco Holdings Ltd</span><p>An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ LMS, and multinational EU projects.</p></div></li>
+        <li class="job"><p class="when">2023 – 2025</p><div><h3>Lecturer &amp; Academic Partner</h3><span class="at">University of Derby / Mediterranean College</span><p>Networks and Security, Web Scripting, Application Development, with assessment designed to be inclusive first.</p></div></li>
+        <li class="job"><p class="when">2022 – 2024</p><div><h3>Blockchain &amp; Full-Stack Developer</h3><span class="at">University of Nicosia / IFF</span><p>Large Next.js, NestJS and Docker applications, and a Web3 NFT marketplace.</p></div></li>
+      </ol>
+      <h3 class="sub" data-rv>Education</h3>
+      <ul class="edu">
+        <li data-rv><span>2020 – 2022</span><span><b>MSc Data and Web Science</b>, Aristotle University of Thessaloniki. DeepMind scholarship.</span></li>
+        <li data-rv><span>2015 – 2020</span><span><b>BSc Applied Informatics</b>, University of Macedonia. Web3 thesis on academic credentials.</span></li>
+      </ul>
+    </div></div>
+  </section>
+
+  <section class="sec" id="papers" data-sec="papers" aria-labelledby="h-papers">
+    <div class="wrap"><div class="col wide sc">
+      <h2 id="h-papers" data-rv>Papers</h2>
+      <p class="lead" data-rv>Most of my research asks how blockchains hold up in real institutions: universities, governance, telecom networks.</p>
+      <ol class="papers">
+        <li><span class="cites"><b>32</b><small>citations</small></span><div><h3>A process-aware approach for blockchain-based verification of academic qualifications</h3><p>Simulation Modelling Practice and Theory 121, 102642 · 2022</p></div></li>
+        <li><span class="cites"><b>11</b><small>citations</small></span><div><h3>Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe</h3><p>XIV Balkan Conference on Operational Research · 2020</p></div></li>
+        <li><span class="cites"><b>7</b><small>citations</small></span><div><h3>Exploring decentralized governance: a framework applied to Compound Finance</h3><p>Intl. Conference on Mathematical Research for Blockchain Economy · 2023</p></div></li>
+        <li><span class="cites"><b>1</b><small>citation</small></span><div><h3>FraMark: a blockchain marketplace for 5G network management using fractional NFTs</h3><p>7th World Symposium on Communication Engineering (WSCE) · 2024</p></div></li>
+        <li><span class="cites"><b>1</b><small>citation</small></span><div><h3>Data security for smart cities</h3><p>2025</p></div></li>
+        <li><span class="cites"><b>0</b><small>citations</small></span><div><h3>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management</h3><p>IEEE ICCE 2025 · 2025</p></div></li>
+        <li><span class="cites"><b>0</b><small>citations</small></span><div><h3>Graph embedding and node features for drug–target interaction prediction</h3><p>Aristotle University of Thessaloniki, MSc work · 2022</p></div></li>
+        <li><span class="cites"><b>0</b><small>citations</small></span><div><h3>Blockchain in higher education: permissioned and permissionless approaches</h3><p>4th Summit on Gender Equality in Computing · 2022</p></div></li>
+      </ol>
+      <p class="note">Plus two Greek-language theses on verifying academic titles with Ethereum (2020, 2021). <a class="arrow" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">All on Google Scholar →</a></p>
+    </div></div>
+  </section>
+
+  <section class="sec" id="proof" data-sec="proof" aria-labelledby="h-proof">
+    <div class="wrap">
+      <div class="head sc">
+        <h2 id="h-proof" data-rv>Certificates</h2>
+        <p data-rv>The paper trail: degrees, courses and awards, as scanned. Select one to open it full size.</p>
+        <ul class="awards" data-rv>
+          <li><b>DeepMind Scholarship</b>, Aristotle University of Thessaloniki, 2020–2022</li>
+          <li><b>3rd place, Infinitech Hackathon</b>, Crowdpolicy, 06/2022</li>
+          <li><b>Basic Research grant</b>, University of Macedonia, 2020–2021</li>
+          <li><b>Move/Sui Bootcamp Thessaloniki award</b>, 2025</li>
+        </ul>
+      </div>
+      <ul class="certs" id="certs">
+        <li><a href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg"><figure><img src="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" alt="Scan of the MSc degree in Data and Web Science" width="1240" height="1755" loading="lazy" decoding="async"></figure><span class="ct">Data and Web Science</span><span class="ck">Master degree</span></a></li>
+        <li><a href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg"><figure><img src="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" alt="Scan of the BSc degree from the University of Macedonia" width="1742" height="2460" loading="lazy" decoding="async"></figure><span class="ct">Applied Informatics</span><span class="ck">Bachelor degree</span></a></li>
+        <li><a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png"><figure><img src="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png" alt="Move Bootcamp Thessaloniki award artwork" width="3543" height="3542" loading="lazy" decoding="async"></figure><span class="ct">Move Bootcamp Thessaloniki</span><span class="ck">Award</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg"><figure><img src="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" alt="CCNA course certificate" width="2175" height="1439" loading="lazy" decoding="async"></figure><span class="ct">CCNA, Cisco Certified Network Associate</span><span class="ck">Certificate of completion</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg"><figure><img src="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" alt="Machine learning and deep neural networks certificate" width="1755" height="1240" loading="lazy" decoding="async"></figure><span class="ct">Machine Learning and Deep Neural Networks</span><span class="ck">Certificate of completion</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg"><figure><img src="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg" alt="NFT Talents Program certificate" width="1500" height="844" loading="lazy" decoding="async"></figure><span class="ct">NFT Talents Program</span><span class="ck">Certificate of completion</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png"><figure><img src="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png" alt="Cloud Engineering certificate annex" width="2481" height="3509" loading="lazy" decoding="async"></figure><span class="ct">Cloud Engineering</span><span class="ck">Certificate of completion</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png"><figure><img src="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" alt="Certified Rust Developer certificate" width="2342" height="1656" loading="lazy" decoding="async"></figure><span class="ct">Rust Developer</span><span class="ck">Certificate of completion</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png"><figure><img src="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png" alt="Advanced Ethical Hacking certificate" width="800" height="600" loading="lazy" decoding="async"></figure><span class="ct">Advanced Ethical Hacking</span><span class="ck">Certificate of completion</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg"><figure><img src="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" alt="How to Get Published with IEEE certificate" width="1650" height="1275" loading="lazy" decoding="async"></figure><span class="ct">How to Get Published with IEEE</span><span class="ck">Certificate of completion</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg"><figure><img src="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" alt="Introduction to Digital Currencies certificate" width="1754" height="1241" loading="lazy" decoding="async"></figure><span class="ct">Introduction to Digital Currencies</span><span class="ck">Certificate of achievement</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg"><figure><img src="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg" alt="Blockchain in Education webinar certificate" width="1754" height="1241" loading="lazy" decoding="async"></figure><span class="ct">Blockchain in Education</span><span class="ck">Certificate of participation</span></a></li>
+      </ul>
+      <button class="btn more" id="more" type="button" aria-controls="certs">See all 34 <span aria-hidden="true">+</span></button>
+
+      <div class="gap"></div>
+      <div class="head sc">
+        <h2 data-rv>Projects</h2>
+        <p data-rv>Sites I built or worked on, as they looked. Scroll the row sideways.</p>
+      </div>
+      <ul class="projects" tabindex="0" aria-label="Projects">
+        <li><figure><img src="../../img/portfolio/verde.uom.gr.PNG" alt="VerDe website, contact page" width="1840" height="907" loading="lazy" decoding="async"></figure><p class="host">verde.uom.gr</p><p>VerDe, the academic credential verification system from my papers.</p></li>
+        <li><figure><img src="../../img/portfolio/bbf-gui.ddns.net.gif" alt="Blockchain Benchmarking Framework landing page" width="1377" height="956" loading="lazy" decoding="async"></figure><p class="host">bbf-gui.ddns.net</p><p>Landing page of a blockchain benchmarking framework for deploying and evaluating blockchain protocols.</p></li>
+        <li><figure><img src="../../img/portfolio/metau.unic.ac.cy.png" alt="University of Nicosia metaverse course site" width="1698" height="943" loading="lazy" decoding="async"></figure><p class="host">metau.unic.ac.cy</p><p>University of Nicosia course site for on-chain education in the metaverse, with a wallet connect.</p></li>
+        <li><figure><img src="../../img/portfolio/accelerate.png" alt="University of Nicosia accelerate sign-in page" width="1910" height="998" loading="lazy" decoding="async"></figure><p class="host">accelerate.unic.ac.cy</p><p>A University of Nicosia sign-in page, shown here on staging.</p></li>
+        <li><figure><img src="../../img/portfolio/celc.web.auth.gr.PNG" alt="Centre for European Legal Culture website" width="1600" height="936" loading="lazy" decoding="async"></figure><p class="host">celc.web.auth.gr</p><p>Site of the Centre for European Legal Culture at AUTh, in Greek and English.</p></li>
+        <li><figure><img src="../../img/portfolio/eudem.polsci.auth.gr.PNG" alt="EUDEM Jean Monnet Chair website" width="1896" height="944" loading="lazy" decoding="async"></figure><p class="host">eudem.polsci.auth.gr</p><p>Site of the EUDEM Jean Monnet Chair: activities, news and staff.</p></li>
+        <li><figure><img src="../../img/portfolio/marlab.ode.uom.gr.PNG" alt="MarLab marketing laboratory website" width="1835" height="917" loading="lazy" decoding="async"></figure><p class="host">marlab.ode.uom.gr</p><p>Site of MarLab, the marketing laboratory at the University of Macedonia.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" data-sec="contact" aria-labelledby="h-contact">
+    <div class="wrap">
+      <h2 id="h-contact" data-rv>Contact</h2>
+      <p data-rv>Email is the quickest way to reach me, for work, research or a talk.</p>
+      <a class="mail" href="mailto:gmixoulis@gmail.com" data-rv>gmixoulis@gmail.com</a>
+      <ul class="links" data-rv>
+        <li><a class="arrow" href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a></li>
+        <li><a class="arrow" href="https://github.com/gmixoulis">GitHub</a></li>
+        <li><a class="arrow" href="https://twitter.com/GeorgeMicou">X</a></li>
+        <li><a class="arrow" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a></li>
+      </ul>
+      <p class="quiet" data-rv>Also here: <a href="../../garden/">Zen Garden</a>, my personal notes, and <a href="../../play/">Ledger Run</a>, my résumé as a platformer.</p>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><p>© 2026 George Michoulis</p><p>The ink is a real-time fluid simulation running on your GPU.</p></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+'use strict';
+const doc = document.documentElement, $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const DQ = matchMedia('(prefers-color-scheme: dark)');
+const coarse = matchMedia('(pointer: coarse)').matches;
+const mob = coarse || innerWidth < 760;
+const Q = new URLSearchParams(location.search);
+if (coarse) $('#hint').textContent = 'Drag a finger to stir the water.';
+
+/* ============ Ink: a 2D stable-fluids solver ============
+   Technique credit: Jos Stam, "Stable Fluids" (SIGGRAPH 1999) for semi-Lagrangian advection
+   + pressure projection; vorticity confinement after Fedkiw, Stam & Jensen (2001); the GPU
+   ping-pong layout follows the approach popularised by Pavel Dobryakov's WebGL fluid demo.
+   Written from scratch here. Dye channels: r = sumi, g = vermilion, b = pigment grain. */
+const cv = $('#fluid');
+const ctxo = { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'high-performance' };
+let gl = cv.getContext('webgl2', ctxo); const gl2 = !!gl;
+if (!gl) gl = cv.getContext('webgl', ctxo);
+let ink = null;
+try { if (gl) ink = makeInk(); } catch (e) { console.warn('ink disabled:', e); ink = null; }
+if (!ink) doc.classList.add('nogl');
+
+function makeInk() {
+  let HF;
+  if (gl2) { gl.getExtension('EXT_color_buffer_float'); gl.getExtension('EXT_color_buffer_half_float'); HF = gl.HALF_FLOAT; }
+  else { const e = gl.getExtension('OES_texture_half_float'); if (!e || !gl.getExtension('OES_texture_half_float_linear')) return null; HF = e.HALF_FLOAT_OES; }
+  const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+  const slow = /swiftshader|llvmpipe|software/i.test(dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : '') && !Q.has('hq');
+  const CFG = slow ? { sim: 96, dye: 480, it: 8, dpr: 1 } : mob ? { sim: 128, dye: 640, it: 12, dpr: 1.5 } : { sim: 192, dye: 1024, it: 22, dpr: 2 };
+
+  const ok = (i, f) => {
+    const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texImage2D(gl.TEXTURE_2D, 0, i, 4, 4, 0, f, HF, null);
+    const fb = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t, 0);
+    const s = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
+    gl.deleteTexture(t); gl.deleteFramebuffer(fb); return s;
+  };
+  const fmt = (i, f) => {
+    const list = gl2 ? [[i, f], [gl.RG16F, gl.RG], [gl.RGBA16F, gl.RGBA]] : [[gl.RGBA, gl.RGBA]];
+    for (const x of list) if (ok(x[0], x[1])) return x;
+    throw 'no renderable half-float format';
+  };
+  const R = gl2 ? fmt(gl.R16F, gl.RED) : fmt(), RG = gl2 ? fmt(gl.RG16F, gl.RG) : R, RGBA = gl2 ? fmt(gl.RGBA16F, gl.RGBA) : R;
+
+  const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw gl.getShaderInfoLog(s); return s; };
+  const VS = sh(gl.VERTEX_SHADER, `precision highp float;attribute vec2 aPos;uniform vec2 texel;varying vec2 vUv,vL,vR,vT,vB;
+void main(){vUv=aPos*.5+.5;vL=vUv-vec2(texel.x,0.);vR=vUv+vec2(texel.x,0.);vT=vUv+vec2(0.,texel.y);vB=vUv-vec2(0.,texel.y);gl_Position=vec4(aPos,0.,1.);}`);
+  const HEAD = `precision highp float;precision highp sampler2D;varying vec2 vUv,vL,vR,vT,vB;
+float hash(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
+float vn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+1.),f.x),f.y);}
+`;
+  const prog = src => {
+    const p = gl.createProgram(); gl.attachShader(p, VS); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, HEAD + src));
+    gl.bindAttribLocation(p, 0, 'aPos'); gl.linkProgram(p);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw gl.getProgramInfoLog(p);
+    const u = {}; for (let i = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS); i--;) { const n = gl.getActiveUniform(p, i).name; u[n] = gl.getUniformLocation(p, n); }
+    return o => {
+      gl.useProgram(p); let unit = 0;
+      for (const k in o) {
+        const v = o[k], l = u[k]; if (l == null) continue;
+        if (v.tex) { gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, v.tex); gl.uniform1i(l, unit++); }
+        else if (typeof v === 'number') gl.uniform1f(l, v);
+        else (v.length === 2 ? gl.uniform2fv : gl.uniform3fv).call(gl, l, v);
+      }
+    };
+  };
+
+  const P = {
+    splat: prog(`uniform sampler2D uT;uniform float aspect,radius,grain,gscale;uniform vec3 color;uniform vec2 point,swirl,seed;
+void main(){vec2 p=vUv-point;p.x*=aspect;float g=exp(-dot(p,p)/radius);vec3 a=color;a.xy+=(swirl.x*vec2(-p.y,p.x)-swirl.y*p)/sqrt(radius);
+float n=vn(vUv*vec2(aspect,1.)*gscale+seed);n=n*n*(3.-2.*n);
+gl_FragColor=vec4(texture2D(uT,vUv).xyz+g*a+vec3(0.,0.,g*color.x*n*grain),1.);}`),
+    advect: prog(`uniform sampler2D uV,uS;uniform float dt,decay,aspect,edge;uniform vec2 shift;
+void main(){vec2 v=texture2D(uV,vUv).xy;vec2 c=vUv-dt*vec2(v.x/aspect,v.y)-shift;vec4 r=texture2D(uS,c)/(1.+decay*dt);
+if(edge>0.){vec2 e=smoothstep(0.,edge,c)*smoothstep(0.,edge,1.-c);r*=e.x*e.y;}gl_FragColor=r;}`),
+    div: prog(`uniform sampler2D uV;void main(){float L=texture2D(uV,vL).x,R=texture2D(uV,vR).x,T=texture2D(uV,vT).y,B=texture2D(uV,vB).y;gl_FragColor=vec4(.5*(R-L+T-B),0.,0.,1.);}`),
+    curl: prog(`uniform sampler2D uV;void main(){float L=texture2D(uV,vL).y,R=texture2D(uV,vR).y,T=texture2D(uV,vT).x,B=texture2D(uV,vB).x;gl_FragColor=vec4(.5*(R-L-T+B),0.,0.,1.);}`),
+    vort: prog(`uniform sampler2D uV,uC,uD;uniform float curl,dt,buoy;
+void main(){float L=texture2D(uC,vL).x,R=texture2D(uC,vR).x,T=texture2D(uC,vT).x,B=texture2D(uC,vB).x,C=texture2D(uC,vUv).x;
+vec2 f=.5*vec2(abs(T)-abs(B),abs(R)-abs(L));f/=length(f)+1e-4;f*=curl*C;f.y*=-1.;vec4 d=texture2D(uD,vUv);
+vec2 v=texture2D(uV,vUv).xy+(f+vec2(0.,-buoy*(d.r+.3*d.g)))*dt;gl_FragColor=vec4(clamp(v,-3.,3.),0.,1.);}`),
+    fade: prog(`uniform sampler2D uT;uniform float value;void main(){gl_FragColor=value*texture2D(uT,vUv);}`),
+    pres: prog(`uniform sampler2D uP,uDv;float at(vec2 c){return c.x<0.||c.x>1.||c.y<0.||c.y>1.?0.:texture2D(uP,c).x;}void main(){float L=at(vL),R=at(vR),T=at(vT),B=at(vB);gl_FragColor=vec4((L+R+B+T-texture2D(uDv,vUv).x)*.25,0.,0.,1.);}`),
+    grad: prog(`uniform sampler2D uP,uV;float at(vec2 c){return c.x<0.||c.x>1.||c.y<0.||c.y>1.?0.:texture2D(uP,c).x;}void main(){float L=at(vL),R=at(vR),T=at(vT),B=at(vB);gl_FragColor=vec4(texture2D(uV,vUv).xy-.5*vec2(R-L,T-B),0.,1.);}`),
+    // paper: r = mottling, g = kozo fibres, b = dither noise. Rendered once per resize.
+    paper: prog(`uniform float px;
+void main(){vec2 p=gl_FragCoord.xy/px;float m=vn(p*.0035)*.55+vn(p*.012)*.3+vn(p*.06)*.15;
+vec2 w=p+60.*vec2(vn(p*.004),vn(p*.004+3.1));float f=0.;
+f+=(1.-smoothstep(0.,.03,abs(vn(mat2(.8,.6,-.6,.8)*w*vec2(.05,.011))-.5)))*smoothstep(.62,.9,vn(p*.011+11.));
+f+=(1.-smoothstep(0.,.03,abs(vn(mat2(.3,-.95,.95,.3)*w*vec2(.05,.009)+7.)-.5)))*smoothstep(.64,.9,vn(p*.009+23.));
+gl_FragColor=vec4(m,min(f,1.),hash(p),1.);}`),
+    show: prog(`uniform sampler2D uD,uPp;uniform float dark,sheen,ga;uniform vec3 ink,red,paper,glow,rglow;uniform vec2 res;
+void main(){vec4 d=texture2D(uD,vUv);vec3 pp=texture2D(uPp,gl_FragCoord.xy/res).rgb;
+float gr=clamp(d.b/max(d.r,1e-3),0.,1.);float s=max(d.r,0.)*(1.-ga+2.*ga*gr)*(1.+.1*pp.g);float r=max(d.g,0.);
+float gx=texture2D(uD,vR).r-texture2D(uD,vL).r,gy=texture2D(uD,vT).r-texture2D(uD,vB).r;
+vec3 n=normalize(vec3(-gx,-gy,.06));float sp=pow(max(dot(n,normalize(vec3(-.35,.55,1.3))),0.),30.)*smoothstep(.04,.5,s);
+vec3 col;vec2 u=vUv-.5;
+if(dark<.5){col=paper*(1.-.02*pp.g-.03*(pp.r-.5))*exp(-ink*s*3.3-red*r*2.4);col+=sp*sheen*.09;col*=1.-.12*dot(u,u);}
+else{vec3 bg=paper*(1.+.5*(pp.r-.5))+.01*pp.g+vec3(.03,.024,.018)*smoothstep(.75,0.,length((vUv-vec2(.5,1.08))*vec2(.9,1.7)));vec3 e=glow*(1.-exp(-s*2.3))+rglow*(1.-exp(-r*2.6));col=bg+e*(1.-bg)+sp*sheen*.2*glow;col*=1.-.5*dot(u,u);}
+gl_FragColor=vec4(col+(pp.b-.5)/170.,1.);}`),
+  };
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0); gl.enableVertexAttribArray(0);
+  gl.disable(gl.BLEND);
+
+  const fbo = (w, h, [i, f], type = HF) => {
+    const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
+    for (const [k, v] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D, k, v);
+    gl.texImage2D(gl.TEXTURE_2D, 0, i, w, h, 0, f, type, null);
+    const fb = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+    gl.viewport(0, 0, w, h); gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT);
+    return { tex, fb, w, h, tx: [1 / w, 1 / h], kill() { gl.deleteTexture(tex); gl.deleteFramebuffer(fb); } };
+  };
+  const dbl = (w, h, f) => { const o = { r: fbo(w, h, f), w: fbo(w, h, f), swap() { [o.r, o.w] = [o.w, o.r]; }, kill() { o.r.kill(); o.w.kill(); } }; return o; };
+  const blit = t => { gl.bindFramebuffer(gl.FRAMEBUFFER, t ? t.fb : null); t ? gl.viewport(0, 0, t.w, t.h) : gl.viewport(0, 0, cv.width, cv.height); gl.drawArrays(gl.TRIANGLES, 0, 3); };
+  const dims = n => { const a = innerWidth / innerHeight; return a >= 1 ? [Math.round(n * a), n] : [n, Math.round(n / a)]; };
+
+  let vel, dye, prs, dv, crl, pap, asp = 1, aspMade = 0;
+  function build() {
+    [vel, dye, prs, dv, crl].forEach(x => x && x.kill());
+    const [sw, shh] = dims(CFG.sim), [dw, dh] = dims(CFG.dye);
+    asp = sw / shh; aspMade = innerWidth / innerHeight;
+    vel = dbl(sw, shh, RG); prs = dbl(sw, shh, R); dv = fbo(sw, shh, R); crl = fbo(sw, shh, R); dye = dbl(dw, dh, RGBA);
+  }
+  function size() {
+    const d = Math.min(devicePixelRatio || 1, CFG.dpr), w = Math.round(cv.clientWidth * d), h = Math.round(cv.clientHeight * d);
+    if (Math.abs(innerWidth / innerHeight - aspMade) / aspMade > .22) build();
+    if (cv.width === w && cv.height === h && pap) return;
+    cv.width = w; cv.height = h;
+    pap && pap.kill(); pap = fbo(w, h, [gl.RGBA, gl.RGBA], gl.UNSIGNED_BYTE);
+    P.paper({ px: d }); blit(pap);
+  }
+  build(); size();
+
+  function splat(x, y, vx, vy, k, r, rad, sw = 0, inw = 0) {
+    P.splat({ uT: vel.r, texel: [0, 0], aspect: asp, point: [x, y], color: [vx, vy, 0], radius: rad, swirl: [sw, inw], grain: 0, seed: [0, 0], gscale: 1 });
+    blit(vel.w); vel.swap();
+    if (k || r) {
+      P.splat({ uT: dye.r, aspect: asp, point: [x, y], color: [k, r, 0], radius: rad, swirl: [0, 0], grain: 1, gscale: 190, seed: [Math.random() * 500, Math.random() * 500] });
+      blit(dye.w); dye.swap();
+    }
+  }
+
+  const S = { buoy: 0, dd: .05, shift: 0 };
+  function step(dt) {
+    const tx = vel.r.tx;
+    P.curl({ uV: vel.r, texel: tx }); blit(crl);
+    P.vort({ uV: vel.r, uC: crl, uD: dye.r, texel: tx, curl: 4, dt, buoy: S.buoy }); blit(vel.w); vel.swap();
+    P.div({ uV: vel.r, texel: tx }); blit(dv);
+    P.fade({ uT: prs.r, texel: tx, value: .8 }); blit(prs.w); prs.swap();
+    for (let i = 0; i < CFG.it; i++) { P.pres({ uP: prs.r, uDv: dv, texel: tx }); blit(prs.w); prs.swap(); }
+    P.grad({ uP: prs.r, uV: vel.r, texel: tx }); blit(vel.w); vel.swap();
+    P.advect({ uV: vel.r, uS: vel.r, texel: tx, dt, decay: .45, aspect: asp, edge: 0, shift: [0, S.shift] }); blit(vel.w); vel.swap();
+    P.advect({ uV: vel.r, uS: dye.r, texel: dye.r.tx, dt, decay: S.dd, aspect: asp, edge: .012, shift: [0, S.shift] }); blit(dye.w); dye.swap();
+    S.shift = 0;
+  }
+  const C = { ink: [1, 1, 1], glow: [1, 1, 1] };
+  function show() {
+    const dk = DQ.matches;
+    P.show({ uD: dye.r, uPp: pap, texel: dye.r.tx, dark: dk ? 1 : 0, sheen: 1, ga: .08, res: [cv.width, cv.height],
+      ink: C.ink, red: [.1, .95, 1.32], glow: C.glow, rglow: dk ? [.92, .27, .16] : [.97, .38, .22],
+      paper: dk ? [.051, .047, .043] : [.949, .929, .89] });
+    blit(null);
+  }
+  return { splat, step, show, size, S, C, get asp() { return asp; } };
+}
+
+/* ============ Ink events ============ */
+const rnd = a => (Math.random() * 2 - 1) * a;
+const EM = [];
+const emit = (dur, fn, delay = 0) => EM.push({ t: -delay, dur, fn });
+function runEm(dt) {
+  for (let i = EM.length; i--;) { const e = EM[i]; e.t += dt; if (e.t < 0) continue; e.fn(e.dur ? Math.min(e.t / e.dur, 1) : 1, dt); if (e.t >= e.dur) EM.splice(i, 1); }
+}
+const sideX = () => innerWidth > 900 ? .75 : .5;
+const yOf = (el, f = .5) => { const r = el.getBoundingClientRect(); return 1 - (r.top + r.height * f) / innerHeight; };
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+// A drop entering still water: a dense bead, a wide downward plunge that rolls into a vortex pair,
+// a thin thread left behind, and small random eddies so the bloom never comes out symmetric.
+function drop(x, y, o = {}) {
+  const s = o.size || 1, k = o.ink ?? 1, r = o.red || 0, v = o.v ?? 1, A = ink.asp;
+  for (let i = 0; i < 4; i++) { const a = i * 1.571 + rnd(.5), q = (.04 + .05 * Math.random()) * s; ink.splat(x + Math.cos(a) * q / A, y - .06 * s + Math.sin(a) * q, rnd(.2), rnd(.2), 0, 0, .0015 * s); }
+  emit(.18, (t, dt) => ink.splat(x, y + .045 * s * (1 - t), 0, 0, k * dt / .18, r * dt / .18, .0011 * s * s)); // falls in, not pops in
+  emit(.45, (t, dt) => ink.splat(x, y - .05 * t * s, 0, -1.3 * v * dt * (1 - t * .6), 0, 0, .009 * s * s));
+  emit(2, (t, dt) => ink.splat(x + rnd(.0012), y + .012 * s, 0, 0, k * .6 * dt * (1 - t), r * .5 * dt * (1 - t), .00007 * s), .2);
+  for (const [dl, f] of [[.4, .35], [.8, .2]]) emit(0, () => ink.splat(x + rnd(.004), y + .01 * s, 0, -.03 * v, k * f, r * f, .0003 * s), dl);
+}
+function plume(x, dur) {
+  emit(dur, (t, dt) => {
+    const w = Math.sin(t * dur * 1.7) * .014 + Math.sin(t * dur * 4.3) * .004;
+    ink.splat(x + w, .06, rnd(.3) * dt, 2.6 * dt, .8 * dt, 0, .0005);
+  });
+}
+function swirl(x, y) {
+  const A = ink.asp;
+  for (let i = 0; i < 7; i++) { const a = i * .898 + rnd(.25), q = .12 + rnd(.05); ink.splat(x + Math.cos(a) * q / A, y + Math.sin(a) * q, 0, 0, i === 4 ? 0 : .32, i === 4 ? .3 : 0, .00035); }
+  emit(2.6, (t, dt) => ink.splat(x, y, 0, 0, 0, 0, .012, 2.6 * dt * (1 - t), .5 * dt * (1 - t)));
+}
+const EV = {
+  top() {
+    const a = $('.acts'), y = a ? clamp(1 - (a.getBoundingClientRect().bottom + innerHeight * .07) / innerHeight, .22, .5) : .42;
+    drop(.5, y, { ink: 1, size: mob ? .9 : 1.15 });
+    emit(0, () => drop(.5 + .045 / ink.asp * (mob ? .5 : 1), y + .015, { ink: 0, red: .4, size: .45, v: .6 }), 1.1);
+  },
+  about() { plume(innerWidth > 900 ? .66 : .5, 6.5); },
+  papers() { swirl(sideX(), .5); },
+  contact() {
+    const m = $('.links'), y = m ? clamp(1 - (m.getBoundingClientRect().bottom + innerHeight * .08) / innerHeight, .2, .45) : .3;
+    drop(.5, y, { ink: 0, red: .7, size: .75, v: .8 });
+  },
+};
+// per-section scene state: ink colour (light: absorption; dark: glow), buoyancy, how fast the water clears
+const SEC = {
+  top:     { ink: [1.06, 1, .9], glow: [.93, .89, .8],  buoy: .006,  dd: .05 },
+  about:   { ink: [.78, .93, 1.14], glow: [.97, .84, .64], buoy: -.4, dd: .07 },
+  work:    { ink: [1.2, 1, .8],   glow: [.76, .84, .96], buoy: .02,  dd: .07 },
+  papers:  { ink: [1, 1, 1],      glow: [.88, .88, .9],  buoy: .01, dd: .08 },
+  proof:   { ink: [1, 1, 1],      glow: [.86, .86, .86], buoy: .01,  dd: 1.8 },
+  contact: { ink: [1.06, 1, .9], glow: [.95, .9, .82],  buoy: .006,  dd: .05 },
+};
+let tgt = SEC.top;
+
+/* ============ loop ============ */
+if (ink) {
+  const ptr = { x: 0, y: 0, dx: 0, dy: 0, has: false, moved: false };
+  const move = (cx, cy) => { const x = cx / innerWidth, y = 1 - cy / innerHeight; if (ptr.has) { ptr.dx += x - ptr.x; ptr.dy += y - ptr.y; ptr.moved = true; } ptr.x = x; ptr.y = y; ptr.has = true; };
+  if (!RM) {
+    addEventListener('pointermove', e => e.pointerType !== 'touch' && move(e.clientX, e.clientY), { passive: true });
+    addEventListener('touchstart', e => { ptr.has = false; move(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+    addEventListener('touchmove', e => move(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+  }
+  ink.S.buoy = tgt.buoy; ink.C.ink = tgt.ink.slice(); ink.C.glow = tgt.glow.slice();
+  let last = performance.now(), sy = scrollY, raf = 0;
+  const lerp = (a, b, k) => a.forEach((v, i) => a[i] = v + (b[i] - v) * k);
+  function frame(now) {
+    raf = requestAnimationFrame(frame);
+    const dt = Math.min((now - last) / 1000, 1 / 30); last = now;
+    // the page and the water are coupled: ink drifts up at ~45% of the scroll speed
+    const d = scrollY - sy; sy = scrollY; ink.S.shift = clamp(d / innerHeight * .45, -.5, .5);
+    const k = 1 - Math.exp(-dt * 1.1);
+    lerp(ink.C.ink, tgt.ink, k); lerp(ink.C.glow, tgt.glow, k);
+    ink.S.buoy += (tgt.buoy - ink.S.buoy) * k; ink.S.dd += (tgt.dd - ink.S.dd) * Math.min(1, k * 3);
+    if (ptr.moved && dt > 0) {
+      const vx = ptr.dx * ink.asp / dt, vy = ptr.dy / dt, sp = Math.hypot(vx, vy);
+      ink.splat(ptr.x, ptr.y, vx * .12, vy * .12, Math.min(sp * .006, .018), 0, .0011);
+      ptr.dx = ptr.dy = 0; ptr.moved = false;
+    }
+    runEm(dt); ink.step(dt); ink.show();
+  }
+  let idle = 0;
+  addEventListener('pointermove', () => idle = 0, { passive: true });
+  if (!RM) setInterval(() => {
+    if (document.hidden || active !== 'top' || (idle += 6) < 12) return;
+    idle = 0;
+    const x = .5 + rnd(.16), y = .2 + Math.random() * .12;
+    drop(x, y, { ink: .8, size: mob ? .6 : .75 });
+    if (Math.random() < .35) emit(0, () => drop(x + .03 / ink.asp, y + .01, { ink: 0, red: .3, size: .4, v: .6 }), .9);
+  }, 6000);
+  const start = () => { if (!raf && !RM) { last = performance.now(); raf = requestAnimationFrame(frame); } };
+  document.addEventListener('visibilitychange', () => { if (document.hidden) { cancelAnimationFrame(raf); raf = 0; } else start(); });
+  addEventListener('resize', () => { ink.size(); RM && ink.show(); });
+  DQ.addEventListener('change', () => RM && ink.show());
+  if (RM) { // a still, finished bloom: simulate ~4 s up front, draw once
+    EV.top(); for (let i = 0; i < 260; i++) { runEm(1 / 60); ink.step(1 / 60); } ink.show();
+  } else start();
+  // test hook: advance the simulation deterministically (used by the QA screenshots)
+  window.__ink = { advance(n) { ink.S.buoy = tgt.buoy; ink.S.dd = tgt.dd; ink.C.ink = tgt.ink.slice(); ink.C.glow = tgt.glow.slice(); for (let i = 0; i < n; i++) { runEm(1 / 60); ink.step(1 / 60); } ink.show(); } };
+}
+
+/* ============ scroll choreography + UI ============ */
+const G = window.gsap, ST = window.ScrollTrigger;
+const links = $$('.nav ul a');
+let active = '', secT = 0; const fired = {};
+function activate(id) {
+  if (id === active) return; active = id;
+  links.forEach(a => a.hash === '#' + id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'));
+  tgt = SEC[id] || SEC.top;
+  clearTimeout(secT);
+  if (!ink || RM) return;
+  secT = setTimeout(() => {
+    const now = performance.now();
+    if (active !== id || now - (fired[id] || -1e9) < 9000) return;
+    fired[id] = now; EV[id] && EV[id]();
+  }, 240);
+}
+const secs = $$('[data-sec]');
+if (G && ST) {
+  G.registerPlugin(ST);
+  let lenis = null;
+  if (!RM && window.Lenis) {
+    lenis = new Lenis({ lerp: .1 });
+    lenis.on('scroll', ST.update);
+    G.ticker.add(t => lenis.raf(t * 1000)); G.ticker.lagSmoothing(0);
+  }
+  $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    const t = a.hash.length > 1 && $(a.hash); if (!t) return;
+    e.preventDefault(); lenis ? lenis.scrollTo(t, { offset: a.hash === '#top' ? 0 : -20 }) : t.scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
+    history.replaceState(null, '', a.hash);
+  }));
+  secs.forEach(s => ST.create({ trigger: s, start: 'top 55%', end: 'bottom 55%', onToggle: self => self.isActive && activate(s.dataset.sec) }));
+  ST.create({ start: () => innerHeight * .75, end: 'max', toggleClass: { targets: '#nav', className: 'solid' } });
+  // experience: one drop per role as each row reaches the reading line, spaced so they bloom in sequence
+  let q = 0;
+  $$('.job').forEach(row => ST.create({ trigger: row, start: 'top 78%', once: true, onEnter: () => {
+    if (!ink || RM) return;
+    const wait = Math.max(0, q - performance.now()); q = performance.now() + wait + 480;
+    setTimeout(() => { const y = yOf(row, .35); if (y > .05 && y < .95) drop(sideX() + rnd(.03), y, { ink: .85, size: mob ? .6 : .78 }); }, wait);
+  } }));
+  if (!RM) {
+    G.from('h1 .w>span', { yPercent: 108, duration: 1.5, ease: 'expo.out', stagger: .13, delay: .15 });
+    G.from('.loc, .hero .line, .acts, .cue, .hint', { opacity: 0, y: 18, duration: 1.1, ease: 'power3.out', stagger: .09, delay: .55 });
+    G.from('.seal', { scale: 1.6, opacity: 0, duration: .9, ease: 'power2.out', delay: 1.2 });
+    $$('[data-rv]').forEach(el => G.from(el, { opacity: 0, y: 26, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } }));
+    $$('.job').forEach(el => G.from(el, { opacity: 0, x: -18, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 80%', once: true } }));
+    // citation numbers soak into the paper like ink
+    $$('.papers li').forEach(el => {
+      const tl = G.timeline({ scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
+      tl.from(el.querySelector('b'), { opacity: 0, filter: 'blur(12px)', scale: 1.25, duration: 1.3, ease: 'power2.out' })
+        .from(el.querySelector('div'), { opacity: 0, y: 14, duration: .9, ease: 'power3.out' }, .15);
+    });
+    G.from('#certs li', { opacity: 0, y: 34, duration: 1, ease: 'power3.out', stagger: .06, scrollTrigger: { trigger: '#certs', start: 'top 85%', once: true } });
+    G.from('.projects li', { opacity: 0, x: 60, duration: 1.1, ease: 'power3.out', stagger: .08, scrollTrigger: { trigger: '.projects', start: 'top 85%', once: true } });
+    if (!coarse) $$('.mag').forEach(el => {
+      el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect(); G.to(el, { x: (e.clientX - r.left - r.width / 2) * .3, y: (e.clientY - r.top - r.height / 2) * .4, duration: .5, ease: 'power3.out' }); });
+      el.addEventListener('pointerleave', () => G.to(el, { x: 0, y: 0, duration: .9, ease: 'elastic.out(1,.45)' }));
+    });
+  }
+} else {
+  activate('top');
+  if (ink && !RM) setTimeout(EV.top, 300);
+}
+
+/* the other 22 certificates, captioned from their file names */
+const MORE = 'Award_Academic-Achievement.jpg Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg Certificate-Of-Completion_Discover-Customer.jpg Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg Certificate-Of-Completion_Networking-Essentials.png Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg Certificate-Of-Completion_The-Hour-Of-Code.jpg Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg Certificate-Of-Participation_EY-Cyber-Day.jpg Certificate-Of-Participation_GNULinux-Command-Line.jpg Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg English-Certificate_English-Certificate-English-Proficiency.jpg'.split(' ');
+$('#more').addEventListener('click', e => {
+  const ul = $('#certs'), words = s => s.replace(/-/g, ' ');
+  const first = ul.children.length;
+  ul.insertAdjacentHTML('beforeend', MORE.map(f => {
+    const [k, t] = f.replace(/\.\w+$/, '').split('_'), src = '../../img/renamed/' + f, title = words(t), kind = words(k);
+    return `<li><a href="${src}"><figure><img src="${src}" alt="${title}, ${kind.toLowerCase()}" loading="lazy" decoding="async"></figure><span class="ct">${title}</span><span class="ck">${kind[0] + kind.slice(1).toLowerCase()}</span></a></li>`;
+  }).join(''));
+  e.currentTarget.hidden = true;
+  ul.children[first].querySelector('a').focus({ preventScroll: true });
+  ST && ST.refresh();
+});
+})();
+</script>
+</body>
+</html>

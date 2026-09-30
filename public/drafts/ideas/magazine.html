@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>The Profile · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki, in his own words.">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&display=swap" rel="stylesheet">
+<style>
+@property --dc { syntax: '<color>'; inherits: true; initial-value: #a4221a; }
+:root {
+  --paper: #eae8e2; --paper-2: #dedad0; --ink: #161412; --ink-2: #4a453e;
+  --red: #a4221a; --rule: #16141233;
+  --display: 'Bodoni Moda', 'Didot', 'Bodoni 72', serif;
+  --text: 'Newsreader', 'Georgia', serif;
+  --g: 1.25rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --paper: #1f1e1c; --paper-2: #2a2826; --ink: #ede6d8; --ink-2: #bdb4a5; --red: #ec6c50; --rule: #ede6d833; }
+  .ink { filter: invert(1) sepia(.2) brightness(.93); }
+  .shot { filter: brightness(.9); }
+  .ink-red { filter: invert(1) hue-rotate(180deg) brightness(.95); }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--paper); color: var(--ink); -webkit-text-size-adjust: 100%; }
+body { margin: 0; font: 400 1.125rem/1.55 var(--text); font-optical-sizing: auto; overflow-x: clip; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: .18em; }
+a:hover { color: var(--red); }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.wrap { width: min(78rem, 100% - 2 * var(--g)); margin-inline: auto; }
+
+/* ---------- cover ---------- */
+.cover { min-height: 100svh; display: flex; flex-direction: column; padding-block: 1rem 2.5rem; }
+.topline { display: flex; justify-content: space-between; align-items: baseline; font-size: .875rem; color: var(--ink-2); }
+.topline a { text-decoration: none; }
+.topline a:hover { text-decoration: underline; }
+.folio { font-family: var(--display); font-style: italic; }
+.cover-grid { flex: 1; display: grid; column-gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto 1fr auto auto auto;
+  grid-template-areas: "name name" "cap art" "rule rule" "stand stand" "by by"; }
+.cover-name { grid-area: name; margin: 1.5rem 0 0; font: 600 20.4vw/.84 var(--display); letter-spacing: -.02em;
+  font-variation-settings: 'opsz' 96; }
+.cover-name span { display: block; }
+.cover-name span + span { margin-left: -.035em; }
+.tt { grid-area: rule; border: 0; border-top: 3px solid var(--ink); border-bottom: 1px solid var(--ink); height: 3px; margin: 0; align-self: end; }
+.standfirst { grid-area: stand; margin: 1.25rem 0 0; font-size: 1.3rem; line-height: 1.35; font-weight: 400; text-wrap: pretty; }
+.byline { grid-area: by; margin: 1rem 0 0; font-style: italic; color: var(--ink-2); font-size: 1rem; }
+.cover-art { grid-area: art; align-self: end; justify-self: end; width: 42vw; max-width: 14rem; margin: 1.5rem 0 -.15rem; }
+.cover-cap { grid-area: cap; align-self: end; margin: 0 0 .75rem; font-size: .8125rem; line-height: 1.35; font-style: italic; color: var(--ink-2); text-align: right; max-width: 12rem; justify-self: end; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .cover-name { opacity: 0; }
+  .js.ready .cover-name { opacity: 1; animation: settle .9s cubic-bezier(.16, .8, .3, 1) both; }
+  .js .dropcap { transition: --dc .9s ease-out .2s; }
+  .js .dropcap:not(.inked) { --dc: var(--ink); }
+}
+@keyframes settle {
+  0% { letter-spacing: .1em; opacity: 0; }
+  30% { opacity: 1; }
+  100% { letter-spacing: -.02em; opacity: 1; }
+}
+
+/* ---------- feature ---------- */
+.ch { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 2.25rem; padding-block: 3.5rem 1rem; }
+.ch h2 { margin: 0; font: italic 500 clamp(2.4rem, 7vw, 4.25rem)/1.02 var(--display); letter-spacing: -.01em; text-wrap: balance; max-width: 14em; }
+.body { max-width: 65ch; }
+.body p { margin: 0; hyphens: auto; text-wrap: pretty; }
+.body p + p { text-indent: 1.3em; }
+.dropcap { --dc: var(--red); }
+.dropcap::first-letter { float: left; font: 600 4.9em/.8 var(--display); margin: .07em .09em 0 0; color: var(--dc); }
+@supports (initial-letter: 4) or (-webkit-initial-letter: 4) {
+  .dropcap::first-letter { float: none; font-size: inherit; line-height: inherit; margin: 0 .14em 0 0; -webkit-initial-letter: 4; initial-letter: 4; }
+}
+.end::after { content: ""; display: inline-block; width: .55em; height: .55em; margin-left: .4em; background: var(--red); vertical-align: baseline; }
+
+.pull { margin: 0; padding-top: 1rem; border-top: 2px solid var(--red); font: italic 400 1.75rem/1.2 var(--display); text-wrap: balance; }
+.pull p { margin: 0; text-align: left; hyphens: none; }
+.cols .pull { margin-block: 1.75rem; }
+
+.orn { display: flex; justify-content: center; padding-block: 2.5rem 0; color: var(--ink); }
+.orn svg { width: 3.5rem; height: auto; }
+
+figure { margin: 0; }
+.fig img.shot { border: 1px solid var(--rule); width: 100%; }
+figcaption { margin-top: .6rem; font-size: .875rem; line-height: 1.4; font-style: italic; color: var(--ink-2); text-wrap: pretty; }
+figcaption b, .fign { font: normal 700 .95em var(--display); color: var(--red); margin-right: .25em; }
+
+.box { background: var(--paper-2); padding: 1.25rem 1.25rem 1.5rem; border-top: 4px solid var(--ink); font-size: 1rem; line-height: 1.45; }
+.box h3 { margin: 0 0 1rem; font: 700 1.45rem/1.1 var(--display); }
+.box ol, .box ul { margin: 0; padding: 0; list-style: none; }
+
+/* timeline */
+.tl li { display: grid; grid-template-columns: 5.6rem 1fr; gap: .75rem; padding: .7rem 0; border-top: 1px solid var(--rule); }
+.tl li:first-child { border-top: 0; padding-top: 0; }
+.tl .yr { font: 600 1rem/1.4 var(--display); font-variant-numeric: lining-nums; }
+.tl .what { font-weight: 600; }
+.tl .where { display: block; color: var(--ink-2); font-style: italic; }
+
+/* papers */
+.papers li { padding: .75rem 0; border-top: 1px solid var(--rule); }
+.papers li:first-child { border-top: 0; padding-top: 0; }
+.papers cite { font-style: normal; font-weight: 600; display: block; }
+.papers .meta { display: block; color: var(--ink-2); font-style: italic; font-size: .9375rem; }
+.box-foot { margin: 1rem 0 0; font-size: .9375rem; color: var(--ink-2); }
+
+/* credentials */
+.creds { display: grid; gap: 1.5rem; }
+.awards li { padding: .45rem 0; border-top: 1px solid var(--rule); }
+.awards li:first-child { border-top: 0; padding-top: 0; }
+.awards .where { color: var(--ink-2); font-style: italic; }
+.scans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem .75rem; }
+.scans a { display: block; text-decoration: none; }
+.scans .frame { display: block; aspect-ratio: 1; background: var(--paper); padding: .5rem; }
+.scans img { width: 100%; height: 100%; object-fit: contain; }
+.scans span { display: block; margin-top: .35rem; font-size: .8125rem; line-height: 1.3; font-style: italic; color: var(--ink-2); }
+.scans a:hover span { color: var(--red); }
+
+.stack { display: grid; gap: 1.5rem; align-content: start; }
+
+/* end box */
+.endbox { position: relative; margin-block: 7rem 0; padding: 2rem 1.25rem 1.75rem; background: var(--paper-2); border-top: 4px solid var(--ink); }
+.endbox h2 { margin: 0 0 .75rem; font: 700 1.45rem/1.1 var(--display); }
+.endbox .lede { margin: 0; font: italic 400 1.5rem/1.3 var(--text); max-width: 30em; text-wrap: pretty; }
+.endbox p { margin: .9rem 0 0; max-width: 60ch; }
+.endbox .sprig { position: absolute; right: .5rem; top: -4.5rem; width: 8.5rem; pointer-events: none; }
+.colophon { padding-block: 2rem 3rem; font-size: .8125rem; color: var(--ink-2); font-style: italic; }
+.colophon p { margin: 0; max-width: 70ch; }
+
+/* ---------- wide ---------- */
+@media (min-width: 48rem) {
+  :root { --g: 2.5rem; }
+  body { font-size: 1.1875rem; }
+  .cover-name { font-size: 16vw; }
+  .standfirst { font-size: 1.55rem; max-width: 30em; }
+  .cover-art { max-width: 12rem; }
+  .scans { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .box { padding: 1.5rem 1.75rem 1.75rem; }
+  .endbox { padding: 2.5rem 2.5rem 2.25rem; }
+  .endbox .sprig { width: 12rem; top: -6.5rem; right: 1.5rem; }
+}
+@media (min-width: 64rem) {
+  :root { --g: 3.5rem; }
+  .cover-grid { grid-template-columns: minmax(0, 1fr) 17vw; column-gap: 2rem; grid-template-rows: 1fr auto auto auto;
+    grid-template-areas: "name art" "rule rule" "stand cap" "by cap"; }
+  .cover-name { font-size: 15.2vw; margin: 0; align-self: end; }
+  .cover-art { width: 100%; max-width: none; margin: 0 0 -.2rem; }
+  .standfirst { font-size: 1.75rem; max-width: 27em; margin-top: 1.5rem; }
+  .byline { margin-top: 1rem; }
+  .cover-cap { align-self: start; margin: 1.6rem 0 0; max-width: none; }
+
+  .ch { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 2rem; row-gap: 3rem; padding-block: 5rem 1rem; }
+  .cols { max-width: none; columns: 2; column-gap: 2.5rem; }
+  .cols .pull { column-span: all; margin: 2rem 0; padding: 1.25rem 0 0; font-size: 2.35rem; max-width: 22em; }
+
+  .ch1 h2 { grid-column: 1 / 9; }
+  .ch1 .body { grid-column: 1 / 9; }
+  .ch1 > .pull { grid-column: 10 / 13; grid-row: 2; align-self: start; margin-top: 6rem; }
+  .ch1 .fig { grid-column: 1 / 13; display: grid; grid-template-columns: subgrid; }
+  .ch1 .fig img { grid-column: 1 / 10; }
+  .ch1 .fig figcaption { grid-column: 10 / 13; align-self: end; margin: 0; }
+
+  .ch2 h2 { grid-column: 5 / 13; }
+  .ch2 .tl-box { grid-column: 1 / 5; grid-row: 2; align-self: start; }
+  .ch2 .body { grid-column: 5 / 13; grid-row: 2; }
+  .ch2 .f2 { grid-column: 1 / 8; }
+  .ch2 .f3 { grid-column: 8 / 13; }
+
+  .ch3 h2 { grid-column: 1 / 9; }
+  .ch3 .body { grid-column: 1 / 8; grid-row: 2; }
+  .ch3 .papers-box { grid-column: 9 / 13; grid-row: 2 / 4; align-self: start; }
+  .ch3 .cred-box { grid-column: 1 / 8; grid-row: 3; align-self: start; }
+  .ch3 .f4 { grid-column: 1 / 9; }
+  .ch3 .stack { grid-column: 9 / 13; }
+
+  .endbox { width: min(56rem, 100%); margin-inline: auto; margin-top: 9rem; }
+  .colophon { width: min(56rem, 100%); margin-inline: auto; }
+}
+</style>
+</head>
+<body>
+<header class="cover wrap">
+  <div class="topline"><a href="index.html">← All ideas</a><span class="folio">The Profile</span></div>
+  <div class="cover-grid">
+    <h1 class="cover-name"><span>George</span> <span>Michoulis</span></h1>
+    <img class="cover-art ink" src="../../img/ink/parts/crane.png" width="178" height="278" alt="Sumi ink drawing of a crane standing on one leg">
+    <hr class="tt">
+    <p class="standfirst">George Michoulis is a blockchain developer and researcher in Thessaloniki, Greece. He writes smart contracts, studies ledgers with graph-based machine learning, builds full-stack Web3 systems, and has taught networks and security at university level.</p>
+    <p class="byline">As told to this page, September 2026</p>
+    <p class="cover-cap">On the cover: a crane in sumi ink, from the brush set used across this site.</p>
+  </div>
+</header>
+
+<main id="feature" class="wrap">
+  <article>
+    <section class="ch ch1" aria-labelledby="c1">
+      <h2 id="c1">A diploma you can check</h2>
+      <div class="body cols">
+        <p class="dropcap">Thessaloniki is home. I live here and work remotely, and most of my work is on blockchains: smart contracts, graph-based machine learning, and the full-stack Web3 systems that put both in front of people.</p>
+        <p>I came to blockchains through a practical problem: how do you check that a diploma is real? I studied Applied Informatics at the University of Macedonia from 2015 to 2020, and my thesis looked at verifying academic credentials on Ethereum. I kept at the question after I graduated, and in 2020 and 2021 I also held a Basic Research grant from the university.</p>
+        <p>From that work came VerDe, a system for verifying academic qualifications on Ethereum. I introduced it at the XIV Balkan Conference on Operational Research in 2020. In 2022 I followed it with a process-aware approach to the same problem, published in <i>Simulation Modelling Practice and Theory</i>. That paper has been cited 32 times, more than anything else I have written.</p>
+        <p>For my master’s I moved across town to the Aristotle University of Thessaloniki and its Data and Web Science programme, from 2020 to 2022, on a DeepMind scholarship. There I worked on graph-embedding methods for detecting fraud on blockchains. A ledger is a graph of accounts and transactions, and embeddings turn that graph into something a model can learn from.</p>
+      </div>
+      <aside class="pull" aria-hidden="true"><p>I came to blockchains through a practical problem: how do you check that a diploma is real?</p></aside>
+      <figure class="fig">
+        <img class="shot" src="../../img/portfolio/verde.uom.gr.PNG" width="1840" height="907" loading="lazy" alt="Screenshot of the VerDe contact page at verde.uom.gr, with a map of the University of Macedonia area in Thessaloniki">
+        <figcaption><b>Fig. 1</b> verde.uom.gr, the site for VerDe. This is its contact page: the menu reads About, Demo, Publications, Team and Contact, and the map is centred on the University of Macedonia.</figcaption>
+      </figure>
+    </section>
+
+    <div class="orn" aria-hidden="true"><svg viewBox="0 0 64 12" fill="currentColor"><path d="M6 0l6 6-6 6-6-6zM32 0l6 6-6 6-6-6zM58 0l6 6-6 6-6-6z"/></svg></div>
+
+    <section class="ch ch2" aria-labelledby="c2">
+      <h2 id="c2">Three sides of the work</h2>
+      <div class="body cols">
+        <p>I think of my work as having three sides: research, building and teaching. Research means publications, and startup work, on how effective ledgers are in practice and on what actually changes when a blockchain system is put to use.</p>
+        <p>Building means Web3, from NFTs to DeFi; data science with graph embeddings; and shipping across Solidity, TypeScript and the cloud. Since May 2026 I have been a Web3 full-stack developer at Cyberscope by TAC, where I make Web3 products end to end: the contracts, the on-chain integrations, React and Next frontends, and security tooling.</p>
+        <aside class="pull" aria-hidden="true"><p>I think of my work as having three sides: research, building and teaching.</p></aside>
+        <p>Before that, from 2024 to 2026, I was a blockchain developer and researcher at Sidroco Holdings. I worked on an NFT marketplace for 5G, prototypes on Hyperledger Fabric, an Erasmus+ learning management system and multinational EU projects. From 2022 to 2024 I was at the University of Nicosia and IFF, building large Next.js, NestJS and Docker applications and a Web3 NFT marketplace.</p>
+        <p>Teaching is the third side. From 2023 to 2025 I was a lecturer and academic partner for the University of Derby at Mediterranean College, teaching Networks and Security, Web Scripting and Application Development, and I designed the assessment to be inclusive first. I also speak in public about Web3 and edge technology.</p>
+      </div>
+      <aside class="box tl-box" aria-labelledby="tl-h">
+        <h3 id="tl-h">Timeline</h3>
+        <ol class="tl">
+          <li><span class="yr">2026–now</span><span><span class="what">Web3 full-stack developer</span><span class="where">Cyberscope by TAC, since May 2026</span></span></li>
+          <li><span class="yr">2024–2026</span><span><span class="what">Blockchain developer and researcher</span><span class="where">Sidroco Holdings Ltd</span></span></li>
+          <li><span class="yr">2023–2025</span><span><span class="what">Lecturer and academic partner</span><span class="where">University of Derby, Mediterranean College</span></span></li>
+          <li><span class="yr">2022–2024</span><span><span class="what">Blockchain and full-stack developer</span><span class="where">University of Nicosia, IFF</span></span></li>
+          <li><span class="yr">2020–2022</span><span><span class="what">MSc Data and Web Science</span><span class="where">Aristotle University of Thessaloniki, DeepMind scholarship</span></span></li>
+          <li><span class="yr">2015–2020</span><span><span class="what">BSc Applied Informatics</span><span class="where">University of Macedonia</span></span></li>
+        </ol>
+      </aside>
+      <figure class="fig f2">
+        <img class="shot" src="../../img/portfolio/metau.unic.ac.cy.png" width="1698" height="943" loading="lazy" alt="Screenshot of metau.unic.ac.cy, a University of Nicosia course page with a Connect Wallet button">
+        <figcaption><b>Fig. 2</b> metau.unic.ac.cy, a University of Nicosia course site. The page describes a course held in virtual auditoriums inside an open metaverse, and the header carries a Connect Wallet button.</figcaption>
+      </figure>
+      <figure class="fig f3">
+        <img class="shot" src="../../img/portfolio/accelerate.png" width="1910" height="998" loading="lazy" alt="Screenshot of a University of Nicosia sign-in page at stg.accelerate.unic.ac.cy">
+        <figcaption><b>Fig. 3</b> The sign-in page of a University of Nicosia platform, on its staging address, stg.accelerate.unic.ac.cy.</figcaption>
+      </figure>
+    </section>
+
+    <div class="orn" aria-hidden="true"><svg viewBox="0 0 64 12" fill="currentColor"><path d="M6 0l6 6-6 6-6-6zM32 0l6 6-6 6-6-6zM58 0l6 6-6 6-6-6z"/></svg></div>
+
+    <section class="ch ch3" aria-labelledby="c3">
+      <h2 id="c3">On the record</h2>
+      <div class="body cols">
+        <p>Much of what I have published is about three things on blockchains: verification, governance and markets. After the credential papers came a framework for decentralised governance, applied to Compound Finance, at the Mathematical Research for Blockchain Economy conference in 2023. FraMark, a blockchain marketplace for 5G network management built on fractional NFTs, appeared at the World Symposium on Communication Engineering in 2024, and a survey of blockchain marketplaces for 5G network slicing followed at IEEE ICCE in 2025.</p>
+        <p>Not everything fits that pattern. My MSc work includes a paper on graph embeddings and node features for predicting drug–target interactions, and I have written about blockchain in higher education for the Summit on Gender Equality in Computing, and about data security for smart cities.</p>
+        <p>There were awards along the way: the DeepMind scholarship that funded my master’s, third place at the Infinitech Hackathon in June 2022, and in 2025 an award at the first Move and Sui bootcamp in Thessaloniki. I keep the certificates, too. There are thirty-four scans in the archive, and six of them are reproduced here.</p>
+        <p class="end">Some of what I have built is easier to show than to describe: sites for university groups and projects, a few of which appear below.</p>
+      </div>
+      <aside class="box papers-box" aria-labelledby="pp-h">
+        <h3 id="pp-h">Selected papers</h3>
+        <ol class="papers">
+          <li><cite>A process-aware approach for blockchain-based verification of academic qualifications</cite><span class="meta">Simulation Modelling Practice and Theory 121, 2022. Cited 32 times.</span></li>
+          <li><cite>Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe</cite><span class="meta">XIV Balkan Conference on Operational Research, 2020. Cited 11 times.</span></li>
+          <li><cite>Exploring decentralized governance: a framework applied to Compound Finance</cite><span class="meta">Mathematical Research for Blockchain Economy, 2023. Cited 7 times.</span></li>
+          <li><cite>FraMark: a blockchain marketplace for 5G network management using fractional NFTs</cite><span class="meta">7th World Symposium on Communication Engineering, 2024. Cited once.</span></li>
+          <li><cite>Data security for smart cities</cite><span class="meta">2025. Cited once.</span></li>
+          <li><cite>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management</cite><span class="meta">IEEE ICCE, 2025. Not yet cited.</span></li>
+          <li><cite>Graph embedding and node features for drug–target interaction prediction</cite><span class="meta">Aristotle University of Thessaloniki, MSc work, 2022. Not yet cited.</span></li>
+          <li><cite>Blockchain in higher education: permissioned and permissionless approaches</cite><span class="meta">4th Summit on Gender Equality in Computing, 2022. Not yet cited.</span></li>
+        </ol>
+        <p class="box-foot">Plus two theses in Greek on verifying academic titles with Ethereum, from 2020 and 2021. The full list is on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+      </aside>
+      <aside class="box cred-box" aria-labelledby="cr-h">
+        <h3 id="cr-h">Credentials</h3>
+        <div class="creds">
+          <ul class="awards">
+            <li>DeepMind scholarship <span class="where">Aristotle University of Thessaloniki, 2020–2022</span></li>
+            <li>Third place, Infinitech Hackathon <span class="where">Crowdpolicy, June 2022</span></li>
+            <li>Basic Research grant <span class="where">University of Macedonia, 2020–2021</span></li>
+            <li>Award, Move/Sui bootcamp Thessaloniki <span class="where">2025</span></li>
+          </ul>
+          <div class="scans">
+            <a href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg"><span class="frame"><img src="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" width="1240" height="1755" loading="lazy" alt="Scan of my MSc degree, Data and Web Science, Aristotle University of Thessaloniki"></span><span>MSc degree, Data and Web Science</span></a>
+            <a href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg"><span class="frame"><img src="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" width="1742" height="2460" loading="lazy" alt="Scan of my bachelor’s degree from the University of Macedonia"></span><span>Bachelor’s degree, University of Macedonia</span></a>
+            <a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png"><span class="frame"><img src="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png" width="3543" height="3542" loading="lazy" alt="Move Bootcamp Thessaloniki award artwork"></span><span>Move bootcamp Thessaloniki, award</span></a>
+            <a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg"><span class="frame"><img src="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" width="2175" height="1439" loading="lazy" alt="Scan of my CCNA course certificate of completion"></span><span>CCNA, certificate of completion</span></a>
+            <a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png"><span class="frame"><img src="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" width="2342" height="1656" loading="lazy" alt="Scan of my Rust developer certificate of completion"></span><span>Rust developer, certificate of completion</span></a>
+            <a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg"><span class="frame"><img src="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" width="1754" height="1241" loading="lazy" alt="Scan of my Introduction to Digital Currencies certificate from the University of Nicosia"></span><span>Introduction to Digital Currencies, University of Nicosia</span></a>
+          </div>
+        </div>
+        <p class="box-foot">Twenty-eight more certificates are in the archive, from advanced ethical hacking to the Hour of Code.</p>
+      </aside>
+      <figure class="fig f4">
+        <img class="shot" src="../../img/portfolio/eudem.polsci.auth.gr.PNG" width="1896" height="944" loading="lazy" alt="Screenshot of eudem.polsci.auth.gr, the EUDEM Jean Monnet Chair home page with a slide of flags">
+        <figcaption><b>Fig. 4</b> eudem.polsci.auth.gr, the site of the EUDEM Jean Monnet Chair. The home page opens on a slideshow; this slide shows a row of flags outside a curved glass building, under the word Institutions.</figcaption>
+      </figure>
+      <div class="stack">
+        <figure class="fig">
+          <img class="shot" src="../../img/portfolio/celc.web.auth.gr.PNG" width="1600" height="936" loading="lazy" alt="Screenshot of celc.web.auth.gr, a Greek-language home page with a photo of a stone arch bridge">
+          <figcaption><b>Fig. 5</b> celc.web.auth.gr, the Centre for European Legal Culture, in Greek, with a stone arch bridge on the home page.</figcaption>
+        </figure>
+        <figure class="fig">
+          <img class="shot" src="../../img/portfolio/marlab.ode.uom.gr.PNG" width="1835" height="917" loading="lazy" alt="Screenshot of marlab.ode.uom.gr, the MarLab marketing laboratory home page">
+          <figcaption><b>Fig. 6</b> marlab.ode.uom.gr, the Marketing Laboratory at the University of Macedonia: menu, member log-in and a welcome note.</figcaption>
+        </figure>
+      </div>
+    </section>
+  </article>
+</main>
+
+<footer class="wrap">
+  <section class="endbox" aria-labelledby="w-h">
+    <img class="sprig ink-red" src="../../img/ink/parts/branch.png" width="256" height="192" alt="">
+    <h2 id="w-h">Write to him</h2>
+    <p class="lede">George Michoulis lives in Thessaloniki. Write to him at <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>.</p>
+    <p>He is also on <a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a>, <a href="https://github.com/gmixoulis">GitHub</a> and <a href="https://twitter.com/GeorgeMicou">X</a>, and his papers are listed on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+    <p>Elsewhere on this site: <a href="../../garden/">the Zen Garden</a>, his personal notes, and <a href="../../play/">Ledger Run</a>, his résumé as a platformer game.</p>
+  </section>
+  <div class="colophon"><p>Set in Bodoni Moda and Newsreader. The illustrations are sumi ink from the site’s own brush set, the figures are screenshots of sites George built, and the certificates are scans of the originals.</p></div>
+</footer>
+
+<script>
+(() => {
+  const root = document.documentElement, go = () => root.classList.add('ready');
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(go); setTimeout(go, 1500);
+  const dc = document.querySelector('.dropcap');
+  if (!('IntersectionObserver' in window)) return dc.classList.add('inked');
+  const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { dc.classList.add('inked'); io.disconnect(); } }, { threshold: .5 });
+  io.observe(dc);
+})();
+</script>
+</body>
+</html>

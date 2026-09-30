@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en" data-aud="looking">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Who's asking? · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki. The same facts, ordered for whoever is reading.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f3ee;--ink:#1a1916;--muted:#5c5850;--rule:#d8d2c6;--accent:#a3381a;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#101614;--ink:#ebe5d9;--muted:#a19d92;--rule:#2b3330;--accent:#ec9d62;color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.125rem/1.6 "Source Serif 4",Georgia,serif;font-optical-sizing:auto}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.18em}
+a:hover{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.sans,.who,.meta,.back,.more,.foot,.wall span,.sites b{font-family:"Instrument Sans",sans-serif}
+.wrap{max-width:78rem;margin:0 auto;padding:0 clamp(1rem,5vw,4.5rem)}
+.col{max-width:44rem}
+@media (min-width:62rem){.col{margin-left:clamp(0rem,14vw - 6rem,12rem)}}
+
+/* opening */
+.back{display:inline-block;margin-top:1.1rem;padding:.35rem 0;font-size:.85rem;color:var(--muted);text-decoration:none}
+h1{font-weight:400;font-size:clamp(3.3rem,1.1rem + 7.4vw,7.8rem);line-height:.92;letter-spacing:-.028em;margin:clamp(2.2rem,7vh,5rem) 0 1.2rem;font-variation-settings:"opsz" 60}
+.who{margin:0;font-size:.95rem;line-height:1.5;color:var(--muted);max-width:50rem}
+.ask{font-size:clamp(1.6rem,1rem + 2.3vw,2.85rem);line-height:1.2;letter-spacing:-.01em;margin:clamp(2.6rem,8vh,5rem) 0 0;max-width:20em;font-variation-settings:"opsz" 48}
+.or{margin:.9rem 0 0;font-size:1.1rem;color:var(--muted)}
+.pick{position:relative;white-space:nowrap;cursor:pointer}
+.pick input{position:absolute;left:0;top:0;width:1px;height:1px;margin:0;opacity:0}
+.pick span{text-decoration:underline dotted var(--muted);text-decoration-thickness:max(1.5px,.06em);text-underline-offset:.2em;transition:color .2s}
+.pick:hover span{text-decoration-style:solid;text-decoration-color:currentColor}
+.pick input:checked+span{color:var(--accent);font-style:italic;text-decoration:underline solid var(--accent);text-decoration-thickness:max(2px,.07em)}
+.pick input:focus-visible+span{outline:2px solid var(--accent);outline-offset:.2em;border-radius:2px}
+.or .pick input:checked+span{font-style:italic}
+.lede{margin:clamp(2rem,5vh,3rem) 0 0;font-size:clamp(1.15rem,1rem + .45vw,1.35rem);line-height:1.55;max-width:36rem}
+
+/* blocks: one column, reordered per reader */
+#blocks{position:relative;margin-top:clamp(2.5rem,7vh,4.5rem);padding-bottom:3rem}
+.blk{padding-top:clamp(2.8rem,6vw,4.5rem);scroll-margin-top:1.5rem}
+.blk h2{font-weight:400;font-size:clamp(1.65rem,1.2rem + 1.4vw,2.3rem);line-height:1.15;letter-spacing:-.012em;margin:0 0 1.1rem;font-variation-settings:"opsz" 48}
+.blk h2:focus{outline:none}.blk h2:focus-visible{outline:2px solid var(--accent)}
+.blk p{margin:0 0 1rem}
+.blk:not([data-w=b]) .gist,.blk[data-w=b] .body,.blk:not([data-w=b]) .more{display:none}
+.blk[data-w=b]{padding:1.05rem 0 1.15rem;border-top:1px solid var(--rule)}
+.blk[data-w=b] h2{font-size:1.2rem;font-weight:600;letter-spacing:0;margin:0 0 .2rem;font-variation-settings:"opsz" 20}
+.blk .gist{margin:0;color:var(--muted);max-width:40rem;font-size:1.05rem;line-height:1.5}
+.more{display:inline;padding:.2rem 0;white-space:nowrap;border:0;background:none;color:var(--accent);font-size:.88rem;font-weight:500;cursor:pointer;text-decoration:underline;text-underline-offset:.22em}
+.also{margin:0;padding-top:clamp(3.5rem,8vw,5.5rem);padding-bottom:.9rem;font-style:italic;color:var(--muted);font-size:1.05rem}
+.meta{display:block;font-size:.86rem;line-height:1.45;color:var(--muted);margin-top:.25rem}
+h3{font-weight:600;font-size:1.22rem;line-height:1.3;margin:0}
+ul,ol{list-style:none;margin:0;padding:0}
+
+/* specifics */
+.stack p{margin:0 0 .35rem}.stack i{color:var(--muted)}
+.roles li{padding:.8rem 0 .9rem}.roles p{margin:.35rem 0 0}
+.sites{display:grid;gap:1.7rem;margin-top:.4rem}
+.sites li{display:grid;grid-template-columns:minmax(0,15rem) minmax(0,1fr);gap:1.3rem;align-items:start}
+.sites img,.wall img,.scan{display:block;outline:1px solid var(--rule);background:#fff}
+.sites img{width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top left}
+.sites b{display:block;font-weight:500;font-size:1rem;margin-bottom:.2rem}
+.sites span{font-size:1.02rem;line-height:1.5}
+.papers li{display:grid;grid-template-columns:3.4rem minmax(0,1fr);gap:1.1rem;padding:.7rem 0}
+.papers .n{font-size:2.1rem;line-height:1;text-align:right;font-variant-numeric:lining-nums tabular-nums;font-variation-settings:"opsz" 48}
+.papers li:first-child .n{color:var(--accent)}
+.papers .n small{display:block;font:400 .72rem/1.2 "Instrument Sans",sans-serif;color:var(--muted);margin-top:.35rem}
+.papers cite{font-style:normal;display:block;line-height:1.38}
+.papers+p{margin-top:1.2rem;font-size:1rem;color:var(--muted)}
+.steps{display:grid;gap:1.6rem;margin:.4rem 0 1.6rem}
+.steps li{border-top:1px solid var(--ink);padding-top:.7rem}
+.steps li+li .meta::before,.path li+li .meta:first-of-type::before{content:"→ " / "";color:var(--accent)}
+.steps h3{margin:.25rem 0 .35rem}.steps p{font-size:1rem;line-height:1.5;margin:0}
+@media (min-width:48rem){.steps{grid-template-columns:repeat(3,minmax(0,1fr));gap:1.4rem}.steps li:nth-child(2){margin-top:2.4rem}.steps li:nth-child(3){margin-top:4.8rem}}
+.path{display:grid;gap:2rem}
+@media (min-width:48rem){.path{grid-template-columns:repeat(2,minmax(0,1fr));gap:2.5rem}}
+.path p{margin:.5rem 0 0}
+.scan{display:none;width:8.5rem;height:auto;margin-bottom:1rem}
+[data-aud=studying] .scan{display:block}
+.mods{margin:.2rem 0 1.4rem;font-size:clamp(1.4rem,1.1rem + 1vw,1.95rem);line-height:1.3;font-variation-settings:"opsz" 40}
+.mods li{padding:.1rem 0}
+.wall{display:flex;flex-wrap:wrap;gap:1.6rem 1.3rem;align-items:flex-end;margin-top:1.4rem}
+.wall a{display:block;width:min-content;text-decoration:none}
+.wall img{height:8.5rem;width:auto}
+.wall span{display:block;min-width:7.5rem;margin-top:.5rem;font-size:.8rem;line-height:1.35;color:var(--muted)}
+.wall a:hover span{color:var(--accent)}
+.awards li{padding:.35rem 0}
+.blk[data-b=contact]{margin-top:clamp(3.5rem,8vw,5.5rem);padding-top:2rem;border-top:1px solid var(--ink)}
+.blk[data-b=contact] h2{font-size:clamp(2.1rem,1.3rem + 2.8vw,3.5rem);line-height:1.08;margin-bottom:1rem}
+.mail{color:var(--accent);text-decoration-thickness:max(2px,.05em);text-underline-offset:.14em}
+.mail:hover{color:var(--ink)}
+.elsewhere{display:flex;flex-wrap:wrap;gap:.3rem 1.4rem;margin-top:1rem}
+[data-aud=researching] .l-scholar,[data-aud=hiring] .l-linkedin{order:-1}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.6rem 1.5rem;padding:1.4rem 0 2.6rem;border-top:1px solid var(--rule);font-size:.9rem;color:var(--muted)}
+.foot button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:.2em}
+.foot button:hover{color:var(--accent)}
+.foot p{margin:0}.foot nav{display:flex;flex-wrap:wrap;gap:.6rem 1.4rem}
+
+@media (min-width:75rem){
+  .sites,.wall,.steps{margin-right:-16rem}
+  .sites li{grid-template-columns:24rem minmax(0,22rem);gap:1.6rem}
+  .wall img{height:9.5rem}
+}
+@media (max-width:40rem){
+  body{font-size:1.07rem}
+  .sites li{grid-template-columns:7.5rem minmax(0,1fr);gap:.9rem}
+  .sites span{font-size:.97rem}
+  .wall{gap:1.3rem 1rem}.wall img{height:6.4rem}.wall span{min-width:6.5rem}
+  .papers li{grid-template-columns:2.6rem minmax(0,1fr);gap:.8rem}.papers .n{font-size:1.7rem}
+}
+@media (prefers-color-scheme:dark){.sites img,.wall img,.scan{filter:brightness(.84) contrast(1.04)}}
+@media (prefers-reduced-motion:reduce){.pick span{transition:none}}
+</style>
+</head>
+<body>
+<header class="wrap">
+  <a class="back" href="index.html">← All ideas</a>
+  <h1>George Michoulis</h1>
+  <p class="who">Blockchain developer and researcher in Thessaloniki, Greece, working remotely. <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a></p>
+
+  <div role="radiogroup" aria-labelledby="ask-l" aria-describedby="ask-h">
+    <p class="ask"><span id="ask-l">Show me what matters to someone who is</span>
+      <label class="pick"><input type="radio" name="aud" value="hiring"><span>hiring</span></label>,
+      <label class="pick"><input type="radio" name="aud" value="researching"><span>researching</span></label>
+      or <label class="pick"><input type="radio" name="aud" value="studying"><span>studying</span></label>.</p>
+    <p class="or">Or someone <label class="pick"><input type="radio" name="aud" value="looking" checked><span>just looking</span></label>, who wants the short version.</p>
+  </div>
+  <p id="ask-h" class="sr">Choosing a reader reorders the sections below. The choice is saved in the page address, so you can share it.</p>
+
+  <div class="col">
+    <p class="lede"
+      data-looking="I'm a blockchain developer and researcher. I write smart contracts, work on graph-based machine learning, and build full-stack Web3 systems. I've also lectured in networks, security and application development. This is the short version; pick a reader above for a longer one."
+      data-hiring="I'm a Web3 full-stack developer with a research background: contracts, on-chain integrations, and the apps people use on top of them. My current role comes first, then the stack, past roles and sites I've shipped."
+      data-researching="I study how effective ledgers are in practice, and what they actually change, across different blockchain systems. It started with verifying academic credentials on Ethereum, moved to decentralized governance, and is now about marketplaces for 5G networks."
+      data-studying="I've lectured in networks and security, web scripting and application development. Below is what I teach, the path from my BSc to my MSc, and the short courses I took along the way. If something in your course isn't clicking, ask me."
+    >I'm a blockchain developer and researcher. I write smart contracts, work on graph-based machine learning, and build full-stack Web3 systems. I've also lectured in networks, security and application development. This is the short version; pick a reader above for a longer one.</p>
+  </div>
+</header>
+
+<main class="wrap">
+ <div class="col" id="blocks">
+
+  <section class="blk" data-b="now" aria-labelledby="h-now">
+    <h2 id="h-now" data-looking="What I do now" data-hiring="Right now, at Cyberscope" data-researching="My day job" data-studying="Where I work now">What I do now</h2>
+    <p class="gist">Web3 full-stack developer at Cyberscope by TAC since May 2026, working remotely from Thessaloniki.</p>
+    <div class="body">
+      <p>Since May 2026 I've been a Web3 full-stack developer at Cyberscope by TAC. I build Web3 products end to end: the contracts, the on-chain integrations, the React and Next.js front ends, and security tooling.</p>
+      <p>I work remotely from Thessaloniki.</p>
+    </div>
+  </section>
+
+  <section class="blk" data-b="build" aria-labelledby="h-build">
+    <h2 id="h-build" data-looking="What I build" data-hiring="What I build, and with what">What I build</h2>
+    <p class="gist">Smart contracts, NFT and DeFi products, the Next.js and NestJS apps around them, and graph-embedding models on the data side.</p>
+    <div class="body">
+      <p>Most of my work sits where a contract meets a product people use: NFT marketplaces, DeFi, and the web apps around them. At Sidroco that meant an NFT marketplace for 5G and Hyperledger Fabric prototypes. At the University of Nicosia it meant large Next.js and NestJS apps in Docker, and a Web3 NFT marketplace.</p>
+      <div class="stack">
+        <p><i>Contracts and ledgers:</i> Solidity, Hyperledger Fabric</p>
+        <p><i>Front end:</i> TypeScript, React, Next.js</p>
+        <p><i>Back end:</i> NestJS, Docker, cloud deployment</p>
+        <p><i>Data:</i> graph embeddings, the subject of my MSc</p>
+        <p><i>Also studied:</i> Rust (developer certificate), Move on Sui (bootcamp award, 2025)</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="blk" data-b="roles" aria-labelledby="h-roles">
+    <h2 id="h-roles">Where I've worked</h2>
+    <p class="gist">Cyberscope by TAC, Sidroco Holdings, the University of Derby / Mediterranean College, and the University of Nicosia / IFF.</p>
+    <ol class="body roles">
+      <li><h3>Web3 Full-Stack Developer</h3><span class="meta">Cyberscope by TAC · May 2026 to now</span><p>End-to-end Web3 products: contracts, on-chain integrations, React/Next front ends, security tooling.</p></li>
+      <li><h3>Blockchain Developer &amp; Researcher</h3><span class="meta">Sidroco Holdings Ltd · 2024 to 2026</span><p>An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ LMS, and multinational EU projects.</p></li>
+      <li><h3>Lecturer &amp; Academic Partner</h3><span class="meta">University of Derby / Mediterranean College · 2023 to 2025</span><p>Networks &amp; Security, Web Scripting, Application Development, with inclusivity-first assessment.</p></li>
+      <li><h3>Blockchain &amp; Full-Stack Developer</h3><span class="meta">University of Nicosia / IFF · 2022 to 2024</span><p>Large Next.js / NestJS / Docker apps and a Web3 NFT marketplace.</p></li>
+    </ol>
+  </section>
+
+  <section class="blk" data-b="sites" aria-labelledby="h-sites">
+    <h2 id="h-sites" data-looking="Sites I've built" data-hiring="Sites I've shipped">Sites I've built</h2>
+    <p class="gist">Among them: metau.unic.ac.cy, bbf-gui.ddns.net and verde.uom.gr.</p>
+    <ul class="body sites">
+      <li><img src="../../img/portfolio/metau.unic.ac.cy.png" width="1698" height="943" loading="lazy" alt="Screenshot of metau.unic.ac.cy"><div><b>metau.unic.ac.cy</b><span>A University of Nicosia course site with a Connect Wallet button, and a classroom set inside a metaverse.</span></div></li>
+      <li><img src="../../img/portfolio/bbf-gui.ddns.net.gif" width="1377" height="956" loading="lazy" alt="Screenshot of bbf-gui.ddns.net"><div><b>bbf-gui.ddns.net</b><span>The front end of the Blockchain Benchmarking Framework, for deploying and evaluating different blockchain protocols.</span></div></li>
+      <li><img src="../../img/portfolio/verde.uom.gr.PNG" width="1840" height="907" loading="lazy" alt="Screenshot of verde.uom.gr"><div><b>verde.uom.gr</b><span>VerDe, the academic credential verification system from my papers. This is its contact page.</span></div></li>
+      <li><img src="../../img/portfolio/accelerate.png" width="1910" height="998" loading="lazy" alt="Screenshot of stg.accelerate.unic.ac.cy"><div><b>stg.accelerate.unic.ac.cy</b><span>The sign-in screen of a University of Nicosia platform, on its staging address.</span></div></li>
+      <li><img src="../../img/portfolio/celc.web.auth.gr.PNG" width="1600" height="936" loading="lazy" alt="Screenshot of celc.web.auth.gr"><div><b>celc.web.auth.gr</b><span>The Greek-language site of the Centre for European Legal Culture at Aristotle University.</span></div></li>
+      <li><img src="../../img/portfolio/eudem.polsci.auth.gr.PNG" width="1896" height="944" loading="lazy" alt="Screenshot of eudem.polsci.auth.gr"><div><b>eudem.polsci.auth.gr</b><span>The site of the EUDEM Jean Monnet Chair: staff, activities and news.</span></div></li>
+      <li><img src="../../img/portfolio/marlab.ode.uom.gr.PNG" width="1835" height="917" loading="lazy" alt="Screenshot of marlab.ode.uom.gr"><div><b>marlab.ode.uom.gr</b><span>MarLab, the Marketing Laboratory at the University of Macedonia: membership, research, publications.</span></div></li>
+    </ul>
+  </section>
+
+  <section class="blk" data-b="papers" aria-labelledby="h-papers">
+    <h2 id="h-papers" data-looking="Papers" data-hiring="I also publish" data-researching="Papers, most cited first" data-studying="Papers you might read">Papers</h2>
+    <p class="gist">Most cited: a process-aware approach for blockchain-based verification of academic qualifications (2022, 32 citations).</p>
+    <div class="body">
+      <ol class="papers">
+        <li><span class="n">32<small>citations</small></span><div><cite>A process-aware approach for blockchain-based verification of academic qualifications</cite><span class="meta">2022 · Simulation Modelling Practice and Theory 121, 102642</span></div></li>
+        <li><span class="n">11</span><div><cite>Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe</cite><span class="meta">2020 · XIV Balkan Conference on Operational Research</span></div></li>
+        <li><span class="n">7</span><div><cite>Exploring decentralized governance: a framework applied to Compound Finance</cite><span class="meta">2023 · Intl. Conference on Mathematical Research for Blockchain Economy</span></div></li>
+        <li><span class="n">1</span><div><cite>FraMark: a blockchain marketplace for 5G network management using fractional NFTs</cite><span class="meta">2024 · 7th World Symposium on Communication Engineering (WSCE)</span></div></li>
+        <li><span class="n">1</span><div><cite>Data security for smart cities</cite><span class="meta">2025</span></div></li>
+        <li><span class="n">0</span><div><cite>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management</cite><span class="meta">2025 · IEEE ICCE 2025</span></div></li>
+        <li><span class="n">0</span><div><cite>Graph embedding and node features for drug-target interaction prediction</cite><span class="meta">2022 · Aristotle University of Thessaloniki, MSc work</span></div></li>
+        <li><span class="n">0</span><div><cite>Blockchain in higher education: permissioned and permissionless approaches</cite><span class="meta">2022 · 4th Summit on Gender Equality in Computing</span></div></li>
+      </ol>
+      <p>Plus two Greek-language theses on verifying academic titles with Ethereum (2020, 2021). Live counts are on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">my Google Scholar profile</a>.</p>
+    </div>
+  </section>
+
+  <section class="blk" data-b="line" aria-labelledby="h-line">
+    <h2 id="h-line" data-looking="What my research follows" data-researching="The research line">What my research follows</h2>
+    <p class="gist">Credential verification, then decentralized governance, and now marketplaces for 5G networks.</p>
+    <div class="body">
+      <ol class="steps">
+        <li><span class="meta">2020 to 2022</span><h3>Credential verification</h3><p>VerDe, which verifies academic qualifications on Ethereum, then a process-aware approach to the same problem.</p></li>
+        <li><span class="meta">2023</span><h3>Decentralized governance</h3><p>A framework for looking at on-chain governance, applied to Compound Finance.</p></li>
+        <li><span class="meta">2024 to 2025</span><h3>5G marketplaces</h3><p>FraMark, which manages 5G networks with fractional NFTs, and a survey of NFT marketplaces for network slicing.</p></li>
+      </ol>
+      <p>Alongside it: graph embeddings for drug-target interaction prediction (my MSc work, 2022), and data security for smart cities (2025).</p>
+    </div>
+  </section>
+
+  <section class="blk" data-b="edu" aria-labelledby="h-edu">
+    <h2 id="h-edu" data-looking="Education" data-researching="The MSc, on a DeepMind scholarship" data-studying="From BSc to MSc">Education</h2>
+    <p class="gist">MSc Data and Web Science, Aristotle University of Thessaloniki, on a DeepMind scholarship. BSc Applied Informatics, University of Macedonia.</p>
+    <ol class="body path">
+      <li><img class="scan" src="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" width="1742" height="2460" loading="lazy" alt="Scan of my BSc degree from the University of Macedonia, in Greek">
+        <span class="meta">2015 to 2020</span><h3>BSc Applied Informatics</h3><span class="meta">University of Macedonia</span>
+        <p>My thesis was on verifying academic credentials with Ethereum, the topic of my two most cited papers.</p></li>
+      <li><img class="scan" src="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" width="1240" height="1755" loading="lazy" alt="Scan of my MSc diploma from Aristotle University of Thessaloniki, in Greek">
+        <span class="meta">2020 to 2022</span><h3>MSc Data and Web Science</h3><span class="meta">Aristotle University of Thessaloniki · DeepMind Scholarship</span>
+        <p>I worked on graph-embedding methods for blockchain fraud detection, and used graph embeddings to predict drug-target interactions.</p></li>
+    </ol>
+  </section>
+
+  <section class="blk" data-b="teach" aria-labelledby="h-teach">
+    <h2 id="h-teach" data-looking="Teaching" data-studying="What I teach">Teaching</h2>
+    <p class="gist">Networks &amp; security, web scripting and application development at the University of Derby / Mediterranean College, 2023 to 2025.</p>
+    <div class="body">
+      <p>From 2023 to 2025 I was a lecturer and academic partner at the University of Derby / Mediterranean College. My modules:</p>
+      <ul class="mods"><li>Networks &amp; Security</li><li>Web Scripting</li><li>Application Development</li></ul>
+      <p>I designed assessment inclusivity-first. Outside the classroom I give talks on Web3 and edge tech, and I wrote about permissioned and permissionless blockchains in higher education for the 4th Summit on Gender Equality in Computing (2022).</p>
+    </div>
+  </section>
+
+  <section class="blk" data-b="certs" aria-labelledby="h-certs">
+    <h2 id="h-certs">What I studied along the way</h2>
+    <p class="gist">Short courses in networking, security, cloud, machine learning, Rust and Move.</p>
+    <div class="body">
+      <p>Alongside the degrees I took short courses, mostly where teaching or work needed them. These are scans of the real certificates; each opens full size.</p>
+      <div class="wall">
+        <a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg"><img src="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" width="2175" height="1439" loading="lazy" alt="CCNA certificate scan"><span>CCNA, Cisco Certified Network Associate</span></a>
+        <a href="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png"><img src="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png" width="303" height="303" loading="lazy" alt="Networking Essentials badge"><span>Networking essentials</span></a>
+        <a href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png"><img src="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png" width="800" height="600" loading="lazy" alt="Advanced Ethical Hacking certificate scan"><span>Advanced ethical hacking</span></a>
+        <a href="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg"><img src="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg" width="1495" height="2171" loading="lazy" alt="GNU/Linux command line certificate scan"><span>GNU/Linux command line</span></a>
+        <a href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png"><img src="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png" width="2481" height="3509" loading="lazy" alt="Cloud Engineering certificate scan"><span>Cloud engineering</span></a>
+        <a href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg"><img src="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" width="1755" height="1240" loading="lazy" alt="Machine Learning and Deep Neural Networks certificate scan"><span>Machine learning and deep neural networks</span></a>
+        <a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg"><img src="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" width="1754" height="1241" loading="lazy" alt="Introduction to Digital Currencies certificate scan"><span>Introduction to digital currencies</span></a>
+        <a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png"><img src="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" width="2342" height="1656" loading="lazy" alt="Rust Developer certificate scan"><span>Rust developer</span></a>
+        <a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png"><img src="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png" width="3543" height="3542" loading="lazy" alt="Move Bootcamp Thessaloniki award artwork"><span>Move/Sui bootcamp, Thessaloniki (award, 2025)</span></a>
+        <a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg"><img src="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" width="1650" height="1275" loading="lazy" alt="How to Get Published with IEEE certificate scan"><span>How to get published with IEEE</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="blk" data-b="awards" aria-labelledby="h-awards">
+    <h2 id="h-awards">Awards and grants</h2>
+    <p class="gist">A DeepMind Scholarship (2020 to 2022), 3rd place at the Infinitech Hackathon (2022), a Basic Research grant (2020 to 2021) and a Move/Sui bootcamp award (2025).</p>
+    <ul class="body awards">
+      <li>DeepMind Scholarship <span class="meta">Aristotle University of Thessaloniki · 2020 to 2022</span></li>
+      <li>3rd place, Infinitech Hackathon <span class="meta">Crowdpolicy · June 2022</span></li>
+      <li>Basic Research grant <span class="meta">University of Macedonia · 2020 to 2021</span></li>
+      <li>Award at the first Move/Sui bootcamp in Thessaloniki <span class="meta">2025</span></li>
+    </ul>
+  </section>
+
+  <p class="also" data-b="also">Also, briefly</p>
+
+  <section class="blk" data-b="contact" aria-labelledby="h-contact">
+    <h2 id="h-contact"><a class="mail" href="mailto:gmixoulis@gmail.com" data-looking="Write to me" data-hiring="Email me about a role" data-researching="Email me about a collaboration" data-studying="Email me with a question">Write to me</a></h2>
+    <p data-looking="gmixoulis@gmail.com. I'm also on LinkedIn, GitHub, Google Scholar and X."
+       data-hiring="gmixoulis@gmail.com. My work history is on LinkedIn and my code is on GitHub."
+       data-researching="gmixoulis@gmail.com. Every paper, with current citation counts, is on Google Scholar."
+       data-studying="gmixoulis@gmail.com. Questions about networks, security, web scripting or app development are all fair.">gmixoulis@gmail.com. I'm also on LinkedIn, GitHub, Google Scholar and X.</p>
+    <p class="elsewhere">
+      <a class="l-linkedin" href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a>
+      <a href="https://github.com/gmixoulis">GitHub</a>
+      <a class="l-scholar" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>
+      <a href="https://twitter.com/GeorgeMicou">X</a>
+    </p>
+  </section>
+
+ </div>
+ <p id="live" class="sr" aria-live="polite"></p>
+</main>
+
+<footer class="wrap">
+  <div class="foot">
+    <p>George Michoulis, Thessaloniki. <button type="button" id="again">Read this page as someone else</button></p>
+    <nav aria-label="Elsewhere on the site"><a href="../../garden/">Zen garden</a><a href="../../play/">Ledger Run, my CV as a game</a></nav>
+  </div>
+</footer>
+
+<script>
+(() => {
+  // Same blocks, per reader: order + weight. ":b" = brief (heading + one line). "also" = the divider.
+  const PLAN = {
+    looking: 'now:b build:b line:b teach:b sites:b papers:b edu:b contact',
+    hiring: 'now build roles sites contact also papers:b edu:b awards:b',
+    researching: 'papers line edu contact also now:b teach:b awards:b',
+    studying: 'teach edu certs contact also papers:b now:b'
+  };
+  const SUBJECT = { looking: 'Hello', hiring: 'About a role', researching: 'About a collaboration', studying: 'A question' };
+  const plan = a => PLAN[a].split(' ').map(t => t.split(':'));
+  const list = document.getElementById('blocks'), live = document.getElementById('live');
+  const mail = document.querySelector('.mail'), lede = document.querySelector('.lede');
+  const blocks = {};
+  list.querySelectorAll('[data-b]').forEach(el => { blocks[el.dataset.b] = el; });
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // "More, if you're hiring" links on brief blocks: jump to the reader who gets the full version.
+  for (const el of Object.values(blocks)) {
+    const g = el.querySelector('.gist'); if (!g) continue;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'more'; g.append(' ', b);
+    el.querySelector('h2').tabIndex = -1;
+  }
+
+  let cur;
+  function apply(aud, { animate = false, announce = false } = {}) {
+    if (!PLAN[aud]) aud = 'looking';
+    if (aud === cur) return;
+    const motion = animate && !reduced();
+    const first = new Map();
+    if (motion) {
+      list.querySelectorAll('.ghost').forEach(g => g.remove());
+      list.getAnimations({ subtree: true }).forEach(a => a.cancel());
+      for (const el of Object.values(blocks)) if (!el.hidden) first.set(el, el.getBoundingClientRect());
+    }
+
+    cur = aud;
+    document.documentElement.dataset.aud = aud;
+    document.querySelectorAll('[data-looking]').forEach(el => { el.textContent = el.dataset[aud] || el.dataset.looking; });
+    document.querySelector(`input[name=aud][value=${aud}]`).checked = true;
+    mail.href = 'mailto:gmixoulis@gmail.com?subject=' + encodeURIComponent(SUBJECT[aud]);
+
+    const p = plan(aud), shown = new Set();
+    for (const [id, w] of p) { const el = blocks[id]; el.hidden = false; el.dataset.w = w || 'f'; list.append(el); shown.add(el); }
+    for (const el of Object.values(blocks)) if (!shown.has(el)) el.hidden = true;
+    for (const el of shown) {
+      const b = el.querySelector('.more'); if (!b) continue;
+      const to = ['hiring', 'researching', 'studying'].find(a => a !== aud && plan(a).some(([i, w]) => i === el.dataset.b && !w));
+      b.hidden = !to;
+      if (to) { b.dataset.to = to; b.innerHTML = `More<span class="sr"> on ${el.querySelector('h2').textContent.toLowerCase()}</span>, if you're ${to}`; }
+    }
+
+    if (motion) {
+      const L = list.getBoundingClientRect();
+      first.forEach((r, el) => {
+        if (!el.hidden) return;
+        // Leaving blocks fade out where they stood, so nothing just blinks away.
+        const g = el.cloneNode(true);
+        g.hidden = false; g.inert = true; g.setAttribute('aria-hidden', 'true'); g.classList.add('ghost');
+        g.removeAttribute('data-b'); g.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
+        Object.assign(g.style, { position: 'absolute', left: r.left - L.left + 'px', top: r.top - L.top + 'px', width: r.width + 'px', margin: 0, pointerEvents: 'none' });
+        list.append(g);
+        g.animate({ opacity: [1, 0] }, { duration: 150, easing: 'ease-out', fill: 'forwards' }).onfinish = () => g.remove();
+      });
+      for (const el of shown) {
+        const r = first.get(el), n = el.getBoundingClientRect();
+        if (r) {
+          const dx = r.left - n.left, dy = r.top - n.top;
+          if (dx || dy) el.animate({ transform: [`translate(${dx}px,${dy}px)`, 'none'] }, { duration: 350, easing: 'cubic-bezier(.25,.7,.2,1)' });
+        } else {
+          el.animate({ opacity: [0, 1], transform: ['translateY(1.25rem)', 'none'] }, { duration: 350, delay: 120, easing: 'ease-out', fill: 'backwards' });
+        }
+      }
+      lede.animate({ opacity: [0, 1] }, { duration: 250, easing: 'ease-out' });
+    }
+
+    if (announce) {
+      const full = p.filter(([i, w]) => !w && i !== 'also').map(([i]) => blocks[i].querySelector('h2').textContent);
+      live.textContent = aud === 'looking'
+        ? 'Showing the short version, for someone just looking.'
+        : `Reordered for someone who is ${aud}. In order: ${full.join('; ')}.`;
+    }
+    const url = aud === 'looking' ? location.pathname + location.search : '#' + aud;
+    if (location.hash !== (aud === 'looking' ? '' : '#' + aud)) history.replaceState(null, '', url);
+  }
+
+  document.querySelectorAll('input[name=aud]').forEach(r => r.addEventListener('change', () => apply(r.value, { animate: true, announce: true })));
+  addEventListener('hashchange', () => apply(location.hash.slice(1), { animate: true, announce: true }));
+  list.addEventListener('click', e => {
+    const b = e.target.closest('.more'); if (!b) return;
+    const el = b.closest('[data-b]');
+    apply(b.dataset.to, { announce: true });
+    el.querySelector('h2').focus({ preventScroll: true });
+    el.scrollIntoView({ block: 'start', behavior: reduced() ? 'auto' : 'smooth' });
+  });
+  document.getElementById('again').addEventListener('click', () => {
+    scrollTo({ top: 0, behavior: reduced() ? 'auto' : 'smooth' });
+    document.querySelector('input[name=aud]:checked').focus({ preventScroll: true });
+  });
+  apply(location.hash.slice(1));
+})();
+</script>
+</body>
+</html>

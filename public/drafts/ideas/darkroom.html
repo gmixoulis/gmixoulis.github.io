@@ -1,0 +1,1310 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Darkroom · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki. His record, printed one sheet at a time in a darkroom, or as plain text.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600&family=Spectral:ital,wght@0,200;0,300;0,400;0,600;1,300&display=swap">
+<script>
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('darkroom-theme'); } catch (e) {}
+    if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    document.documentElement.dataset.theme = t;
+  })();
+</script>
+<style>
+*{box-sizing:border-box}
+:root{--bg:#060303;--ink:#f3d8cd;--dim:#d1a295;--rule:rgba(243,216,205,.24);--veil:rgba(6,3,3,.8);--focus:#ffd6c6;color-scheme:dark}
+:root[data-theme=light]{--bg:#e3ded5;--ink:#1b1714;--dim:#4b433c;--rule:rgba(27,23,20,.22);--veil:rgba(227,222,213,.84);--focus:#1b1714;color-scheme:light}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:400 17px/1.55 Spectral,Georgia,serif;overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body.reading{overflow-y:auto}
+a{color:inherit;text-underline-offset:3px;text-decoration-thickness:1px}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:2px}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+
+#stage{position:fixed;inset:0;outline:none}
+#gl{display:block;width:100%;height:100%;touch-action:none}
+#stage:focus-visible::after{content:"";position:absolute;inset:8px;border:1px dashed var(--focus);border-radius:8px;pointer-events:none}
+.veil{position:fixed;left:0;right:0;pointer-events:none;z-index:2}
+.veil.top{top:0;height:96px;background:linear-gradient(var(--veil),transparent)}
+.veil.bot{bottom:0;height:132px;background:linear-gradient(transparent,var(--veil))}
+
+.tl{position:fixed;top:14px;left:18px;z-index:5}
+.back{font-size:14px;color:var(--dim);text-decoration:none}
+.back:hover{color:var(--ink);text-decoration:underline}
+h1{margin:4px 0 0;font:italic 300 23px/1.2 Spectral,Georgia,serif}
+.count{position:fixed;top:18px;right:20px;margin:0;font-size:14px;color:var(--dim);z-index:5;font-variant-numeric:oldstyle-nums}
+
+.hintbar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:4;width:min(560px,calc(100vw - 480px));text-align:center}
+#hint{margin:0;font:italic 300 17px/1.4 Spectral,Georgia,serif}
+#bench-btn{margin-top:4px;font-size:15px;border-bottom:1px solid var(--rule);padding:2px 1px}
+.mail{position:fixed;left:18px;bottom:16px;z-index:5;font-size:16px}
+.ctrl{position:fixed;right:16px;bottom:10px;z-index:5;display:flex;gap:14px;align-items:center}
+#read{font-size:15px;border-bottom:1px solid var(--rule);padding:4px 1px}
+#read:hover,#bench-btn:hover{border-color:var(--ink)}
+#lights{display:flex;align-items:center;gap:8px;font-size:15px;padding:4px 2px}
+.plate{width:17px;height:26px;border-radius:3px;border:1px solid var(--dim);display:grid;place-items:center}
+.rocker{width:7px;height:11px;border-radius:2px;background:var(--ink);transform:translateY(3px);transition:transform .18s}
+#lights[aria-pressed=true] .rocker{transform:translateY(-3px)}
+
+body.reading #stage,body.reading .veil,body.reading .hintbar,body.reading .count{display:none}
+#text{position:relative;z-index:3;min-height:100%;padding:112px 22px 132px;background:var(--bg)}
+#text>*{max-width:640px;margin-left:auto;margin-right:auto}
+#text h2{font:italic 300 30px/1.2 Spectral,Georgia,serif;margin:56px auto 8px}
+#text #text-h{font-size:19px;color:var(--dim);margin-top:0}
+#text h3{font:600 19px/1.35 Spectral,Georgia,serif;margin:0 0 2px}
+#text article{padding:18px 0;border-top:1px solid var(--rule)}
+#text p{margin:0 0 6px}
+#text .t-name{font:200 44px/1.1 Spectral,Georgia,serif;margin-bottom:10px}
+#text img{display:block;max-width:100%;height:auto;margin-top:12px;border:1px solid var(--rule)}
+#text ol,#text ul{margin:0;padding-left:1.2em}
+#text li{margin-bottom:10px}
+#text cite{font-style:normal}
+#text .venue{font-style:italic}
+body.nogl .ctrl #read{display:none}
+body.reading .tl,body.reading .mail,body.reading .ctrl{background:var(--bg);padding:4px 6px;border-radius:4px}
+
+@media (max-width:760px){
+  .hintbar{width:calc(100vw - 32px);bottom:54px}
+  #hint{font-size:16px}
+  .mail{font-size:15px}
+  .count{font-size:13px;top:20px;right:16px}
+  h1{font-size:21px}
+  .veil.bot{height:150px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<noscript><style>#text[hidden]{display:block}#stage,.veil,.hintbar,.count,#read{display:none}body{overflow:auto}</style></noscript>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<header class="tl">
+  <a class="back" href="index.html">← All ideas</a>
+  <h1>George Michoulis</h1>
+</header>
+
+<main>
+  <div id="stage" tabindex="0" role="group" aria-label="Darkroom bench" aria-describedby="hint keys">
+    <canvas id="gl" aria-hidden="true"></canvas>
+  </div>
+  <div class="veil top" aria-hidden="true"></div>
+  <div class="veil bot" aria-hidden="true"></div>
+  <p id="keys" class="vh">Enter develops the next sheet, then lifts the finished print onto the drying line. Arrow keys move along the line. Escape goes back to the bench.</p>
+  <p id="count" class="count" aria-hidden="true"></p>
+  <div class="hintbar">
+    <p id="hint">Each sheet in the black box is one part of my record.</p>
+    <button id="bench-btn" type="button" hidden>Back to the bench</button>
+  </div>
+  <div id="live" class="vh" aria-live="polite"></div>
+
+  <section id="text" aria-labelledby="text-h" hidden>
+    <h2 id="text-h" tabindex="-1">Every print, as plain text</h2>
+
+    <article data-sheet="title">
+      <p class="t-name">George Michoulis</p>
+      <p class="t-sub">Blockchain developer and researcher in Thessaloniki, Greece. I work remotely.</p>
+    </article>
+
+    <h2>Work</h2>
+    <article data-sheet="role">
+      <h3 class="org">Cyberscope by TAC</h3>
+      <p><span class="role">Web3 full-stack developer</span>, <span class="years">May 2026 – present</span></p>
+      <p class="line">I build Web3 products end to end, from contracts and on-chain integrations to React and Next.js frontends and security tooling.</p>
+    </article>
+    <article data-sheet="role">
+      <h3 class="org">Sidroco Holdings Ltd</h3>
+      <p><span class="role">Blockchain developer and researcher</span>, <span class="years">2024 – 2026</span></p>
+      <p class="line">An NFT marketplace for 5G network management, Hyperledger Fabric prototypes and an Erasmus+ learning management system.</p>
+    </article>
+    <article data-sheet="role">
+      <h3 class="org">University of Derby / Mediterranean College</h3>
+      <p><span class="role">Lecturer and academic partner</span>, <span class="years">2023 – 2025</span></p>
+      <p class="line">I taught Networks and Security, Web Scripting, and Application Development.</p>
+    </article>
+    <article data-sheet="role">
+      <h3 class="org">University of Nicosia / IFF</h3>
+      <p><span class="role">Blockchain and full-stack developer</span>, <span class="years">2022 – 2024</span></p>
+      <p class="line">Next.js, NestJS and Docker apps, and a Web3 NFT marketplace.</p>
+    </article>
+
+    <h2>Things I built</h2>
+    <article data-sheet="shot" data-src="../../img/portfolio/verde.uom.gr.PNG">
+      <h3>verde.uom.gr</h3>
+      <p>VerDe checks academic credentials against the Ethereum blockchain. This is its contact page, with a map pinned on the University of Macedonia.</p>
+      <img src="../../img/portfolio/verde.uom.gr.PNG" width="1840" height="907" loading="lazy" alt="VerDe contact page: a website card, an email card and a Google map centred on the University of Macedonia.">
+    </article>
+    <article data-sheet="shot" data-src="../../img/portfolio/metau.unic.ac.cy.png">
+      <h3>metau.unic.ac.cy</h3>
+      <p>A University of Nicosia course site. The banner reads “The future of education is now”, and a Connect Wallet button sits in the top bar.</p>
+      <img src="../../img/portfolio/metau.unic.ac.cy.png" width="1698" height="943" loading="lazy" alt="University of Nicosia page headed “The future of education is now. Decentralised, on-chain and in the metaverse”, with a View courses button and a Connect Wallet button.">
+    </article>
+    <article data-sheet="shot" data-src="../../img/portfolio/accelerate.png">
+      <h3>stg.accelerate.unic.ac.cy</h3>
+      <p>The sign-in page of a University of Nicosia platform, on its staging server.</p>
+      <img src="../../img/portfolio/accelerate.png" width="1910" height="998" loading="lazy" alt="Log-in page with the UNIC logo and an abstract artwork of red and grey circles beside an email and password form.">
+    </article>
+    <article data-sheet="shot" data-src="../../img/portfolio/eudem.polsci.auth.gr.PNG">
+      <h3>eudem.polsci.auth.gr</h3>
+      <p>The home page of EUDEM, a Jean Monnet Chair on the fundamentals of European integration.</p>
+      <img src="../../img/portfolio/eudem.polsci.auth.gr.PNG" width="1896" height="944" loading="lazy" alt="EUDEM home page with its circle-of-stars logo, a menu bar and a slide of flags titled Institutions.">
+    </article>
+
+    <h2>Papers</h2>
+    <article data-sheet="papers">
+      <ol class="refs">
+        <li data-year="2022" data-cites="32"><cite>A process-aware approach for blockchain-based verification of academic qualifications</cite>. <span class="venue">Simulation Modelling Practice and Theory 121, 102642</span>. 2022, cited 32 times.</li>
+        <li data-year="2020" data-cites="11"><cite>Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe</cite>. <span class="venue">XIV Balkan Conference on Operational Research</span>. 2020, cited 11 times.</li>
+        <li data-year="2023" data-cites="7"><cite>Exploring decentralized governance: a framework applied to Compound Finance</cite>. <span class="venue">Intl. Conf. on Mathematical Research for Blockchain Economy</span>. 2023, cited 7 times.</li>
+        <li data-year="2024" data-cites="1"><cite>FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs</cite>. <span class="venue">7th World Symposium on Communication Engineering (WSCE)</span>. 2024, cited once.</li>
+        <li data-year="2025" data-cites="1"><cite>Data security for smart cities</cite>. 2025, cited once.</li>
+        <li data-year="2025" data-cites="0"><cite>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management</cite>. <span class="venue">IEEE ICCE 2025</span>. 2025.</li>
+        <li data-year="2022" data-cites="0"><cite>Graph Embedding and Node Features for Drug-Target Interaction Prediction</cite>. <span class="venue">Aristotle University of Thessaloniki (MSc work)</span>. 2022.</li>
+        <li data-year="2022" data-cites="0"><cite>Blockchain in Higher Education: permissioned and permissionless approaches</cite>. <span class="venue">4th Summit on Gender Equality in Computing</span>. 2022.</li>
+      </ol>
+      <p class="note">Also two Greek-language theses on verifying academic titles with Ethereum, from 2020 and 2021. The full list is on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+    </article>
+
+    <h2>Degrees</h2>
+    <article data-sheet="scan" data-src="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg">
+      <h3>BSc Applied Informatics</h3>
+      <p>University of Macedonia, 2015–2020. My thesis was on verifying credentials with Ethereum.</p>
+      <img src="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" width="1742" height="2460" loading="lazy" alt="Scan of the University of Macedonia bachelor's degree, in Greek, for Applied Informatics.">
+    </article>
+    <article data-sheet="scan" data-src="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg">
+      <h3>MSc Data and Web Science</h3>
+      <p>Aristotle University of Thessaloniki, 2020–2022. I worked on graph-embedding methods for blockchain fraud detection, on a DeepMind scholarship.</p>
+      <img src="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" width="1240" height="1754" loading="lazy" alt="Scan of the Aristotle University master's degree copy, in Greek, for Data and Web Science.">
+    </article>
+
+    <h2>Certificates</h2>
+    <article data-sheet="scan" data-src="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg">
+      <h3>Introduction to digital currencies</h3>
+      <p>Certificate of achievement, University of Nicosia.</p>
+      <img src="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" width="1754" height="1240" loading="lazy" alt="University of Nicosia certificate of accomplishment for Introduction to Digital Currencies.">
+    </article>
+    <article data-sheet="scan" data-src="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg">
+      <h3>Machine learning and deep neural networks</h3>
+      <p>Certificate of completion, Aristotle University of Thessaloniki.</p>
+      <img src="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" width="1754" height="1240" loading="lazy" alt="Aristotle University certificate of completion for a short course on machine learning and deep neural networks.">
+    </article>
+    <article data-sheet="scan" data-src="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg">
+      <h3>CCNA (Cisco Certified Network Associate)</h3>
+      <p>Certificate of completion, University of Thessaly.</p>
+      <img src="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" width="2175" height="1439" loading="lazy" alt="University of Thessaly certificate, in Greek, for an accelerated CCNA programme.">
+    </article>
+
+    <h2>Awards</h2>
+    <article data-sheet="awards">
+      <ul>
+        <li><b>DeepMind Scholarship</b>, Aristotle University of Thessaloniki, 2020–2022</li>
+        <li><b>3rd place, Infinitech Hackathon</b>, Crowdpolicy, June 2022</li>
+        <li><b>Basic Research grant</b>, University of Macedonia, 2020–2021</li>
+        <li><b>Move/Sui Bootcamp award</b>, Thessaloniki, 2025</li>
+      </ul>
+    </article>
+
+    <h2>Write to me</h2>
+    <article data-sheet="email">
+      <p class="mailto"><a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a></p>
+      <p class="place">Thessaloniki, Greece. I work remotely.</p>
+      <p class="elsewhere">I'm also on <a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a>, <a href="https://github.com/gmixoulis">GitHub</a>, <a href="https://twitter.com/GeorgeMicou">X</a> and <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>. This site also has a <a href="../../garden/">Zen garden</a> of notes and <a href="../../play/">Ledger Run</a>, a platformer CV.</p>
+    </article>
+  </section>
+</main>
+
+<footer>
+  <a class="mail" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+  <div class="ctrl">
+    <button id="lights" type="button" aria-pressed="false"><span class="plate" aria-hidden="true"><span class="rocker"></span></span><span>Lights</span></button>
+    <button id="read" type="button" aria-expanded="false" aria-controls="text">Read as text</button>
+  </div>
+</footer>
+
+<script type="module">
+const root = document.documentElement;
+const $ = s => document.querySelector(s);
+const textEl = $('#text'), readBtn = $('#read'), lightsBtn = $('#lights'), hintEl = $('#hint'),
+      liveEl = $('#live'), countEl = $('#count'), stageEl = $('#stage'), benchBtn = $('#bench-btn');
+const reduceMQ = matchMedia('(prefers-reduced-motion: reduce)');
+const still = () => reduceMQ.matches;
+const coarse = matchMedia('(pointer: coarse)').matches;
+const sheetEls = [...textEl.querySelectorAll('[data-sheet]')];
+const sleep = ms => still() || !ms ? Promise.resolve() : new Promise(r => setTimeout(r, ms));
+
+let reading = false, glReady = false;
+let wake = () => {}, onTheme = () => {};
+
+// ---------- theme: the wall switch ----------
+let theme = root.dataset.theme;
+const paintLights = () => lightsBtn.setAttribute('aria-pressed', String(theme === 'light'));
+paintLights();
+function setTheme(t) {
+  theme = t; root.dataset.theme = t;
+  try { localStorage.setItem('darkroom-theme', t); } catch (e) {}
+  paintLights(); onTheme(t);
+}
+lightsBtn.addEventListener('click', () => setTheme(theme === 'light' ? 'dark' : 'light'));
+
+// ---------- read as text ----------
+function setReading(on) {
+  reading = on;
+  textEl.hidden = !on;
+  document.body.classList.toggle('reading', on);
+  stageEl.inert = on;
+  readBtn.setAttribute('aria-expanded', String(on));
+  readBtn.textContent = on ? 'Back to the darkroom' : 'Read as text';
+  if (on) { scrollTo(0, 0); $('#text-h').focus({ preventScroll: true }); }
+  else { stageEl.focus({ preventScroll: true }); wake(80); }
+}
+readBtn.addEventListener('click', () => setReading(!reading));
+function noGL() { glReady = false; document.body.classList.add('nogl'); setReading(true); }
+
+let gl2 = false;
+try { gl2 = !!document.createElement('canvas').getContext('webgl2'); } catch (e) {}
+if (!gl2) noGL();
+else boot().catch(err => { console.warn('Darkroom fell back to text:', err); noGL(); });
+
+async function boot() {
+  const [THREE, { EffectComposer }, { RenderPass }, { UnrealBloomPass }, { ShaderPass }, { OutputPass }, { RoomEnvironment }, { mergeGeometries }] = await Promise.all([
+    import('three'),
+    import('three/addons/postprocessing/EffectComposer.js'),
+    import('three/addons/postprocessing/RenderPass.js'),
+    import('three/addons/postprocessing/UnrealBloomPass.js'),
+    import('three/addons/postprocessing/ShaderPass.js'),
+    import('three/addons/postprocessing/OutputPass.js'),
+    import('three/addons/environments/RoomEnvironment.js'),
+    import('three/addons/utils/BufferGeometryUtils.js'),
+  ]);
+  await Promise.all(['200 40px Spectral', '300 40px Spectral', '400 40px Spectral', '600 40px Spectral',
+    'italic 300 40px Spectral', '600 40px "Barlow Condensed"'].map(f => document.fonts.load(f))).catch(() => {});
+
+  const V3 = THREE.Vector3, Q = THREE.Quaternion;
+  const lerp = THREE.MathUtils.lerp, clamp = THREE.MathUtils.clamp;
+  const small = matchMedia('(max-width: 760px)').matches || coarse;
+  const T0 = performance.now();
+  const clock = () => (performance.now() - T0) / 1000;
+
+  // ---------- renderer ----------
+  const canvas = $('#gl');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
+  const dpr = Math.min(devicePixelRatio || 1, small ? 1.5 : 2);
+  renderer.setPixelRatio(dpr);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  const aniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color();
+  const camera = new THREE.PerspectiveCamera(34, innerWidth / innerHeight, 0.05, 30);
+  const camTarget = new V3();
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  scene.environment = envTex;
+
+  const rt = new THREE.WebGLRenderTarget(innerWidth, innerHeight, { type: THREE.HalfFloatType, samples: small ? 0 : 4 });
+  const composer = new EffectComposer(renderer, rt);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.6, 0.55, 0.45);
+  composer.addPass(bloom);
+  const finish = new ShaderPass({
+    uniforms: { tDiffuse: { value: null }, uVig: { value: 0.6 }, uRes: { value: new THREE.Vector2(1, 1) } },
+    vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); }',
+    fragmentShader: `uniform sampler2D tDiffuse; uniform float uVig; uniform vec2 uRes; varying vec2 vUv;
+      float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+      void main(){
+        vec4 c = texture2D(tDiffuse, vUv);
+        vec2 q = vUv - .5; q.x *= uRes.x / uRes.y;
+        c.rgb *= 1. - uVig * smoothstep(.32, 1.05, length(q));
+        c.rgb += (h(floor(vUv * uRes)) - .5) * .05 * (.12 + c.rgb);
+        gl_FragColor = c;
+      }`,
+  });
+  composer.addPass(finish);
+  composer.addPass(new OutputPass());
+
+  // ---------- world constants (metres) ----------
+  const PW = 0.40, PH = 0.32;                 // a 10×8 sheet
+  const TW = 0.52, TD = 0.43, TH = 0.062, WT = 0.012;
+  const LIQ_Y = 0.046, SUB_Y = 0.022;
+  const WALL_Z = -0.62, HANG_Z = WALL_Z + 0.05, LINE_Y = 0.535, SP = 0.47;
+  const HINGE = new V3(0, PH / 2 + 0.004, 0);
+  const Q_HANG = new Q();
+  const qFlat = (yaw = 0) => new Q().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, yaw, 'YXZ'));
+  const Q_DRIP = new Q().setFromEuler(new THREE.Euler(-Math.PI / 2 + 1.0, 0, 0));
+  const U = { time: { value: 0 } };
+
+  function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const rnd0 = mulberry(11);
+
+  function canvasTex(w, h, draw, repeat) {
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    draw(c.getContext('2d'), w, h);
+    const t = new THREE.CanvasTexture(c);
+    t.anisotropy = aniso;
+    if (repeat) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(repeat[0], repeat[1]); }
+    return t;
+  }
+
+  // ---------- shared GLSL ----------
+  // Ripples are analytic: every drop is a damped ring-shaped wave packet moving outward.
+  // A cheap stand-in for a height-field simulation, and it costs nothing when the liquid is still.
+  const RIPPLE = `
+    uniform vec4 uRip[8];
+    uniform float uTime;
+    vec3 ripple(vec2 p){
+      vec3 acc = vec3(0.);
+      for (int i = 0; i < 8; i++) {
+        vec4 r = uRip[i];
+        float age = uTime - r.z;
+        if (r.w <= 0. || age < 0. || age > 4.5) continue;
+        vec2 d = p - r.xy;
+        float dist = length(d) + 1e-4;
+        float x = dist - age * .19;
+        float g = exp(-x * x * 650.);
+        float a = r.w * exp(-age * 1.1) / (1. + dist * 6.);
+        float ph = x * 250.;
+        acc.x += sin(ph) * g * a;
+        acc.yz += (cos(ph) * 250. - sin(ph) * 1300. * x) * g * a * d / dist;
+      }
+      return acc;
+    }`;
+
+  // ---------- materials ----------
+  const brushed = canvasTex(512, 512, (g, w, h) => {
+    g.fillStyle = '#7c7c7c'; g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 3200; i++) {
+      g.fillStyle = `rgba(${rnd0() < .5 ? '255,255,255' : '0,0,0'},${.03 + rnd0() * .08})`;
+      g.fillRect(rnd0() * w, rnd0() * h, 40 + rnd0() * 300, 1);
+    }
+  }, [3, 2]);
+  const steel = new THREE.MeshStandardMaterial({ color: 0x9a9ea3, metalness: 0.88, roughness: 0.95, roughnessMap: brushed });
+  const plaster = canvasTex(512, 512, (g, w, h) => {
+    g.fillStyle = '#d8d8d8'; g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 9000; i++) { const v = 200 + rnd0() * 55 | 0; g.fillStyle = `rgba(${v},${v},${v},.35)`; g.fillRect(rnd0() * w, rnd0() * h, 1 + rnd0() * 3, 1 + rnd0() * 3); }
+  }, [6, 2.4]);
+  plaster.colorSpace = THREE.SRGBColorSpace;
+  const wallMat = new THREE.MeshStandardMaterial({ color: 0xc4bcae, map: plaster, roughness: 0.96 });
+  const tiles = canvasTex(512, 256, (g, w, h) => {
+    g.fillStyle = '#77726b'; g.fillRect(0, 0, w, h);
+    for (let y = 0; y < h; y += 64) for (let x = 0; x < w; x += 64) {
+      const v = 226 + rnd0() * 16 | 0; g.fillStyle = `rgb(${v},${v - 3},${v - 9})`; g.fillRect(x + 2, y + 2, 60, 60);
+    }
+  }, [5.6, 0.8]);
+  tiles.colorSpace = THREE.SRGBColorSpace;
+  const tileMat = new THREE.MeshStandardMaterial({ map: tiles, roughness: 0.22 });
+
+  // Print material: a standard lit surface whose albedo is "developed" in the shader.
+  const printGeo = new THREE.PlaneGeometry(PW, PH, 16, 12);
+  const blank = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1); blank.needsUpdate = true;
+  const noRip = { value: Array.from({ length: 8 }, () => new THREE.Vector4(0, 0, -99, 0)) };
+  function makePrintMaterial(seed) {
+    const m = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, metalness: 0, side: THREE.DoubleSide, envMap: envTex, envMapIntensity: lerp(0, 0.12, lightK) });
+    const u = { uTex: { value: blank }, uDev: { value: 0 }, uSub: { value: 0 }, uCurl: { value: 0 }, uSeed: { value: seed }, uRip: { value: noRip.value }, uTime: U.time };
+    m.userData.u = u;
+    m.onBeforeCompile = sh => {
+      Object.assign(sh.uniforms, u);
+      sh.vertexShader = sh.vertexShader
+        .replace('#include <common>', '#include <common>\nvarying vec2 vPUv; varying vec3 vPW; uniform float uCurl;')
+        .replace('#include <begin_vertex>', `#include <begin_vertex>
+          vPUv = uv;
+          transformed.z += uCurl * (pow(abs(uv.x - .5) * 2., 2.) * .5 + pow(1. - uv.y, 2.));`)
+        .replace('#include <worldpos_vertex>', `#include <worldpos_vertex>
+          vPW = (modelMatrix * vec4(transformed, 1.)).xyz;`);
+      sh.fragmentShader = sh.fragmentShader
+        .replace('#include <common>', `#include <common>
+          varying vec2 vPUv; varying vec3 vPW;
+          uniform sampler2D uTex; uniform float uDev, uSub, uSeed;
+          ${RIPPLE}
+          float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+          float vn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
+            return mix(mix(h21(i), h21(i + vec2(1, 0)), f.x), mix(h21(i + vec2(0, 1)), h21(i + 1.), f.x), f.y); }`)
+        .replace('#include <map_fragment>', `
+          // Development. Final density comes from the texture; it builds with time along a
+          // saturating curve after a short induction, so shadows arrive first and the grey,
+          // grainy, low-contrast image firms up into full blacks.
+          vec2 puv = vPUv;
+          float caust = 1.;
+          if (uSub > 0.) {
+            vec3 rp = ripple(vPW.xz);
+            puv += rp.yz * .04 * uSub;
+            // light focused and spread by the moving surface: bright and dark rings on the paper
+            caust = 1. + (rp.y * .9 - rp.z * 1.2) * uSub;
+          }
+          float lum = dot(texture2D(uTex, puv).rgb, vec3(.2126, .7152, .0722));
+          float Dfin = -log(max(lum, .006)) / 2.302585;
+          float wob = vn(vPUv * 3. + uSeed) - .5;
+          float t = clamp((uDev - .1) / .9 * (1. + wob * .45 * (1. - uDev)), 0., 1.);
+          float gdev = (1. - exp(-3.3 * t)) / (1. - exp(-3.3));
+          float gr = h21(floor(vPUv * vec2(1500., 1200.)) + uSeed) - .5;
+          gr *= clamp(1.6 - fwidth(vPUv.x) * 1500., 0., 1.);
+          float D = Dfin * gdev * (1. + gr * mix(.95, .14, gdev));
+          float R = gl_FrontFacing ? .9 * exp(-D * 2.302585) : .86;
+          diffuseColor.rgb *= R * clamp(caust, .45, 1.6);`);
+    };
+    m.customProgramCacheKey = () => 'darkroom-print';
+    return m;
+  }
+
+  // ---------- geometry helpers ----------
+  function rr(w, d, r) {
+    const s = new THREE.Shape(), x = -w / 2, y = -d / 2;
+    s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r);
+    s.lineTo(x + w, y + d - r); s.quadraticCurveTo(x + w, y + d, x + w - r, y + d);
+    s.lineTo(x + r, y + d); s.quadraticCurveTo(x, y + d, x, y + d - r);
+    s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+    return s;
+  }
+  function makeTray(w, d, h, color, rough, ribs) {
+    const g = new THREE.Group();
+    const mat = new THREE.MeshStandardMaterial({ color, roughness: rough });
+    const ring = rr(w, d, 0.034); ring.holes.push(rr(w - 2 * WT, d - 2 * WT, 0.026));
+    const rg = new THREE.ExtrudeGeometry(ring, { depth: h, bevelEnabled: true, bevelThickness: 0.003, bevelSize: 0.002, bevelSegments: 2, curveSegments: 6 });
+    rg.rotateX(-Math.PI / 2);
+    const wall = new THREE.Mesh(rg, mat); wall.castShadow = wall.receiveShadow = true; g.add(wall);
+    const bg = new THREE.ShapeGeometry(rr(w - 0.006, d - 0.006, 0.03), 6); bg.rotateX(-Math.PI / 2);
+    const bot = new THREE.Mesh(bg, mat); bot.position.y = 0.004; bot.receiveShadow = true; g.add(bot);
+    if (ribs) for (let i = -2; i <= 2; i++) {
+      const rib = new THREE.Mesh(new THREE.BoxGeometry(w - 0.1, 0.004, 0.007), mat);
+      rib.position.set(0, 0.006, i * (d - 0.12) / 4); rib.receiveShadow = true; g.add(rib);
+    }
+    return g;
+  }
+  function dymo(text) {
+    const probe = document.createElement('canvas').getContext('2d');
+    probe.font = '600 60px "Barlow Condensed"'; probe.letterSpacing = '5px';
+    const cw = Math.ceil(probe.measureText(text).width + 70), ch = 96;
+    const t = canvasTex(cw, ch, g => {
+      g.fillStyle = '#131313'; g.beginPath(); g.roundRect(0, 6, cw, ch - 12, 10); g.fill();
+      g.font = '600 60px "Barlow Condensed"'; g.letterSpacing = '5px'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.fillStyle = '#6b6b6b'; g.fillText(text, cw / 2 + 1, ch / 2 + 5);
+      g.fillStyle = '#efefef'; g.fillText(text, cw / 2, ch / 2 + 3);
+    });
+    t.colorSpace = THREE.SRGBColorSpace;
+    const hgt = 0.03;
+    return new THREE.Mesh(new THREE.PlaneGeometry(hgt * cw / ch, hgt), new THREE.MeshStandardMaterial({ map: t, roughness: 0.3 }));
+  }
+
+  // ---------- the room ----------
+  const benchMesh = new THREE.Mesh(new THREE.BoxGeometry(6, 0.05, 1.6), steel);
+  benchMesh.position.set(0, -0.025, WALL_Z + 0.8); benchMesh.receiveShadow = true; scene.add(benchMesh);
+  const lip = new THREE.Mesh(new THREE.BoxGeometry(6, 0.05, 0.03), steel);
+  lip.position.set(0, 0.01, WALL_Z + 1.58); lip.receiveShadow = true; scene.add(lip);
+  const wallMesh = new THREE.Mesh(new THREE.PlaneGeometry(8, 3.2), wallMat);
+  wallMesh.position.set(0, 1.6, WALL_Z); wallMesh.receiveShadow = true; scene.add(wallMesh);
+  const splash = new THREE.Mesh(new THREE.PlaneGeometry(6, 0.3), tileMat);
+  splash.position.set(0, 0.15, WALL_Z + 0.002); splash.receiveShadow = true; scene.add(splash);
+  const cordMat = new THREE.MeshStandardMaterial({ color: 0x3a332c, roughness: 0.9 });
+  const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.0017, 0.0017, 8, 6), cordMat);
+  cord.rotation.z = Math.PI / 2; cord.position.set(0, LINE_Y, HANG_Z); cord.castShadow = true; scene.add(cord);
+
+  // trays: developer, stop, fix
+  const LIQ = { uLampPos: { value: new V3() }, uLampCol: { value: new THREE.Color(1, 0.12, 0.05) }, uCeilPos: { value: new V3(0.3, 2.6, 0.9) }, uLight: { value: 0 }, uWallZ: { value: WALL_Z }, uTime: U.time };
+  const liquidVS = 'varying vec3 vW; varying vec2 vL; void main(){ vL = position.xz; vec4 w = modelMatrix * vec4(position, 1.); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }';
+  const liquidFS = `${RIPPLE}
+    uniform vec3 uLampPos, uLampCol, uTint, uCeilPos;
+    uniform float uLight, uWallZ, uOpacity;
+    uniform vec2 uHalf;
+    varying vec3 vW; varying vec2 vL;
+    void main(){
+      vec3 rp = ripple(vW.xz);
+      vec3 n = normalize(vec3(-rp.y, 1., -rp.z));
+      vec3 V = normalize(cameraPosition - vW);
+      float F = .02 + .98 * pow(1. - max(dot(n, V), 0.), 5.);
+      vec3 R = reflect(-V, n);
+      float s = max(dot(R, normalize(uLampPos - vW)), 0.);
+      vec3 refl = uLampCol * (pow(s, 1400.) * 70. + pow(s, 40.) * 1.6);
+      // the pool of red light the lamp throws on the wall, seen in the liquid
+      float tw = (uWallZ - vW.z) / min(R.z, -1e-3);
+      vec3 hw = vW + R * max(tw, 0.);
+      float dl = distance(hw, uLampPos);
+      refl += uLampCol * (1.8 * exp(-dl * dl * 2.) + .3) * (1. - uLight);
+      float c = max(dot(R, normalize(uCeilPos - vW)), 0.);
+      refl += vec3(1., .97, .92) * uLight * (pow(c, 400.) * 16. + pow(c, 10.) * .6 + .22);
+      // chemical sheen: a faint thin-film tint that follows the surface slope
+      float film = dot(rp.yz, vec2(2.4, 1.7)) + vL.x * 5. + vL.y * 3.;
+      vec3 sheen = .5 + .5 * cos(6.2832 * (film + vec3(0., .33, .67)));
+      refl *= mix(vec3(1.), sheen * 1.3, .15);
+      vec2 e = uHalf - abs(vL);
+      float edge = 1. - smoothstep(0., .018, min(e.x, e.y));
+      F = min(1., F + edge * .3);
+      vec3 body = uTint * (.02 + .3 * uLight);
+      float op = uOpacity * (1. - .45 * uLight);
+      gl_FragColor = vec4(body * op + refl * F, op + edge * .15);
+      #include <tonemapping_fragment>
+      #include <colorspace_fragment>
+    }`;
+  const trays = {};
+  const trayDefs = { dev: [0xe8e4dc, 'DEVELOPER', [0.55, 0.38, 0.16], 0.24], stop: [0x7a221c, 'STOP', [0.62, 0.55, 0.12], 0.2], fix: [0x5b6065, 'FIXER', [0.34, 0.4, 0.42], 0.16] };
+  for (const [k, [color, label, tint, op]] of Object.entries(trayDefs)) {
+    const group = makeTray(TW, TD, TH, color, 0.33, true);
+    const ripArr = Array.from({ length: 8 }, () => new THREE.Vector4(0, 0, -99, 0));
+    const lw = TW - 2 * WT - 0.002, ld = TD - 2 * WT - 0.002;
+    const lg = new THREE.ShapeGeometry(rr(lw, ld, 0.025), 6); lg.rotateX(-Math.PI / 2);
+    const mat = new THREE.ShaderMaterial({
+      uniforms: { ...LIQ, uRip: { value: ripArr }, uTint: { value: new THREE.Color(...tint) }, uOpacity: { value: op }, uHalf: { value: new THREE.Vector2(lw / 2, ld / 2) } },
+      vertexShader: liquidVS, fragmentShader: liquidFS, transparent: true, depthWrite: false, premultipliedAlpha: true,
+    });
+    const liquid = new THREE.Mesh(lg, mat); liquid.position.y = LIQ_Y; group.add(liquid);
+    const tag = dymo(label); tag.position.set(0, TH * 0.52, TD / 2 + 0.0035); group.add(tag);
+    scene.add(group);
+    trays[k] = { k, group, liquid, ripArr, ripI: 0, center: new V3() };
+    liquid.userData.tray = trays[k];
+  }
+  const liquids = Object.values(trays).map(t => t.liquid);
+
+  // the black paper box
+  const box = makeTray(PW + 0.07, PH + 0.07, 0.06, 0x141414, 0.8, false);
+  const boxTag = dymo('PAPER'); boxTag.position.set(0, 0.032, (PH + 0.07) / 2 + 0.0035); box.add(boxTag);
+  const stackMesh = new THREE.Mesh(new THREE.BoxGeometry(PW, 1, PH), new THREE.MeshStandardMaterial({ color: 0xf2f0ea, roughness: 0.85 }));
+  stackMesh.castShadow = stackMesh.receiveShadow = true; box.add(stackMesh);
+  scene.add(box);
+
+  // safelight lamp on the wall
+  const lamp = new THREE.Group();
+  const housingMat = new THREE.MeshStandardMaterial({ color: 0x3a3430, metalness: 0.35, roughness: 0.5 });
+  const housing = new THREE.Mesh(new THREE.BoxGeometry(0.27, 0.19, 0.13), housingMat);
+  const glassMat = new THREE.MeshStandardMaterial({ color: 0x1a0000, emissive: 0xff2408, emissiveIntensity: 4, roughness: 0.2 });
+  const glass = new THREE.Mesh(new THREE.PlaneGeometry(0.205, 0.13), glassMat); glass.position.z = 0.0655;
+  lamp.add(housing, glass); lamp.rotation.x = 0.55; scene.add(lamp);
+  const lampCord = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 1.2, 6), new THREE.MeshStandardMaterial({ color: 0x151515, roughness: 0.7 }));
+  const lampMount = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.07, 0.03), housingMat);
+  scene.add(lampCord, lampMount);
+
+  // darkroom timer: its sweep hand runs while a print develops
+  const faceTex = canvasTex(256, 256, (g, w) => {
+    g.fillStyle = '#0b0b0b'; g.beginPath(); g.arc(w / 2, w / 2, w / 2, 0, 7); g.fill();
+    g.strokeStyle = '#bfe9cc'; g.fillStyle = '#bfe9cc'; g.lineCap = 'round';
+    for (let i = 0; i < 60; i++) {
+      const a = i / 60 * Math.PI * 2, r0 = i % 5 ? 108 : 96;
+      g.lineWidth = i % 5 ? 2 : 5; g.beginPath();
+      g.moveTo(w / 2 + Math.sin(a) * r0, w / 2 - Math.cos(a) * r0); g.lineTo(w / 2 + Math.sin(a) * 118, w / 2 - Math.cos(a) * 118); g.stroke();
+    }
+    g.font = '600 30px "Barlow Condensed"'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    for (let i = 0; i < 12; i += 2) { const a = i / 12 * Math.PI * 2; g.fillText(String(i * 5), w / 2 + Math.sin(a) * 74, w / 2 - Math.cos(a) * 74); }
+  });
+  faceTex.colorSpace = THREE.SRGBColorSpace;
+  const timer = new THREE.Group();
+  const faceMat = new THREE.MeshStandardMaterial({ map: faceTex, emissiveMap: faceTex, emissive: 0x9dffc0, emissiveIntensity: 0.9, roughness: 0.3 });
+  const face = new THREE.Mesh(new THREE.CircleGeometry(0.085, 48), faceMat);
+  const bezel = new THREE.Mesh(new THREE.TorusGeometry(0.089, 0.007, 8, 48), new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.5, metalness: 0.4 }));
+  const handGeo = new THREE.BoxGeometry(0.003, 0.074, 0.002); handGeo.translate(0, 0.03, 0.004);
+  const hand = new THREE.Mesh(handGeo, new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xc8ffd8, emissiveIntensity: 1.2 }));
+  timer.add(face, bezel, hand); scene.add(timer);
+
+  // light switch
+  const sw = new THREE.Group();
+  const swPlate = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.12, 0.01), new THREE.MeshStandardMaterial({ color: 0xdcd5c7, roughness: 0.4, emissive: 0x2a1a14, emissiveIntensity: 0.6 }));
+  const swRocker = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.054, 0.018), new THREE.MeshStandardMaterial({ color: 0xece6da, roughness: 0.35, emissive: 0x2a1a14, emissiveIntensity: 0.6 }));
+  swRocker.position.z = 0.01;
+  // the little neon pilot lamp so the switch can be found in the dark
+  const pilot = new THREE.Mesh(new THREE.CircleGeometry(0.005, 16), new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xff8a2a, emissiveIntensity: 5 }));
+  pilot.position.set(0, -0.045, 0.0055);
+  sw.add(swPlate, swRocker, pilot); scene.add(sw);
+
+  // clothes pegs
+  const pegGeo = mergeGeometries([
+    new THREE.BoxGeometry(0.013, 0.078, 0.006).translate(0, 0, -0.0038),
+    new THREE.BoxGeometry(0.013, 0.078, 0.006).translate(0, 0, 0.0038),
+    new THREE.TorusGeometry(0.006, 0.0014, 6, 12).rotateY(Math.PI / 2).translate(0, 0.008, 0),
+  ]);
+  const pegMat = new THREE.MeshStandardMaterial({ color: 0xc19c6e, roughness: 0.75 });
+
+  // ---------- lights ----------
+  const key = new THREE.SpotLight(0xff3314, 8, 0, 0.85, 1, 1.4);
+  key.castShadow = true; key.shadow.mapSize.set(small ? 1024 : 2048, small ? 1024 : 2048);
+  key.shadow.bias = -0.0004; key.shadow.normalBias = 0.015; key.shadow.camera.near = 0.1; key.shadow.camera.far = 6;
+  scene.add(key, key.target);
+  // a shadowless wash over the drying line, so hanging prints stay readable under the safelight
+  const fill = new THREE.SpotLight(0xff2a10, 3, 0, 0.62, 1, 1.6);
+  scene.add(fill, fill.target);
+  const hemi = new THREE.HemisphereLight(0x2a0703, 0x000000, 0.4);
+  scene.add(hemi);
+  const CEIL = new V3(-0.45, 2.1, 0.45);
+  const PAL = {
+    keyS: new THREE.Color(0xff3314), keyW: new THREE.Color(0xf6f7ff),
+    skyS: new THREE.Color(0x3a0904), skyW: new THREE.Color(0xfbf8f2), gndS: new THREE.Color(0x000000), gndW: new THREE.Color(0x8a847c),
+    bgS: new THREE.Color(0x050202), bgW: new THREE.Color(0xd8d2c8),
+  };
+
+  // ---------- layout ----------
+  function layoutFor(aspect) {
+    if (aspect >= 1.05) return {
+      name: 'wide',
+      box: [-0.93, -0.3], dev: [-0.31, -0.28], stop: [0.3, -0.3], fix: [0.91, -0.3],
+      range: [-1.3, 1.3], lamp: [-0.95, 0.92], timer: [0.92, 0.9], sw: [1.18, 0.7],
+      cam: { target: [0, 0.3, -0.38], pitch: 0.74, fitW: 2.55, fitH: 1.9, fov: 34 },
+    };
+    return {
+      name: 'tall',
+      box: [-0.285, 0.15], dev: [0.285, 0.15], stop: [0.285, -0.33], fix: [-0.285, -0.33],
+      range: [-0.64, 0.64], lamp: [-0.4, 0.95], timer: [0.42, 0.93], sw: [0.6, 0.72],
+      cam: { target: [0, 0.28, -0.2], pitch: 0.84, fitW: 1.3, fitH: 2.3, fov: 50 },
+    };
+  }
+  let L = null, bench = null;
+  function fitDist(fitW, fitH) {
+    const vf = THREE.MathUtils.degToRad(camera.fov), hf = 2 * Math.atan(Math.tan(vf / 2) * camera.aspect);
+    return Math.max((fitW / 2) / Math.tan(hf / 2), (fitH / 2) / Math.tan(vf / 2));
+  }
+  function benchPose() {
+    const c = L.cam, t = new V3(...c.target), d = fitDist(c.fitW, c.fitH);
+    return { p: t.clone().add(new V3(0, Math.sin(c.pitch), Math.cos(c.pitch)).multiplyScalar(d)), t };
+  }
+  function linePose() {
+    const cy = LINE_Y - PH / 2 - 0.01, d = fitDist(PW * 1.2, PH * 1.9);
+    return { p: new V3(0, cy + 0.03, HANG_Z + d), t: new V3(0, cy, HANG_Z) };
+  }
+  const lampLight = new V3();
+  function applyLayout() {
+    L = layoutFor(camera.aspect);
+    camera.fov = L.cam.fov; camera.updateProjectionMatrix();
+    for (const k of ['dev', 'stop', 'fix']) {
+      const [x, z] = L[k]; trays[k].group.position.set(x, 0, z); trays[k].center.set(x, SUB_Y, z);
+    }
+    box.position.set(L.box[0], 0, L.box[1]);
+    lamp.position.set(L.lamp[0], L.lamp[1], WALL_Z + 0.13);
+    lampMount.position.set(L.lamp[0], L.lamp[1] + 0.03, WALL_Z + 0.015);
+    lampCord.position.set(L.lamp[0] + 0.1, L.lamp[1] + 0.66, WALL_Z + 0.01);
+    lampLight.set(L.lamp[0], L.lamp[1] - 0.08, WALL_Z + 0.3);
+    LIQ.uLampPos.value.copy(lampLight);
+    key.target.position.set((L.dev[0] + L.stop[0]) / 2, 0, (L.dev[1] + L.stop[1]) / 2 + 0.25);
+    fill.position.set(0, 1.25, 0.7); fill.target.position.set(0, LINE_Y - 0.2, WALL_Z);
+    timer.position.set(L.timer[0], L.timer[1], WALL_Z + 0.01);
+    sw.position.set(L.sw[0], L.sw[1], WALL_Z + 0.005);
+    bench = benchPose();
+    placeStack();
+    if (devSheet && devSheet.state !== 'toDev') setCenter(devSheet, trays.dev.center, devSheet.group.quaternion);
+    clampScroll(); scroll = scrollT;
+    snapCamera(mode === 'line' ? linePose() : bench);
+    applyLight(lightK);
+  }
+
+  // ---------- render loop, on demand ----------
+  const tweens = new Set();
+  const easeIO = k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+  function tween(ms, fn, ease = easeIO) {
+    return new Promise(res => {
+      if (still() || ms <= 0) { fn(1); wake(); res(); return; }
+      tweens.add({ t0: performance.now(), ms, fn, ease, res }); wake();
+    });
+  }
+  let raf = 0, activeUntil = 0, last = performance.now();
+  wake = (ms = 0) => {
+    activeUntil = Math.max(activeUntil, performance.now() + ms);
+    if (!raf && !document.hidden && !reading) { last = performance.now(); raf = requestAnimationFrame(frame); }
+  };
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(120); });
+  function frame(now) {
+    raf = 0;
+    const raw = Math.max(0, now - last) / 1000, dt = Math.min(0.05, raw); last = now;
+    U.time.value = clock();
+    for (const tw of [...tweens]) {
+      const k = clamp((performance.now() - tw.t0) / tw.ms, 0, 1);
+      tw.fn(tw.ease(k));
+      if (k >= 1) { tweens.delete(tw); tw.res(); }
+    }
+    let busy = tweens.size > 0 || !!(drag && drag.moved);
+    busy = develop(Math.min(0.4, raw)) || busy;
+    busy = updateLine(dt, now) || busy;
+    composer.render();
+    if (!document.hidden && !reading && (busy || performance.now() < activeUntil)) raf = requestAnimationFrame(frame);
+  }
+
+  let camTok = 0;
+  function snapCamera(pose) { camTok++; camera.position.copy(pose.p); camTarget.copy(pose.t); camera.lookAt(camTarget); wake(); }
+  function moveCamera(pose) {
+    const tok = ++camTok, p0 = camera.position.clone(), t0 = camTarget.clone();
+    return tween(950, k => {
+      if (tok !== camTok) return;
+      camera.position.lerpVectors(p0, pose.p, k); camTarget.lerpVectors(t0, pose.t, k); camera.lookAt(camTarget);
+    });
+  }
+
+  // ---------- light: safelight <-> room lights ----------
+  let lightK = theme === 'light' ? 1 : 0, themeTok = 0;
+  function applyLight(k) {
+    lightK = k;
+    key.color.copy(PAL.keyS).lerp(PAL.keyW, k);
+    key.intensity = lerp(5.5, 30, k);
+    key.angle = lerp(0.85, 1.0, k); key.penumbra = lerp(1, 0.75, k);
+    key.position.lerpVectors(lampLight, CEIL, k);
+    fill.intensity = lerp(3.2, 0, k);
+    for (const sh of sheets) if (sh.mat) sh.mat.envMapIntensity = lerp(0, 0.12, k);
+    hemi.color.copy(PAL.skyS).lerp(PAL.skyW, k); hemi.groundColor.copy(PAL.gndS).lerp(PAL.gndW, k);
+    hemi.intensity = lerp(0.28, 0.55, k);
+    scene.environmentIntensity = lerp(0.015, 0.45, k);
+    scene.background.copy(PAL.bgS).lerp(PAL.bgW, k);
+    glassMat.emissiveIntensity = lerp(2.4, 1.2, k);
+    faceMat.emissiveIntensity = lerp(0.8, 0.08, k);
+    LIQ.uLight.value = k;
+    LIQ.uLampCol.value.setRGB(1, 0.12, 0.05).multiplyScalar(lerp(1, 0.35, k));
+    bloom.strength = lerp(0.7, 0.2, k); bloom.threshold = lerp(0.42, 1.3, k);
+    finish.uniforms.uVig.value = lerp(0.62, 0.34, k);
+    renderer.toneMappingExposure = lerp(1.15, 1.0, k);
+    swRocker.rotation.x = k > 0.5 ? -0.32 : 0.32;
+    wake();
+  }
+  onTheme = async t => {
+    const tok = ++themeTok, to = t === 'light' ? 1 : 0, from = lightK;
+    if (still()) return applyLight(to);
+    if (to === 1) {
+      // a fluorescent tube catching: one stutter, then on
+      for (const [ms, v] of [[0, 0.8], [70, 0.12], [110, 1]]) { await sleep(ms); if (tok !== themeTok) return; applyLight(v); }
+    } else {
+      await tween(420, k => { if (tok === themeTok) applyLight(lerp(from, 0, k)); });
+    }
+  };
+
+  // ---------- ripples ----------
+  function addRipple(tray, x, z, amp) {
+    tray.ripArr[tray.ripI++ % 8].set(x, z, clock(), amp);
+    wake(4600);
+  }
+  let lastRip = 0;
+  function softRipple(tray, p, amp) {
+    const now = performance.now(); if (now - lastRip < 85) return; lastRip = now;
+    addRipple(tray, p.x, p.z, amp);
+  }
+
+  // ---------- the prints ----------
+  const sheets = sheetEls.map((el, i) => ({ el, i, kind: el.dataset.sheet, src: el.dataset.src || null, state: 'box', devK: 0 }));
+  let roleN = 0; for (const s of sheets) if (s.kind === 'role') s.roleN = roleN++;
+  const texScale = small ? 0.6 : (dpr > 1.4 ? 1 : 0.8);
+  const CW = 1280, CH = 1024;
+
+  function ensureMesh(sh) {
+    if (sh.group) return;
+    sh.mat = makePrintMaterial(sh.i * 7.31 + 3);
+    sh.mesh = new THREE.Mesh(printGeo, sh.mat);
+    sh.mesh.position.copy(HINGE).negate();
+    sh.mesh.castShadow = sh.mesh.receiveShadow = true;
+    sh.mesh.userData.sheet = sh;
+    sh.group = new THREE.Group(); sh.group.add(sh.mesh); scene.add(sh.group);
+  }
+  function setCenter(sh, c, q) {
+    sh.group.quaternion.copy(q);
+    sh.group.position.copy(HINGE).applyQuaternion(q).add(c);
+  }
+  const centerOf = sh => sh.group.position.clone().sub(HINGE.clone().applyQuaternion(sh.group.quaternion));
+  function flyTo(sh, to, q1, ms, arc = 0.12) {
+    const c0 = centerOf(sh), q0 = sh.group.quaternion.clone(), q = new Q(), a = new V3(), b = new V3();
+    return tween(ms, k => {
+      const c1 = typeof to === 'function' ? to() : to;
+      const mid = c0.clone().lerp(c1, 0.5); mid.y = Math.max(c0.y, c1.y) + arc;
+      a.lerpVectors(c0, mid, k); b.lerpVectors(mid, c1, k);
+      q.slerpQuaternions(q0, q1, k);
+      setCenter(sh, a.lerp(b, k), q);
+    });
+  }
+
+  function ensureTex(sh) {
+    ensureMesh(sh);
+    return sh.texP || (sh.texP = (async () => {
+      let img = null;
+      if (sh.src) { try { img = new Image(); img.src = sh.src; await img.decode(); } catch (e) { img = null; } }
+      let c = drawSheet(sh, img);
+      if (img) { try { c.getContext('2d').getImageData(0, 0, 1, 1); } catch (e) { c = drawSheet(sh, null); } }
+      const t = new THREE.CanvasTexture(c);
+      t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = aniso;
+      sh.tex = t; sh.mat.userData.u.uTex.value = t; wake();
+      return t;
+    })());
+  }
+
+  // ---------- typesetting the prints (canvas 2D) ----------
+  const q = (sh, s) => (sh.el.querySelector(s)?.textContent || '').replace(/\s+/g, ' ').trim();
+  function wrap(g, text, maxW) {
+    const out = []; let line = '';
+    for (const w of text.split(' ')) {
+      const t = line ? line + ' ' + w : w;
+      if (line && g.measureText(t).width > maxW) { out.push(line); line = w; } else line = t;
+    }
+    if (line) out.push(line);
+    return out;
+  }
+  function block(g, text, x, y, maxW, lh, maxLines = 99) {
+    const ls = wrap(g, text, maxW).slice(0, maxLines);
+    ls.forEach((l, i) => g.fillText(l, x, y + i * lh));
+    return y + ls.length * lh;
+  }
+  // shrink a font until the longest word fits and the text takes at most maxLines
+  function fit(g, text, font, size, maxW, maxLines) {
+    for (; size > 14; size -= 2) {
+      g.font = font(size);
+      const ls = wrap(g, text, maxW);
+      if (ls.length <= maxLines && ls.every(l => g.measureText(l).width <= maxW)) return { size, lines: ls };
+    }
+    g.font = font(size); return { size, lines: wrap(g, text, maxW) };
+  }
+  // The rough black edge of a filed-out negative carrier.
+  function filed(g, x, y, w, h, t, rnd) {
+    const j = () => (rnd() - 0.5) * 5 + (rnd() < 0.05 ? rnd() * 8 : 0);
+    const X0 = x - t, Y0 = y - t, X1 = x + w + t, Y1 = y + h + t;
+    g.fillStyle = '#050505'; g.beginPath(); g.moveTo(X0, Y0);
+    for (let p = X0; p <= X1; p += 12) g.lineTo(p, Y0 - Math.abs(j()));
+    for (let p = Y0; p <= Y1; p += 12) g.lineTo(X1 + Math.abs(j()), p);
+    for (let p = X1; p >= X0; p -= 12) g.lineTo(p, Y1 + Math.abs(j()));
+    for (let p = Y1; p >= Y0; p -= 12) g.lineTo(X0 - Math.abs(j()), p);
+    g.closePath(); g.fill();
+  }
+  function darkField(g, x, y, w, h) {
+    const gr = g.createRadialGradient(x + w * 0.42, y + h * 0.45, 40, x + w / 2, y + h / 2, w * 0.72);
+    gr.addColorStop(0, '#202020'); gr.addColorStop(1, '#060606');
+    g.fillStyle = gr; g.fillRect(x, y, w, h);
+  }
+  const S = (w, s) => `${w} ${s}px Spectral, Georgia, serif`;
+  const B = s => `600 ${s}px "Barlow Condensed", sans-serif`;
+
+  function drawSheet(sh, img) {
+    const c = document.createElement('canvas');
+    c.width = Math.round(CW * texScale); c.height = Math.round(CH * texScale);
+    const g = c.getContext('2d');
+    g.scale(texScale, texScale);
+    g.imageSmoothingQuality = 'high';
+    g.fillStyle = '#fff'; g.fillRect(0, 0, CW, CH);
+    g.textBaseline = 'alphabetic';
+    const rnd = mulberry(sh.i * 97 + 5);
+    ({ title: drawTitle, role: drawRole, shot: drawPhoto, scan: drawPhoto, papers: drawPapers, awards: drawAwards, email: drawEmail })[sh.kind](g, sh, rnd, img);
+    return c;
+  }
+  function drawTitle(g, sh, rnd) {
+    const x = 84, y = 78, w = CW - 168, h = CH - 250;
+    filed(g, x, y, w, h, 18, rnd); darkField(g, x, y, w, h);
+    g.fillStyle = '#f2f2f2';
+    g.font = S(200, 196); g.fillText('George', x + 78, y + h * 0.5);
+    g.font = S('italic 300', 196); g.fillText('Michoulis', x + 70, y + h * 0.5 + 190);
+    g.fillStyle = '#161616'; g.font = S('italic 300', 34);
+    g.fillText(q(sh, '.t-sub'), x - 4, CH - 92);
+  }
+  function drawRole(g, sh, rnd) {
+    const X = 60, Y = 92, W = CW - 120, H = 430;
+    g.fillStyle = '#171717'; g.fillRect(X, Y, W, H);
+    g.fillStyle = '#000';
+    for (let x = X + 16; x < X + W - 26; x += 46) {
+      g.beginPath(); g.roundRect(x, Y + 13, 25, 18, 4); g.roundRect(x, Y + H - 31, 25, 18, 4); g.fill();
+    }
+    const gap = 22, fy = Y + 64, fh = H - 128, fw = (W - 40 - gap * 2) / 3;
+    const cells = [[q(sh, '.org'), s => S(400, s), 54, 4], [q(sh, '.role'), s => S('italic 300', s), 50, 4], [q(sh, '.years'), s => S(200, s), 70, 3]];
+    cells.forEach(([text, font, size, maxL], j) => {
+      const fx = X + 20 + j * (fw + gap);
+      const gr = g.createRadialGradient(fx + fw / 2, fy + fh / 2, 20, fx + fw / 2, fy + fh / 2, fw * 0.75);
+      gr.addColorStop(0, '#ffffff'); gr.addColorStop(1, '#d6d6d6');
+      g.fillStyle = gr; g.beginPath(); g.roundRect(fx, fy, fw, fh, 6); g.fill();
+      const f = fit(g, text, font, size, fw - 60, maxL), lh = f.size * 1.12;
+      g.fillStyle = '#101010';
+      const top = fy + (fh - f.lines.length * lh) / 2 + f.size * 0.82;
+      f.lines.forEach((l, i) => g.fillText(l, fx + 30, top + i * lh));
+      const n = sh.roleN * 3 + j + 1;
+      g.fillStyle = '#cfcfcf'; g.font = B(20);
+      g.fillText(String(n), fx + 8, Y + H - 40); g.fillText(`${n}A`, fx + fw * 0.55, Y + H - 40);
+    });
+    g.fillStyle = '#141414'; g.font = S(400, 38);
+    block(g, q(sh, '.line'), X + 8, Y + H + 112, W - 60, 54, 3);
+  }
+  function drawPhoto(g, sh, rnd, img) {
+    const title = q(sh, 'h3'), desc = q(sh, 'p');
+    const ar = img ? img.naturalWidth / img.naturalHeight : 1.5;
+    if (ar >= 1.05) {
+      g.font = S('italic 300', 30);
+      const capL = wrap(g, desc, CW - 200).slice(0, 2);
+      const capH = 60 + capL.length * 40;
+      let w = CW - 190, h = w / ar; const maxH = CH - 130 - capH;
+      if (h > maxH) { h = maxH; w = h * ar; }
+      const x = (CW - w) / 2, y = Math.max(64, (CH - h - capH - 40) / 2);
+      filed(g, x, y, w, h, 15, rnd);
+      if (img) g.drawImage(img, x, y, w, h); else darkField(g, x, y, w, h);
+      g.fillStyle = '#121212'; g.font = S(600, 32); g.fillText(title, x - 2, y + h + 72);
+      g.font = S('italic 300', 30); capL.forEach((l, i) => g.fillText(l, x - 2, y + h + 118 + i * 40));
+    } else {
+      const h = CH - 150, w = h * ar, x = 92, y = 76;
+      filed(g, x, y, w, h, 15, rnd);
+      if (img) g.drawImage(img, x, y, w, h); else darkField(g, x, y, w, h);
+      const cx = x + w + 84, cw = CW - cx - 80;
+      g.fillStyle = '#121212';
+      const f = fit(g, title, s => S(400, s), 50, cw, 3);
+      f.lines.forEach((l, i) => g.fillText(l, cx, y + 140 + i * f.size * 1.15));
+      g.font = S('italic 300', 32);
+      block(g, desc, cx, y + 170 + f.lines.length * f.size * 1.15, cw, 44, 8);
+    }
+  }
+  function drawPapers(g, sh) {
+    g.fillStyle = '#111'; g.font = S(600, 40); g.fillText('Papers', 84, 112);
+    g.font = S('italic 300', 22); g.fillText('Titles, venues and Google Scholar citation counts', 250, 110);
+    g.fillRect(84, 136, CW - 168, 2);
+    const items = [...sh.el.querySelectorAll('li')];
+    const cols = [84, 676], cw = 520; let col = 0, y = 190;
+    for (const li of items) {
+      const t = li.querySelector('cite').textContent, v = li.querySelector('.venue')?.textContent;
+      const yr = li.dataset.year, n = +li.dataset.cites;
+      g.font = S(400, 24); const tl = wrap(g, t, cw);
+      g.font = S('italic 300', 21); const vl = v ? wrap(g, v, cw) : [];
+      const need = tl.length * 30 + vl.length * 27 + 34;
+      if (y + need > CH - 110 && col === 0) { col = 1; y = 190; }
+      const x = cols[col];
+      g.fillStyle = '#111'; g.font = S(400, 24); tl.forEach(l => { g.fillText(l, x, y); y += 30; });
+      g.fillStyle = '#2a2a2a'; g.font = S('italic 300', 21); vl.forEach(l => { g.fillText(l, x, y); y += 27; });
+      g.fillStyle = '#3a3a3a'; g.font = B(19); g.letterSpacing = '1px';
+      g.fillText(n ? `${yr} · cited ${n === 1 ? 'once' : n + ' times'}` : yr, x, y + 2); g.letterSpacing = '0px';
+      y += 44;
+    }
+    g.fillStyle = '#222'; g.font = S('italic 300', 21);
+    block(g, 'Also two Greek-language theses on verifying academic titles with Ethereum, from 2020 and 2021.', 84, CH - 64, CW - 168, 28, 2);
+  }
+  function drawAwards(g, sh) {
+    g.fillStyle = '#111'; g.font = S(600, 40); g.fillText('Awards', 104, 128);
+    g.fillRect(104, 152, CW - 208, 2);
+    let y = 250;
+    for (const li of sh.el.querySelectorAll('li')) {
+      const name = li.querySelector('b').textContent, rest = li.textContent.replace(name, '').replace(/^,\s*/, '');
+      g.fillStyle = '#111'; g.font = S(400, 50); g.fillText(name, 104, y);
+      g.fillStyle = '#2a2a2a'; g.font = S('italic 300', 32); g.fillText(rest, 106, y + 50);
+      y += 180;
+    }
+  }
+  function drawEmail(g, sh, rnd) {
+    const x = 84, y = 78, w = CW - 168, h = CH - 250;
+    filed(g, x, y, w, h, 18, rnd); darkField(g, x, y, w, h);
+    g.fillStyle = '#bdbdbd'; g.font = S('italic 300', 40); g.fillText('Write to me at', x + 80, y + h * 0.42);
+    const mail = q(sh, '.mailto');
+    const f = fit(g, mail, s => S(300, s), 104, w - 160, 1);
+    g.fillStyle = '#f4f4f4'; g.fillText(mail, x + 74, y + h * 0.42 + f.size * 1.2);
+    g.fillStyle = '#161616'; g.font = S('italic 300', 34); g.fillText(q(sh, '.place'), x - 4, CH - 92);
+  }
+
+  // ---------- state ----------
+  let nextIdx = 1, devSheet = null, stackTop = null, dropping = false, mode = 'bench', focusIdx = 0;
+  const line = [];
+  let scroll = 0, scrollT = 0;
+  const lineX0 = () => L.range[0] + PW / 2 + 0.05;
+  const lineX = slot => lineX0() + slot * SP - scroll;
+  const maxScroll = () => Math.max(0, lineX0() + (line.length - 1) * SP + PW / 2 + 0.05 - L.range[1]);
+  const hangCenter = slot => new V3(lineX(slot), LINE_Y - HINGE.y, HANG_Z);
+  function clampScroll() { if (mode === 'bench') scrollT = clamp(scrollT, 0, maxScroll()); }
+  const stackBase = 0.006, sheetT = 0.0017;
+  // the body of the stack is every sheet under the top one; the top sheet is a real print mesh
+  const below = () => Math.max(0, sheets.length - nextIdx - 1);
+  function placeStack() {
+    const h = 0.003 + below() * sheetT;
+    stackMesh.scale.y = h; stackMesh.position.y = stackBase + h / 2;
+    stackMesh.visible = below() > 0;
+    if (stackTop && stackTop.state === 'box') setCenter(stackTop, stackTopCenter(), stackTop.group.quaternion);
+  }
+  const stackTopCenter = () => new V3(L.box[0], stackBase + (below() ? 0.003 + below() * sheetT : 0) + 0.0012, L.box[1]);
+  function prepareStackTop() {
+    stackTop = nextIdx < sheets.length ? sheets[nextIdx] : null;
+    if (stackTop) { ensureMesh(stackTop); stackTop.state = 'box'; setCenter(stackTop, stackTopCenter(), qFlat((rnd0() - 0.5) * 0.04)); }
+    placeStack(); updateCount();
+  }
+  function updateCount() {
+    const n = sheets.length - nextIdx;
+    countEl.textContent = n ? `${n} ${n === 1 ? 'sheet' : 'sheets'} left in the box` : 'The box is empty';
+  }
+
+  const tapWord = coarse ? 'Tap' : 'Click';
+  const HINT = {
+    start: 'Each sheet in the black box is one part of my record. The first is already in the developer.',
+    dev: 'Developing. The blacks come up first.',
+    lift: `${tapWord} the print to lift it out. It goes through stop and fix, then onto the line.`,
+    next: `Drag the next sheet into the developer, or press Enter. ${tapWord} a print on the line to read it.`,
+    wrong: 'That tray comes later. Start in the developer, the white one.',
+    empty: `That was the last sheet. ${tapWord} a print on the line to read it.`,
+    line: 'Arrow keys or drag to move along the line. Esc takes you back to the bench.',
+  };
+  let hintKey = '';
+  function setHint(k) { if (hintKey === k) return; hintKey = k; hintEl.textContent = HINT[k]; }
+  function benchHint() {
+    if (mode === 'line') return setHint('line');
+    if (devSheet?.state === 'developed') return setHint('lift');
+    if (devSheet) return setHint(line.length ? 'dev' : 'start');
+    setHint(nextIdx < sheets.length ? (line.length ? 'next' : 'start') : 'empty');
+  }
+  const textOf = sh => sh.el.textContent.replace(/\s+/g, ' ').trim();
+  function announce(sh, prefix) {
+    liveEl.textContent = '';
+    setTimeout(() => { liveEl.textContent = `${prefix} ${textOf(sh)}`; }, 50);
+  }
+
+  // ---------- the process ----------
+  function landIn(sh, tray) {
+    const u = sh.mat.userData.u; u.uSub.value = 1; u.uRip.value = tray.ripArr; sh.tray = tray;
+    const c = centerOf(sh);
+    addRipple(tray, c.x, c.z, 0.006);
+    addRipple(tray, c.x + (rnd0() - 0.5) * PW * 0.8, c.z + (rnd0() - 0.5) * PH * 0.8, 0.0025);
+  }
+  function drip(tray, sh) {
+    const e = new V3(0, -PH / 2, 0).applyQuaternion(sh.group.quaternion).add(centerOf(sh));
+    addRipple(tray, e.x, e.z, 0.002);
+    setTimeout(() => addRipple(tray, e.x + 0.03, e.z, 0.0015), still() ? 0 : 170);
+  }
+  function startDev(sh) {
+    devSheet = sh; sh.state = 'developing'; sh.devK = still() ? 1 : 0; benchHint(); wake();
+  }
+  function develop(dt) {
+    const sh = devSheet;
+    if (!sh || sh.state !== 'developing' || !sh.tex) return false;
+    sh.devK = Math.min(1, sh.devK + dt * (sh.fast ? 2.6 : 1 / 2.7));
+    sh.mat.userData.u.uDev.value = sh.devK;
+    hand.rotation.z = -sh.devK * Math.PI * 2;
+    if (sh.devK >= 1) {
+      sh.state = 'developed'; benchHint(); announce(sh, 'Developed:');
+      if (sh.liftQueued) lift(sh);
+      const nx = sheets[nextIdx]; if (nx) ensureTex(nx);
+    }
+    return true;
+  }
+  function finishNow(sh) {
+    if (sh.state !== 'developing') return;
+    sh.devK = 1; sh.mat.userData.u.uDev.value = 1; sh.state = 'developed'; announce(sh, 'Developed:');
+  }
+  async function lift(sh) {
+    if (sh.state === 'developing') { sh.fast = true; sh.liftQueued = true; return; }
+    if (sh.state !== 'developed') return;
+    if (devSheet === sh) devSheet = null;
+    sh.state = 'lifting'; sh.slot = line.length; line.push(sh);
+    if (mode === 'bench') scrollT = maxScroll();
+    benchHint();
+    const u = sh.mat.userData.u, dev = trays.dev;
+    u.uSub.value = 0; sh.mat.roughness = 0.12;
+    await flyTo(sh, dev.center.clone().setY(0.2), Q_DRIP, 440, 0);
+    drip(dev, sh); await sleep(260);
+    for (const k of ['stop', 'fix']) {
+      const t = trays[k];
+      await flyTo(sh, t.center, qFlat((rnd0() - 0.5) * 0.06), 460, 0.1);
+      landIn(sh, t); await sleep(230);
+      u.uSub.value = 0;
+      await flyTo(sh, t.center.clone().setY(0.18), Q_DRIP, 320, 0);
+      drip(t, sh); await sleep(120);
+    }
+    await flyTo(sh, () => hangCenter(sh.slot), Q_HANG, 900, 0.16);
+    sh.state = 'hung'; sh.hungAt = performance.now(); sh.mat.userData.u.uCurl.value = 0.012;
+    if (!sh.pegs) {
+      sh.pegs = [-0.13, 0.13].map(x => { const p = new THREE.Mesh(pegGeo, pegMat); p.position.set(x, 0.06, 0); p.castShadow = true; sh.group.add(p); return p; });
+      tween(200, k => sh.pegs.forEach(p => { p.position.y = lerp(0.06, 0.0, k); }));
+    }
+    benchHint(); wake(4200);
+  }
+  async function dropIntoDev(sh) {
+    dropping = true;
+    if (sheets[nextIdx] === sh) nextIdx++;
+    stackTop = null; placeStack(); updateCount();
+    if (devSheet) { const old = devSheet; finishNow(old); lift(old); await sleep(300); }
+    devSheet = sh; sh.state = 'toDev';
+    ensureTex(sh);
+    await flyTo(sh, trays.dev.center, qFlat((rnd0() - 0.5) * 0.05), sh.dragged ? 420 : 700, sh.dragged ? 0.04 : 0.2);
+    landIn(sh, trays.dev); startDev(sh);
+    dropping = false;
+    prepareStackTop();
+  }
+  async function returnToStack(sh) {
+    sh.state = 'returning';
+    await flyTo(sh, stackTopCenter(), qFlat(0), 420, 0.05);
+    sh.state = 'box'; placeStack();
+  }
+  function step() {
+    if (mode === 'line') return exitLine();
+    if (devSheet && (devSheet.state === 'developing' || devSheet.state === 'developed')) return lift(devSheet);
+    if (!dropping && stackTop && stackTop.state === 'box') dropIntoDev(stackTop);
+  }
+
+  // ---------- the drying line ----------
+  function updateLine(dt, now) {
+    let busy = false;
+    const k = 1 - Math.exp(-dt * 9);
+    if (Math.abs(scrollT - scroll) > 1e-4) { scroll += (scrollT - scroll) * k; busy = true; } else scroll = scrollT;
+    for (const sh of line) {
+      if (sh.state !== 'hung') continue;
+      const t = (now - sh.hungAt) / 1000;
+      const sw = t < 4 && !still() ? Math.exp(-t * 1.7) : 0;
+      sh.group.position.set(lineX(sh.slot), LINE_Y, HANG_Z);
+      sh.group.quaternion.setFromEuler(new THREE.Euler(-0.1 * sw * Math.sin(t * 6.3), 0, 0.03 * sw * Math.sin(t * 4.1 + 1)));
+      if (t < 5) { sh.mat.roughness = lerp(0.12, 0.5, Math.min(1, t / 5)); busy = true; }
+      else sh.mat.roughness = 0.5;
+    }
+    return busy;
+  }
+  function enterLine(i) {
+    const hung = line.filter(s => s.state === 'hung');
+    if (!hung.length) return;
+    focusIdx = clamp(i, 0, line.length - 1);
+    if (line[focusIdx].state !== 'hung') focusIdx = hung[hung.length - 1].slot;
+    mode = 'line'; scrollT = lineX0() + focusIdx * SP;
+    moveCamera(linePose()); benchBtn.hidden = false; benchHint();
+    announce(line[focusIdx], 'On the line:');
+  }
+  function exitLine() {
+    if (mode !== 'line') return;
+    mode = 'bench'; clampScroll(); moveCamera(bench); benchBtn.hidden = true; benchHint();
+  }
+  function nudge(dir) {
+    if (!line.length) return;
+    if (mode === 'line') {
+      const n = clamp(focusIdx + dir, 0, line.length - 1);
+      if (n === focusIdx || line[n].state !== 'hung') return;
+      focusIdx = n; scrollT = lineX0() + n * SP; announce(line[n], 'On the line:');
+    } else { scrollT += dir * SP; clampScroll(); }
+    wake();
+  }
+  const centreSlot = () => clamp(Math.round((scroll - lineX0()) / SP), 0, Math.max(0, line.length - 1));
+  benchBtn.addEventListener('click', exitLine);
+
+  // ---------- pointer ----------
+  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+  const dragPlane = new THREE.Plane(new V3(0, 1, 0), -0.17), hitP = new V3();
+  function pick(e, list) {
+    const r = canvas.getBoundingClientRect();
+    ndc.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
+    ray.setFromCamera(ndc, camera);
+    return ray.intersectObjects(list, false)[0] || null;
+  }
+  function pickables() {
+    const a = [];
+    if (stackTop && stackTop.state === 'box' && !dropping) a.push(stackTop.mesh);
+    if (devSheet && (devSheet.state === 'developing' || devSheet.state === 'developed')) a.push(devSheet.mesh);
+    for (const s of line) if (s.state === 'hung') a.push(s.mesh);
+    a.push(swPlate, swRocker, ...liquids, wallMesh, benchMesh);
+    return a;
+  }
+  function worldPerPx() {
+    const d = camera.position.distanceTo(new V3(camera.position.x, LINE_Y, HANG_Z));
+    return 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * d / canvas.clientHeight;
+  }
+  let drag = null;
+  canvas.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    const h = pick(e, pickables()), o = h?.object;
+    drag = { id: e.pointerId, x0: e.clientX, y0: e.clientY, x: e.clientX, t0: performance.now(), moved: false, kind: 'none' };
+    if (o && stackTop && o === stackTop.mesh) { drag.kind = 'sheet'; drag.sh = stackTop; }
+    else if (o && devSheet && o === devSheet.mesh) drag.kind = 'dev';
+    else if (o?.userData.sheet) { drag.kind = 'line'; drag.sh = o.userData.sheet; }
+    else if (o === swPlate || o === swRocker) drag.kind = 'switch';
+    else if (o?.userData.tray) { drag.kind = 'stir'; drag.tray = o.userData.tray; addRipple(drag.tray, h.point.x, h.point.z, 0.004); }
+    else if (o === wallMesh) drag.kind = 'wall';
+    canvas.setPointerCapture(e.pointerId);
+    wake();
+  });
+  canvas.addEventListener('pointermove', e => {
+    if (drag && e.pointerId === drag.id) {
+      if (!drag.moved && Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) > 6) {
+        drag.moved = true;
+        if (drag.kind === 'sheet') { drag.sh.state = 'drag'; drag.sh.dragged = true; placeStack(); canvas.style.cursor = 'grabbing'; }
+      }
+      if (drag.moved) {
+        if (drag.kind === 'sheet') {
+          const r = canvas.getBoundingClientRect();
+          ndc.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
+          ray.setFromCamera(ndc, camera);
+          if (ray.ray.intersectPlane(dragPlane, hitP)) {
+            hitP.x = clamp(hitP.x, L.range[0] - 0.1, L.range[1] + 0.1); hitP.z = clamp(hitP.z, WALL_Z + 0.25, 0.75);
+            const vx = clamp((e.clientX - drag.x) * 0.01, -0.2, 0.2);
+            setCenter(drag.sh, hitP, new Q().setFromEuler(new THREE.Euler(-Math.PI / 2 + 0.05, vx * 0.4, -vx, 'YXZ')));
+          }
+        } else if (drag.kind === 'line' || drag.kind === 'wall') {
+          scrollT -= (e.clientX - drag.x) * worldPerPx();
+          if (mode === 'bench') clampScroll();
+        } else if (drag.kind === 'stir') {
+          const h = pick(e, [drag.tray.liquid]);
+          if (h) softRipple(drag.tray, h.point, 0.0026);
+        }
+      }
+      drag.x = e.clientX; wake();
+      return;
+    }
+    const h = pick(e, pickables()), o = h?.object;
+    let cur = 'default';
+    if (o && stackTop && o === stackTop.mesh) cur = 'grab';
+    else if (o?.userData.sheet || o === swPlate || o === swRocker) cur = 'pointer';
+    else if (o === wallMesh && line.length > 1) cur = 'ew-resize';
+    canvas.style.cursor = cur;
+    if (o?.userData.tray) softRipple(o.userData.tray, h.point, 0.0014);
+  });
+  function endDrag(e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    const d = drag; drag = null; canvas.style.cursor = 'default';
+    if (d.kind === 'sheet') {
+      if (!d.moved) { if (mode === 'bench') dropIntoDev(d.sh); }
+      else {
+        const c = centerOf(d.sh), over = t => Math.abs(c.x - t.group.position.x) < TW * 0.62 && Math.abs(c.z - t.group.position.z) < TD * 0.66;
+        if (over(trays.dev)) dropIntoDev(d.sh);
+        else { if (over(trays.stop) || over(trays.fix)) { setHint('wrong'); setTimeout(benchHint, 3200); } returnToStack(d.sh); }
+      }
+    } else if (!d.moved) {
+      if (d.kind === 'dev' && mode === 'bench') lift(devSheet);
+      else if (d.kind === 'line') mode === 'line' ? (focusIdx = d.sh.slot, scrollT = lineX0() + focusIdx * SP, announce(d.sh, 'On the line:')) : enterLine(d.sh.slot);
+      else if (d.kind === 'switch') setTheme(theme === 'light' ? 'dark' : 'light');
+      else if (mode === 'line') exitLine();
+    } else if (mode === 'line' && (d.kind === 'line' || d.kind === 'wall')) {
+      focusIdx = clamp(Math.round((scrollT - lineX0()) / SP), 0, line.length - 1);
+      scrollT = lineX0() + focusIdx * SP; announce(line[focusIdx], 'On the line:');
+    }
+    wake();
+  }
+  canvas.addEventListener('pointerup', endDrag);
+  canvas.addEventListener('pointercancel', e => {
+    if (drag?.kind === 'sheet' && drag.moved) returnToStack(drag.sh);
+    drag = null; wake();
+  });
+  let wheelAcc = 0;
+  canvas.addEventListener('wheel', e => {
+    if (!line.length) return;
+    e.preventDefault();
+    const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    if (mode === 'line') { wheelAcc += d; if (Math.abs(wheelAcc) > 80) { nudge(Math.sign(wheelAcc)); wheelAcc = 0; } }
+    else { scrollT += d * 0.0016; clampScroll(); wake(); }
+  }, { passive: false });
+
+  // ---------- keyboard ----------
+  addEventListener('keydown', e => {
+    if (reading) { if (e.key === 'Escape' && !document.body.classList.contains('nogl')) setReading(false); return; }
+    const onCtrl = e.target.closest?.('button, a');
+    if ((e.key === 'Enter' || e.key === ' ') && !onCtrl) { e.preventDefault(); step(); }
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); nudge(e.key === 'ArrowRight' ? 1 : -1); }
+    else if (e.key === 'ArrowUp' && !onCtrl && mode === 'bench' && line.length) { e.preventDefault(); enterLine(centreSlot()); }
+    else if ((e.key === 'ArrowDown' || e.key === 'Escape') && mode === 'line') { e.preventDefault(); exitLine(); }
+    wake();
+  });
+
+  // ---------- resize ----------
+  let layoutName = '';
+  function resize() {
+    const w = innerWidth, h = innerHeight;
+    renderer.setSize(w, h, false); composer.setSize(w, h);
+    finish.uniforms.uRes.value.set(w * dpr, h * dpr);
+    camera.aspect = w / h;
+    const next = layoutFor(camera.aspect).name;
+    if (next !== layoutName || !L) { layoutName = next; applyLayout(); }
+    else { camera.updateProjectionMatrix(); bench = benchPose(); snapCamera(mode === 'line' ? linePose() : bench); }
+    wake(60);
+  }
+  addEventListener('resize', resize);
+
+  // ---------- start: the title print is already in the developer ----------
+  resize();
+  applyLight(lightK);
+  const first = sheets[0];
+  ensureMesh(first);
+  setCenter(first, trays.dev.center, qFlat(0.02));
+  landIn(first, trays.dev);
+  startDev(first);
+  prepareStackTop();
+  benchHint();
+  glReady = true;
+  await ensureTex(first);
+  ensureTex(sheets[1]);
+  wake(300);
+  if (location.search.includes("debug")) window.__dr = { sheets, trays, U, addRipple, drawSheet, get dev() { return devSheet; }, get line() { return line; }, pick: (x, y) => pick({ clientX: x, clientY: y }, pickables())?.object };
+}
+</script>
+</body>
+</html>

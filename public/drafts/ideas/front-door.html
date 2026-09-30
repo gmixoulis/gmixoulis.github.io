@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Front door · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki. A playable CV first, with the plain CV one click away.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400..650;1,7..72,400&display=swap" rel="stylesheet">
+<script>if (matchMedia('(pointer: coarse), (max-width: 760px)').matches) document.documentElement.classList.add('no-play')</script>
+<style>
+:root{
+  color-scheme:light dark;
+  --wall:#efede8;--mat:#faf9f6;--ink:#1b1a18;--muted:#5a5751;--rule:#d2cec5;--accent:#b0341d;--bezel:#1b1a18;
+  --g:clamp(16px,4vw,56px);--m:clamp(10px,1.4vw,20px);
+}
+@media (prefers-color-scheme:dark){:root{
+  /* a screening room: the wall recedes, the screen sits in a black surround */
+  --wall:#191816;--mat:#0c0c0b;--ink:#ebe7df;--muted:#a8a399;--rule:#35322e;--accent:#f0806a;--bezel:#45423d;
+}}
+*{box-sizing:border-box}
+body{margin:0;padding:0 var(--g) 0;background:var(--wall);color:var(--ink);font:400 1.0625rem/1.55 Literata,Georgia,serif;font-optical-sizing:auto;-webkit-text-size-adjust:100%}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.2em;text-decoration-color:color-mix(in srgb,currentColor 45%,transparent)}
+a:hover{color:var(--accent);text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+kbd{font:inherit;font-size:.86em;padding:0 .36em;border:1px solid var(--rule);border-bottom-width:2px;border-radius:3px;background:var(--mat);color:var(--ink)}
+
+/* ---------- the room ---------- */
+.back{display:inline-block;margin-top:18px;font-size:.875rem;color:var(--muted);text-decoration:none}
+/* stacked: name above the screen; the screen is sized so it and its caption fit the viewport.
+   --room is shared by the door, the CV and the footer so their edges line up. */
+:root{--room:max(36rem,min(calc(1000px + 2*var(--m)),calc((100svh - 18.5rem)*1.5625 + 2*var(--m))))}
+.door-room,.cv,.foot{width:min(100%,var(--room));margin-inline:auto}
+.door-room{display:grid;grid-template-columns:minmax(0,1fr)}
+.intro{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:.6rem 2.5rem;padding:clamp(22px,4.5vh,52px) 0 clamp(16px,2.6vh,26px)}
+/* wide, short screens (most laptops): the name hangs beside the screen like a wall label */
+@media (min-width:1024px) and (min-aspect-ratio:8/5){
+  :root:not(.no-play){--gap:clamp(28px,3.6vw,64px);--room:calc(18.5rem + var(--gap) + min(calc(1000px + 2*var(--m)),calc((100svh - 7.5rem)*1.5625 + 2*var(--m))))}
+  html:not(.no-play) .door-room{grid-template-columns:18.5rem minmax(0,1fr);grid-template-rows:auto 1fr auto;column-gap:var(--gap);padding-top:clamp(16px,3vh,32px)}
+  html:not(.no-play) .intro{grid-column:1;grid-row:1;display:block;padding:0}
+  html:not(.no-play) .frame{grid-column:2;grid-row:1/4}
+  html:not(.no-play) .caption{grid-column:1;grid-row:3;flex-direction:column;margin:0}
+  html:not(.no-play) h1{font-size:clamp(2.7rem,3.7vw,3.9rem)}
+  html:not(.no-play) .line{margin-top:1.1rem}
+}
+h1{margin:0;font-size:clamp(2.45rem,4.6vw,4.2rem);font-weight:500;line-height:1;letter-spacing:-.028em}
+.line{margin:0;max-width:22rem;color:var(--muted);line-height:1.45}
+
+/* ---------- the screen on the wall ---------- */
+.frame{background:var(--mat);padding:var(--m);border:1px solid var(--rule)}
+.screen{position:relative;aspect-ratio:1000/640;overflow:hidden;outline:1px solid var(--bezel);background:color-mix(in srgb,var(--ink) 9%,var(--mat));container-type:inline-size}
+.screen iframe{position:absolute;left:0;top:0;width:1000px;height:640px;border:0;transform-origin:0 0;transform:scale(var(--s,1))}
+.poster{position:absolute;inset:0;z-index:1;cursor:pointer}
+/* the blind stops just below the game's grass line, so a strip of the world shows underneath */
+.blind{position:absolute;inset:0 0 18.5% 0;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);grid-template-rows:auto 1fr auto;column-gap:5cqw;padding:5cqw 5.5cqw 4cqw;background:var(--mat);border-bottom:3px solid var(--accent);cursor:auto}
+.blind h2{grid-column:1;margin:0;font-size:clamp(1.7rem,5.6cqw,3.5rem);font-weight:500;line-height:1;letter-spacing:-.025em}
+.desc{grid-column:1;margin:.9em 0 0;max-width:30em;font-size:clamp(1rem,1.9cqw,1.2rem);color:var(--muted)}
+.levels{grid-column:2;grid-row:1/3;margin:.3em 0 0;padding:0;list-style:none;font-size:clamp(.9rem,1.6cqw,1.05rem);counter-reset:l}
+.levels li{display:grid;grid-template-columns:1.6em 1fr;padding:.34em 0;border-top:1px solid var(--rule)}
+.levels li::before{counter-increment:l;content:counter(l);color:var(--muted);font-variant-numeric:lining-nums}
+.levels li.then::before{content:"";}
+.levels li.then{color:var(--muted);font-style:italic}
+.away{display:none;margin:.8em 0 0;color:var(--ink)}
+.doors{grid-column:1/-1;align-self:end;display:grid;grid-template-columns:1fr 1fr;gap:5cqw}
+.door{display:flex;flex-direction:column;gap:.35rem;padding:.8em 0 0;border:0;border-top:2px solid var(--ink);background:none;color:inherit;font:inherit;text-align:left;text-decoration:none;cursor:pointer}
+.door .big{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;font-size:clamp(1.3rem,3.2cqw,2.05rem);font-weight:500;line-height:1.1;letter-spacing:-.012em}
+.door .sub{font-size:clamp(.875rem,1.45cqw,.97rem);color:var(--muted)}
+.door:hover{border-top-color:var(--accent)}
+.door:hover .big{color:var(--accent)}
+.door:focus-visible{outline-offset:6px}
+.playing .poster{visibility:hidden;transition:visibility 0s .42s}
+.playing .blind{transform:translateY(-104%);transition:transform .42s cubic-bezier(.55,0,.2,1)}
+.caption{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.3rem 1.5rem;margin:.75rem 0 0;font-size:.9375rem;color:var(--muted)}
+.caption .how{color:var(--ink)}
+
+/* ---------- the plain CV ---------- */
+.cv{margin-top:clamp(80px,14vh,150px);scroll-margin-top:20px}
+.cv-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:.4rem 2rem;padding-bottom:.9rem;border-bottom:2px solid var(--ink)}
+.cv-head h2{margin:0;font-size:clamp(1.9rem,3.3vw,2.7rem);font-weight:500;letter-spacing:-.02em;line-height:1.1}
+.cv-head p{margin:0;color:var(--muted)}
+.cols{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:clamp(2rem,5.5vw,5rem);margin-top:2rem}
+.cv h3{margin:2.4rem 0 .7rem;font-size:1.2rem;font-weight:600;letter-spacing:-.005em}
+.cols>div>h3:first-child{margin-top:0}
+.cv ol,.cv ul{margin:0;padding:0;list-style:none}
+.cv p{margin:0}
+.now{font-size:1.15rem;line-height:1.5;max-width:36em}
+.yr,.n{font-variant-numeric:tabular-nums lining-nums}
+.entries li{padding:.7rem 0;border-top:1px solid var(--rule)}
+.entries li:first-child{border-top:0;padding-top:0}
+.hd{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+.hd b{font-weight:600}
+.yr{color:var(--muted);white-space:nowrap;font-size:.95rem}
+.what{color:var(--muted);font-size:.97rem;margin-top:.15rem!important;max-width:40em}
+.papers li{display:grid;grid-template-columns:2.4rem 1fr;gap:.2rem .6rem;padding:.6rem 0;border-top:1px solid var(--rule)}
+.papers li:first-child{border-top:0;padding-top:0}
+.papers .n{font-size:1.3rem;font-weight:500;line-height:1.2;text-align:right;padding-right:.2rem}
+.papers .v{display:block;color:var(--muted);font-size:.93rem}
+.note{color:var(--muted);font-size:.93rem;margin-top:.7rem!important}
+.side li{padding:.18rem 0}
+.side .yr{font-size:.93rem}
+.hosts a{font-variant-ligatures:none;letter-spacing:.005em}
+.certs{columns:3 15rem;column-gap:3rem;margin-top:.2rem;font-size:.94rem}
+.certs h4{margin:0 0 .35rem;font-size:1rem;font-weight:600;break-after:avoid}
+.certs ul+h4{margin-top:1.2rem}
+.certs li{padding:.12rem 0;break-inside:avoid}
+.certs a{text-decoration-color:color-mix(in srgb,currentColor 28%,transparent)}
+.foot{margin-top:clamp(64px,10vh,110px);padding:1.2rem 0 2.2rem;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.4rem 2rem;color:var(--muted);font-size:.93rem}
+.foot p{margin:0}
+
+@media (max-width:900px){.cols{grid-template-columns:1fr}.cols>div+div>h3:first-child{margin-top:2.4rem}}
+
+/* ---------- touch or narrow: the game needs a keyboard, so lead with the CV ---------- */
+.no-play .door-room{grid-template-columns:minmax(0,1fr)}
+.no-play .screen{aspect-ratio:auto}
+.no-play .poster{position:static;cursor:auto}
+.no-play .blind{position:static;display:block;padding:clamp(18px,5cqw,32px);border-bottom:0}
+.no-play .levels,.no-play #play,.no-play .caption{display:none}
+.no-play .away{display:block}
+.no-play .doors{display:block;margin-top:1.4rem}
+.no-play .cv{margin-top:clamp(40px,7vh,72px)}
+@media (max-width:760px){
+  .intro{padding-top:26px}
+  .line{max-width:none}
+  .hd{flex-direction:column;gap:0}
+}
+@media (prefers-reduced-motion:reduce){.playing .blind,.playing .poster{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="index.html">← All ideas</a>
+</header>
+
+<main>
+  <section class="door-room" aria-labelledby="lr">
+    <div class="intro">
+      <h1>George Michoulis</h1>
+      <p class="line">Blockchain developer and researcher in Thessaloniki. My CV is on this page twice: as a small game, and as plain text.</p>
+    </div>
+    <div class="frame">
+      <div class="screen" id="stage">
+        <template id="game"><iframe src="../../play/index.html" title="Ledger Run, a playable résumé"></iframe></template>
+        <div class="poster">
+          <div class="blind">
+            <h2 id="lr">Ledger Run</h2>
+            <p class="desc">My CV as a side-scrolling game. You walk right, and my work plays out as a city around you.</p>
+            <ol class="levels" aria-label="What you walk through">
+              <li>About me, past the White Tower</li>
+              <li>Skills, under the sea</li>
+              <li>Career</li>
+              <li>Education</li>
+              <li class="then">then a rocket, past the awards, up to a contact form</li>
+            </ol>
+            <p class="away">Best on a computer with a keyboard. <a href="../../play/index.html">Open it anyway</a></p>
+            <div class="doors">
+              <button class="door" id="play" type="button" aria-label="Play Ledger Run"><span class="big">Play <span aria-hidden="true">→</span></span><span class="sub">Hold <kbd>→</kbd> to walk, <kbd>↑</kbd> to jump</span></button>
+              <a class="door" href="#cv"><span class="big">Skip to the plain CV <span aria-hidden="true">↓</span></span><span class="sub">The same facts on one page</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="caption"><span class="how">Use <kbd>→</kbd> to walk. Or <a href="#cv">skip it</a>.</span><span>The engine is adapted from dokson’s colace.me.</span></p>
+    <p class="vh" role="status" id="status"></p>
+  </section>
+
+  <section class="cv" id="cv" aria-labelledby="cv-h">
+    <div class="cv-head">
+      <h2 id="cv-h">The plain CV</h2>
+      <p>Everything the game shows, without the walking.</p>
+    </div>
+    <div class="cols">
+      <div>
+        <h3>Now</h3>
+        <p class="now">Since May 2026 I’m a Web3 full-stack developer at Cyberscope by TAC. I build end-to-end Web3 products there: contracts, on-chain integrations, React and Next frontends, and security tooling. The quickest way to reach me is <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>.</p>
+
+        <h3>Work</h3>
+        <ol class="entries">
+          <li><p class="hd"><b>Web3 full-stack developer, Cyberscope by TAC</b><span class="yr">05/2026 – now</span></p><p class="what">End-to-end Web3 products, contracts, on-chain integrations, React/Next frontends, security tooling.</p></li>
+          <li><p class="hd"><b>Blockchain developer and researcher, Sidroco Holdings Ltd</b><span class="yr">2024 – 2026</span></p><p class="what">An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ LMS, and multinational EU projects.</p></li>
+          <li><p class="hd"><b>Lecturer and academic partner, University of Derby / Mediterranean College</b><span class="yr">2023 – 2025</span></p><p class="what">I taught Networks &amp; Security, Web Scripting and Application Development, with inclusivity-first assessment.</p></li>
+          <li><p class="hd"><b>Blockchain and full-stack developer, University of Nicosia / IFF</b><span class="yr">2022 – 2024</span></p><p class="what">Large Next.js, NestJS and Docker apps, and a Web3 NFT marketplace.</p></li>
+        </ol>
+
+        <h3>Education</h3>
+        <ol class="entries">
+          <li><p class="hd"><b>MSc Data and Web Science, Aristotle University of Thessaloniki</b><span class="yr">2020 – 2022</span></p><p class="what">Graph-embedding methods for blockchain fraud detection, funded by a DeepMind scholarship. <a href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg">Degree scan</a></p></li>
+          <li><p class="hd"><b>BSc Applied Informatics, University of Macedonia</b><span class="yr">2015 – 2020</span></p><p class="what">Thesis on verifying academic credentials with Ethereum. <a href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg">Degree scan</a></p></li>
+        </ol>
+
+        <h3>Most cited papers</h3>
+        <ol class="papers">
+          <li><span class="n">32<span class="vh"> citations</span></span><span>A process-aware approach for blockchain-based verification of academic qualifications<span class="v">Simulation Modelling Practice and Theory 121, 102642 · 2022</span></span></li>
+          <li><span class="n">11<span class="vh"> citations</span></span><span>Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe<span class="v">XIV Balkan Conference on Operational Research · 2020</span></span></li>
+          <li><span class="n">7<span class="vh"> citations</span></span><span>Exploring decentralized governance: a framework applied to Compound Finance<span class="v">Intl. Conf. on Mathematical Research for Blockchain Economy · 2023</span></span></li>
+          <li><span class="n">1<span class="vh"> citation</span></span><span>FraMark: a blockchain marketplace for 5G network management using fractional NFTs<span class="v">7th World Symposium on Communication Engineering (WSCE) · 2024</span></span></li>
+        </ol>
+        <p class="note">The numbers are Google Scholar citations. Four more papers and two Greek-language theses are on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">my Scholar profile</a>.</p>
+      </div>
+
+      <div class="side">
+        <h3>Contact</h3>
+        <ul>
+          <li><a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a></li>
+          <li><a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a></li>
+          <li><a href="https://github.com/gmixoulis">GitHub</a></li>
+          <li><a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a></li>
+          <li><a href="https://twitter.com/GeorgeMicou">X, @GeorgeMicou</a></li>
+        </ul>
+        <p class="note">Thessaloniki, Greece. I work remotely.</p>
+
+        <h3>Awards</h3>
+        <ul>
+          <li>DeepMind Scholarship, AUTH <span class="yr">2020 – 2022</span></li>
+          <li>3rd place, Infinitech Hackathon, Crowdpolicy <span class="yr">06/2022</span></li>
+          <li>Basic Research grant, University of Macedonia <span class="yr">2020 – 2021</span></li>
+          <li><a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png">Move/Sui Bootcamp Thessaloniki award</a> <span class="yr">2025</span></li>
+        </ul>
+
+        <h3>Projects</h3>
+        <ul class="hosts">
+          <li><a href="../../img/portfolio/verde.uom.gr.PNG">verde.uom.gr</a></li>
+          <li><a href="../../img/portfolio/accelerate.png">accelerate.unic.ac.cy</a> <span class="yr">staging</span></li>
+          <li><a href="../../img/portfolio/metau.unic.ac.cy.png">metau.unic.ac.cy</a></li>
+          <li><a href="../../img/portfolio/celc.web.auth.gr.PNG">celc.web.auth.gr</a></li>
+          <li><a href="../../img/portfolio/eudem.polsci.auth.gr.PNG">eudem.polsci.auth.gr</a></li>
+          <li><a href="../../img/portfolio/marlab.ode.uom.gr.PNG">marlab.ode.uom.gr</a></li>
+          <li><a href="../../img/portfolio/bbf-gui.ddns.net.gif">bbf-gui.ddns.net</a></li>
+        </ul>
+        <p class="note">Sites I built or worked on. Each links to a screenshot.</p>
+      </div>
+    </div>
+
+    <h3>Certificates</h3>
+    <div class="certs">
+      <h4>Courses</h4>
+      <ul>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png">Advanced ethical hacking</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg">CCNA, Cisco Certified Network Associate</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png">Cloud engineering</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg">Cybersecurity e-learning academy</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg">Digital skills for tourism</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Discover-Customer.jpg">Discover customer</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png">Entrepreneurship, funding and development of new enterprises</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg">European legal culture programme, AUTH</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg">How to design and build a website</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg">How to get published with IEEE</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg">Introduction to digital currencies</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg">Machine learning and deep neural networks</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png">Networking essentials</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg">NFT Talents Program</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png">Rust developer</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg">Software development for telecommunication networks</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_The-Hour-Of-Code.jpg">The Hour of Code</a></li>
+      </ul>
+      <h4>Talks, workshops and events</h4>
+      <ul>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg">Blockchain for the legal industry</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg">Blockchain in education, remote learning, social distancing</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg">Data analytics to strengthen healthcare cybersecurity</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_EY-Cyber-Day.jpg">EY Cyber Day</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg">GNU/Linux command line</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg">RippleX workshop launch event</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png">Marketing mix and brand</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg">Marine educational robotics, Hydrobot programme</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg">Processing data in the fog</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg">Skgcode: a real-estate chatbot</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg">VeChain ToolChain and healthcare</a></li>
+      </ul>
+      <h4>Language and other</h4>
+      <ul>
+        <li><a href="../../img/renamed/English-Certificate_English-Certificate-English-Proficiency.jpg">English proficiency</a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg">TOEIC listening and reading</a></li>
+        <li><a href="../../img/renamed/Award_Academic-Achievement.jpg">Academic achievement award</a></li>
+      </ul>
+    </div>
+    <p class="note">Each title links to the scan.</p>
+  </section>
+</main>
+
+<footer class="foot">
+  <p>George Michoulis · Thessaloniki · <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a></p>
+  <p>Also here: <a href="../../garden/">Zen Garden</a>, my notes · <a href="../../play/index.html">Ledger Run in its own window</a></p>
+</footer>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  if (root.classList.contains('no-play')) return;
+  const stage = document.getElementById('stage');
+  const poster = stage.querySelector('.poster');
+  stage.prepend(document.getElementById('game').content.cloneNode(true));
+  const game = stage.querySelector('iframe');
+  game.tabIndex = -1; // keep the game out of the tab order until someone asks for it
+  // 2px overscan: the game leaves a sub-pixel strip of its sky colour along the bottom edge when scaled
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', (e.contentRect.width + 2) / 1000)).observe(stage);
+  poster.addEventListener('click', e => {
+    // the Play button, or the strip of grass under the blind; clicks on the poster's text stay text clicks
+    if (!(e.target === poster || e.target.closest('#play')) || root.classList.contains('playing')) return;
+    root.classList.add('playing');
+    poster.inert = true;
+    game.removeAttribute('tabindex');
+    stage.scrollIntoView({ block: 'nearest' });
+    game.focus();
+    game.contentWindow.focus();
+    document.getElementById('status').textContent = 'Ledger Run is playing. Hold the right arrow to walk.';
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1315 @@
+<!doctype html>
+<html lang="en" class="nojs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Noren · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki. Part the cloth curtains of six doorways to walk through his degrees, jobs, papers and awards.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&family=Shippori+Mincho+B1:wght@800&family=Yuji+Syuku&display=swap" rel="stylesheet">
+<script>document.documentElement.className='js'</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<style>
+:root{--slip:#f3eee4;--sink:#1f1a15;--sink2:#51473c;--sline:rgba(31,26,21,.2);
+--paper:#f1ece1;--ink:#1f1a15;--ink2:#564b40;--link:#23365c;--line:rgba(31,26,21,.18);--focus:#b3740f}
+@media (prefers-color-scheme:dark){:root{--slip:#191b21;--sink:#ece6da;--sink2:#b9b0a2;--sline:rgba(236,230,218,.22);
+--paper:#14161b;--ink:#ece6da;--ink2:#b3aa9c;--link:#a9bde3;--line:rgba(236,230,218,.18);--focus:#e0a642}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#1c1713}
+body{font:400 16px/1.5 "Shippori Mincho",Georgia,serif;color:var(--ink);overflow:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* corners: small paper slips */
+.slip{background:var(--slip);color:var(--sink);border:1px solid var(--sline)}
+.tl{position:fixed;left:16px;top:14px;z-index:30;padding:5px 11px 7px}
+.back{display:block;font-size:12.5px;color:var(--sink2);text-decoration:none}
+.back:hover{text-decoration:underline}
+h1{margin:1px 0 0;font:700 16px/1.25 "Shippori Mincho",Georgia,serif;letter-spacing:.01em}
+.corner{position:fixed;right:16px;top:14px;z-index:30;display:flex;gap:8px;align-items:flex-start}
+.corner a,.corner button{display:block;padding:6px 11px 7px;font-size:14px;line-height:1.3}
+.corner a{text-decoration:none}
+.corner a:hover{text-decoration:underline}
+.corner button:hover{border-color:var(--sink)}
+
+#world{position:fixed;inset:0;overflow:hidden;touch-action:none}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none;-webkit-user-select:none}
+#veil{position:absolute;inset:0;background:#1c1713;opacity:0;pointer-events:none;transition:opacity .28s}
+#veil.on{opacity:1}
+
+/* the rooms' text, projected onto walls */
+#rooms{position:absolute;inset:0;pointer-events:none;z-index:1}
+.room{position:absolute;inset:0;visibility:hidden;opacity:0;transition:opacity .3s,visibility 0s .3s}
+.room.cur{visibility:visible;opacity:1;transition:opacity .8s .15s}
+.lb{position:absolute;left:0;top:0;transform-origin:0 0;color:#1d1813;font-size:12px;line-height:1.45;pointer-events:auto}
+.lb p{margin:0}
+.lb a{color:#1d1813}
+.lb:focus-visible{outline-offset:4px}
+.seal{display:block;width:17px;height:auto}
+.plate{writing-mode:vertical-rl;padding:12px 11px;color:#efe7d6;font:600 13px/1.75 "Shippori Mincho",serif;letter-spacing:.08em}
+.plate .s{font-weight:400;font-size:11.5px;margin-right:6px}
+.intro{padding:13px 15px 12px;font-size:12.5px;line-height:1.56}
+.intro p+p{margin-top:.55em}
+.intro .seal{display:inline-block;width:15px;vertical-align:-4px;margin-left:8px}
+.cap{padding:7px 10px 8px;font-size:11.5px;line-height:1.45}
+.cap .t{font-weight:700;font-size:13px;line-height:1.3;margin-bottom:2px}
+.cap button{margin-top:5px;padding:0;border:0;background:none;font-size:11.5px;text-decoration:underline;text-underline-offset:3px;color:#1d1813}
+.board{display:flex;flex-direction:column;align-items:center;padding:9px 0 11px;cursor:default}
+.board .yr{font-size:11px;letter-spacing:.03em;white-space:nowrap}
+.board .v{writing-mode:vertical-rl;flex:1;margin-top:10px;min-height:0}
+.board .role{font:700 15.5px/1.32 "Shippori Mincho",serif;letter-spacing:.03em}
+.board .org{font-size:11.5px;line-height:1.35;margin-right:7px}
+.more{position:absolute;left:0;top:calc(100% + 8px);width:max(100%,210px);padding:7px 9px 8px;background:#f5f0e6;border:1px solid rgba(29,24,19,.22);box-shadow:0 3px 14px rgba(0,0,0,.22);font-size:11.5px;line-height:1.45;writing-mode:horizontal-tb;opacity:0;visibility:hidden;transition:opacity .2s,visibility 0s .2s;z-index:3;pointer-events:none}
+.more cite{font-style:normal;font-weight:700}
+.lb:hover .more,.lb:focus-visible .more,.lb:focus-within .more{opacity:1;visibility:visible;transition:opacity .2s}
+.sc{display:flex;flex-direction:column;align-items:center;padding:9px 0 7px;cursor:default}
+.sc .v{writing-mode:vertical-rl;flex:1;min-height:0;font:700 14px/1.3 "Shippori Mincho",serif;letter-spacing:.04em}
+.sc .n{font-size:10.5px;line-height:1.25;text-align:center;margin-top:5px}
+.sc .n b{display:block;font-size:13px}
+.tag{padding:6px 8px 7px;font-size:10.5px;line-height:1.4}
+.tag .t{font-weight:700;font-size:11.5px;line-height:1.3;margin-bottom:2px}
+.mail{display:flex;align-items:center;justify-content:center;gap:12px}
+.mail a{font:400 31px/1 "Yuji Syuku","Shippori Mincho",serif;text-decoration:none;letter-spacing:.01em}
+.mail a:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:6px}
+.mail .seal{width:24px}
+a.tan{writing-mode:vertical-rl;display:flex;align-items:center;padding:12px 0;font:700 12.5px/1 "Shippori Mincho",serif;letter-spacing:.06em;text-decoration:none}
+a.tan:hover{text-decoration:underline;text-underline-offset:3px}
+.slipnote{padding:7px 10px 8px;font-size:11.5px;line-height:1.4}
+.slipnote a{font-weight:700;font-size:13px}
+
+/* hint + walking controls */
+.hint{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:5;margin:0;width:max-content;max-width:min(430px,calc(100vw - 32px));padding:9px 14px 10px;font-size:14.5px;line-height:1.45;transition:opacity .5s}
+.hint small{display:block;font-size:12.5px;color:var(--sink2);margin-top:2px}
+.hint.gone{opacity:0;pointer-events:none}
+.walk{position:fixed;right:16px;bottom:16px;z-index:6;display:flex;gap:8px}
+.walk button{padding:6px 11px 7px;font-size:13.5px;line-height:1.3}
+.walk button:hover{border-color:var(--sink)}
+.walk button[hidden]{display:none}
+
+/* read as text */
+#text{position:fixed;inset:0;z-index:20;overflow:auto;background:var(--paper);color:var(--ink);padding:104px 16px 90px;display:none;-webkit-overflow-scrolling:touch}
+#text:focus{outline:none}
+.reading #text,.nojs #text{display:block}
+.reading #world,.reading .walk,.reading .hint,.nojs #world,.nojs .walk,.nojs .hint,.nojs #tbtn,.noweb #tbtn{display:none}
+#text .in{max-width:40rem;margin:0 auto}
+#text h2{font:700 clamp(26px,4.4vw,34px)/1.15 "Shippori Mincho",serif;margin:0 0 .7em;letter-spacing:-.005em}
+#text h3{font:700 19px/1.3 "Shippori Mincho",serif;margin:2.2em 0 .6em;padding-top:.9em;border-top:1px solid var(--line)}
+#text p,#text li{font-size:16.5px;line-height:1.62}
+#text p{margin:0 0 .9em}
+#text ul{margin:0;padding:0;list-style:none}
+#text li{margin:0 0 .75em}
+#text a{color:var(--link);text-underline-offset:3px}
+#text .muted{color:var(--ink2)}
+#text .certs{columns:2 16rem;column-gap:2rem}
+#text .certs li{margin:0 0 .45em;font-size:15px;line-height:1.45;break-inside:avoid}
+#text .certs span{color:var(--ink2)}
+.noweb-note{display:none}
+.noweb .noweb-note,.nojs .noweb-note{display:block;color:var(--ink2);font-size:15px}
+
+/* phones: the room text docks into a paper sheet under the view */
+.docked #rooms{touch-action:pan-y;position:fixed;top:auto;left:0;right:0;bottom:0;max-height:43vh;overflow:auto;pointer-events:auto;background:#f3eee4;border-top:1px solid rgba(31,26,21,.25);-webkit-overflow-scrolling:touch}
+.docked .room{position:static;display:none;visibility:visible;opacity:1;transition:none}
+.docked .room.cur{display:block;padding:14px 16px 66px}
+.docked .lb{position:relative;transform:none!important;width:auto!important;height:auto!important;margin:0 0 12px;padding:0}
+.docked .plate,.docked .board .v,.docked .sc .v,.docked a.tan{writing-mode:horizontal-tb}
+.docked .plate,.docked .board,.docked .sc,.docked .mail{display:block}
+.docked .plate{font-size:15px;letter-spacing:0}
+.docked .board .v{margin:2px 0 0}
+.docked .board .role,.docked .sc .v{font-size:15px}
+.docked .board .org{margin:0}
+.docked .sc .n{text-align:left;margin:2px 0 0}
+.docked .sc .n b{display:inline;font-size:inherit}
+.docked .more{position:static;opacity:1;visibility:visible;width:auto;padding:3px 0 0;border:0;background:none;box-shadow:none;font-size:13px}
+.docked .intro,.docked .cap,.docked .tag,.docked .slipnote{font-size:14px}
+.docked .mail{justify-content:flex-start}
+.docked .mail a{font-size:26px}
+.docked a.tan{display:inline-block;margin:0 18px 12px 0;padding:0;font-size:15px;text-decoration:underline}
+.docked .hint{bottom:auto;top:96px}
+.docked .walk{bottom:12px;right:auto;left:16px}
+@media (max-width:560px){
+  .corner{flex-direction:column;align-items:flex-end;gap:6px}
+  .corner a,.corner button{font-size:13px;padding:5px 9px 6px}
+  .tl{padding:4px 9px 6px}
+  h1{font-size:15px}
+  #text{padding-top:118px}
+}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+<header class="tl slip">
+  <a class="back" href="index.html">← All ideas</a>
+  <h1>George Michoulis</h1>
+</header>
+<div class="corner">
+  <a class="slip" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+  <button class="slip" id="tbtn" type="button" aria-controls="text" aria-expanded="false">Read as text</button>
+</div>
+
+<main>
+<div id="world" aria-label="A house of six doorways">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div id="rooms">
+    <section class="room" data-room="0" aria-labelledby="r0">
+      <h2 id="r0" class="vh">Outside the door</h2>
+      <div class="lb plate" data-k="plate" data-l="1.64 2.14 0.44 1.3"><p>Blockchain developer</p><p>and researcher</p><p class="s">Thessaloniki, Greece</p></div>
+    </section>
+    <section class="room" data-room="1" aria-labelledby="r1">
+      <h2 id="r1" class="vh">Entrance</h2>
+      <div class="lb kake intro" data-k="kake" data-mg="0.075 0.24 0.13" data-l="-2.83 1.74 1.5 1.42">
+        <p>I live in Thessaloniki and work remotely. Since May 2026 I've built Web3 products at Cyberscope by TAC, from the contracts to the React front ends and security tooling.</p>
+        <p>As a researcher I test where a ledger is worth using: checking degrees, governing a lending protocol, trading 5G network slices. I've lectured on networks and security, and I give talks on Web3 and edge tech.<img class="seal" src="../../img/ink/parts/seal-ko.png" alt=""></p>
+      </div>
+    </section>
+    <section class="room" data-room="2" aria-labelledby="r2">
+      <h2 id="r2" class="vh">Study</h2>
+      <div class="lb cap" data-k="cap" data-l="-2.98 0.93 1.0"><p class="t">BSc Applied Informatics</p><p>University of Macedonia, 2015–2020. Thesis on verifying academic credentials with Ethereum.</p></div>
+      <div class="lb cap" data-k="cap" data-l="-1.82 0.93 1.0"><p class="t">MSc Data and Web Science</p><p>Aristotle University of Thessaloniki, 2020–2022. Graph-embedding methods for detecting blockchain fraud, on a DeepMind scholarship.</p></div>
+      <div class="lb cap" data-k="cap" data-l="-0.6 1.66 0.8"><p>30 more certificates on the chest, from a CCNA course to RippleX and VeChain workshops.</p><button type="button" data-target="t-certs">List them</button></div>
+    </section>
+    <section class="room" data-room="3" aria-labelledby="r3">
+      <h2 id="r3" class="vh">Work</h2>
+      <div class="lb board" data-k="board" data-age="0" data-l="-3.02 2.17 0.62 1.72" tabindex="0"><p class="yr">05/2026 –</p><div class="v"><p class="role">Web3 Full-Stack Developer</p><p class="org">Cyberscope by TAC</p></div><p class="more">End-to-end Web3 products, contracts, on-chain integrations, React and Next front ends, security tooling.</p></div>
+      <div class="lb board" data-k="board" data-age="1" data-l="-2.26 2.17 0.62 1.72" tabindex="0"><p class="yr">2024 – 2026</p><div class="v"><p class="role">Blockchain Developer &amp; Researcher</p><p class="org">Sidroco Holdings Ltd</p></div><p class="more">An NFT marketplace for 5G, Hyperledger Fabric prototypes and an Erasmus+ learning management system.</p></div>
+      <div class="lb board" data-k="board" data-age="2" data-l="-1.5 2.17 0.62 1.72" tabindex="0"><p class="yr">2023 – 2025</p><div class="v"><p class="role">Lecturer &amp; Academic Partner</p><p class="org">University of Derby / Mediterranean College</p></div><p class="more">Taught Networks and Security, Web Scripting and Application Development.</p></div>
+      <div class="lb board" data-k="board" data-age="3" data-l="-0.74 2.17 0.62 1.72" tabindex="0"><p class="yr">2022 – 2024</p><div class="v"><p class="role">Blockchain &amp; Full-Stack Developer</p><p class="org">University of Nicosia / IFF</p></div><p class="more">Next.js, NestJS and Docker apps, and a Web3 NFT marketplace.</p></div>
+    </section>
+    <section class="room" data-room="4" aria-labelledby="r4">
+      <h2 id="r4" class="vh">Papers</h2>
+      <div class="lb kake sc" data-k="kake" data-c="11" tabindex="0"><p class="v">VerDe</p><p class="n"><b>11</b>2020</p><p class="more"><cite>Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe.</cite> XIV Balkan Conference on Operational Research, 2020. Cited 11 times.</p></div>
+      <div class="lb kake sc" data-k="kake" data-c="32" tabindex="0"><p class="v">Process-aware verification</p><p class="n"><b>32</b>2022</p><p class="more"><cite>A process-aware approach for blockchain-based verification of academic qualifications.</cite> Simulation Modelling Practice and Theory 121, 102642, 2022. Cited 32 times.</p></div>
+      <div class="lb kake sc" data-k="kake" data-c="0" tabindex="0"><p class="v">Drug–target</p><p class="n"><b>0</b>2022</p><p class="more"><cite>Graph Embedding and Node Features for Drug-Target Interaction Prediction.</cite> Aristotle University of Thessaloniki, MSc work, 2022.</p></div>
+      <div class="lb kake sc" data-k="kake" data-c="0" tabindex="0"><p class="v">Higher education</p><p class="n"><b>0</b>2022</p><p class="more"><cite>Blockchain in Higher Education: permissioned and permissionless approaches.</cite> 4th Summit on Gender Equality in Computing, 2022.</p></div>
+      <div class="lb kake sc" data-k="kake" data-c="7" tabindex="0"><p class="v">Decentralized governance</p><p class="n"><b>7</b>2023</p><p class="more"><cite>Exploring decentralized governance: a framework applied to Compound Finance.</cite> Intl. Conf. on Mathematical Research for Blockchain Economy, 2023. Cited 7 times.</p></div>
+      <div class="lb kake sc" data-k="kake" data-c="1" tabindex="0"><p class="v">FraMark</p><p class="n"><b>1</b>2024</p><p class="more"><cite>FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs.</cite> 7th World Symposium on Communication Engineering (WSCE), 2024. Cited once.</p></div>
+      <div class="lb kake sc" data-k="kake" data-c="1" tabindex="0"><p class="v">Smart-city data</p><p class="n"><b>1</b>2025</p><p class="more"><cite>Data security for smart cities,</cite> 2025. Cited once.</p></div>
+      <div class="lb kake sc" data-k="kake" data-c="0" tabindex="0"><p class="v">5G slicing</p><p class="n"><b>0</b>2025</p><p class="more"><cite>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management.</cite> IEEE ICCE 2025.</p></div>
+      <div class="lb cap" data-k="cap" data-l="-0.43 0.9 1.15"><p>Each scroll's length follows its Google Scholar citation count, written at its foot.</p><p><a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Scholar profile</a></p></div>
+    </section>
+    <section class="room" data-room="5" aria-labelledby="r5">
+      <h2 id="r5" class="vh">Awards</h2>
+      <div class="lb tag" data-k="tag" data-l="-2.95 1.22 0.6"><p class="t">Academic achievement award</p><p>Greek Ministry of Education, 2015</p></div>
+      <div class="lb tag" data-k="tag" data-l="-2.25 1.22 0.6"><p class="t">Infinitech Hackathon, 3rd place</p><p>Crowdpolicy, June 2022</p></div>
+      <div class="lb tag" data-k="tag" data-l="-1.55 1.22 0.6"><p class="t">Move/Sui Bootcamp award</p><p>Thessaloniki, 2025</p></div>
+      <div class="lb tag" data-k="tag" data-l="-2.56 1.64 0.72"><p class="t">DeepMind Scholarship</p><p>Aristotle University of Thessaloniki, 2020–2022</p></div>
+      <div class="lb tag" data-k="tag" data-l="-1.56 1.64 0.72"><p class="t">Basic Research grant</p><p>University of Macedonia, 2020–2021</p></div>
+    </section>
+    <section class="room" data-room="6" aria-labelledby="r6">
+      <h2 id="r6" class="vh">Write</h2>
+      <div class="lb mail" data-k="mail" data-l="-3.0 2.12 2.2 0.56"><a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a><img class="seal" src="../../img/ink/parts/seal-ko.png" alt=""></div>
+      <a class="lb tan" data-k="tan" data-tint="0" data-l="-2.84 1.3 0.15 0.7" href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a>
+      <a class="lb tan" data-k="tan" data-tint="1" data-l="-2.52 1.3 0.15 0.7" href="https://github.com/gmixoulis">GitHub</a>
+      <a class="lb tan" data-k="tan" data-tint="2" data-l="-2.2 1.3 0.15 0.7" href="https://twitter.com/GeorgeMicou">X @GeorgeMicou</a>
+      <a class="lb tan" data-k="tan" data-tint="3" data-l="-1.88 1.3 0.15 0.7" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>
+      <div class="lb slipnote" data-k="cap" data-l="1.02 1.86 1.45 0 0.05"><a href="/garden/">Zen Garden</a><p>My notes.</p></div>
+      <div class="lb slipnote" data-k="cap" data-l="1.02 1.3 1.45 0 0.05"><a href="/play/">Ledger Run</a><p>My CV as a platformer game.</p></div>
+    </section>
+  </div>
+  <div id="veil" aria-hidden="true"></div>
+</div>
+
+<p class="hint slip gone" id="hint">A noren is the split cloth that hangs in a Japanese shop door. Drag across it to part it and walk in.<small>Or click it, or press Enter. Use the arrow keys or scroll to move between rooms.</small></p>
+<nav class="walk" aria-label="Walk between rooms">
+  <button class="slip" id="prev" type="button" hidden>←</button>
+  <button class="slip" id="next" type="button" hidden>→</button>
+</nav>
+<p class="vh" id="live" aria-live="polite"></p>
+
+<article id="text" tabindex="-1" aria-labelledby="th">
+<div class="in">
+  <p class="noweb-note">This page is a walk through six curtained doorways drawn with WebGL, which this browser can't show. Everything in the rooms is here as text.</p>
+  <h2 id="th">George Michoulis</h2>
+  <p>Blockchain developer and researcher in Thessaloniki, Greece. I work remotely.</p>
+  <p>Since May 2026 I've built Web3 products at Cyberscope by TAC, from the contracts to the React front ends and security tooling. As a researcher I test where a ledger is worth using: checking degrees, governing a lending protocol, trading 5G network slices. I've lectured on networks, security and application development, and I give talks on Web3 and edge tech.</p>
+  <p>Email me at <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>.</p>
+
+  <h3>Jobs</h3>
+  <ul>
+    <li><strong>Cyberscope by TAC</strong>, Web3 full-stack developer, since May 2026. End-to-end Web3 products, contracts, on-chain integrations, React and Next front ends, security tooling.</li>
+    <li><strong>Sidroco Holdings Ltd</strong>, blockchain developer and researcher, 2024 to 2026. An NFT marketplace for 5G, Hyperledger Fabric prototypes and an Erasmus+ learning management system.</li>
+    <li><strong>University of Derby / Mediterranean College</strong>, lecturer and academic partner, 2023 to 2025. I taught Networks and Security, Web Scripting and Application Development.</li>
+    <li><strong>University of Nicosia / IFF</strong>, blockchain and full-stack developer, 2022 to 2024. Next.js, NestJS and Docker apps, and a Web3 NFT marketplace.</li>
+  </ul>
+
+  <h3>Degrees</h3>
+  <ul>
+    <li><strong>BSc Applied Informatics</strong>, University of Macedonia, 2015 to 2020. My thesis was on verifying academic credentials with Ethereum.</li>
+    <li><strong>MSc Data and Web Science</strong>, Aristotle University of Thessaloniki, 2020 to 2022. Graph-embedding methods for detecting blockchain fraud, funded by a DeepMind scholarship.</li>
+  </ul>
+
+  <h3>Papers</h3>
+  <ul>
+    <li>A process-aware approach for blockchain-based verification of academic qualifications. <span class="muted">Simulation Modelling Practice and Theory 121, 102642, 2022. Cited 32 times.</span></li>
+    <li>Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe. <span class="muted">XIV Balkan Conference on Operational Research, 2020. Cited 11 times.</span></li>
+    <li>Exploring decentralized governance: a framework applied to Compound Finance. <span class="muted">Intl. Conf. on Mathematical Research for Blockchain Economy, 2023. Cited 7 times.</span></li>
+    <li>FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs. <span class="muted">7th World Symposium on Communication Engineering (WSCE), 2024. Cited once.</span></li>
+    <li>Data security for smart cities. <span class="muted">2025. Cited once.</span></li>
+    <li>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management. <span class="muted">IEEE ICCE 2025.</span></li>
+    <li>Graph Embedding and Node Features for Drug-Target Interaction Prediction. <span class="muted">Aristotle University of Thessaloniki, MSc work, 2022.</span></li>
+    <li>Blockchain in Higher Education: permissioned and permissionless approaches. <span class="muted">4th Summit on Gender Equality in Computing, 2022.</span></li>
+    <li>Two Greek-language theses on verifying academic titles with Ethereum. <span class="muted">2020 and 2021.</span></li>
+  </ul>
+  <p><a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar profile</a></p>
+
+  <h3>Awards</h3>
+  <ul>
+    <li><strong>DeepMind Scholarship</strong>, Aristotle University of Thessaloniki, 2020 to 2022.</li>
+    <li><strong>Infinitech Hackathon</strong>, 3rd place, Crowdpolicy, June 2022.</li>
+    <li><strong>Basic Research grant</strong>, University of Macedonia, 2020 to 2021.</li>
+    <li><strong>Move/Sui Bootcamp award</strong>, Thessaloniki, 2025.</li>
+    <li><strong>Academic achievement award</strong>, Greek Ministry of Education, 2015.</li>
+  </ul>
+
+  <h3 id="t-certs" tabindex="-1">Certificates</h3>
+  <ul class="certs">
+    <li>Advanced ethical hacking <span>· completion</span></li>
+    <li>European legal culture program, Aristotle University of Thessaloniki <span>· completion</span></li>
+    <li>CCNA, Cisco Certified Network Associate <span>· completion</span></li>
+    <li>Cloud engineering <span>· completion</span></li>
+    <li>Cybersecurity e-learning academy <span>· completion</span></li>
+    <li>Digital skills for tourism <span>· completion</span></li>
+    <li>Discover customer <span>· completion</span></li>
+    <li>Entrepreneurship, funding and development of new enterprises <span>· completion</span></li>
+    <li>How to design and build a website <span>· completion</span></li>
+    <li>How to get published with IEEE <span>· completion</span></li>
+    <li>Machine learning and deep neural networks <span>· completion</span></li>
+    <li>NFT Talents program <span>· completion</span></li>
+    <li>Networking essentials <span>· completion</span></li>
+    <li>Rust developer <span>· completion</span></li>
+    <li>Software development for telecommunication networks <span>· completion</span></li>
+    <li>The Hour of Code <span>· completion</span></li>
+    <li>Introduction to digital currencies <span>· achievement</span></li>
+    <li>TOEIC listening and reading test <span>· achievement</span></li>
+    <li>English proficiency <span>· certificate</span></li>
+    <li>Blockchain for the legal industry… <span>· participation</span></li>
+    <li>Blockchain in education, remote learning, social distancing… <span>· participation</span></li>
+    <li>Data analytics to strengthen healthcare cybersecurity <span>· participation</span></li>
+    <li>EY Cyber Day <span>· participation</span></li>
+    <li>GNU/Linux command line <span>· participation</span></li>
+    <li>RippleX workshop launch event <span>· participation</span></li>
+    <li>Migma marketing kai brand <span>· participation</span></li>
+    <li>Marine educational robotics, Hydrobot program <span>· participation</span></li>
+    <li>Processing data in the fog… <span>· participation</span></li>
+    <li>SKGcode project, a real estate chatbot <span>· participation</span></li>
+    <li>VeChain ToolChain, digital transformation of the healthcare industry <span>· participation</span></li>
+  </ul>
+
+  <h3>Elsewhere</h3>
+  <ul>
+    <li><a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a>, <a href="https://github.com/gmixoulis">GitHub</a>, <a href="https://twitter.com/GeorgeMicou">X (@GeorgeMicou)</a> and <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</li>
+    <li><a href="/garden/">Zen Garden</a>, the notes I keep on this site.</li>
+    <li><a href="/play/">Ledger Run</a>, my CV as a platformer.</li>
+  </ul>
+</div>
+</article>
+</main>
+
+<script type="module">
+const $ = s => document.querySelector(s);
+const html = document.documentElement, textEl = $('#text'), tbtn = $('#tbtn'), world = $('#world');
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const NAMES = ['the street', 'the entrance', 'Study', 'Work', 'Papers', 'Awards', 'Write'];
+const SLUGS = ['', 'entrance', 'study', 'work', 'papers', 'awards', 'write'];
+let reading = false, onResume = () => {};
+
+function openText(open, target) {
+  reading = open;
+  html.classList.toggle('reading', open);
+  tbtn.setAttribute('aria-expanded', String(open));
+  tbtn.textContent = open ? 'Back to the house' : 'Read as text';
+  world.inert = open;
+  if (open) {
+    const t = target && document.getElementById(target);
+    if (t) { t.scrollIntoView({ block: 'start' }); t.focus({ preventScroll: true }); }
+    else { textEl.scrollTop = 0; textEl.focus({ preventScroll: true }); }
+  } else onResume();
+}
+tbtn.addEventListener('click', () => openText(!reading));
+document.addEventListener('click', e => { const b = e.target.closest('[data-target]'); if (b) openText(true, b.dataset.target); });
+function noWorld() { html.classList.add('noweb'); openText(true); }
+
+main();
+
+async function main() {
+  const gl2 = (() => { try { return !!document.createElement('canvas').getContext('webgl2'); } catch (e) { return false; } })();
+  if (!gl2) return noWorld();
+  let THREE, RALib, RoomEnvironment;
+  try {
+    const m = await Promise.all([import('three'), import('three/addons/lights/RectAreaLightUniformsLib.js'), import('three/addons/environments/RoomEnvironment.js')]);
+    THREE = m[0]; RALib = m[1].RectAreaLightUniformsLib; RoomEnvironment = m[2].RoomEnvironment;
+  } catch (e) { return noWorld(); }
+
+  const canvas = $('#gl');
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' }); }
+  catch (e) { return noWorld(); }
+
+  const SMALL = Math.min(innerWidth, innerHeight) < 700 || matchMedia('(pointer:coarse)').matches;
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, SMALL ? 1.5 : 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.NeutralToneMapping;
+  renderer.toneMappingExposure = 1.0;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.autoUpdate = false;
+  const ANISO = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+
+  // Wait for the dye faces: the lettering is painted into the cloth once, so the font must be there first.
+  await Promise.race([
+    Promise.all([
+      document.fonts.load('800 100px "Shippori Mincho B1"', 'GeorgeMichoulisStudyWorkPapersAwardsWrite'),
+      document.fonts.load('600 80px "Shippori Mincho"', '縁'),
+      document.fonts.load('400 30px "Yuji Syuku"', 'gmixoulis@gmail.com'),
+      document.fonts.load('700 16px "Shippori Mincho"', 'Aa'),
+    ]),
+    new Promise(r => setTimeout(r, 5000)),
+  ]).catch(() => {});
+
+  // ---------- world constants (metres) ----------
+  const L = 7.2, W = 6.4, HR = 3.0, WT = 0.14, DX = 1.75, DW = 1.9, DH = 2.2, EYE = 1.35, BASE = 180;
+  const zWall = s => -s * L, zFace = s => -s * L + WT / 2;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color('#1c1713');
+  const FOG = [9, 30];
+  scene.fog = new THREE.Fog('#1c1713', FOG[0], FOG[1]);
+  const camera = new THREE.PerspectiveCamera(44, innerWidth / innerHeight, 0.05, 60);
+
+  const pm = new THREE.PMREMGenerator(renderer);
+  scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
+  scene.environmentIntensity = 0.32;
+
+  const hemi = new THREE.HemisphereLight('#fff3e2', '#6b5842', 0.55);
+  scene.add(hemi);
+  const sun = new THREE.DirectionalLight('#ffe4c2', 0);
+  sun.position.set(-8.4, 4.3, 7.4); sun.target.position.set(0, 1, 0);
+  sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, { left: -8, right: 8, top: 5, bottom: -5, near: 1, far: 30 });
+  sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.02;
+  scene.add(sun, sun.target);
+  RALib.init();
+  const AREA_I = 7.5;
+  const areas = [0, 1, 2, 3].map(() => { const a = new THREE.RectAreaLight('#fff1dc', 0, 3.6, 1.65); scene.add(a); return a; });
+
+  // ---------- procedural textures ----------
+  const rng = seed => { let s = (seed * 2654435761) >>> 0 || 1; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; };
+  const cnv = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d', { willReadFrequently: true })]; };
+  const ctex = (c, srgb = true, rep = true) => {
+    const t = new THREE.CanvasTexture(c);
+    if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+    if (rep) t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.anisotropy = ANISO; return t;
+  };
+  const grain = (g, w, h, amt, r) => { const d = g.getImageData(0, 0, w, h), a = d.data; for (let i = 0; i < a.length; i += 4) { const n = (r() - .5) * amt; a[i] += n; a[i + 1] += n; a[i + 2] += n; } g.putImageData(d, 0, 0); };
+
+  function woodTex(base, dark, seed, planks = 0) {
+    const [c, g] = cnv(512, 512), r = rng(seed);
+    g.fillStyle = base; g.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 18; i++) { g.fillStyle = `rgba(${dark},${.03 + r() * .07})`; g.fillRect(r() * 512, 0, 8 + r() * 50, 512); }
+    for (let i = 0; i < 130; i++) {
+      const x0 = r() * 512, a = 1.5 + r() * 7, f = (1 + Math.floor(r() * 3)) * Math.PI * 2 / 512, ph = r() * 6.3;
+      g.strokeStyle = `rgba(${dark},${.05 + r() * .2})`; g.lineWidth = .4 + r() * 1.3; g.beginPath();
+      for (let y = 0; y <= 512; y += 8) { const x = x0 + a * Math.sin(y * f + ph); y ? g.lineTo(x, y) : g.moveTo(x, y); }
+      g.stroke();
+    }
+    if (planks) for (let k = 0; k < planks; k++) { const x = k * 512 / planks; g.fillStyle = `rgba(${dark},.6)`; g.fillRect(x, 0, 2.5, 512); g.fillStyle = 'rgba(255,240,220,.06)'; g.fillRect(x + 2.5, 0, 2, 512); }
+    grain(g, 512, 512, 9, r);
+    return ctex(c);
+  }
+  function plasterTex() {
+    const [c, g] = cnv(512, 512), r = rng(3);
+    g.fillStyle = '#d8cbb1'; g.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 70; i++) {
+      const x = r() * 512, y = r() * 512, rad = 20 + r() * 90, gr = g.createRadialGradient(x, y, 0, x, y, rad);
+      gr.addColorStop(0, `rgba(${r() < .5 ? '120,98,66' : '255,250,238'},${.04 * r()})`); gr.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = gr; g.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+    }
+    for (let i = 0; i < 9000; i++) { g.fillStyle = `rgba(${r() < .55 ? '96,74,48' : '255,252,244'},${.05 + r() * .12})`; g.fillRect(r() * 512, r() * 512, 1 + r() * 1.4, 1 + r() * 1.4); }
+    return ctex(c);
+  }
+  function washiTex(base = '#f2ede1', seed = 5) {
+    const [c, g] = cnv(256, 256), r = rng(seed);
+    g.fillStyle = base; g.fillRect(0, 0, 256, 256);
+    for (let i = 0; i < 260; i++) {
+      g.strokeStyle = `rgba(${r() < .5 ? '170,150,120' : '255,255,250'},${.12 + r() * .2})`; g.lineWidth = .5 + r() * .7;
+      const x = r() * 256, y = r() * 256, a = r() * 6.3, l = 4 + r() * 16;
+      g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + Math.cos(a) * l * .5 + r() * 4, y + Math.sin(a) * l * .5 + r() * 4, x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
+    }
+    grain(g, 256, 256, 7, r);
+    return ctex(c);
+  }
+  function stoneTex() {
+    const [c, g] = cnv(512, 512), r = rng(9);
+    g.fillStyle = '#34312d'; g.fillRect(0, 0, 512, 512);
+    let y = 0;
+    while (y < 512) {
+      const h = 60 + r() * 70; let x = -r() * 80;
+      while (x < 512) {
+        const w = 70 + r() * 120, v = 110 + r() * 40;
+        g.fillStyle = `rgb(${v},${v - 4},${v - 10})`;
+        g.beginPath(); g.roundRect(x + 3, y + 3, w - 6, Math.min(h, 512 - y) - 6, 6); g.fill();
+        if (x + w > 512) { g.beginPath(); g.roundRect(x + 3 - 512, y + 3, w - 6, Math.min(h, 512 - y) - 6, 6); g.fill(); }
+        x += w;
+      }
+      y += h;
+    }
+    for (let i = 0; i < 6000; i++) { g.fillStyle = `rgba(${r() < .5 ? '20,18,16' : '230,225,215'},${.06 + r() * .1})`; g.fillRect(r() * 512, r() * 512, 1 + r() * 2, 1 + r() * 2); }
+    grain(g, 512, 512, 14, r);
+    return ctex(c);
+  }
+  function brocadeTex() {
+    const [c, g] = cnv(128, 128), r = rng(21);
+    g.fillStyle = '#bdbdbd'; g.fillRect(0, 0, 128, 128);
+    g.strokeStyle = 'rgba(255,255,255,.22)'; g.lineWidth = 1;
+    for (let i = -128; i < 256; i += 16) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i + 128, 128); g.stroke(); g.beginPath(); g.moveTo(i + 128, 0); g.lineTo(i, 128); g.stroke(); }
+    for (let i = 0; i < 128; i += 2) { g.fillStyle = 'rgba(0,0,0,.05)'; g.fillRect(0, i, 128, 1); }
+    grain(g, 128, 128, 16, r);
+    return ctex(c);
+  }
+  function softShadowTex() {
+    const [c, g] = cnv(128, 128);
+    g.filter = 'blur(9px)'; g.fillStyle = '#000'; g.fillRect(22, 22, 84, 84);
+    const t = new THREE.CanvasTexture(c); return t;
+  }
+  // Plain-weave cotton normal map: warp and weft threads alternate over/under, with uneven (slubbed) thread thickness.
+  function weaveNormalTex() {
+    const N = 256, T = 16, cell = N / T, h = new Float32Array(N * N), r = rng(11);
+    const tw = Array.from({ length: T }, () => .72 + r() * .56), tf = Array.from({ length: T }, () => .72 + r() * .56);
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+      const cx = x / cell, cy = y / cell, ix = cx | 0, iy = cy | 0, fx = cx - ix, fy = cy - iy;
+      const warp = Math.cos((fx - .5) * Math.PI) ** .6 * tw[ix], weft = Math.cos((fy - .5) * Math.PI) ** .6 * tf[iy];
+      h[y * N + x] = ((ix + iy) & 1) ? warp * (.55 + .45 * Math.sin(fy * Math.PI)) : weft * (.55 + .45 * Math.sin(fx * Math.PI));
+    }
+    const [c, g] = cnv(N, N), d = g.createImageData(N, N), a = d.data, s = 2.4;
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+      const hx = h[y * N + (x + 1) % N] - h[y * N + (x - 1 + N) % N], hy = h[((y + 1) % N) * N + x] - h[((y - 1 + N) % N) * N + x];
+      const nx = -hx * s, ny = hy * s, l = Math.hypot(nx, ny, 1), i = (y * N + x) * 4;
+      a[i] = (nx / l * .5 + .5) * 255; a[i + 1] = (ny / l * .5 + .5) * 255; a[i + 2] = (1 / l * .5 + .5) * 255; a[i + 3] = 255;
+    }
+    g.putImageData(d, 0, 0);
+    return ctex(c, false);
+  }
+  // Resist-dyed noren: indigo ground with uneven vat colour, lettering left undyed with slightly ragged, bled edges.
+  function dyeTex({ w: Wm, h: Hm, lines, color, crest, seed }) {
+    const w = lines.length > 1 ? 1536 : 1280, h = Math.round(w * Hm / Wm), r = rng(seed);
+    const [c, g] = cnv(w, h);
+    const nw = 56, nh = Math.max(8, Math.round(56 * h / w)), [nc, ng] = cnv(nw, nh), nd = ng.createImageData(nw, nh);
+    for (let i = 0; i < nd.data.length; i += 4) { const v = r() * 255; nd.data[i] = nd.data[i + 1] = nd.data[i + 2] = v; nd.data[i + 3] = 255; }
+    ng.putImageData(nd, 0, 0);
+    const [bc, bg] = cnv(w, h); bg.imageSmoothingEnabled = true; bg.filter = 'blur(4px)'; bg.drawImage(nc, 0, 0, w, h);
+    const noise = bg.getImageData(0, 0, w, h).data;
+    const [mc, mg] = cnv(w, h);
+    mg.fillStyle = '#fff'; mg.strokeStyle = '#fff'; mg.textAlign = 'center';
+    for (const L of lines) {
+      let size = L.size * w;
+      mg.font = `800 ${size}px "Shippori Mincho B1", Georgia, serif`;
+      mg.letterSpacing = `${(L.track || 0) * size}px`;
+      const m = mg.measureText(L.text).width;
+      if (m > w * .84) { size *= w * .84 / m; mg.font = `800 ${size}px "Shippori Mincho B1", Georgia, serif`; mg.letterSpacing = `${(L.track || 0) * size}px`; }
+      mg.textBaseline = 'alphabetic'; mg.fillText(L.text, w / 2, L.y * h);
+    }
+    mg.fillRect(0, h * .052, w, Math.max(2, h * .0035));
+    const [m2, m2g] = cnv(w, h); m2g.filter = 'blur(1.1px)'; m2g.drawImage(mc, 0, 0); m2g.filter = 'none';
+    if (crest) { // the crest is cut as a crisp stencil, so it skips the blur
+      const cx = w / 2, cy = crest.y * h, rr = crest.r * w;
+      m2g.fillStyle = m2g.strokeStyle = '#fff'; m2g.textAlign = 'center';
+      m2g.lineWidth = rr * .09; m2g.beginPath(); m2g.arc(cx, cy, rr, 0, Math.PI * 2); m2g.stroke();
+      m2g.font = `600 ${rr * 1.2}px "Shippori Mincho", serif`; m2g.textBaseline = 'middle'; m2g.fillText('縁', cx, cy + rr * .06);
+    }
+    const mask = m2g.getImageData(0, 0, w, h).data;
+    const base = new THREE.Color(color), ir = base.r * 255, ig = base.g * 255, ib = base.b * 255;
+    // THREE.Color from hex is linear; convert back to sRGB bytes for the canvas
+    const lin2s = v => { v /= 255; return 255 * (v <= .0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - .055); };
+    const IR = lin2s(ir), IG = lin2s(ig), IB = lin2s(ib), K = [238, 232, 216];
+    const out = g.createImageData(w, h), o = out.data;
+    for (let i = 0, p = 0; i < o.length; i += 4, p++) {
+      const n = noise[i] / 255, fine = r(), y = (p / w | 0) / h;
+      const tone = .84 + .3 * n + (fine - .5) * .07 - .06 * y;
+      let a = mask[i] / 255;
+      if (a > 0) { a = Math.min(1, Math.max(0, (a + (n - .5) * .2 + (fine - .5) * .09 - .36) / .24)); a = a * a * (3 - 2 * a); }
+      const kn = .9 + .1 * n;
+      o[i] = IR * tone * (1 - a) + K[0] * kn * a;
+      o[i + 1] = IG * tone * (1 - a) + K[1] * kn * a;
+      o[i + 2] = IB * tone * (1 - a) + K[2] * kn * a;
+      o[i + 3] = 255;
+    }
+    g.putImageData(out, 0, 0);
+    // the sleeve at the top is folded double, so it reads a touch darker
+    g.fillStyle = 'rgba(8,10,20,.22)'; g.fillRect(0, 0, w, h * .045);
+    return ctex(c, true, false);
+  }
+
+  const T = {
+    plaster: plasterTex(),
+    wood: woodTex('#c9a578', '92,62,34', 1),
+    woodDark: woodTex('#6a4c34', '30,18,10', 2),
+    ceil: woodTex('#8a6645', '48,30,16', 4, 6),
+    facade: woodTex('#342a23', '14,10,8', 6, 9),
+    washi: washiTex(),
+    stone: stoneTex(),
+    brocade: brocadeTex(),
+    shadow: softShadowTex(),
+    weave: weaveNormalTex(),
+  };
+  const rot = t => { const c = t.clone(); c.center.set(.5, .5); c.rotation = Math.PI / 2; c.needsUpdate = true; return c; };
+  T.woodH = rot(T.wood); T.woodDarkH = rot(T.woodDark);
+  const loader = new THREE.TextureLoader();
+  const img = (src, rep) => loader.load(src, t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = ANISO; if (rep) t.wrapS = t.wrapT = THREE.RepeatWrapping; t.needsUpdate = true; request(); });
+  T.tatami = img('../../img/ui/tatami.jpg', true);
+  T.bsc = img('../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg');
+  T.msc = img('../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg');
+  T.award = img('../../img/renamed/Award_Academic-Achievement.jpg');
+
+  const std = o => new THREE.MeshStandardMaterial(o);
+  const M = {
+    plaster: std({ map: T.plaster, roughness: .96 }),
+    alcove: std({ map: T.plaster, color: '#d9cdb8', roughness: .96 }),
+    wood: std({ map: T.wood, roughness: .7 }),
+    woodH: std({ map: T.woodH, roughness: .7 }),
+    dark: std({ map: T.woodDark, roughness: .75 }),
+    darkH: std({ map: T.woodDarkH, roughness: .75 }),
+    ceil: std({ map: T.ceil, roughness: .82 }),
+    facade: std({ map: T.facade, roughness: .86 }),
+    tatami: std({ map: T.tatami, color: '#bab39a', roughness: .93 }),
+    heri: std({ color: '#262c3a', roughness: .72 }),
+    shoji: new THREE.MeshBasicMaterial({ map: T.washi, color: new THREE.Color(1.55, 1.48, 1.34) }),
+    washi: std({ map: T.washi, roughness: .95 }),
+    fusuma: std({ map: T.washi, color: '#e6dcc6', roughness: .95 }),
+    bar: std({ color: '#4a3526', roughness: .7 }),
+    barL: std({ color: '#cdb28a', roughness: .7 }),
+    stone: std({ map: T.stone, roughness: .92 }),
+    plinth: std({ map: T.stone, color: '#9c968c', roughness: .9 }),
+    interior: new THREE.MeshBasicMaterial({ color: '#15100c' }),
+    shadow: new THREE.MeshBasicMaterial({ map: T.shadow, color: '#000', transparent: true, opacity: .42, depthWrite: false }),
+    frame: std({ map: T.woodDark, color: '#8a7766', roughness: .55 }),
+    mat: std({ color: '#efe9dc', roughness: .9 }),
+    lacquer: std({ color: '#15110e', roughness: .2, metalness: .1 }),
+    bronze: std({ color: '#6e4a2c', roughness: .42, metalness: .8 }),
+    stoneDark: std({ color: '#2a2826', roughness: .45 }),
+    cord: std({ color: '#4c3d52', roughness: .8 }),
+    bamboo: std({ color: '#b39a62', roughness: .55 }),
+    rod: std({ color: '#3a2c20', roughness: .6 }),
+    tansu: std({ map: T.wood, color: '#a47a55', roughness: .6 }),
+  };
+  const BROC = ['#7a6d52', '#5d4636', '#3d4a66', '#5d6552', '#6b5a48'].map(c => std({ map: T.brocade, color: c, roughness: .8 }));
+  const AGE = ['#ece2cc', '#ddcdb0', '#cbb794', '#b6a07e'].map(c => std({ map: T.wood, color: c, roughness: .66 }));
+  const TINT = ['#e7ecf2', '#f3ebdc', '#efe4c8', '#e3e8dd'].map(c => std({ map: T.washi, color: c, roughness: .95 }));
+  const cedar = std({ map: T.woodH, color: '#eadbc3', roughness: .62 });
+
+  // ---------- geometry helpers ----------
+  const groups = [];
+  function worldUV(geo, w, h, d, s = 1) { // box UVs in metres so textures keep their scale
+    const uv = geo.attributes.uv, f = [[d, h], [d, h], [w, d], [w, d], [w, h], [w, h]];
+    for (let k = 0; k < 6; k++) for (let v = 0; v < 4; v++) { const i = k * 4 + v; uv.setXY(i, uv.getX(i) * f[k][0] / s, uv.getY(i) * f[k][1] / s); }
+  }
+  const scaleUV = (geo, su, sv) => { const a = geo.attributes.uv; for (let i = 0; i < a.count; i++) a.setXY(i, a.getX(i) * su, a.getY(i) * sv); };
+  function mesh(geo, mat, x, y, z, g) { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); g.add(m); return m; }
+  function box(w, h, d, mat, x, y, z, g, s = 1) { const geo = new THREE.BoxGeometry(w, h, d); worldUV(geo, w, h, d, s); return mesh(geo, mat, x, y, z, g); }
+  function plane(w, h, mat, x, y, z, g, s) { const geo = new THREE.PlaneGeometry(w, h); if (s) scaleUV(geo, w / s, h / s); return mesh(geo, mat, x, y, z, g); }
+  function cylX(r, len, mat, x, y, z, g) { const m = mesh(new THREE.CylinderGeometry(r, r, len, 14), mat, x, y, z, g); m.rotation.z = Math.PI / 2; return m; }
+  function shade(g, x, y, z, w, h, o = .42) { const m = plane(w, h, M.shadow, x, y, z, g); if (o !== .42) { m.material = M.shadow.clone(); m.material.opacity = o; } m.renderOrder = 1; return m; }
+  function floorShade(g, x, y, z, w, d, o = .5) { const m = shade(g, x, y, z, w, d, o); m.rotation.x = -Math.PI / 2; return m; }
+  const bars = new Map();
+  const bar = (g, mat, w, h, d, x, y, z) => { if (!bars.has(g)) bars.set(g, new Map()); const m = bars.get(g); if (!m.has(mat)) m.set(mat, []); m.get(mat).push(w, h, d, x, y, z); };
+  function flushBars() {
+    const unit = new THREE.BoxGeometry(1, 1, 1), mx = new THREE.Matrix4();
+    for (const [g, m] of bars) for (const [mat, a] of m) {
+      const n = a.length / 6, im = new THREE.InstancedMesh(unit, mat, n);
+      for (let i = 0; i < n; i++) { const j = i * 6; mx.makeScale(a[j], a[j + 1], a[j + 2]); mx.setPosition(a[j + 3], a[j + 4], a[j + 5]); im.setMatrixAt(i, mx); }
+      g.add(im);
+    }
+  }
+
+  // A shoji: paper glowing with daylight behind a light-wood kumiko lattice. axis 'x' = in a side wall facing +x, 'z' = in a far wall facing +z.
+  function shoji(g, axis, cx, cy, cz, len, hgt) {
+    const p = plane(len, hgt, M.shoji, 0, cy, 0, g, .5);
+    if (axis === 'x') { p.rotation.y = Math.PI / 2; p.position.set(cx - .03, cy, cz); } else p.position.set(cx, cy, cz - .03);
+    const put = (u, y, wu, h, d) => axis === 'x' ? bar(g, M.barL, d, h, wu, cx, cy + y, cz + u) : bar(g, M.barL, wu, h, d, cx + u, cy + y, cz);
+    const n = Math.max(1, Math.round(len / .9)), pw = len / n;
+    for (let i = 0; i <= n; i++) put(-len / 2 + i * pw, 0, .04, hgt, .035);
+    put(0, hgt / 2 - .025, len, .05, .035); put(0, -hgt / 2 + .03, len, .06, .035);
+    for (let i = 0; i < n; i++) for (let k = 1; k < 3; k++) put(-len / 2 + i * pw + k * pw / 3, 0, .012, hgt, .016);
+    for (let k = 1; k < 7; k++) put(0, -hgt / 2 + k * hgt / 7, len, .012, .016);
+  }
+
+  // ---------- the street and the shopfront ----------
+  function buildStreet() {
+    const g = new THREE.Group(); groups[0] = g; scene.add(g);
+    const fw = 16, fh = 4.8, dW = 2.7, dH = 2.35, fz = 0;
+    const gr = plane(fw + 4, 12, M.stone, 0, 0, 6, g, 2.2); gr.rotation.x = -Math.PI / 2; gr.receiveShadow = true;
+    const side = (fw - dW) / 2;
+    for (const s of [-1, 1]) { const m = box(side, fh, WT, M.facade, s * (dW / 2 + side / 2), fh / 2, fz, g, 2.2); m.receiveShadow = true; }
+    box(dW, fh - dH, WT, M.facade, 0, (fh + dH) / 2, fz, g, 2.2).receiveShadow = true;
+    // koshi lattice windows with the dark shop inside
+    for (const [a, b] of [[-5.0, -1.95], [2.35, 5.0]]) {
+      const cx = (a + b) / 2, w = b - a;
+      plane(w, 1.5, M.interior, cx, 1.3, WT / 2 + .004, g);
+      for (let x = a + .03; x < b - .02; x += .062) bar(g, M.bar, .03, 1.5, .045, x, 1.3, WT / 2 + .03);
+      bar(g, M.bar, w + .08, .07, .07, cx, 2.08, WT / 2 + .035); bar(g, M.bar, w + .08, .08, .08, cx, .52, WT / 2 + .04);
+      bar(g, M.bar, .07, 1.64, .07, a - .02, 1.3, WT / 2 + .035); bar(g, M.bar, .07, 1.64, .07, b + .02, 1.3, WT / 2 + .035);
+    }
+    for (const s of [-1, 1]) { const m = box(side - .1, .3, .3, M.plinth, s * (dW / 2 + .1 + (side - .1) / 2), .15, WT / 2 + .1, g, 1.2); m.receiveShadow = true; }
+    for (const s of [-1, 1]) box(.14, dH + .1, .22, M.dark, s * (dW / 2 + .07), (dH + .1) / 2, .04, g).castShadow = true;
+    box(fw, .17, .24, M.darkH, 0, dH + .085, .05, g).receiveShadow = true;
+    box(fw, .14, .2, M.darkH, 0, 3.55, .06, g).receiveShadow = true;
+    box(dW, .05, .3, M.dark, 0, .025, 0, g);
+    // a small pent roof over the door
+    const eave = box(fw, .07, .95, M.dark, 0, 2.93, .5, g); eave.rotation.x = .2; eave.castShadow = true;
+    const fascia = box(fw, .12, .04, M.darkH, 0, 2.84, .97, g); fascia.castShadow = true;
+    groups[0].userData.face = WT / 2;
+  }
+
+  // ---------- one room of the house ----------
+  function buildRoom(r) {
+    const g = new THREE.Group(); groups[r] = g; scene.add(g);
+    const zF = zWall(r), zN = zWall(r - 1), zc = (zF + zN) / 2, f = zF + WT / 2;
+    const fl = plane(W, L, M.tatami, 0, 0, zc, g); fl.rotation.x = -Math.PI / 2; scaleUV(fl.geometry, W / .75, L / .5);
+    for (let k = 1; k < 8; k++) bar(g, M.heri, .05, .008, L, -W / 2 + k * .9, .004, zc);
+    const ce = plane(W, L, M.ceil, 0, HR, zc, g, 1.2); ce.rotation.x = Math.PI / 2;
+    for (let z = zF + .35; z < zN; z += .45) bar(g, M.bar, W, .035, .04, 0, HR - .018, z);
+    bar(g, M.bar, W, .06, .07, 0, HR - .03, f + .035);
+    // far wall: a doorway on the right, or a shoji to the garden in the last room
+    const a = DX - DW / 2, b = DX + DW / 2;
+    box(a + W / 2, HR, WT, M.plaster, (-W / 2 + a) / 2, HR / 2, zF, g, 1.6);
+    box(W / 2 - b, HR, WT, M.plaster, (b + W / 2) / 2, HR / 2, zF, g, 1.6);
+    if (r < 6) {
+      box(DW, HR - DH, WT, M.plaster, DX, (HR + DH) / 2, zF, g, 1.6);
+      box(.1, DH, WT + .06, M.wood, a - .05, DH / 2, zF, g); box(.1, DH, WT + .06, M.wood, b + .05, DH / 2, zF, g);
+      box(DW + .2, .08, WT + .06, M.woodH, DX, DH + .04, zF, g);
+      box(DW, .02, WT + .04, M.wood, DX, .01, zF, g);
+    } else {
+      const y0 = .35, y1 = DH;
+      box(DW, HR - y1, WT, M.plaster, DX, (HR + y1) / 2, zF, g, 1.6); box(DW, y0, WT, M.plaster, DX, y0 / 2, zF, g, 1.6);
+      shoji(g, 'z', DX, (y0 + y1) / 2, zF + .02, DW, y1 - y0);
+      box(.08, y1 - y0 + .1, .1, M.wood, a - .04, (y0 + y1) / 2, f, g); box(.08, y1 - y0 + .1, .1, M.wood, b + .04, (y0 + y1) / 2, f, g);
+      box(DW + .16, .07, .1, M.woodH, DX, y1 + .035, f, g); box(DW + .16, .06, .12, M.woodH, DX, y0 - .03, f, g);
+    }
+    // left wall with a long shoji letting the daylight in
+    const sx = -W / 2 - WT / 2, s0 = zF + .35, s1 = zF + 3.95, y0 = .45, y1 = 2.1;
+    box(WT, HR, s0 - zF, M.plaster, sx, HR / 2, (zF + s0) / 2, g, 1.6);
+    box(WT, HR, zN - s1, M.plaster, sx, HR / 2, (s1 + zN) / 2, g, 1.6);
+    box(WT, y0, s1 - s0, M.plaster, sx, y0 / 2, (s0 + s1) / 2, g, 1.6);
+    box(WT, HR - y1, s1 - s0, M.plaster, sx, (HR + y1) / 2, (s0 + s1) / 2, g, 1.6);
+    shoji(g, 'x', -W / 2, (y0 + y1) / 2, (s0 + s1) / 2, s1 - s0, y1 - y0);
+    bar(g, M.bar, .07, .06, s1 - s0 + .1, -W / 2 + .02, y0 - .03, (s0 + s1) / 2);
+    // right wall with a pair of fusuma
+    box(WT, HR, L, M.plaster, W / 2 + WT / 2, HR / 2, zc, g, 1.6);
+    for (let i = 0; i < 2; i++) {
+      const z = zF + 1.3 + i * .92, pnl = plane(.9, 1.86, M.fusuma, W / 2 - .012, .93, z, g, .6); pnl.rotation.y = -Math.PI / 2;
+      bar(g, M.bar, .03, 1.9, .028, W / 2 - .02, .95, z - .45); bar(g, M.bar, .03, 1.9, .028, W / 2 - .02, .95, z + .45);
+      bar(g, M.bar, .03, .03, .92, W / 2 - .02, 1.88, z); bar(g, M.bar, .03, .03, .92, W / 2 - .02, .015, z);
+      const pull = mesh(new THREE.CylinderGeometry(.028, .028, .01, 16), M.bar, W / 2 - .017, .95, z + (i ? -.36 : .36), g); pull.rotation.z = Math.PI / 2;
+    }
+    box(.05, .09, 2.0, M.woodH, W / 2 - .025, 1.925, zF + 1.76, g);
+    // posts, nageshi and skirting
+    for (const x of [-W / 2 + .055, W / 2 - .055]) box(.11, HR, .11, M.wood, x, HR / 2, f + .055, g);
+    box(.11, HR, .11, M.wood, -W / 2 + .055, HR / 2, s1 + .06, g); box(.11, HR, .11, M.wood, -W / 2 + .055, HR / 2, s0 - .06, g);
+    box(.11, HR, .11, M.wood, W / 2 - .055, HR / 2, zF + 3.25, g);
+    box(W, .1, .05, M.woodH, 0, 2.32, f + .025, g);
+    box(.05, .1, L, M.woodH, -W / 2 + .025, 2.32, zc, g); box(.05, .1, L, M.woodH, W / 2 - .025, 2.32, zc, g);
+    bar(g, M.bar, a + W / 2, .06, .016, (-W / 2 + a) / 2, .03, f + .008);
+    bar(g, M.bar, W / 2 - b, .06, .016, (b + W / 2) / 2, .03, f + .008);
+    bar(g, M.bar, .016, .06, L, -W / 2 + .008, .03, zc); bar(g, M.bar, .016, .06, L, W / 2 - .008, .03, zc);
+    g.userData.face = f;
+    ROOMS[r] && ROOMS[r](g, f);
+  }
+
+  const ROOMS = {
+    1(g, f) { // entrance: a tokonoma alcove with a hanging scroll
+      const x1 = -.96, d = .6;
+      plane(x1 + W / 2, 1.9, M.alcove, (-W / 2 + x1) / 2, 1.09, f + .002, g, 1.6);
+      box(x1 + W / 2, .14, d, M.darkH, (-W / 2 + x1) / 2, .07, f + d / 2, g);
+      box(x1 + W / 2, .09, .1, M.woodH, (-W / 2 + x1) / 2, 2.07, f + d, g);
+      box(x1 + W / 2, HR - 2.11, .06, M.plaster, (-W / 2 + x1) / 2, (HR + 2.11) / 2, f + d, g, 1.6);
+      box(.06, HR, d, M.plaster, x1 + .03, HR / 2, f + d / 2, g, 1.6);
+      mesh(new THREE.CylinderGeometry(.055, .06, HR, 14), M.wood, x1 + .02, HR / 2, f + d, g);
+      floorShade(g, (-W / 2 + x1) / 2, .142, f + .12, x1 + W / 2, .35, .35);
+    },
+    2(g, f) { // study: two framed degrees and a chest with the rest of the paper
+      const frame = (tex, aspect, cx) => {
+        const iw = .64, ih = iw / aspect, ow = iw + .24, oh = ih + .28, cy = 1.6;
+        shade(g, cx + .03, cy - .04, f + .006, ow + .12, oh + .12);
+        box(ow, oh, .04, M.frame, cx, cy, f + .03, g);
+        plane(ow - .08, oh - .08, M.mat, cx, cy, f + .051, g);
+        plane(iw, ih, std({ map: tex, roughness: .55 }), cx, cy + .01, f + .052, g);
+      };
+      frame(T.bsc, 1742 / 2460, -2.5); frame(T.msc, 1240 / 1755, -1.34);
+      const tx = -.2;
+      box(.82, .6, .42, M.tansu, tx, .3, f + .22, g);
+      for (let k = 1; k < 3; k++) bar(g, M.bar, .8, .012, .01, tx, k * .2, f + .432);
+      bar(g, M.bar, .012, .2, .01, tx, .5, f + .432);
+      for (const [x, y] of [[-.2, .1], [.2, .1], [-.2, .3], [.2, .3], [-.2, .5], [.2, .5]]) bar(g, M.stoneDark, .07, .014, .02, tx + x, y, f + .44);
+      floorShade(g, tx, .003, f + .26, 1.0, .6, .5);
+      for (let k = 0; k < 3; k++) { const s = box(.23, .016, .31, M.washi, tx - .06 + k * .012, .608 + k * .016, f + .22 + k * .006, g); s.rotation.y = (k - 1) * .06; }
+      floorShade(g, tx - .05, .601, f + .22, .36, .44, .35);
+    },
+
+    5(g, f) { // awards: staggered shelves over a low cabinet
+      box(2.7, .42, .38, M.tansu, -1.7, .21, f + .19, g);
+      for (let i = 0; i < 4; i++) { plane(.63, .32, M.fusuma, -3.05 + .3375 + i * .675, .21, f + .382, g, .5); bar(g, M.bar, .02, .36, .01, -3.05 + i * .675, .21, f + .385); }
+      floorShade(g, -1.7, .003, f + .3, 3.0, .7, .5);
+      const top = .42, sy = 1.72;
+      box(2.1, .04, .3, M.woodH, -1.7, sy - .02, f + .15, g);
+      for (const x of [-2.72, -.68]) box(.03, .12, .28, M.woodH, x, sy - .08, f + .15, g);
+      shade(g, -1.7, sy - .05, f + .004, 2.2, .1, .35);
+      // academic achievement scan, propped on a stand
+      const pa = new THREE.Group(); pa.position.set(-2.65, top, f + .19); pa.rotation.x = -.2; g.add(pa);
+      box(.44, .33, .02, M.frame, 0, .165, 0, pa); plane(.39, .274, std({ map: T.award, roughness: .6 }), 0, .165, .0105, pa);
+      floorShade(g, -2.65, top + .002, f + .17, .5, .18, .45);
+      // hackathon bronze on a stand
+      box(.2, .03, .1, M.dark, -1.95, top + .015, f + .2, g);
+      for (const s of [-1, 1]) box(.02, .05, .02, M.dark, -1.95 + s * .05, top + .055, f + .2, g);
+      const disc = mesh(new THREE.CylinderGeometry(.095, .095, .014, 48), M.bronze, -1.95, top + .125, f + .2, g); disc.rotation.x = Math.PI / 2;
+      floorShade(g, -1.95, top + .002, f + .2, .28, .14, .4);
+      // bootcamp plaque
+      const pq = box(.17, .25, .022, AGE[1], -1.25, top + .125, f + .19, g); pq.rotation.x = -.12;
+      floorShade(g, -1.25, top + .002, f + .18, .22, .12, .4);
+      // scholarship: a lacquered letter box tied with a cord
+      box(.4, .11, .26, M.lacquer, -2.2, sy + .055, f + .15, g); bar(g, M.cord, .405, .013, .022, -2.2, sy + .055, f + .15); bar(g, M.cord, .022, .112, .265, -2.2, sy + .055, f + .15);
+      floorShade(g, -2.2, sy + .002, f + .15, .5, .34, .5);
+      // research grant: a bound report
+      for (let k = 0; k < 2; k++) { const s = box(.21, .024, .297, M.washi, -1.2 + k * .012, sy + .012 + k * .024, f + .15, g); s.rotation.y = k ? .05 : -.03; }
+      bar(g, M.cord, .012, .054, .3, -1.2, sy + .024, f + .15);
+      floorShade(g, -1.2, sy + .002, f + .15, .3, .38, .45);
+    },
+    6(g, f) { // write: a low desk with an inkstone and brush
+      box(1.3, .03, .4, M.woodH, -2.3, .34, f + .25, g);
+      for (const x of [-2.9, -1.7]) box(.03, .325, .36, M.wood, x, .1625, f + .25, g);
+      box(.14, .03, .24, M.stoneDark, -2.6, .37, f + .25, g);
+      const br = cylX(.006, .26, M.bamboo, -2.15, .362, f + .3, g); br.rotation.y = .3;
+      floorShade(g, -2.3, .003, f + .26, 1.5, .55, .45);
+      cylX(.012, 1.3, M.bamboo, -2.3, 1.36, f + .045, g);
+      for (const x of [-2.9, -1.7]) bar(g, M.cord, .004, .16, .004, x, 1.44, f + .04);
+    },
+  };
+
+  // ---------- noren: verlet cloth, one grid per panel, panels sewn together only near the top ----------
+  // (Position-based / Jakobsen-style verlet cloth; the code here is written for this page.)
+  const ITER = 5;
+  class Noren {
+    constructor(o) {
+      Object.assign(this, o);
+      const { P, C, R, W: Wn, H, cx, yTop, zRod } = this, gap = .008, wp = (Wn - (P - 1) * gap) / P, n = P * C * R;
+      // the rod sleeve gathers the cloth to ~90% of its width; the spare width hangs as soft vertical folds
+      const G = .9, LAM = .19, AMP = LAM / Math.PI * Math.sqrt(1 / G - 1);
+      this.n = n; this.wp = wp;
+      const pos = new Float32Array(n * 3), nat = new Float32Array(n * 2), inv = new Float32Array(n), uv = new Float32Array(n * 2), x0 = cx - Wn / 2;
+      for (let p = 0; p < P; p++) for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) {
+        const i = (p * R + r) * C + c, lx = p * (wp + gap) + c / (C - 1) * wp, ly = r / (R - 1) * H;
+        nat[i * 2] = lx; nat[i * 2 + 1] = ly;
+        const x = cx + (x0 + lx - cx) * G, z = zRod + AMP * Math.sin(lx / LAM * Math.PI * 2 + p * 2.1) * (r ? 1 - .35 * r / R : 1);
+        inv[i] = r === 0 ? 0 : 1;
+        pos[i * 3] = x; pos[i * 3 + 1] = yTop - ly; pos[i * 3 + 2] = z;
+        uv[i * 2] = lx / Wn; uv[i * 2 + 1] = 1 - ly / H;
+      }
+      this.pos = pos; this.prev = pos.slice(); this.inv = inv;
+      this.nrm = new Float32Array(n * 3); this.tan = new Float32Array(n * 3);
+      const A = [], B = [], K = [], seams = [], add = (a, b, k) => { A.push(a); B.push(b); K.push(k); };
+      for (let p = 0; p < P; p++) for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) {
+        const i = (p * R + r) * C + c;
+        if (c < C - 1) add(i, i + 1, 1);
+        if (r < R - 1) add(i, i + C, 1);
+        if (c < C - 1 && r < R - 1) { add(i, i + C + 1, .5); add(i + 1, i + C, .5); }
+        if (c < C - 2) add(i, i + 2, .12);
+        if (r < R - 2) add(i, i + 2 * C, .3);
+      }
+      const jr = Math.round((R - 1) * .3); // sewn for the top 30%, split below, like a real noren
+      for (let p = 0; p < P - 1; p++) for (let r = 0; r <= jr; r++) {
+        const a = (p * R + r) * C + C - 1, b = ((p + 1) * R + r) * C;
+        seams.push(A.length); add(a, b, 1); add(a - 1, b + 1, .12);
+        if (r < jr) { add(a, b + C, .5); add(a + C, b, .5); }
+      }
+      this.ca = Int32Array.from(A); this.cb = Int32Array.from(B); this.ck = Float32Array.from(K);
+      this.cr = new Float32Array(A.length);
+      for (let k = 0; k < A.length; k++) { const a = A[k], b = B[k]; this.cr[k] = Math.hypot(nat[a * 2] - nat[b * 2], nat[a * 2 + 1] - nat[b * 2 + 1]); }
+      for (const k of seams) this.cr[k] = .002; // sewn edge to edge
+      // fabric memory: skip-one horizontal links keep the gathered spacing, so the folds run the full length
+      for (let k = 0; k < A.length; k++) if (K[k] === .12) { const a = A[k] * 3, b = B[k] * 3; this.cr[k] = Math.hypot(pos[a] - pos[b], pos[a + 2] - pos[b + 2], pos[a + 1] - pos[b + 1]); }
+      const idx = [];
+      for (let p = 0; p < P; p++) for (let r = 0; r < R - 1; r++) for (let c = 0; c < C - 1; c++) { const i = (p * R + r) * C + c; idx.push(i, i + C, i + 1, i + 1, i + C, i + C + 1); }
+      const geo = new THREE.BufferGeometry();
+      this.aPos = new THREE.BufferAttribute(pos, 3).setUsage(THREE.DynamicDrawUsage);
+      this.aNrm = new THREE.BufferAttribute(this.nrm, 3).setUsage(THREE.DynamicDrawUsage);
+      this.aTan = new THREE.BufferAttribute(this.tan, 3).setUsage(THREE.DynamicDrawUsage);
+      geo.setAttribute('position', this.aPos); geo.setAttribute('normal', this.aNrm); geo.setAttribute('tangent3', this.aTan);
+      geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); geo.setIndex(idx);
+      this.mesh = new THREE.Mesh(geo, clothMaterial(this.tex, Wn, H));
+      this.mesh.frustumCulled = false; this.mesh.castShadow = true;
+      this.mesh.customDepthMaterial = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking, side: THREE.DoubleSide });
+      scene.add(this.mesh);
+      this.awake = false; this.still = 0; this.spheres = []; this.normals();
+    }
+    normals() {
+      const { pos, nrm, tan, P, C, R } = this;
+      for (let p = 0; p < P; p++) for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) {
+        const i = (p * R + r) * C + c, l = (c > 0 ? i - 1 : i) * 3, rr = (c < C - 1 ? i + 1 : i) * 3, u = (r > 0 ? i - C : i) * 3, d = (r < R - 1 ? i + C : i) * 3;
+        const tx = pos[rr] - pos[l], ty = pos[rr + 1] - pos[l + 1], tz = pos[rr + 2] - pos[l + 2];
+        const bx = pos[d] - pos[u], by = pos[d + 1] - pos[u + 1], bz = pos[d + 2] - pos[u + 2];
+        let nx = by * tz - bz * ty, ny = bz * tx - bx * tz, nz = bx * ty - by * tx;
+        const nl = Math.hypot(nx, ny, nz) || 1, tl = Math.hypot(tx, ty, tz) || 1, j = i * 3;
+        nrm[j] = nx / nl; nrm[j + 1] = ny / nl; nrm[j + 2] = nz / nl;
+        tan[j] = tx / tl; tan[j + 1] = ty / tl; tan[j + 2] = tz / tl;
+      }
+    }
+    upload() { this.normals(); this.aPos.needsUpdate = this.aNrm.needsUpdate = this.aTan.needsUpdate = true; }
+    step(dt, t, wind, damp = .986) {
+      const { pos, prev, inv, nrm, n, ca, cb, cr, ck, spheres } = this, dt2 = dt * dt, nc = ca.length;
+      let mv = 0;
+      for (let i = 0, j = 0; i < n; i++, j += 3) {
+        if (!inv[i]) continue;
+        const x = pos[j], y = pos[j + 1], z = pos[j + 2];
+        let ax = 0, ay = -9.81, az = 0;
+        if (wind) { // draught through the doorway, pressing on the cloth along its normal
+          const tur = 1 + .5 * Math.sin(x * 2.1 + t * 1.6) * Math.sin(y * 1.7 - t * 1.2) + .25 * Math.sin(t * 2.9 + x * 4.3);
+          const d = (nrm[j] * .25 + nrm[j + 2]) * wind * tur;
+          ax += nrm[j] * d; ay += nrm[j + 1] * d; az += nrm[j + 2] * d;
+        }
+        const vx = (x - prev[j]) * damp, vy = (y - prev[j + 1]) * damp, vz = (z - prev[j + 2]) * damp;
+        prev[j] = x; prev[j + 1] = y; prev[j + 2] = z;
+        pos[j] = x + vx + ax * dt2; pos[j + 1] = y + vy + ay * dt2; pos[j + 2] = z + vz + az * dt2;
+        const m = vx * vx + vy * vy + vz * vz; if (m > mv) mv = m;
+      }
+      for (let it = 0; it < ITER; it++) {
+        for (let k = 0; k < nc; k++) {
+          const ia = ca[k], ib = cb[k], wa = inv[ia], wb = inv[ib], ws = wa + wb;
+          if (!ws) continue;
+          const a = ia * 3, b = ib * 3, dx = pos[b] - pos[a], dy = pos[b + 1] - pos[a + 1], dz = pos[b + 2] - pos[a + 2];
+          const l = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1e-9, s = (l - cr[k]) / (l * ws) * ck[k];
+          pos[a] += dx * s * wa; pos[a + 1] += dy * s * wa; pos[a + 2] += dz * s * wa;
+          pos[b] -= dx * s * wb; pos[b + 1] -= dy * s * wb; pos[b + 2] -= dz * s * wb;
+        }
+        for (const s of spheres) this.collide(s, it === ITER - 1);
+      }
+      this.wall();
+      if (!wind && !spheres.length) { this.still = mv < 3e-8 ? this.still + 1 : 0; if (this.still > 45) this.awake = false; }
+      else this.still = 0;
+    }
+    collide(s, friction) { // a hand or the walker's body: push cloth out of the sphere and drag it along
+      const { pos, inv, n } = this, r2 = s.r * s.r;
+      for (let i = 0, j = 0; i < n; i++, j += 3) {
+        if (!inv[i]) continue;
+        const dx = pos[j] - s.x, dy = pos[j + 1] - s.y, dz = pos[j + 2] - s.z, d2 = dx * dx + dy * dy + dz * dz;
+        if (d2 >= r2 * (friction ? 1.3 : 1)) continue;
+        if (friction && s.fx !== undefined) { pos[j] += s.fx * s.fr; pos[j + 1] += s.fy * s.fr; }
+        if (d2 >= r2) continue;
+        const d = Math.sqrt(d2) || 1e-6, k = s.r / d;
+        pos[j] = s.x + dx * k; pos[j + 1] = s.y + dy * k; pos[j + 2] = s.z + dz * k;
+      }
+    }
+    wall() { // the cloth hangs in front of the wall face; only the opening lets it swing through
+      const { pos, prev, inv, n, cx } = this, zw = this.zRod - .038, hw = this.doorW / 2 - .02;
+      for (let i = 0, j = 0; i < n; i++, j += 3) {
+        if (!inv[i] || pos[j + 2] >= zw || Math.abs(pos[j] - cx) <= hw) continue;
+        if (Math.abs(prev[j] - cx) <= hw) pos[j] = cx + Math.sign(pos[j] - cx) * hw;
+        else { pos[j + 2] = zw; prev[j + 2] = zw; }
+      }
+    }
+    opening() { // free half-width at chest height around the centre slit
+      const { pos, P, C, R, cx, zRod } = this, yc = EYE - .1; let m = 9;
+      for (let p = P / 2 - 1; p <= P / 2; p++) for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) {
+        const j = ((p * R + r) * C + c) * 3;
+        if (Math.abs(pos[j + 1] - yc) < .3 && Math.abs(pos[j + 2] - zRod) < .3) { const d = Math.abs(pos[j] - cx); if (d < m) m = d; }
+      }
+      return m;
+    }
+    settle(steps) { for (let i = 0; i < steps; i++) this.step(1 / 60, 0, 0, .93); this.upload(); }
+    copyFrom(o) { const dz = this.zRod - o.zRod, dx = this.cx - o.cx; for (let i = 0; i < this.n; i++) { const j = i * 3; this.pos[j] = o.pos[j] + dx; this.pos[j + 1] = o.pos[j + 1]; this.pos[j + 2] = o.pos[j + 2] + dz; } this.prev.set(this.pos); this.upload(); }
+  }
+
+  // Cloth shading: indigo cotton with a procedural weave normal map, diffuse light passing through
+  // thin undyed lettering when the next room is brighter, and a soft cotton sheen at grazing angles.
+  const clothU = {
+    hSky: { value: new THREE.Color() }, hGround: { value: new THREE.Color() },
+    sunDir: { value: new THREE.Vector3() }, sunCol: { value: new THREE.Color() },
+    lPos: { value: [0, 1, 2, 3].map(() => new THREE.Vector3()) }, lCol: { value: [0, 1, 2, 3].map(() => new THREE.Color()) },
+    fogC: { value: new THREE.Color('#1c1713') }, fogR: { value: new THREE.Vector2(FOG[0], FOG[1]) },
+    weave: { value: T.weave },
+  };
+  function clothMaterial(tex, Wn, H) {
+    return new THREE.ShaderMaterial({
+      uniforms: { ...clothU, dye: { value: tex }, wrep: { value: new THREE.Vector2(Wn / .085, H / .085) } },
+      side: THREE.DoubleSide,
+      vertexShader: `attribute vec3 tangent3; varying vec3 vN; varying vec3 vT; varying vec3 vW; varying vec2 vUv; varying float vD;
+        void main(){ vUv=uv; vN=normal; vT=tangent3; vW=position; vec4 mv=viewMatrix*vec4(position,1.0); vD=-mv.z; gl_Position=projectionMatrix*mv; }`,
+      fragmentShader: `uniform sampler2D dye; uniform sampler2D weave; uniform vec2 wrep;
+        uniform vec3 hSky; uniform vec3 hGround; uniform vec3 sunDir; uniform vec3 sunCol; uniform vec3 lPos[4]; uniform vec3 lCol[4];
+        uniform vec3 fogC; uniform vec2 fogR;
+        varying vec3 vN; varying vec3 vT; varying vec3 vW; varying vec2 vUv; varying float vD;
+        void main(){
+          vec3 base = texture2D(dye, vUv).rgb;
+          float undyed = smoothstep(.1, .45, dot(base, vec3(.3,.59,.11)));
+          vec3 N = normalize(vN) * (gl_FrontFacing ? 1.0 : -1.0);
+          vec3 Tn = normalize(vT - N * dot(N, vT)); vec3 Bn = cross(N, Tn);
+          vec3 wn = texture2D(weave, vUv * wrep).xyz * 2.0 - 1.0;
+          vec3 Np = normalize(Tn * wn.x + Bn * wn.y + N * wn.z);
+          vec3 V = normalize(cameraPosition - vW);
+          vec3 diff = mix(hGround, hSky, Np.y * .5 + .5);
+          vec3 back = vec3(0.0);
+          float nl = dot(Np, sunDir); diff += sunCol * max(nl, 0.0); back += sunCol * max(-dot(N, sunDir), 0.0) * .4;
+          for (int i = 0; i < 4; i++) {
+            vec3 Lv = lPos[i] - vW; float d2 = dot(Lv, Lv); vec3 L = Lv * inversesqrt(d2);
+            vec3 c = lCol[i] * (.25 + .75 * max(-L.x, 0.0)) / (1.0 + d2 * .35);
+            diff += c * max(dot(Np, L), 0.0); back += c * max(-dot(N, L), 0.0);
+          }
+          float trans = mix(.12, .5, undyed);
+          vec3 col = base * diff + base * back * trans * vec3(1.0, .92, .8);
+          float fres = pow(1.0 - max(dot(Np, V), 0.0), 3.0);
+          col += fres * .1 * diff * mix(vec3(.5, .6, .8), vec3(1.0), undyed);
+          col = mix(col, fogC, smoothstep(fogR.x, fogR.y, vD));
+          gl_FragColor = vec4(col, 1.0);
+          #include <tonemapping_fragment>
+          #include <colorspace_fragment>
+        }`,
+    });
+  }
+
+  // ---------- build ----------
+  buildStreet();
+  for (let r = 1; r <= 6; r++) buildRoom(r);
+
+  const INDIGO = ['#1c2946', '#27395d', '#1b2743', '#304a73', '#1a2238', '#27395d'];
+  const WORDS = ['', 'Study', 'Work', 'Papers', 'Awards', 'Write'];
+  const RES = SMALL ? { C: 12, R: 18, C0: 10 } : { C: 24, R: 32, C0: 18 };
+  const norens = [];
+  const mkRod = (g, cx, y, z, w) => { cylX(.017, w + .2, M.rod, cx, y, z, g); for (const s of [-1, 1]) box(.03, .05, .09, M.rod, cx + s * (w / 2 + .08), y + .01, z - .04, g); };
+  norens[0] = new Noren({
+    cx: 0, zRod: WT / 2 + .05, yTop: 2.42, W: 3.0, H: 1.55, P: 4, C: RES.C0, R: RES.R, doorW: 2.7,
+    tex: dyeTex({ w: 3.0, h: 1.55, color: INDIGO[0], seed: 3, crest: { y: .165, r: .046 }, lines: [{ text: 'George', size: .135, y: .5, track: .02 }, { text: 'Michoulis', size: .135, y: .765, track: .02 }] }),
+  });
+  mkRod(groups[0], 0, 2.44, WT / 2 + .05, 2.8);
+  for (let j = 1; j <= 5; j++) {
+    norens[j] = new Noren({
+      cx: DX, zRod: zFace(j) + .05, yTop: 2.26, W: 2.2, H: 1.45, P: 2, C: RES.C, R: RES.R, doorW: DW,
+      tex: dyeTex({ w: 2.2, h: 1.45, color: INDIGO[j], seed: 7 + j * 13, lines: [{ text: WORDS[j], size: .2, y: .66, track: .03 }] }),
+    });
+    mkRod(groups[j], DX, 2.28, zFace(j) + .05, 2.0);
+  }
+  norens[0].settle(170); norens[1].settle(170);
+  for (let j = 2; j <= 5; j++) norens[j].copyFrom(norens[1]);
+
+  // ---------- labels: real HTML pinned to the walls ----------
+  const labels = [], byRoom = [[], [], [], [], [], [], []];
+  { // scroll sizes in the papers room follow citations
+    let x = -3.02;
+    document.querySelectorAll('.sc').forEach((el, i) => {
+      const c = +el.dataset.c, w = .3 + .07 * Math.sqrt(c), h = 1.05 + .19 * Math.sqrt(c);
+      el.dataset.l = `${(x + .05).toFixed(3)} 2.0 ${(w - .1).toFixed(3)} ${(h - .34).toFixed(3)} 0.075`;
+      el.dataset.mg = '0.05 0.22 0.12'; el.dataset.b = String(i % BROC.length);
+      el.querySelector('.v').style.fontSize = (11 + 7 * (w - .3) / .4).toFixed(1) + 'px';
+      x += w + .055;
+    });
+  }
+  document.querySelectorAll('#rooms .room').forEach(sec => {
+    const r = +sec.dataset.room;
+    sec.querySelectorAll('.lb').forEach(el => {
+      const [x, y, w, h, dz] = el.dataset.l.split(' ').map(Number);
+      const lb = { el, room: r, kind: el.dataset.k, x, y, w, h: h > 0 ? h : 0, z: 0, dz: isNaN(dz) ? .03 : dz };
+      el.style.width = (w * BASE) + 'px';
+      if (lb.h) el.style.height = (lb.h * BASE) + 'px';
+      labels.push(lb); byRoom[r].push(lb);
+    });
+  });
+  for (const lb of labels) {
+    if (!lb.h) lb.h = lb.el.offsetHeight / BASE;
+    lb.z = (lb.room === 0 ? WT / 2 : zFace(lb.room)) + lb.dz;
+    const g = groups[lb.room], { x, y, w, h, z } = lb, cx = x + w / 2, cy = y - h / 2;
+    switch (lb.kind) {
+      case 'plate': box(w + .02, h + .02, .03, M.frame, cx, cy, z - .016, g); break;
+      case 'kake': {
+        const [sm, tm, bm] = (lb.el.dataset.mg || '0.05 0.22 0.12').split(' ').map(Number);
+        const x0 = x - sm, x1 = x + w + sm, y0 = y + tm, y1 = y - h - bm, mw = x1 - x0, mh = y0 - y1, mc = (x0 + x1) / 2;
+        shade(g, mc + .025, (y0 + y1) / 2 - .03, z - .026, mw + .08, mh + .08);
+        plane(mw, mh, BROC[+(lb.el.dataset.b || 4)], mc, (y0 + y1) / 2, z - .012, g);
+        plane(w, h, M.washi, cx, cy, z - .008, g, .5);
+        box(mw + .02, .02, .016, M.rod, mc, y0 - .01, z - .01, g);
+        cylX(.019, mw + .12, M.rod, mc, y1, z - .006, g);
+        for (const s of [-1, 1]) cylX(.024, .035, M.dark, mc + s * (mw / 2 + .075), y1, z - .006, g);
+        const top = lb.room === 4 ? 2.32 : y0 + .13;
+        const rise = top - y0;
+        for (const s of [-1, 1]) { const len = Math.hypot(mw / 2 - .04, rise), c = mesh(new THREE.BoxGeometry(.004, len, .004), M.cord, mc + s * (mw / 4 - .01), (y0 + top) / 2, z - .012, g); c.rotation.z = s * Math.atan2(mw / 2 - .04, rise); }
+        mesh(new THREE.CylinderGeometry(.006, .006, lb.dz + .02, 8), M.dark, mc, top, z - lb.dz / 2 - .01, g).rotation.x = Math.PI / 2;
+        break;
+      }
+      case 'board': {
+        shade(g, cx + .025, cy - .03, z - .025, w + .08, h + .08, .38);
+        box(w, h, .026, AGE[+lb.el.dataset.age], cx, cy, z - .014, g);
+        mesh(new THREE.CylinderGeometry(.01, .01, .06, 10), M.dark, cx, 2.3, z - .005, g).rotation.x = Math.PI / 2;
+        mesh(new THREE.BoxGeometry(.004, 2.3 - y, .004), M.cord, cx, (2.3 + y) / 2, z - .012, g);
+        break;
+      }
+      case 'cap': case 'tag': {
+        shade(g, cx + .015, cy - .02, z - .02, w + .06, h + .06, .3);
+        plane(w, h, M.washi, cx, cy, z - .004, g, .5);
+        mesh(new THREE.CylinderGeometry(.007, .007, .012, 10), M.bar, cx, y - .025, z + .002, g).rotation.x = Math.PI / 2;
+        break;
+      }
+      case 'tan': {
+        shade(g, cx + .012, cy - .02, z - .022, w + .04, h + .05, .3);
+        plane(w, h, TINT[+lb.el.dataset.tint], cx, cy, z - .006, g, .5);
+        mesh(new THREE.BoxGeometry(.003, 1.36 - y, .003), M.cord, cx, (1.36 + y) / 2, z - .006, g);
+        break;
+      }
+      case 'mail': {
+        shade(g, cx + .03, cy - .04, z - .026, w + .1, h + .1, .4);
+        box(w, h, .03, cedar, cx, cy, z - .016, g);
+        for (const s of [-1, 1]) mesh(new THREE.BoxGeometry(.004, 2.27 - y, .004), M.cord, cx + s * (w / 2 - .15), (2.27 + y) / 2, z - .02, g);
+        break;
+      }
+    }
+  }
+  flushBars();
+
+  // ---------- camera stops and walking ----------
+  let portrait = false, cur = 0, anim = null, hintShown = false, wheelLock = 0;
+  const v3 = (x, y, z) => new THREE.Vector3(x, y, z);
+  function stopPos(s) {
+    if (s === 0) return portrait ? v3(0, EYE, 6.4) : v3(0, EYE, 5.25);
+    const zF = zWall(s);
+    if (portrait) return v3(1.2, EYE, zF + 6.45);
+    const d = Math.min(6.5, Math.max(6.2, 3.2 / (Math.tan(22 * Math.PI / 180) * camera.aspect)));
+    return v3(-.2, EYE, zF + d);
+  }
+  function setVisible(lo, hi) {
+    groups.forEach((g, r) => { g.visible = r >= lo - 1 && r <= hi + 2; });
+    norens.forEach((n, j) => { n.mesh.visible = j >= lo - 1 && j <= hi + 1; });
+  }
+  function assignLights(lo) {
+    for (let i = 0; i < 4; i++) {
+      const r = lo - 1 + i, a = areas[i];
+      if (r >= 1 && r <= 6) { a.position.set(-W / 2 + .03, 1.275, zWall(r) + 2.15); a.lookAt(0, 1.275, zWall(r) + 2.15); a.intensity = AREA_I; }
+      else { a.intensity = 0; a.position.set(0, -50, 0); }
+      clothU.lPos.value[i].copy(a.position); clothU.lCol.value[i].copy(a.color).multiplyScalar(a.intensity * 2.4);
+    }
+    sun.intensity = lo <= 0 ? 11 : 0;
+    clothU.sunDir.value.copy(sun.position).sub(sun.target.position).normalize();
+    clothU.sunCol.value.copy(sun.color).multiplyScalar(sun.intensity * .36);
+    clothU.hSky.value.copy(hemi.color).multiplyScalar(hemi.intensity + .25);
+    clothU.hGround.value.copy(hemi.groundColor).multiplyScalar(hemi.intensity + .25);
+  }
+  const sections = [...document.querySelectorAll('#rooms .room')];
+  function showRoom(s) { sections.forEach((el, i) => el.classList.toggle('cur', i === s)); }
+  const prevBtn = $('#prev'), nextBtn = $('#next'), hint = $('#hint'), live = $('#live');
+  function updateNav() {
+    prevBtn.hidden = cur === 0; nextBtn.hidden = cur === 6;
+    prevBtn.textContent = '← ' + (cur === 1 ? 'Outside' : NAMES[cur - 1]);
+    prevBtn.setAttribute('aria-label', 'Walk back to ' + NAMES[cur - 1]);
+    nextBtn.textContent = cur === 0 ? 'Go in →' : NAMES[cur + 1] + ' →';
+    nextBtn.setAttribute('aria-label', 'Part the curtain and walk into ' + NAMES[cur + 1]);
+  }
+  prevBtn.addEventListener('click', () => go(-1));
+  nextBtn.addEventListener('click', () => go(1));
+
+  function go(dir) {
+    const to = cur + dir;
+    if (to < 0 || to > 6 || anim || reading) return;
+    drag = null; hover = null;
+    if (dir > 0 && !hintShown) { hintShown = true; hint.classList.add('gone'); }
+    sections[cur].classList.remove('cur');
+    if (RM) {
+      $('#veil').classList.add('on');
+      setTimeout(() => { arrive(to, dir); $('#veil').classList.remove('on'); }, 300);
+      return;
+    }
+    const j = dir > 0 ? cur : cur - 1, n = norens[j], pA = stopPos(cur), pB = stopPos(to);
+    const D = v3(n.cx, EYE, n.zRod), C = D.clone().multiplyScalar(2).sub(pA.clone().add(pB).multiplyScalar(.5));
+    anim = { from: cur, to, dir, j, t: 0, dur: 2.5, pA, pB, C, side: Math.sign(pA.z - n.zRod) || 1, hx: 0 };
+    setVisible(Math.min(cur, to), Math.max(cur, to)); assignLights(Math.min(cur, to));
+    n.awake = true; request();
+  }
+  function arrive(to, dir) {
+    const from = cur; cur = to; anim = null;
+    camera.position.copy(stopPos(cur));
+    setVisible(cur, cur); assignLights(cur); showRoom(cur); updateNav();
+    live.textContent = cur === 0 ? 'Outside the shop door' : NAMES[cur][0].toUpperCase() + NAMES[cur].slice(1);
+    wheelLock = performance.now() + 450;
+    try { history.replaceState(null, '', cur ? '#' + SLUGS[cur] : location.pathname + location.search); } catch (e) {}
+    norens.forEach((n, j) => { if (j !== cur) n.spheres = []; });
+    if (dir > 0) { const n = norens[from]; setTimeout(() => { if (cur > from) n.awake = false; }, 2600); }
+    if (norens[cur]) { norens[cur].awake = !RM; scheduleGust(2200); }
+    request();
+  }
+  const bez = (a, c, b, e, out) => out.set(0, 0, 0).addScaledVector(a, (1 - e) * (1 - e)).addScaledVector(c, 2 * (1 - e) * e).addScaledVector(b, e * e);
+  function stepAnim(dt) {
+    const A = anim, n = norens[A.j];
+    A.t += dt;
+    const u = Math.min(1, Math.max(0, (A.t - .22) / (A.dur - .22))), e = .5 - .5 * Math.cos(Math.PI * u);
+    bez(A.pA, A.C, A.pB, e, camera.position);
+    camera.position.y -= .07 * Math.exp(-(((camera.position.z - n.zRod) / .7) ** 2)); // a slight duck under the cloth
+    const cz = camera.position.z, passed = A.dir > 0 ? cz < n.zRod - .25 : cz > n.zRod + .25;
+    const sp = [];
+    if (!passed) { // two hands open the centre slit, then hold it
+      const k = Math.min(1, A.t / .75), s = 1 - (1 - k) ** 3, hx = .06 + .5 * s, fx = hx - A.hx; A.hx = hx;
+      for (const sg of [-1, 1]) sp.push({ x: n.cx + sg * hx, y: EYE - .05, z: n.zRod + A.side * .09, r: .14, fx: sg * fx, fy: 0, fr: .9 });
+    }
+    if (Math.abs(cz - n.zRod) < 1.3) { // the walker's head and shoulders brush through
+      const p = camera.position;
+      sp.push({ x: p.x, y: p.y, z: p.z - A.dir * .2, r: .36 }, { x: p.x, y: p.y - .62, z: p.z - A.dir * .1, r: .44 });
+    }
+    n.spheres = sp;
+    if (A.t >= A.dur) { n.spheres = []; arrive(A.to, A.dir); }
+  }
+
+  // draught: occasional gusts through the doorway; the cloth sleeps between them
+  let gust = { t0: 0, dur: 0, amp: 0 }, gustTimer = 0;
+  function scheduleGust(delay) {
+    clearTimeout(gustTimer);
+    if (RM) return;
+    gustTimer = setTimeout(() => {
+      if (!reading && !document.hidden && norens[cur]) { gust = { t0: simT, dur: 2.6 + Math.random() * 1.8, amp: 1.6 + Math.random() * 1.4 }; norens[cur].awake = true; request(); }
+      scheduleGust(5200 + Math.random() * 5200);
+    }, delay);
+  }
+  const windAt = t => { const u = (t - gust.t0) / gust.dur; return u > 0 && u < 1 ? gust.amp * Math.sin(Math.PI * u) ** 2 : 0; };
+
+  // ---------- pointer: the hand on the cloth ----------
+  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+  let drag = null, hover = null;
+  function planeHit(e, z) {
+    const r = canvas.getBoundingClientRect();
+    ndc.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(ndc, camera);
+    const o = ray.ray.origin, d = ray.ray.direction, t = (z - o.z) / d.z;
+    return t > 0 ? o.clone().addScaledVector(d, t) : null;
+  }
+  const onCloth = (n, p) => p && Math.abs(p.x - n.cx) < n.W / 2 + .12 && p.y < n.yTop + .05 && p.y > n.yTop - n.H - .15;
+  canvas.addEventListener('pointerdown', e => {
+    const n = norens[cur]; if (anim || reading || !n) return;
+    const p = planeHit(e, n.zRod);
+    drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, t0: performance.now(), p, on: onCloth(n, p), travel: 0, type: e.pointerType };
+    canvas.setPointerCapture(e.pointerId);
+    canvas.style.cursor = drag.on ? 'grabbing' : '';
+    if (drag.on) { n.awake = true; request(); }
+  });
+  canvas.addEventListener('pointermove', e => {
+    const n = norens[cur]; if (anim || reading || !n) return;
+    const p = planeHit(e, n.zRod);
+    if (drag && drag.id === e.pointerId) {
+      if (!p) return;
+      const on = onCloth(n, p);
+      if (on && drag.p) {
+        drag.travel += Math.abs(p.x - drag.p.x);
+        drag.hand = { x: p.x, y: p.y, fx: p.x - drag.p.x, fy: (p.y - drag.p.y) * .5 };
+        drag.on = true; n.awake = true; request();
+      }
+      drag.p = p;
+      if (RM && drag.on && drag.travel > .5) go(1);
+    } else if (e.pointerType === 'mouse') {
+      const on = onCloth(n, p);
+      canvas.style.cursor = on ? 'grab' : '';
+      if (on && !RM) { hover = { x: p.x, y: p.y, t: performance.now() }; n.awake = true; request(); } else hover = null;
+    }
+  });
+  const endDrag = e => {
+    if (!drag || drag.id !== e.pointerId) return;
+    const d = drag, dx = e.clientX - d.sx, dy = e.clientY - d.sy, quick = performance.now() - d.t0 < 450;
+    drag = null; canvas.style.cursor = '';
+    if (Math.hypot(dx, dy) < 8 && quick && d.on) return go(1);
+    if (d.type !== 'mouse' && Math.abs(dy) > 60 && Math.abs(dy) > 1.4 * Math.abs(dx)) return go(dy < 0 ? 1 : -1);
+  };
+  canvas.addEventListener('pointerup', endDrag);
+  canvas.addEventListener('pointercancel', e => { if (drag && drag.id === e.pointerId) drag = null; });
+  canvas.addEventListener('pointerleave', () => { hover = null; });
+
+  addEventListener('keydown', e => {
+    if (reading) { if (e.key === 'Escape') { openText(false); tbtn.focus(); } return; }
+    const ctl = e.target.closest && e.target.closest('a,button,[tabindex]');
+    if (['ArrowRight', 'ArrowDown', 'PageDown'].includes(e.key)) { e.preventDefault(); go(1); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(-1); }
+    else if ((e.key === 'Enter' || e.key === ' ') && !ctl) { e.preventDefault(); go(1); }
+  });
+  let wheelAcc = 0, wheelT = 0;
+  addEventListener('wheel', e => {
+    if (reading) return;
+    if (html.classList.contains('docked') && e.target.closest('#rooms')) return;
+    e.preventDefault();
+    const now = performance.now();
+    if (now - wheelT > 250) wheelAcc = 0;
+    wheelT = now;
+    if (anim || now < wheelLock) return;
+    wheelAcc += e.deltaY;
+    if (Math.abs(wheelAcc) > 45) { go(Math.sign(wheelAcc)); wheelAcc = 0; }
+  }, { passive: false });
+
+  // ---------- loop (renders only while something moves) ----------
+  const STEP = 1 / 60, tmp = new THREE.Vector3();
+  let raf = 0, last = 0, acc = 0, simT = 0;
+  function request() { if (!raf && !document.hidden && !reading) { last = performance.now(); raf = requestAnimationFrame(frame); } }
+  onResume = request;
+  function placeLabels() {
+    if (portrait) return;
+    const H = innerHeight, Wd = innerWidth, tn = Math.tan(camera.fov * Math.PI / 360);
+    for (let r = 0; r <= 6; r++) {
+      if (!(r === cur || (anim && r === anim.from))) continue;
+      for (const lb of byRoom[r]) {
+        tmp.set(lb.x, lb.y, lb.z).project(camera);
+        const depth = camera.position.z - lb.z;
+        if (depth < .2) continue;
+        const k = (H / 2) / (tn * depth) / BASE;
+        lb.el.style.transform = `translate(${((tmp.x + 1) / 2 * Wd).toFixed(1)}px,${((1 - tmp.y) / 2 * H).toFixed(1)}px) scale(${k.toFixed(4)})`;
+      }
+    }
+  }
+  function frame(now) {
+    raf = 0;
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    let busy = false;
+    if (hover && now - hover.t > 1200) hover = null;
+    if (anim) { stepAnim(dt); busy = true; }
+    const active = RM ? [] : norens.filter(n => n.awake && n.mesh.visible);
+    if (active.length) {
+      acc += dt; let k = 0;
+      while (acc >= STEP && k < 3) {
+        simT += STEP;
+        for (const n of active) {
+          if (n === norens[cur] && !anim) {
+            const sp = [];
+            if (drag && drag.hand) { const h = drag.hand; sp.push({ x: h.x, y: h.y, z: n.zRod + .1, r: .16, fx: h.fx, fy: h.fy, fr: .75 }); h.fx = h.fy = 0; }
+            else if (hover) sp.push({ x: hover.x, y: hover.y, z: n.zRod + .085, r: .1 });
+            n.spheres = sp;
+          }
+          n.step(STEP, simT, n === norens[cur] && !anim ? windAt(simT) : 0);
+        }
+        acc -= STEP; k++;
+      }
+      if (k === 3) acc = 0;
+      for (const n of active) n.upload();
+      busy = busy || active.some(n => n.awake) || !!drag || !!hover;
+      if (drag && drag.on && !anim && norens[cur] && (norens[cur].opening() > .26 || drag.travel > 1.5)) go(1);
+    }
+    placeLabels();
+    renderer.shadowMap.needsUpdate = sun.intensity > 0;
+    renderer.render(scene, camera);
+    if (busy) request();
+  }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) request(); });
+
+  function resize() {
+    const w = innerWidth, h = innerHeight;
+    renderer.setSize(w, h, false);
+    portrait = w / h < .95;
+    html.classList.toggle('docked', portrait);
+    camera.aspect = w / h; camera.fov = portrait ? 56 : 44;
+    camera.updateProjectionMatrix();
+    camera.projectionMatrix.elements[9] = portrait ? -.36 : 0; // lens shift: keep the doorway above the text sheet
+    camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
+    if (!anim) camera.position.copy(stopPos(cur));
+    request();
+  }
+  addEventListener('resize', resize);
+
+  cur = Math.max(0, SLUGS.indexOf(location.hash.slice(1).toLowerCase()));
+  resize();
+  setVisible(cur, cur); assignLights(cur); showRoom(cur); updateNav();
+  if (cur === 0) hint.classList.remove('gone'); else hintShown = true;
+  if (norens[cur]) norens[cur].awake = !RM;
+  scheduleGust(900);
+  request();
+  window.__dbg = { sun, renderer, scene, camera, THREE }; // TEMP
+}
+</script>
+</body>
+</html>

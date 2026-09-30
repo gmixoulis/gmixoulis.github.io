@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Thessaloniki, not to scale · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki. His work drawn as a hand-made map of the city.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..700;1,400..600&family=Alegreya+Sans+SC:wght@500&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f4efe3;--ink:#27231d;--muted:#5f574a;--rule:#cdc3ad;
+  --sea:#cfe0de;--wl:#a6c3c1;--coast:#3b4848;--street:#dad0ba;--road:#fbf8f0;--roadc:#b3a482;
+  --campus:#e3dfbf;--contour:#d8caab;--wall:#86765a;--water:#2b5860;--route:#ad4128;--forest:#dde0c4;
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#15171b;--ink:#ece5d5;--muted:#a79f90;--rule:#36383d;
+  --sea:#0c1a21;--wl:#1c3642;--coast:#739199;--street:#2f2a21;--road:#6b5431;--roadc:#211c14;
+  --campus:#1d231f;--contour:#26292d;--wall:#6c624f;--water:#88b0b9;--route:#ef8b5d;--forest:#172019;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--paper);color:var(--ink);font:1.0625rem/1.55 "Alegreya Sans","Gill Sans",sans-serif}
+a{color:inherit;text-decoration-color:var(--rule);text-underline-offset:.18em}
+a:hover{text-decoration-color:var(--route)}
+:focus-visible{outline:2px solid var(--route);outline-offset:3px;border-radius:2px}
+h1,h2,h3{font-family:Alegreya,Georgia,serif;font-weight:600;margin:0;text-wrap:balance}
+p{margin:0}
+
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:.9rem clamp(1rem,3vw,3rem);font-size:.95rem;color:var(--muted)}
+.top a{text-decoration:none}.top a:hover{text-decoration:underline}
+main{padding:0 clamp(1rem,3vw,3rem)}
+
+/* the sheet: title + panel beside the map on wide screens, stacked on phones */
+.sheet{display:grid;gap:1.4rem 3rem;grid-template-areas:"title" "map" "panel";grid-template-columns:minmax(0,1fr)}
+.title{grid-area:title}.map{grid-area:map}.panel{grid-area:panel}
+@media (min-width:960px){.sheet{grid-template-columns:minmax(19rem,24rem) minmax(0,1fr);grid-template-rows:auto 1fr;grid-template-areas:"title map" "panel map";align-items:start}}
+
+h1{font-size:clamp(2.6rem,5.2vw,4.6rem);line-height:.94;letter-spacing:-.012em;font-weight:600}
+.where{font-family:Alegreya,serif;font-style:italic;color:var(--muted);margin:.7rem 0 1.1rem;font-size:1.08rem}
+.line{font-size:1.2rem;line-height:1.45;max-width:30rem}
+.about{margin-top:.8rem;color:var(--muted);max-width:30rem;text-wrap:pretty}
+
+/* map */
+.map{margin:0}
+.mapbox{position:relative;aspect-ratio:1000/760;overflow:hidden}
+.mapbox svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.map figcaption{font-size:.92rem;color:var(--muted);margin-top:.55rem;display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;align-items:center}
+.key{display:inline-flex;align-items:center;gap:.4rem}
+.key i{display:inline-block;width:.7rem;height:.7rem;border-radius:50%;background:var(--ink)}
+.key i.h{background:none;border:1.5px dashed var(--ink);width:.9rem;height:.9rem}
+.key i.r{border-radius:0;width:1.4rem;height:2px;background:var(--route)}
+
+svg text{font-family:"Alegreya Sans",sans-serif;fill:var(--ink);paint-order:stroke;stroke:var(--paper);stroke-width:5px;stroke-linejoin:round}
+svg .water{font-family:Alegreya,serif;font-style:italic;fill:var(--water);stroke:var(--sea);letter-spacing:.2em;font-size:31px}
+svg .water.el{font-size:21px;letter-spacing:.14em}
+svg .sc{font-family:"Alegreya Sans SC",sans-serif;fill:var(--muted);letter-spacing:.22em;font-size:17px}
+svg .city{font-family:"Alegreya Sans SC",sans-serif;font-size:27px;letter-spacing:.5em;fill:var(--muted)}
+svg .it{font-family:Alegreya,serif;font-style:italic;font-size:16px;fill:var(--muted)}
+svg .ref{font-size:13px;fill:var(--muted);stroke:none;letter-spacing:.1em}
+.land{fill:var(--paper);stroke:var(--coast);stroke-width:1.6}
+.wl1,.wl0{fill:none;stroke-linejoin:round}.wl1{stroke:var(--wl)}.wl0{stroke:var(--sea)}
+.route{fill:none;stroke:var(--route);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:0}
+.route.pre{stroke-dashoffset:1}
+.route.go{transition:stroke-dashoffset 1.2s cubic-bezier(.5,0,.3,1)}
+
+/* markers: real buttons laid over the drawing, positioned in % of the 1000x760 sheet */
+.mk{--d:1rem;position:absolute;left:calc(var(--x)*1%);top:calc(var(--y)*1%);transform:translate(calc(-.25rem - var(--d)/2),-50%);display:flex;align-items:center;gap:.5rem;background:none;border:0;margin:0;padding:.25rem;font:500 1rem/1.1 "Alegreya Sans",sans-serif;color:var(--ink);cursor:pointer;text-align:left;border-radius:3px}
+.mk.l{flex-direction:row-reverse;text-align:right;transform:translate(calc(-100% + .25rem + var(--d)/2),-50%)}
+.dot{flex:none;width:var(--d);height:var(--d);border-radius:50%;background:var(--ink);box-shadow:0 0 0 3px var(--paper),0 0 0 4.5px var(--ink);transition:transform .2s}
+.mk.home{--d:2.6rem}
+.mk.home .dot{background:none;border:1.6px dashed var(--ink);box-shadow:none}
+.t{text-shadow:0 0 3px var(--paper),0 0 3px var(--paper),0 0 2px var(--paper),0 0 1px var(--paper)}
+.t small{display:block;font:italic 400 .86em/1.25 Alegreya,serif;color:var(--muted);margin-top:.1rem}
+.mk .s{display:none}
+.mk:hover .t>span:first-child{text-decoration:underline;text-decoration-color:var(--route)}
+.mk[aria-pressed="true"] .dot{background:var(--route);box-shadow:0 0 0 3px var(--paper),0 0 0 5px var(--route);transform:scale(1.15)}
+.mk.home[aria-pressed="true"] .dot{background:none;border:2px dashed var(--route);box-shadow:none}
+.mk[aria-pressed="true"] .t>span{color:var(--route)}
+.edge{--d:0px;transform:translate(0,-50%)}
+.edge.e{left:auto;right:4.8%;flex-direction:row-reverse;text-align:right;transform:translate(0,-50%)}
+.edge.off .t small{font-style:italic}
+
+/* panel: the selected place */
+.panel{border-top:1.5px solid var(--ink);padding-top:.9rem;min-width:0}
+.stop{font:italic 1rem/1.3 Alegreya,serif;color:var(--muted);margin-bottom:.35rem}
+.pbody h3{font-size:1.7rem;line-height:1.1}
+.pnav{display:flex;justify-content:space-between;gap:1rem;margin-top:1rem;padding-top:.7rem;border-top:1px solid var(--rule)}
+.pnav button{background:none;border:0;padding:.3rem 0;font:500 1rem "Alegreya Sans",sans-serif;color:var(--ink);cursor:pointer}
+.pnav button:hover:not(:disabled){color:var(--route)}
+.pnav button:disabled{color:var(--muted);opacity:.55;cursor:default}
+
+/* one entry, shared by the panel (cloned) and the index */
+.nm{display:flex;align-items:baseline;gap:.5rem}
+.nm .gr{margin-left:auto;font:400 .95rem "Alegreya Sans",sans-serif;color:var(--muted);white-space:nowrap}
+.role{font-weight:500;margin:.3rem 0 .45rem}
+.role span{display:block;font-family:Alegreya,serif;font-style:italic;font-weight:400;color:var(--muted)}
+.txt{text-wrap:pretty}
+.rel{list-style:none;margin:.7rem 0 0;padding:0;font-size:.95rem;color:var(--muted)}
+.rel li{padding:.35rem 0;border-top:1px dotted var(--rule)}
+.rel b{font-weight:500;color:var(--ink)}
+.rel .n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.shot{display:block;width:min(100%,15rem);aspect-ratio:16/10;object-fit:cover;object-position:top;border:1px solid var(--rule);margin:.6rem 0 .2rem;background:var(--rule)}
+
+/* index of places: a gazetteer page */
+.index{margin-top:clamp(3rem,7vw,5rem)}
+.sech{font-size:clamp(1.7rem,3vw,2.3rem);font-weight:500}
+.sech em{display:block;font-weight:400;color:var(--muted);font-size:.62em;margin-top:.2rem}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.lede{color:var(--muted);margin:.4rem 0 1.6rem;max-width:40rem}
+#places{list-style:none;margin:0;padding:0;columns:2 26rem;column-gap:3.5rem}
+#places>li{break-inside:avoid;padding:1rem 0 1.3rem;border-top:1px solid var(--rule)}
+#places .nm{font-size:1.35rem}
+#places .nm::after{content:"";order:1;flex:1;border-bottom:1.5px dotted var(--muted);transform:translateY(-.3em);min-width:1rem}
+#places .nm .gr{order:2;margin-left:0}
+
+/* from here */
+.from{margin:clamp(3rem,7vw,5rem) 0 0;padding-top:1.4rem;border-top:1.5px solid var(--ink)}
+.cols{display:grid;gap:2.5rem 4rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:960px){.cols{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}}
+.from .sech{margin-bottom:1.6rem}
+.from h3{font-size:1.3rem;margin-bottom:.6rem}
+.papers{list-style:none;margin:0;padding:0}
+.papers li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.2rem 1.2rem;padding:.6rem 0;border-top:1px dotted var(--rule)}
+.papers .pt{font-family:Alegreya,serif;font-size:1.06rem;line-height:1.35}
+.papers .pv{grid-column:1;font-size:.93rem;color:var(--muted)}
+.papers .pc{grid-row:1/span 2;grid-column:2;text-align:right;font:500 1.35rem/1 Alegreya,serif;font-variant-numeric:lining-nums tabular-nums}
+.papers .pc small{display:block;font:400 .78rem "Alegreya Sans",sans-serif;color:var(--muted);margin-top:.2rem}
+.more{margin-top:.8rem;font-size:.95rem}
+.awards{margin:0 0 1rem;padding:0;list-style:none}
+.awards li{padding:.3rem 0}
+.awards span{display:block;color:var(--muted);font-size:.93rem}
+.certs{font-size:.93rem;line-height:1.7;color:var(--muted)}
+.certs a{text-decoration-color:transparent}
+.certs a:hover{text-decoration-color:var(--route);color:var(--ink)}
+.certs a+a::before{content:" · ";color:var(--rule)}
+.write{margin-top:3rem;padding:1.6rem 0 0;border-top:1px solid var(--rule)}
+.write .mail{font:500 clamp(1.5rem,4vw,2.3rem)/1.2 Alegreya,serif;display:inline-block;margin:.3rem 0 .6rem;overflow-wrap:anywhere}
+.links{display:flex;flex-wrap:wrap;gap:.4rem 1.5rem}
+.quiet{color:var(--muted);margin-top:1rem;font-size:.95rem}
+footer{padding:3rem clamp(1rem,3vw,3rem) 2rem;color:var(--muted);font-size:.9rem}
+
+/* phones: the map fills the width, fewer labels; the list carries the detail */
+@media (max-width:959px){
+  .map{margin-inline:calc(-1*clamp(1rem,3vw,3rem))}
+  .map figcaption{padding-inline:clamp(1rem,3vw,3rem)}
+}
+@media (max-width:640px){
+  .minor{display:none}
+  svg .water{font-size:50px;letter-spacing:.12em}
+  svg .water.el{display:none}
+  svg .ref{font-size:27px}
+  svg .nts{font-size:34px}
+  .route{stroke-width:4.5}
+  svg .sc{font-size:30px;letter-spacing:.14em}
+  svg .city{font-size:34px;letter-spacing:.3em}
+  .mk{font-size:.95rem;--d:.8rem}
+  .mk.home{--d:1.7rem}
+  .mk .t>span:first-child,.mk .t small{display:none}
+  .mk .s{display:inline}
+  .mk.home{flex-direction:row-reverse;transform:translate(calc(-100% + .25rem + var(--d)/2),-50%)}
+  .pbody h3{font-size:1.45rem}
+}
+@media (prefers-reduced-motion:reduce){.route{transition:none!important;stroke-dashoffset:0!important}.dot{transition:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a href="index.html">← All ideas</a>
+  <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+</header>
+
+<main>
+  <div class="sheet">
+    <div class="title">
+      <h1>George Michoulis</h1>
+      <p class="where">Thessaloniki, Greece · working remotely</p>
+      <p class="line">Blockchain developer and researcher. I work on smart contracts, graph-based machine learning and full-stack Web3 systems.</p>
+      <p class="about">I studied at two universities a short walk apart in this city, and I still work from here. The map shows where the work happened. Pick a place to read what I did there.</p>
+    </div>
+
+    <figure class="map" id="map" aria-labelledby="mapcap">
+      <div class="mapbox">
+        <svg viewBox="0 0 1000 760" aria-hidden="true" focusable="false">
+          <defs>
+            <path id="land" d="M0,0 L0,300 L70,305 L44,398 L168,410 L186,316 L298,328 L290,358 L326,363 L336,334 C380,340 402,350 430,362 C480,383 522,412 560,438 C620,470 680,498 740,520 C800,543 852,566 880,598 C902,624 944,650 1000,668 L1000,0 Z"/>
+            <pattern id="g1" width="44" height="27" patternUnits="userSpaceOnUse" patternTransform="rotate(23)"><path d="M0 .5H44M0 12H44M.5 0V27M21 0V27" stroke="var(--street)" fill="none"/></pattern>
+            <pattern id="g2" width="52" height="30" patternUnits="userSpaceOnUse" patternTransform="rotate(29)"><path d="M0 .5H52M.5 0V30M30 0V30" stroke="var(--street)" fill="none"/></pattern>
+            <pattern id="g3" width="38" height="34" patternUnits="userSpaceOnUse" patternTransform="rotate(7)"><path d="M0 .5H38M0 17H38M.5 0V34" stroke="var(--street)" fill="none"/></pattern>
+            <pattern id="tr" width="14" height="12" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.3" fill="var(--wall)" opacity=".5"/><circle cx="10" cy="9" r="1.3" fill="var(--wall)" opacity=".5"/></pattern>
+          </defs>
+          <rect width="1000" height="760" fill="var(--sea)"/>
+          <!-- water lining: rings stroked from the land edge, the land covers the inner half -->
+          <use href="#land" class="wl1" stroke-width="46"/><use href="#land" class="wl0" stroke-width="44"/>
+          <use href="#land" class="wl1" stroke-width="27"/><use href="#land" class="wl0" stroke-width="25"/>
+          <use href="#land" class="wl1" stroke-width="12"/><use href="#land" class="wl0" stroke-width="10"/>
+          <use href="#land" class="land"/>
+          <!-- forest, hills -->
+          <path d="M760,0 C800,70 900,118 1000,138 L1000,0 Z" fill="var(--forest)"/>
+          <path d="M760,0 C800,70 900,118 1000,138 L1000,0 Z" fill="url(#tr)"/>
+          <g fill="none" stroke="var(--contour)" stroke-width="1.2">
+            <path d="M150,0 C230,58 330,96 440,92 C560,88 640,44 720,0"/>
+            <path d="M70,0 C150,90 300,140 450,136 C600,132 720,80 830,0"/>
+            <path d="M0,52 C120,150 290,196 460,190 C640,184 800,120 940,0"/>
+            <path d="M0,150 C90,214 180,246 262,256"/>
+          </g>
+          <!-- street grids -->
+          <path d="M252,296 L298,328 L336,334 L430,362 L560,438 L548,300 L537,222 L430,206 L300,214 Z" fill="url(#g1)"/>
+          <path d="M578,452 L740,520 L880,598 L1000,668 L1000,300 L900,272 L760,262 L700,258 L600,250 L585,340 Z" fill="url(#g2)"/>
+          <path d="M0,160 L0,300 L90,306 L146,311 L208,318 L252,296 L292,214 L230,168 L120,150 Z" fill="url(#g3)"/>
+          <!-- campuses -->
+          <path d="M585,266 L690,284 L700,344 L640,352 L590,330 Z" fill="var(--campus)" stroke="var(--wall)" stroke-width=".8"/>
+          <path d="M736,354 L788,362 L785,386 L733,379 Z" fill="var(--campus)" stroke="var(--wall)" stroke-width=".8"/>
+          <!-- Egnatia -->
+          <path d="M0,188 C150,215 330,262 470,300 S760,388 1000,478" fill="none" stroke="var(--roadc)" stroke-width="8"/>
+          <path d="M0,188 C150,215 330,262 470,300 S760,388 1000,478" fill="none" stroke="var(--road)" stroke-width="5"/>
+          <!-- walls of the Upper Town, down to the White Tower -->
+          <path id="wall" d="M252,296 C268,236 296,184 330,150 C360,118 400,76 440,62 C476,70 506,98 524,130 C540,170 546,236 548,300 C550,360 554,404 560,438" fill="none" stroke="var(--wall)" stroke-width="1.4"/>
+          <use href="#wall" stroke="var(--wall)" stroke-width="5" stroke-dasharray="1.6 8" fill="none"/>
+          <rect x="433" y="55" width="14" height="14" fill="var(--paper)" stroke="var(--wall)" stroke-width="1.6"/>
+          <!-- White Tower -->
+          <circle cx="560" cy="438" r="8" fill="var(--ink)" stroke="var(--paper)" stroke-width="2.5"/>
+          <!-- labels -->
+          <text class="city" x="745" y="196" text-anchor="middle">Θεσσαλονίκη</text>
+          <text class="it minor" x="745" y="222" text-anchor="middle">Thessaloniki</text>
+          <text class="sc" x="408" y="176" text-anchor="middle">Upper Town</text>
+          <text class="it minor" x="408" y="198" text-anchor="middle">Άνω Πόλη</text>
+          <text class="it minor" x="425" y="58" text-anchor="end">Heptapyrgion</text>
+          <text class="sc minor" x="178" y="290" text-anchor="middle">Port</text>
+          <text class="it minor" x="580" y="468">White Tower · Λευκός Πύργος</text>
+          <text class="it minor" transform="rotate(19 880 420)" x="880" y="416" text-anchor="middle">Egnatia · Εγνατία</text>
+          <text class="it minor" x="905" y="92" text-anchor="middle">Seich Sou forest</text>
+          <g transform="rotate(20 470 660)"><text class="water" x="470" y="660" text-anchor="middle">Thermaic Gulf</text><text class="water el" x="470" y="690" text-anchor="middle">Θερμαϊκός Κόλπος</text></g>
+          <!-- the route, in the order the work happened -->
+          <path class="route" pathLength="1" d="M760,372 C724,364 668,340 635,305 C720,286 900,360 986,548 C1004,596 960,640 880,652 C700,680 420,600 250,520 C150,472 60,440 36,330 C24,260 20,120 24,40 C140,20 330,14 520,40 C700,66 820,170 882,298"/>
+          <path d="M972,532 L988,552 L966,560" fill="none" stroke="var(--route)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14,58 L24,38 L44,46" fill="none" stroke="var(--route)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- sheet furniture: neat line, grid refs, north, scale -->
+          <g stroke="var(--ink)" fill="none"><rect x=".75" y=".75" width="998.5" height="758.5" stroke-width="1.5"/><path d="M200,0V9M400,0V9M600,0V9M800,0V9M0,190H9M0,380H9M0,570H9" stroke-width="1"/></g>
+          <g><text class="ref" x="100" y="20" text-anchor="middle">A</text><text class="ref" x="300" y="20" text-anchor="middle">B</text><text class="ref" x="500" y="20" text-anchor="middle">C</text><text class="ref" x="700" y="20" text-anchor="middle">D</text><text class="ref" x="900" y="20" text-anchor="middle">E</text><text class="ref" x="12" y="99">1</text><text class="ref" x="12" y="289">2</text><text class="ref" x="12" y="479">3</text><text class="ref" x="12" y="669">4</text></g>
+          <g class="minor" stroke="var(--ink)" fill="none" stroke-width="1.2"><path d="M958,742V706M951,716L958,702L965,716"/><rect x="760" y="733" width="36" height="6" fill="var(--ink)"/><rect x="796" y="733" width="36" height="6"/><rect x="832" y="733" width="36" height="6" fill="var(--ink)"/></g>
+          <text class="it nts" x="814" y="725" text-anchor="middle" style="stroke:var(--sea)">not to scale</text>
+          <text class="ref minor" x="958" y="696" text-anchor="middle">N</text>
+        </svg>
+
+        <button class="mk l" style="--x:76;--y:48.9" data-p="uom" aria-pressed="false" aria-controls="panel" aria-label="University of Macedonia (UoM), 2015 to 2020"><span class="dot"></span><span class="t"><span>University of Macedonia</span><small>2015–2020</small><span class="s">UoM</span></span></button>
+        <button class="mk l" style="--x:63.5;--y:40.1" data-p="auth" aria-pressed="false" aria-controls="panel" aria-label="Aristotle University of Thessaloniki (AUTH), 2020 to 2022"><span class="dot"></span><span class="t"><span>Aristotle University</span><small>2020–2022</small><span class="s">AUTH</span></span></button>
+        <button class="mk edge e" style="--y:72.1" data-p="nicosia" aria-pressed="false" aria-controls="panel" aria-label="Nicosia, Cyprus, off the map about 1,100 kilometres south-east, 2022 to 2024"><span class="t"><span>Nicosia, Cyprus</span><small>about 1,100 km south-east</small><span class="s">Nicosia</span></span></button>
+        <button class="mk edge" style="--x:5.4;--y:8.4" data-p="derby" aria-pressed="false" aria-controls="panel" aria-label="Derby, UK, off the map about 2,300 kilometres north-west, 2023 to 2025"><span class="t"><span>Derby, UK</span><small>about 2,300 km north-west</small><span class="s">Derby</span></span></button>
+        <button class="mk edge off" style="--x:1.8;--y:94" data-p="remote" aria-pressed="false" aria-controls="panel" aria-label="Not on this map: remote EU projects, 2024 to 2026"><span class="t"><span>Not on this map</span><small>remote EU projects, 2024–2026</small><span class="s">Remote EU work</span></span></button>
+        <button class="mk home" style="--x:88.2;--y:39.2" data-p="home" aria-pressed="false" aria-controls="panel" aria-label="Home, working remotely, 2026 to now"><span class="dot"></span><span class="t"><span>Home</span><small>somewhere in the city</small><span class="s">Home</span></span></button>
+      </div>
+      <figcaption id="mapcap"><span>Thessaloniki on the Thermaic Gulf, drawn by hand and not to scale.</span><span class="key"><i></i>place</span><span class="key"><i class="h"></i>home, no address</span><span class="key"><i class="r"></i>my route, 2015 to now</span></figcaption>
+    </figure>
+
+    <section class="panel" id="panel" aria-label="Selected place" hidden>
+      <p class="stop" id="stop" aria-live="polite"></p>
+      <div class="pbody" id="pbody"></div>
+      <div class="pnav"><button type="button" id="prev">← Earlier stop</button><button type="button" id="next">Later stop →</button></div>
+    </section>
+  </div>
+
+  <section class="index" aria-labelledby="idx-h">
+    <h2 class="sech" id="idx-h">Index of places <em>in the order I got there</em></h2>
+    <p class="lede">The same places as the map, as a plain list. Grid references match the letters and numbers on the edge of the map.</p>
+    <ol id="places">
+      <li id="p-uom">
+        <h3 class="nm"><span>University of Macedonia</span><span class="gr">D2</span></h3>
+        <p class="role">BSc Applied Informatics <span>2015–2020</span></p>
+        <p class="txt">My undergraduate degree. My thesis used Ethereum to verify academic credentials, and it grew into VerDe, the system behind my first papers. The university then gave me a Basic Research grant (2020–2021).</p>
+        <ul class="rel">
+          <li><b>Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe</b> · XIV Balkan Conference on Operational Research · <span class="n">2020 · cited 11</span></li>
+          <li><b>A process-aware approach for blockchain-based verification of academic qualifications</b> · Simulation Modelling Practice and Theory · <span class="n">2022 · cited 32</span></li>
+          <li>Two Greek-language theses on verifying academic titles with Ethereum (2020, 2021)</li>
+          <li>Sites I built: <b>verde.uom.gr</b> and <b>marlab.ode.uom.gr</b>, the Marketing Laboratory site<img class="shot" src="../../img/portfolio/verde.uom.gr.PNG" alt="Screenshot of the VerDe contact page on verde.uom.gr, with a map pin at the University of Macedonia" loading="lazy"></li>
+        </ul>
+      </li>
+      <li id="p-auth">
+        <h3 class="nm"><span>Aristotle University of Thessaloniki</span><span class="gr">D2</span></h3>
+        <p class="role">MSc Data and Web Science <span>2020–2022</span></p>
+        <p class="txt">My master's, funded by a DeepMind scholarship. I worked on graph-embedding methods for blockchain fraud detection.</p>
+        <ul class="rel">
+          <li><b>Graph Embedding and Node Features for Drug-Target Interaction Prediction</b> · MSc work · <span class="n">2022</span></li>
+          <li>Sites I built on university hosts: <b>celc.web.auth.gr</b>, the Centre for European Legal Culture, and <b>eudem.polsci.auth.gr</b>, a Jean Monnet Chair site<img class="shot" src="../../img/portfolio/celc.web.auth.gr.PNG" alt="Screenshot of celc.web.auth.gr, the Centre for European Legal Culture site in Greek" loading="lazy"></li>
+        </ul>
+      </li>
+      <li id="p-nicosia">
+        <h3 class="nm"><span>Nicosia, Cyprus</span><span class="gr">off the map ↘</span></h3>
+        <p class="role">Blockchain &amp; Full-Stack Developer, University of Nicosia / IFF <span>2022–2024</span></p>
+        <p class="txt">I built large Next.js, NestJS and Docker applications and a Web3 NFT marketplace for the University of Nicosia and IFF. Nicosia is about 1,100 km south-east of Thessaloniki, as the crow flies.</p>
+        <ul class="rel">
+          <li>Sites I built: <b>metau.unic.ac.cy</b>, a course site with wallet sign-in; <b>accelerate.unic.ac.cy</b> (staging sign-in); <b>bbf-gui.ddns.net</b>, a blockchain benchmarking framework that lists the University of Nicosia among its sponsors<img class="shot" src="../../img/portfolio/metau.unic.ac.cy.png" alt="Screenshot of metau.unic.ac.cy, a University of Nicosia course page with a Connect Wallet button" loading="lazy"></li>
+        </ul>
+      </li>
+      <li id="p-derby">
+        <h3 class="nm"><span>Derby, UK</span><span class="gr">off the map ↖</span></h3>
+        <p class="role">Lecturer &amp; Academic Partner <span>2023–2025</span></p>
+        <p class="txt">Teaching for the University of Derby, through its partnership with Mediterranean College: Networks &amp; Security, Web Scripting and Application Development. I set assessment up to be inclusive first. Derby is about 2,300 km north-west.</p>
+      </li>
+      <li id="p-remote">
+        <h3 class="nm"><span>Remote, EU projects</span><span class="gr">not on the map</span></h3>
+        <p class="role">Blockchain Developer &amp; Researcher, Sidroco Holdings Ltd <span>2024–2026</span></p>
+        <p class="txt">Multinational EU projects: an NFT marketplace for 5G, Hyperledger Fabric prototypes and an Erasmus+ learning platform. I don't pin this one on the map, because it didn't happen in one place.</p>
+        <ul class="rel">
+          <li><b>FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs</b> · WSCE · <span class="n">2024 · cited 1</span></li>
+          <li><b>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management</b> · IEEE ICCE · <span class="n">2025</span></li>
+        </ul>
+      </li>
+      <li id="p-home">
+        <h3 class="nm"><span>Home, working remotely</span><span class="gr">E2, roughly</span></h3>
+        <p class="role">Web3 Full-Stack Developer, Cyberscope by TAC <span>May 2026 to now</span></p>
+        <p class="txt">What I do now: end-to-end Web3 products, smart contracts, on-chain integrations, React and Next.js frontends, and security tooling. I work from home in Thessaloniki. The ring on the map is vague on purpose; there's no address here.</p>
+        <ul class="rel">
+          <li>Also in the city: the <b>Move/Sui Bootcamp Thessaloniki</b> award, 2025</li>
+        </ul>
+      </li>
+    </ol>
+  </section>
+
+  <section class="from" aria-labelledby="from-h">
+    <h2 class="sech" id="from-h">From here <em>papers, certificates, and how to reach me</em></h2>
+    <div class="cols">
+      <section aria-labelledby="pp-h">
+        <h3 id="pp-h">Papers</h3>
+        <ol class="papers">
+          <li><span class="pt">A process-aware approach for blockchain-based verification of academic qualifications</span><span class="pv">Simulation Modelling Practice and Theory 121, 102642 · 2022</span><span class="pc">32<small>cited</small></span></li>
+          <li><span class="pt">Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe</span><span class="pv">XIV Balkan Conference on Operational Research · 2020</span><span class="pc">11<small>cited</small></span></li>
+          <li><span class="pt">Exploring decentralized governance: a framework applied to Compound Finance</span><span class="pv">Intl. Conf. on Mathematical Research for Blockchain Economy · 2023</span><span class="pc">7<small>cited</small></span></li>
+          <li><span class="pt">FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs</span><span class="pv">7th World Symposium on Communication Engineering · 2024</span><span class="pc">1<small>cited</small></span></li>
+          <li><span class="pt">Data security for smart cities</span><span class="pv">2025</span><span class="pc">1<small>cited</small></span></li>
+          <li><span class="pt">Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management</span><span class="pv">IEEE ICCE · 2025</span><span class="pc">0<small>cited</small></span></li>
+          <li><span class="pt">Graph Embedding and Node Features for Drug-Target Interaction Prediction</span><span class="pv">Aristotle University of Thessaloniki, MSc work · 2022</span><span class="pc">0<small>cited</small></span></li>
+          <li><span class="pt">Blockchain in Higher Education: permissioned and permissionless approaches</span><span class="pv">4th Summit on Gender Equality in Computing · 2022</span><span class="pc">0<small>cited</small></span></li>
+        </ol>
+        <p class="more">Plus two Greek-language theses on academic-title verification with Ethereum (2020, 2021). Citation counts come from <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">my Google Scholar profile</a>.</p>
+      </section>
+      <section aria-labelledby="cert-h">
+        <h3 id="cert-h">Awards and certificates</h3>
+        <ul class="awards">
+          <li>DeepMind Scholarship <span>Aristotle University, 2020–2022</span></li>
+          <li>3rd place, Infinitech Hackathon <span>Crowdpolicy, June 2022</span></li>
+          <li>Basic Research grant <span>University of Macedonia, 2020–2021</span></li>
+          <li>Move/Sui Bootcamp Thessaloniki award <span>2025</span></li>
+        </ul>
+        <p class="certs"><a href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg">MSc, Data and Web Science</a><a href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg">Bachelor's degree</a><a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png">Move bootcamp Thessaloniki</a><a href="../../img/renamed/Award_Academic-Achievement.jpg">Academic achievement award</a><a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg">CCNA</a><a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png">Rust developer</a><a href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png">Cloud engineering</a><a href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png">Advanced ethical hacking</a><a href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg">Machine learning and deep neural networks</a><a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg">Introduction to digital currencies</a><a href="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg">NFT Talents program</a><a href="../../img/renamed/Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg">Software development for telecommunication networks</a><a href="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png">Networking essentials</a><a href="../../img/renamed/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg">Cybersecurity e-learning academy</a><a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg">How to get published with IEEE</a><a href="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg">RippleX workshop</a><a href="../../img/renamed/Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg">VeChain ToolChain in healthcare</a><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg">Blockchain for the legal industry</a><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg">Blockchain in education</a><a href="../../img/renamed/Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg">Data analytics for healthcare cybersecurity</a><a href="../../img/renamed/Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg">Processing data in the fog</a><a href="../../img/renamed/Certificate-Of-Participation_EY-Cyber-Day.jpg">EY Cyber Day</a><a href="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg">GNU/Linux command line</a><a href="../../img/renamed/Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg">SKGcode real-estate chatbot</a><a href="../../img/renamed/Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg">Hydrobot marine robotics</a><a href="../../img/renamed/Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg">European legal culture program</a><a href="../../img/renamed/Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png">Entrepreneurship and new enterprises</a><a href="../../img/renamed/Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg">How to design and build a website</a><a href="../../img/renamed/Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg">Digital skills for tourism</a><a href="../../img/renamed/Certificate-Of-Completion_Discover-Customer.jpg">Discover customer</a><a href="../../img/renamed/Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png">Migma marketing kai brand</a><a href="../../img/renamed/Certificate-Of-Completion_The-Hour-Of-Code.jpg">The Hour of Code</a><a href="../../img/renamed/Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg">TOEIC listening and reading</a><a href="../../img/renamed/English-Certificate_English-Certificate-English-Proficiency.jpg">English proficiency</a></p>
+      </section>
+    </div>
+    <section class="write" aria-labelledby="w-h">
+      <h3 id="w-h">Write to me, from wherever you are</h3>
+      <a class="mail" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+      <p class="links"><a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a><a href="https://github.com/gmixoulis">GitHub</a><a href="https://twitter.com/GeorgeMicou">X</a><a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a></p>
+      <p class="quiet">Also on this site: <a href="../../garden/">my Zen Garden notes</a>, and <a href="../../play/">Ledger Run</a>, a platformer version of this CV.</p>
+    </section>
+  </section>
+</main>
+
+<footer>
+  <p>© George Michoulis. The map is drawn by hand for this page. Thessaloniki is not to scale, and the distances to Nicosia and Derby are straight-line estimates.</p>
+</footer>
+
+<script>
+(() => {
+  const items = [...document.querySelectorAll('#places > li')];
+  const marks = [...document.querySelectorAll('.mk')];
+  const panel = document.getElementById('panel'), body = document.getElementById('pbody'), stop = document.getElementById('stop');
+  const prev = document.getElementById('prev'), next = document.getElementById('next');
+  let cur = 0;
+  function show(i) {
+    cur = i;
+    const li = items[i], id = li.id.slice(2);
+    body.innerHTML = li.innerHTML;
+    body.querySelectorAll('img').forEach(im => im.removeAttribute('loading'));
+    stop.innerHTML = `Stop ${i + 1} of ${items.length}` + (i === items.length - 1 ? ', where I am now' : '') + `<span class="vh">: ${li.querySelector('.nm span').textContent}</span>`;
+    marks.forEach(m => m.setAttribute('aria-pressed', m.dataset.p === id));
+    prev.disabled = i === 0; next.disabled = i === items.length - 1;
+  }
+  marks.forEach(m => m.addEventListener('click', () => show(items.findIndex(li => li.id === 'p-' + m.dataset.p))));
+  prev.onclick = () => show(cur - 1); next.onclick = () => show(cur + 1);
+  panel.hidden = false;
+  show(items.length - 1);
+
+  // the signature: the route draws itself once, the first time the map is in view
+  const route = document.querySelector('.route'), map = document.getElementById('map');
+  if (matchMedia('(prefers-reduced-motion: no-preference)').matches && 'IntersectionObserver' in window) {
+    route.classList.add('pre');
+    new IntersectionObserver((es, io) => {
+      if (!es[0].isIntersecting) return;
+      io.disconnect();
+      route.getBoundingClientRect();
+      route.classList.add('go'); route.classList.remove('pre');
+    }, { threshold: .35 }).observe(map);
+  }
+})();
+</script>
+</body>
+</html>
