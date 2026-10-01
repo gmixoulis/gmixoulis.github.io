@@ -1,0 +1,14 @@
+---
+import type { Cert } from '@/data/profile';
+interface Props { certs: Cert[] }
+const { certs } = Astro.props;
+---
+
+<dialog id="dlg" aria-labelledby="dlg-h" data-lenis-prevent>
+  <div class="dh"><h2 id="dlg-h">All {certs.length} certificates</h2><button class="ibtn" id="dlg-x" type="button" aria-label="Close"><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m2 2 10 10M12 2 2 12" /></svg></button></div>
+  <ul class="all">
+    {certs.map((c) => (
+      <li><a href={c.src} target="_blank" rel="noopener noreferrer"><img src={c.src} width={c.w} height={c.h} alt={`Scan: ${c.title}`} loading="lazy" decoding="async" /></a><p>{c.title}<small>{c.by}</small></p></li>
+    ))}
+  </ul>
+</dialog>

@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { SiteNav } from '@/components/site/SiteNav';
+import Nav from '@/components/home/Nav.astro';
 
 interface Props {
   title?: string;
@@ -36,6 +36,11 @@ const description =
   'Blockchain developer, researcher, and full-stack Web3 engineer.';
 
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
+/*
+ * The inline head script sets the theme before first paint. One key, gm-theme: 'light' | 'dark' | 'system'
+ * (anything else counts as 'system', which follows the OS). It sets html.dark (garden CSS) and html[data-theme]
+ * (homepage CSS); src/scripts/home/nav.ts keeps both in sync on toggle. It also flags reduced motion as html.rm.
+ */
 const ldJson = jsonLd
   ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]).map((obj) =>
       JSON.stringify(obj).replace(/</g, '\\u003c'),
@@ -44,7 +49,7 @@ const ldJson = jsonLd
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en" class="dark" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -77,20 +82,20 @@ const ldJson = jsonLd
     <slot name="head" />
     <script is:inline>
       (function () {
+        var r = document.documentElement;
         try {
-          var t = localStorage.getItem('gm-theme') || 'system';
-          var dark =
-            t === 'dark' ||
-            (t === 'system' &&
-              window.matchMedia('(prefers-color-scheme: dark)').matches);
-          document.documentElement.classList.toggle('dark', dark);
-          document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+          var t = localStorage.getItem('gm-theme');
+          var dark = t === 'dark' || (t !== 'light' && !window.matchMedia('(prefers-color-scheme: light)').matches);
+          r.classList.toggle('dark', dark);
+          r.dataset.theme = dark ? 'dark' : 'light';
+          r.style.colorScheme = dark ? 'dark' : 'light';
         } catch (e) {}
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) r.classList.add('rm');
       })();
     </script>
   </head>
   <body class="min-h-dvh">
-    <SiteNav client:load />
+    <Nav />
     <slot />
   </body>
 </html>

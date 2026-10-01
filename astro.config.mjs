@@ -1,6 +1,5 @@
 // @ts-check
 import { defineConfig, fontProviders } from 'astro/config';
-import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
@@ -76,9 +75,15 @@ export default defineConfig({
       ] } },
     { provider: fontProviders.google(), name: 'Source Sans 3', cssVariable: '--font-source-sans',
       weights: [300, 400, 600], styles: ['normal', 'italic'], subsets: ['latin', 'latin-ext', 'greek'] },
+    // Homepage (Cube). Latin fonts, so `subsets` filters the Google faces correctly.
+    { provider: fontProviders.google(), name: 'Funnel Display', cssVariable: '--font-funnel',
+      weights: [500, 600], styles: ['normal'], subsets: ['latin', 'latin-ext'] },
+    { provider: fontProviders.google(), name: 'Geist', cssVariable: '--font-geist',
+      weights: [400, 500, 600], styles: ['normal'], subsets: ['latin', 'latin-ext'] },
+    { provider: fontProviders.google(), name: 'Geist Mono', cssVariable: '--font-geist-mono',
+      weights: [400, 500], styles: ['normal'], subsets: ['latin', 'latin-ext'] },
   ],
   integrations: [
-    react(),
     sitemap({
       filter: (page) => !page.includes('/drafts/'),
       customPages: ['https://george-michoulis.com/play/'],

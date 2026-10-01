@@ -1,0 +1,19 @@
+---
+import { about } from '@/data/profile';
+---
+
+<section class="sec about" id="about" tabindex="-1" aria-labelledby="h-about">
+  <div class="wrap about-g">
+    <div>
+      <p class="eyebrow" data-rv>About</p>
+      <h2 class="h2" id="h-about" data-rv>{about.h[0]} <span class="dim">{about.h[1]}</span></h2>
+      <p class="body def" data-rv>{about.def}</p>
+      <p class="body" data-rv>{about.body}</p>
+    </div>
+    <div class="quotes">
+      {about.quotes.map((q) => (
+        <figure class="q" data-rv><blockquote><p><b>“</b>{q.text}<b>”</b></p></blockquote>{q.caption && <figcaption>{q.caption}</figcaption>}</figure>
+      ))}
+    </div>
+  </div>
+</section>
