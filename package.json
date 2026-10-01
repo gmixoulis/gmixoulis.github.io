@@ -11,7 +11,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "deploy": "gh-pages -d build -u \"George Michoulis <gmixoulis@gmail.com>\" -r https://$GH_TOKEN@github.com/gmixoulis/gmixoulis.github.io.git"
+    "deploy": "gh-pages -d build --nojekyll --cname george-michoulis.com -u \"George Michoulis <gmixoulis@gmail.com>\""
   },
   "dependencies": {
     "@astrojs/rss": "^4",
