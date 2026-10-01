@@ -1,12 +1,22 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import GardenLayout from '@/layouts/GardenLayout.astro';
 import { getPosts, tagCounts, tagHref, fmtDate, readingMinutes } from '@/lib/garden';
+import branch from '@/assets/ink/branch.png';
+import crane from '@/assets/ink/crane.png';
+import sunBrush from '@/assets/ink/sun-brush.png';
+import dragonfly from '@/assets/ink/dragonfly.png';
+import greatWave from '@/assets/ink/great-wave.jpg';
+import ensoSumi from '@/assets/ink/enso-sumi.png';
 
 const posts = await getPosts();
 const tags = tagCounts(posts);
 /** Rake lines hugging the enso (viewBox 600, enso centred). */
 const rakes = [262, 282, 302];
+
+/** Optimised decorative backgrounds, passed into the CSS as inline vars. */
+const wave = await getImage({ src: greatWave, format: 'webp', width: 1600 });
+const enso = await getImage({ src: ensoSumi, format: 'png', width: 800 });
 
 const blogJsonLd = {
   '@context': 'https://schema.org',
@@ -29,15 +39,15 @@ const blogJsonLd = {
 >
   <div class="z-wrap">
     <section class="z-hero" aria-labelledby="garden-title">
-      <img class="z-branch z-reveal" style="--i:5" src="/img/ink/parts/branch.png" alt="" aria-hidden="true" />
-      <img class="z-crane z-reveal" style="--i:7" src="/img/ink/parts/crane.png" alt="" aria-hidden="true" />
+      <Image class="z-branch z-reveal" style="--i:5" src={branch} alt="" aria-hidden="true" loading="eager" />
+      <Image class="z-crane z-reveal" style="--i:7" src={crane} alt="" aria-hidden="true" loading="eager" />
       <div class="z-hero-copy">
         <div class="z-tick z-reveal"></div>
         <p class="z-meta z-reveal" style="--i:1">Personal notes · 禅庭</p>
-        <h1 id="garden-title" class="z-display z-reveal" style="--i:2">
+        <h1 id="garden-title" class="z-display z-reveal z-reveal-text" style="--i:2">
           Zen Garden
         </h1>
-        <p class="z-reveal" style="--i:3">
+        <p class="z-reveal z-reveal-text" style="--i:3">
           Whatever I feel like keeping. The stones stay; the sand gets raked
           again each morning.
         </p>
@@ -49,9 +59,9 @@ const blogJsonLd = {
             <circle cx="300" cy="300" r={r} pathLength="1" style={`--i:${i}`} />
           ))}
         </svg>
-        <img class="z-sun" src="/img/ink/parts/sun-brush.png" alt="" />
-        <div class="z-enso"></div>
-        <img class="z-dragonfly z-reveal" style="--i:6" src="/img/ink/parts/dragonfly.png" alt="" />
+        <Image class="z-sun" src={sunBrush} alt="" loading="eager" />
+        <div class="z-enso" style={`--z-enso: url(${enso.src})`}></div>
+        <Image class="z-dragonfly z-reveal" style="--i:6" src={dragonfly} alt="" loading="eager" />
         <span class="z-hanko" aria-hidden="true">禅庭</span>
         <span class="z-splat" style="--x:8%;--y:82%;--s:7px"></span>
         <span class="z-splat" style="--x:14%;--y:88%;--s:3px"></span>
@@ -100,7 +110,7 @@ const blogJsonLd = {
     {posts.length === 0 && <p class="z-meta" style="padding: 3rem 0">Nothing raked yet.</p>}
 
     <figure class="z-river z-reveal" aria-hidden="true">
-      <div class="z-river-band"></div>
+      <div class="z-river-band" style={`--z-wave: url(${wave.src})`}></div>
       <figcaption class="z-meta">神奈川沖浪裏 · Hokusai, c. 1831</figcaption>
     </figure>
 

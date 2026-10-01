@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Font } from 'astro:assets';
+import { getPosts } from '@/lib/garden';
 import '@/styles/garden.css';
 
 interface Props {
@@ -53,6 +55,16 @@ const petals = [
   { x: '81%', dx: '6vw', rot: '320deg', dur: '17s', delay: '13s' },
   { x: '93%', dx: '-4vw', rot: '-240deg', dur: '20s', delay: '7s' },
 ];
+
+/**
+ * Characters actually rendered in the brush font. The garden shows only a handful of
+ * CJK glyphs (seals, hanko, figcaption, kanji spread), so Yuji Syuku is loaded as a tiny
+ * `text=` subset instead of the full Japanese font. New posts extend the subset at build time.
+ */
+const BASE_CJK = '・円和夢奈川庭心愛沖浪無神禅裏道静';
+const postKanji = (await getPosts()).map((p) => p.data.kanji ?? '').join('');
+const cjk = [...new Set([...BASE_CJK, ...postKanji, ...kanji.map(([ch]) => ch).join('')])].join('');
+const brushHref = `https://fonts.googleapis.com/css2?family=Yuji+Syuku&text=${encodeURIComponent(cjk)}&display=swap`;
 ---
 
 <BaseLayout
@@ -69,12 +81,12 @@ const petals = [
   rss={rss}
 >
   <Fragment slot="head">
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <Font cssVariable="--font-shippori" preload={[{ weight: 600 }]} />
+    <Font cssVariable="--font-source-sans" preload={[{ weight: 400, style: 'normal', subset: 'latin' }]} />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,400&family=Yuji+Boku&family=Yuji+Syuku&family=Zen+Kurenaido&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Decorative kanji only: load off the critical path; the script below switches media to "all". -->
+    <link id="brush-font" rel="stylesheet" href={brushHref} media="print" />
+    <noscript><link rel="stylesheet" href={brushHref} /></noscript>
   </Fragment>
 
   <main class="garden" style="position: relative">
@@ -107,6 +119,8 @@ const petals = [
 </BaseLayout>
 
 <script>
+  document.getElementById('brush-font')?.setAttribute('media', 'all');
+
   // Section enter: ink-soak reveals and katana cuts fire once, when seen.
   const targets = document.querySelectorAll<HTMLElement>('.z-reveal, .z-cut');
   const show = (el: Element) => el.classList.add('is-in');

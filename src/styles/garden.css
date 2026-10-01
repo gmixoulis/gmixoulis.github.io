@@ -26,10 +26,9 @@
   --z-rule-strong: #0a0a0a;
   --z-accent: #c43c2c;
   --z-petal: color-mix(in srgb, var(--z-accent) 42%, var(--z-bg));
-  --z-font-display: "Shippori Mincho", "Hiragino Mincho ProN", "Times New Roman", serif;
-  --z-font-brush: "Yuji Syuku", "Yuji Boku", "Hiragino Mincho ProN", serif;
-  --z-font-hand: "Zen Kurenaido", "Yu Gothic", sans-serif;
-  --z-font-body: "Source Sans 3", "Noto Sans JP", "Hiragino Sans", sans-serif;
+  --z-font-display: var(--font-shippori), "Hiragino Mincho ProN", "Times New Roman", serif;
+  --z-font-brush: "Yuji Syuku", "Hiragino Mincho ProN", serif;
+  --z-font-body: var(--font-source-sans), "Hiragino Sans", "Noto Sans JP", sans-serif;
   --z-font-meta: "IBM Plex Mono", ui-monospace, monospace;
   --z-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --z-cut-ease: cubic-bezier(0.7, 0, 0.2, 1);
@@ -69,7 +68,7 @@
 
 .z-meta {
   font-family: var(--z-font-meta);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--z-ink-faint);
@@ -88,8 +87,6 @@
   opacity: 0.8;
   line-height: 1;
 }
-
-.z-hand { font-family: var(--z-font-hand); }
 
 /* ——— Hero ——— */
 .z-hero {
@@ -147,8 +144,8 @@
   inset: 8%;
   background: var(--z-ink);
   opacity: 0.92;
-  -webkit-mask: url("/img/ui/enso-sumi.png") center / contain no-repeat;
-  mask: url("/img/ui/enso-sumi.png") center / contain no-repeat;
+  -webkit-mask: var(--z-enso) center / contain no-repeat;
+  mask: var(--z-enso) center / contain no-repeat;
 }
 
 /* Ink kanji spread down the page: faint, brushed edge, slow breathing bob */
@@ -279,6 +276,8 @@
   transition-delay: calc(90ms * var(--i, 0));
 }
 .z-reveal.is-in { opacity: 1; filter: blur(0); transform: none; }
+/* Headline text stays opaque so it paints (and counts as LCP) at first frame; it still sharpens and rises. */
+.z-reveal-text { opacity: 1; }
 
 /* ——— Entries ——— */
 .z-entries { list-style: none; margin: 0; padding: 0; }
@@ -321,7 +320,7 @@
 .z-tatami {
   position: absolute;
   inset: 0;
-  background: url("/img/ui/tatami.jpg") center / cover no-repeat;
+  background: var(--z-tatami) center / cover no-repeat;
   opacity: 0.14;
   mix-blend-mode: multiply;
   filter: grayscale(1) contrast(1.05);
@@ -375,8 +374,8 @@
   aspect-ratio: 1;
   background: var(--z-ink);
   opacity: 0.7;
-  -webkit-mask: url("/img/ui/enso-sumi.png") center / contain no-repeat;
-  mask: url("/img/ui/enso-sumi.png") center / contain no-repeat;
+  -webkit-mask: var(--z-enso) center / contain no-repeat;
+  mask: var(--z-enso) center / contain no-repeat;
 }
 
 /* ——— Licensed sumi artwork (public/img/ink/parts) ——— */
@@ -391,7 +390,7 @@
 .z-river { margin: clamp(2rem, 6vh, 4rem) 0 clamp(3rem, 8vh, 5rem); }
 .z-river-band {
   aspect-ratio: 1800 / 588;
-  background: url("/img/ink/parts/great-wave.jpg") center / cover no-repeat;
+  background: var(--z-wave) center / cover no-repeat;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
   filter: contrast(1.08);
@@ -429,7 +428,7 @@
   display: inline-block;
   position: static;
   font-family: var(--z-font-meta);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--z-ink-faint);
