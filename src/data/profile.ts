@@ -22,6 +22,7 @@ export const profile = {
   linkedin: 'https://www.linkedin.com/in/george-michoulis/',
   linkedinPosts: 'https://www.linkedin.com/in/george-michoulis/recent-activity/all/',
   linkedinWidget: 'https://widgets.sociablekit.com/linkedin-profile-posts/iframe/97069',
+  note: "I'm a human being with dyslexia, dysgraphia, ADHD, OCD and a short attention span. I built this site for people like me.",
   lede: 'Blockchain developer and researcher. I build smart contracts, graph-based ML and full-stack Web3 systems.',
   footer: 'George Michoulis (Georgios Michoulis, ',
   greekName: 'Γεώργιος Μιχούλης',

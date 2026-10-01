@@ -341,3 +341,12 @@ html[data-read='easy'] .z-plate {
 html[data-read='easy'] .er {
   border-color: var(--a2);
 }
+
+/* The hero note's 'Read it the easy way' link is pointless once the mode is on. */
+html[data-read='easy'] .er-off {
+  display: none;
+}
+html[data-read='easy'] .note {
+  margin-inline: 0;
+  max-width: 64ch;
+}
