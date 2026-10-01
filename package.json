@@ -10,8 +10,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "deploy": "gh-pages -d build --nojekyll --cname george-michoulis.com -u \"George Michoulis <gmixoulis@gmail.com>\""
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/rss": "^4",
@@ -29,7 +28,6 @@
   },
   "devDependencies": {
     "@types/three": "0.169",
-    "gh-pages": "^6.3.0",
     "puppeteer-core": "^25.8.0",
     "typescript": "^7.0.2",
     "ws": "^8.21.3"
