@@ -1,0 +1,298 @@
+/* Stage is designed for ~1000px (see viewport meta). Full-bleed 1920px
+   shows city + gate + sea in one frame — landmarks look “all together”. */
+html,
+body {
+  background: #47b1e0;
+}
+
+#container {
+  width: 1000px !important;
+  left: 50% !important;
+  margin-left: -500px;
+}
+
+#ground-and-grass-container-1 {
+  z-index: 1;
+}
+
+.elevation,
+#elevation-2 {
+  z-index: 2;
+}
+
+#buildings-container,
+#buildings-container-2,
+#buildings-waterfront {
+  z-index: 5;
+  overflow: visible;
+}
+
+#ale-container {
+  z-index: 40;
+}
+
+/* The exit trigger uses Ale's right edge; put his centre between the rails. */
+.ladder {
+  right: -48px;
+}
+
+/* City 1 @ 4800, width 900 (style.min.css) — White Tower · Rotunda · Heptapyrgion */
+#buildings-container {
+  width: 900px;
+}
+
+#bologna {
+  width: 280px;
+  height: 420px;
+  background-image: url(../image/layers/bologna.png);
+  background-repeat: no-repeat;
+  background-position: bottom left;
+  background-size: contain;
+}
+
+#building-rotunda {
+  position: absolute;
+  bottom: 0;
+  width: 260px;
+  height: 360px;
+  background-image: url(../image/layers/skg-rotunda.png);
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: contain;
+}
+
+#building-heptapyrgion {
+  position: absolute;
+  bottom: 0;
+  width: 360px;
+  height: 340px;
+  background-image: url(../image/layers/skg-heptapyrgion.png);
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: contain;
+}
+
+/* OTE after city 1 (ends 5700), before LEVEL 2 ramp @ 6080 */
+
+
+/* Port only, 7580–7780, between city 2 and LEVEL 2 gate. */
+#buildings-waterfront {
+  display: none;
+}
+
+#building-aristotelous,
+#building-megaron {
+  display: none;
+}
+
+/* Long skill labels */
+#fish-text-container,
+#turtle-text-container,
+#crab-text-container {
+  overflow: visible;
+  width: 560px;
+}
+
+/* LEVEL 4 station — degrees on the floor (vertical banners stay above). */
+#education-station {
+  position: absolute;
+  left: 19940px;
+  bottom: 20%;
+  width: 560px;
+  height: 80%;
+  z-index: 8;
+  pointer-events: auto;
+}
+
+.education-text-container {
+  position: absolute;
+  left: -400px; /* read the degrees before reaching the boarding path */
+  bottom: 48px;
+  width: 520px;
+  padding: 22px 26px 16px;
+  background-color: #444;
+  border: 10px solid #777;
+  box-sizing: border-box;
+}
+
+.edu-when {
+  margin: 0 0 4px;
+  font-family: frankfurter-medium-plain, sans-serif;
+  color: #fff;
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.edu-title {
+  margin: 0 0 8px;
+  font-family: frankfurter-plain, sans-serif;
+  color: #fff;
+  font-size: 32px;
+  line-height: 0.95;
+}
+
+.edu-body {
+  margin: 0 0 16px;
+  width: 92%;
+  font-family: frankfurter-medium-plain, sans-serif;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+#education-diplomas {
+  position: absolute;
+  left: 0;
+  bottom: 518px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.edu-diploma {
+  display: block;
+  width: 252px;
+  height: 168px;
+  border: 8px solid #777;
+  background: #fff8ee;
+  box-shadow: 8px 8px 0 #2a2a2a;
+}
+
+.edu-diploma img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner-image a {
+  position: relative;
+  display: block;
+  width: 256px;
+  height: 256px;
+  margin: 0 auto;
+  border: none;
+}
+
+.banner-image img {
+  display: block;
+  width: 256px;
+  height: 256px;
+  object-fit: cover;
+  background: #fff8ee;
+}
+
+/* LEVEL 3 plates: two-line titles, ribbon hangs on the plate (was: fixed at stage top, covering the title). */
+.experience-text-container {
+  width: 470px;
+  padding: 24px 30px 22px;
+  z-index: 2; /* plate + its ribbon in front of the boss body */
+}
+
+.experience-text-container .experience-text-a {
+  font-size: 26px;
+  line-height: 26px;
+  margin-bottom: 10px;
+}
+
+.experience-text-container .experience-text-b {
+  font-size: 36px;
+  line-height: 34px;
+  margin-bottom: 14px;
+}
+
+.experience-text-container .experience-text-c {
+  width: 100%;
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+.experience-text-container .ribbon-container {
+  top: -50px;
+  left: 0;
+}
+
+/* Contact: social ribbon hangs between the form (ends ~x600) and the rocket body (starts ~x750); 85% put it behind the rocket. */
+#links-container {
+  left: 60.5%;
+  transform: scale(0.8); /* 48px icons clear the rocket's lower fin. */
+  transform-origin: top left;
+}
+
+#contact-button {
+  margin-left: -265px;
+}
+
+#rocket {
+  z-index: 30;
+}
+
+/* The outer mask is the glass; the inner mask exposes only George's head. */
+#ale-container.in-rocket {
+  left: var(--seat-left) !important;
+  top: var(--seat-top) !important;
+  bottom: auto !important;
+  padding: 0 !important;
+  width: 338px;
+  height: 464px;
+  clip-path: circle(81px at 166px 201px);
+  pointer-events: none;
+}
+
+#ale-container.in-rocket #ale {
+  position: absolute;
+  left: 64px;
+  top: 125px;
+  height: 108px; /* stop below the beard, before the shirt */
+  clip-path: circle(36px at 102px 76px);
+}
+
+#ale-container.boarding #ale {
+  animation: rocket-board 0.45s ease-out;
+}
+
+@keyframes rocket-board {
+  from { transform: translate(var(--boarding-x), var(--boarding-y)); }
+  to { transform: translate(0, 0); }
+}
+
+/* George sprite: bald dokson sheet recoloured (hair, beard, ink shirt, coral cape, G). */
+#ale-slides {
+  background-image: url(../image/ale/george-slides.png);
+}
+
+/* Rocket exhaust while riding the vertical layer. */
+#rocket-flame {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 64px;
+  height: 0;
+  margin-left: -32px;
+  transform-origin: 50% 0;
+  background: linear-gradient(180deg, #fff3b0 0%, #ffb347 35%, #ff5a1f 70%, rgba(255, 90, 31, 0) 100%);
+  border-radius: 0 0 32px 32px / 0 0 70px 70px;
+  opacity: 0;
+  pointer-events: none;
+  transition: height 0.3s ease, opacity 0.3s ease;
+}
+
+#rocket.flying #rocket-flame {
+  height: 120px;
+  opacity: 0.95;
+  animation: flame-flicker 0.16s ease-in-out infinite alternate;
+}
+
+@keyframes flame-flicker {
+  from { transform: scaleY(0.85) scaleX(0.9); }
+  to { transform: scaleY(1.15) scaleX(1.06); }
+}
+
+/* Way out of the game, always visible (also during loading). */
+.gm-back{position:fixed;top:16px;left:16px;z-index:2147483000;display:inline-flex;align-items:center;gap:6px;
+  padding:9px 16px 8px;border-radius:999px;background:#fff;color:#1d4e5f;font:16px/1 frankfurter-medium-plain,Arial,sans-serif;
+  letter-spacing:.02em;text-decoration:none;box-shadow:0 3px 0 rgba(0,0,0,.2);transition:transform .15s,box-shadow .15s}
+.gm-back:hover{transform:translateY(-2px);box-shadow:0 5px 0 rgba(0,0,0,.2)}
+.gm-back:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.gm-back:focus-visible{outline:3px solid #f7941d;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.gm-back{transition:none}}

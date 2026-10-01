@@ -1,0 +1,29 @@
+# George Michoulis
+
+> Blockchain developer and researcher based in Thessaloniki · Remote.
+
+Interactive resume: https://gmixoulis.github.io/play/
+
+## Profile
+- Name: George Michoulis
+- Location: Thessaloniki · Remote
+- Email: gmixoulis@gmail.com
+- Roles: Blockchain, Full-Stack, Data Science, Web3, Machine Learning, Research
+
+## Experience
+- Web3 Full-Stack Developer — Cyberscope by TAC (05/2026–Present)
+- Blockchain Developer & Researcher — Sidroco Holdings LTD (2024–2026)
+- Lecturer & Academic Partner — University of Derby / Mediterranean College (2023–2025)
+
+## Education
+- MSc Data and Web Science — Aristotle University of Thessaloniki (DeepMind Scholarship)
+- BSc Applied Informatics — University of Macedonia
+
+## Social
+- LinkedIn: https://www.linkedin.com/in/george-michoulis/
+- GitHub: https://github.com/gmixoulis
+- Scholar: https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el
+- X: https://twitter.com/GeorgeMicou
+
+## Attribution
+Interactive resume visual system adapted from dokson / colace.me (inspired by Robby Leonardi). See NOTICE.txt.

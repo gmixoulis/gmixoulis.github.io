@@ -1,5 +1,5 @@
 # build output
-dist/
+/dist/
 build/
 # generated types
 .astro/
@@ -24,3 +24,6 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 scripts/play-qa/out/
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
