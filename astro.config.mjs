@@ -2,6 +2,26 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
+import { readdirSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+/**
+ * A local tool hook writes `receipts/` and `review-receipts/` logs into whatever folder it runs in,
+ * including under `public/`, which Astro copies verbatim. Strip them from every build so they never deploy.
+ * @returns {import('astro').AstroIntegration}
+ */
+function stripToolReceipts() {
+  const walk = (/** @type {string} */ dir) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      if (!e.isDirectory()) continue;
+      const p = join(dir, e.name);
+      if (e.name === 'receipts' || e.name === 'review-receipts') rmSync(p, { recursive: true, force: true });
+      else walk(p);
+    }
+  };
+  return { name: 'strip-tool-receipts', hooks: { 'astro:build:done': ({ dir }) => walk(fileURLToPath(dir)) } };
+}
 
 /**
  * Vite/Astro do not auto-serve directory indexes for files in `public/`.
@@ -88,6 +108,7 @@ export default defineConfig({
       filter: (page) => !page.includes('/drafts/'),
       customPages: ['https://george-michoulis.com/play/'],
     }),
+    stripToolReceipts(),
   ],
   // CSP is emitted as a <meta> at the end of <head>; BaseLayout's inline theme bootstrap runs before it
   // (no-flash pattern), so it needs no hash. Keep that script above the meta, or add its hash to scriptDirective.
