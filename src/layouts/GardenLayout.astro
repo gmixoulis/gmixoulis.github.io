@@ -1,0 +1,143 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Font } from 'astro:assets';
+import { getPosts } from '@/lib/garden';
+import '@/styles/garden.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  progress?: boolean;
+  canonical?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  ogImage?: string;
+  noindex?: boolean;
+  jsonLd?: object | object[];
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
+  rss?: boolean;
+}
+const {
+  title,
+  description,
+  progress = false,
+  canonical,
+  ogType,
+  ogImage,
+  noindex,
+  jsonLd,
+  publishedTime,
+  modifiedTime,
+  tags,
+  rss = true,
+} = Astro.props;
+
+/** Hana petals drifting through the garden, sparse and slow, looping. */
+/** Ink kanji spread down the whole page: [char, x%, top in vh, size rem, tilt]. Faint, slow bob. */
+const kanji = [
+  ['和', 4, 8, 8, -6],
+  ['静', 88, 22, 7, 4],
+  ['心', 6, 70, 7.5, 5],
+  ['愛', 90, 96, 8, -3],
+  ['無', 3, 135, 7, -4],
+  ['道', 84, 170, 8, 3],
+  ['夢', 8, 215, 7, -5],
+  ['禅', 86, 260, 7.5, 4],
+] as const;
+const petals = [
+  { x: '6%', dx: '6vw', rot: '300deg', dur: '14s', delay: '0.5s' },
+  { x: '18%', dx: '-4vw', rot: '-220deg', dur: '19s', delay: '6s' },
+  { x: '31%', dx: '5vw', rot: '260deg', dur: '16s', delay: '11s' },
+  { x: '44%', dx: '-6vw', rot: '-300deg', dur: '21s', delay: '3s' },
+  { x: '57%', dx: '4vw', rot: '240deg', dur: '15s', delay: '9s' },
+  { x: '69%', dx: '-5vw', rot: '-260deg', dur: '18s', delay: '1.5s' },
+  { x: '81%', dx: '6vw', rot: '320deg', dur: '17s', delay: '13s' },
+  { x: '93%', dx: '-4vw', rot: '-240deg', dur: '20s', delay: '7s' },
+];
+
+/**
+ * Characters actually rendered in the brush font. The garden shows only a handful of
+ * CJK glyphs (seals, hanko, figcaption, kanji spread), so Yuji Syuku is loaded as a tiny
+ * `text=` subset instead of the full Japanese font. New posts extend the subset at build time.
+ */
+const BASE_CJK = '・円和夢奈川庭心愛沖浪無神禅裏道静';
+const postKanji = (await getPosts()).map((p) => p.data.kanji ?? '').join('');
+const cjk = [...new Set([...BASE_CJK, ...postKanji, ...kanji.map(([ch]) => ch).join('')])].join('');
+const brushHref = `https://fonts.googleapis.com/css2?family=Yuji+Syuku&text=${encodeURIComponent(cjk)}&display=swap`;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogType={ogType}
+  ogImage={ogImage}
+  noindex={noindex}
+  jsonLd={jsonLd}
+  publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
+  tags={tags}
+  rss={rss}
+>
+  <Fragment slot="head">
+    <Font cssVariable="--font-shippori" preload={[{ weight: 600 }]} />
+    <Font cssVariable="--font-source-sans" preload={[{ weight: 400, style: 'normal', subset: 'latin' }]} />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Decorative kanji only: load off the critical path; the script below switches media to "all". -->
+    <link id="brush-font" rel="stylesheet" href={brushHref} media="print" />
+    <noscript><link rel="stylesheet" href={brushHref} /></noscript>
+  </Fragment>
+
+  <main class="garden" style="position: relative">
+    {progress && <div class="z-progress" aria-hidden="true"></div>}
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <filter id="z-sumi" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="11" result="fine" />
+        <feDisplacementMap in="SourceGraphic" in2="fine" scale="7" xChannelSelector="R" yChannelSelector="G" result="d1" />
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="1" seed="5" result="coarse" />
+        <feDisplacementMap in="d1" in2="coarse" scale="10" xChannelSelector="R" yChannelSelector="B" />
+      </filter>
+    </svg>
+    <div class="z-kanji-page" aria-hidden="true">
+      {kanji.map(([ch, x, y, size, rot], i) => (
+        <span class="z-kanji" style={`--x:${x}%;--y:${y}vh;--s:${size}rem;--r:${rot}deg;--i:${i}`}>{ch}</span>
+      ))}
+    </div>
+    <div class="z-petals" aria-hidden="true">
+      {petals.map((p) => (
+        <span
+          class="z-petal"
+          style={`--x:${p.x};--dx:${p.dx};--rot:${p.rot};--dur:${p.dur};--delay:${p.delay}`}
+        >
+          <svg viewBox="0 0 20 20"><path d="M10 1c4 3 8 7 8 11a8 8 0 0 1-8 7 8 8 0 0 1-8-7c0-4 4-8 8-11zm0 4l-1.5 3L10 9l1.5-1z" /></svg>
+        </span>
+      ))}
+    </div>
+    <slot />
+  </main>
+</BaseLayout>
+
+<script>
+  document.getElementById('brush-font')?.setAttribute('media', 'all');
+
+  // Section enter: ink-soak reveals and katana cuts fire once, when seen.
+  const targets = document.querySelectorAll<HTMLElement>('.z-reveal, .z-cut');
+  const show = (el: Element) => el.classList.add('is-in');
+  if (!('IntersectionObserver' in window)) {
+    targets.forEach(show);
+  } else {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            show(e.target);
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.01, rootMargin: '0px 0px -6% 0px' },
+    );
+    targets.forEach((el) => io.observe(el));
+  }
+</script>

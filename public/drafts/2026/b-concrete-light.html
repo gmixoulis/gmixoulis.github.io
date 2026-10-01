@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>B · Concrete Light — George Michoulis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --concrete:#D9D4CC; --concrete-2:#CFC9BF; --black:#1C1B19; --black-2:#3A3835; --grey:#7C7872;
+    --lime:#C6F53B;
+    --display:"Bricolage Grotesque",Impact,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+    --pad:clamp(1.25rem,5vw,5rem); --ease:cubic-bezier(.2,.7,.2,1);
+  }
+  *{box-sizing:border-box;margin:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--concrete);color:var(--black);font-family:var(--display);font-weight:300;font-size:1.05rem;line-height:1.5;-webkit-font-smoothing:antialiased;cursor:none}
+  a{color:inherit;text-decoration:none}
+  .mono{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+
+  /* grain + cursor */
+  .grain{position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.12;mix-blend-mode:multiply}
+  .cursor{position:fixed;left:0;top:0;width:14px;height:14px;border-radius:50%;background:var(--lime);border:1px solid var(--black);pointer-events:none;z-index:70;transform:translate(-50%,-50%);transition:width .2s,height .2s}
+  body:has(a:hover) .cursor{width:40px;height:40px;mix-blend-mode:multiply}
+  @media (hover:none){.cursor{display:none} body{cursor:auto}}
+
+  /* nav */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;padding:1.1rem var(--pad);border-bottom:1px solid var(--black);background:var(--concrete)}
+  .nav b{font-weight:800}
+  .nav a{margin-left:1.5rem;position:relative}
+  .nav a::after,.u::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:3px;background:var(--lime);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+  .nav a:hover::after,.u:hover::after{transform:scaleX(1)}
+  .u{position:relative}
+
+  section{padding:calc(var(--pad) + 3rem) var(--pad) var(--pad);border-top:1px solid var(--black)}
+  .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3rem}
+  .head h2{font-size:clamp(2.6rem,7vw,7rem);font-weight:800;letter-spacing:-.04em;line-height:.9}
+  .head .idx{font-size:clamp(3rem,10vw,10rem);font-weight:300;line-height:.8;color:var(--concrete-2);-webkit-text-stroke:1px var(--black)}
+
+  /* hero */
+  .hero{min-height:100vh;display:grid;grid-template-rows:1fr auto;border-top:0;overflow:hidden;position:relative}
+  .hero .num{position:absolute;right:-.02em;top:.6em;font-size:52vw;font-weight:800;line-height:.8;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:2px var(--black);opacity:.35;pointer-events:none}
+  .hero h1{align-self:end;font-size:clamp(3.4rem,14vw,14rem);font-weight:800;letter-spacing:-.05em;line-height:.85;position:relative}
+  .hero h1 span{display:block;font-weight:300}
+  .hero .bar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;border-top:1px solid var(--black);margin-top:2.5rem;padding-top:1rem}
+  .hero .bar p{max-width:38ch}
+  .cta{display:inline-block;background:var(--black);color:var(--concrete);padding:.9rem 1.4rem;font-weight:500;justify-self:start;align-self:start;transition:background .3s,color .3s}
+  .cta:hover{background:var(--lime);color:var(--black)}
+  @supports (animation-timeline: scroll()){
+    .hero .num{animation:num linear both;animation-timeline:scroll(root);animation-range:0 100vh}
+    .hero h1{animation:h1 linear both;animation-timeline:scroll(root);animation-range:0 100vh}
+    @keyframes num{to{transform:translateY(-70vh) translateX(10vw)}}
+    @keyframes h1{to{transform:translateY(-20vh);letter-spacing:0;opacity:.2}}
+  }
+
+  /* about */
+  .about{display:grid;grid-template-columns:2fr 1fr;gap:4rem}
+  .about p.big{font-size:clamp(1.4rem,3vw,2.6rem);line-height:1.15;letter-spacing:-.02em;max-width:26ch}
+  .roles{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--black)}
+  .roles span{padding:1rem;border:1px solid var(--black);margin:-.5px;font-weight:500;transition:background .3s}
+  .roles span:hover{background:var(--black);color:var(--lime)}
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);margin-top:3rem;border:1px solid var(--black)}
+  .pillars div{padding:1.5rem;border-right:1px solid var(--black)}
+  .pillars div:last-child{border-right:0}
+  .pillars h3{font-size:1.5rem;font-weight:800;margin-bottom:.6rem}
+  .pillars p{color:var(--black-2)}
+
+  /* pinned strip */
+  .pin-wrap{height:320vh;view-timeline-name:--pan;border-top:1px solid var(--black)}
+  .pin{position:sticky;top:0;height:100vh;overflow:hidden;display:grid;grid-template-rows:auto 1fr;padding:calc(var(--pad) + 3rem) 0 var(--pad)}
+  .pin .head{padding:0 var(--pad)}
+  .track{display:flex;gap:1.5rem;width:max-content;padding:0 var(--pad);align-items:center}
+  .card{width:min(70vw,760px);border:1px solid var(--black);background:var(--concrete-2);display:grid;grid-template-rows:auto 1fr}
+  .card .lbl{display:flex;justify-content:space-between;padding:.8rem 1rem;border-bottom:1px solid var(--black)}
+  .card img{width:100%;aspect-ratio:16/9;object-fit:cover;object-position:top;display:block;filter:grayscale(1) contrast(1.05);transition:filter .5s}
+  .card:hover img{filter:none}
+  .card.end{width:min(40vw,420px);background:var(--black);color:var(--concrete);padding:2rem;font-size:2rem;font-weight:800;line-height:1;align-content:end}
+  .card.end b{color:var(--lime)}
+  @supports (animation-timeline: scroll()){
+    .track{animation:pan linear both;animation-timeline:--pan;animation-range:contain 0% contain 100%}
+    @keyframes pan{to{transform:translateX(calc(100vw - 100%))}}
+  }
+  @supports not (animation-timeline: scroll()){
+    .pin-wrap{height:auto}
+    .pin{position:static;height:auto;overflow-x:auto}
+  }
+
+  /* experience */
+  .xp{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));border:1px solid var(--black)}
+  .xp article{padding:1.5rem;border-right:1px solid var(--black);border-bottom:1px solid var(--black);display:grid;grid-template-rows:auto auto 1fr;gap:.6rem;min-height:300px;transition:background .3s}
+  .xp article:hover{background:var(--black);color:var(--concrete)}
+  .xp article:hover .mono{color:var(--lime)}
+  .xp h3{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+  .xp .org{font-weight:500}
+  .xp p{align-self:end;color:inherit;opacity:.8}
+
+  /* certs */
+  .certs{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));border:1px solid var(--black)}
+  .certs figure{border:1px solid var(--black);margin:-.5px;aspect-ratio:1;overflow:hidden;position:relative}
+  .certs img{width:100%;height:100%;object-fit:cover;filter:grayscale(1);transition:filter .4s,transform .8s var(--ease)}
+  .certs figure:hover img{filter:none;transform:scale(1.06)}
+  .certs figcaption{position:absolute;left:0;right:0;bottom:0;background:var(--black);color:var(--concrete);padding:.4rem .6rem;font-family:var(--mono);font-size:.7rem;text-transform:uppercase}
+  .pubs{margin-top:3rem}
+  .pub{display:grid;grid-template-columns:5rem 1fr auto;gap:1.5rem;padding:1.2rem 0;border-top:1px solid var(--black);align-items:baseline}
+  .pub .n{font-size:2.6rem;font-weight:800;letter-spacing:-.04em}
+  .pub b{font-weight:500;display:block}
+  .pub small{color:var(--grey)}
+
+  /* edu + contact */
+  .edu{display:grid;grid-template-columns:1fr 1fr;gap:3rem}
+  .edu ul{list-style:none}
+  .edu li{border-top:1px solid var(--black);padding:1rem 0;display:grid;grid-template-columns:8rem 1fr;gap:1rem}
+  .edu li b{font-weight:800;font-size:1.2rem;display:block}
+  .edu li i{font-style:normal;color:var(--grey)}
+  .contact{min-height:80vh;display:grid;align-content:end;background:var(--black);color:var(--concrete)}
+  .contact h2{font-size:clamp(3rem,13vw,13rem);font-weight:800;letter-spacing:-.05em;line-height:.85}
+  .contact h2 a{position:relative}
+  .contact h2 a::after{content:"";position:absolute;left:0;right:0;bottom:.05em;height:.08em;background:var(--lime);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+  .contact h2 a:hover::after{transform:scaleX(1)}
+  .contact .socials{display:flex;gap:2rem;margin-top:2rem;border-top:1px solid var(--grey);padding-top:1rem}
+  .contact .socials a:hover{color:var(--lime)}
+
+  /* reveal */
+  [data-reveal]{opacity:0;transform:translateY(30px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  [data-reveal].in{opacity:1;transform:none}
+
+  @media (max-width:820px){
+    .about,.edu{grid-template-columns:1fr;gap:2rem}
+    .pillars{grid-template-columns:1fr}
+    .pillars div{border-right:0;border-bottom:1px solid var(--black)}
+    .hero .bar{grid-template-columns:1fr}
+    .pub{grid-template-columns:3.5rem 1fr}
+    .nav a{margin-left:.9rem}
+    .nav b span{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    [data-reveal]{opacity:1;transform:none}
+    .pin-wrap{height:auto}.pin{position:static;height:auto;overflow-x:auto}
+  }
+</style>
+</head>
+<body>
+<svg class="grain" width="100%" height="100%" aria-hidden="true"><filter id="g"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .6 0"/></filter><rect width="100%" height="100%" filter="url(#g)"/></svg>
+<div class="cursor" aria-hidden="true"></div>
+
+<nav class="nav mono">
+  <b>GM<span> — George Michoulis</span></b>
+  <span><a href="#about">About</a><a href="#work">Work</a><a href="#xp">Experience</a><a href="#contact">Contact</a></span>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="num" aria-hidden="true">01</div>
+    <h1>George<span>Michoulis</span></h1>
+    <div class="bar">
+      <p class="mono">Web3 · ML · Full-stack<br />Thessaloniki · Remote</p>
+      <p>Blockchain developer and researcher. Smart contracts, graph-based ML, and full-stack Web3 systems.</p>
+      <a class="cta" href="mailto:gmixoulis@gmail.com">Start a conversation →</a>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="head"><h2 data-reveal>About</h2><span class="idx">02</span></div>
+    <div class="about">
+      <div data-reveal>
+        <p class="big">Based in Thessaloniki. BSc Applied Informatics on Ethereum credential verification. MSc Data and Web Science on graph-embedding methods for blockchain fraud detection, funded by DeepMind.</p>
+      </div>
+      <div class="roles" data-reveal>
+        <span>Blockchain</span><span>Full-Stack</span><span>Data Science</span><span>Web3</span><span>Machine Learning</span><span>Research</span>
+      </div>
+    </div>
+    <div class="pillars" data-reveal>
+      <div><h3>Research</h3><p>Publications and startup work on ledger effectiveness, improvement areas, and practical change across blockchain systems.</p></div>
+      <div><h3>Build</h3><p>Web3 (NFTs, DeFi), data science with graph embeddings, and shipping across Solidity, TypeScript, and cloud.</p></div>
+      <div><h3>Teach</h3><p>Lecturer in networks, security, and application development. Public speaking on Web3 and edge tech.</p></div>
+    </div>
+  </section>
+
+  <div class="pin-wrap" id="work">
+    <div class="pin">
+      <div class="head"><h2>Work</h2><span class="idx">03</span></div>
+      <div class="track">
+        <a class="card" href="https://accelerate.uom.gr" target="_blank" rel="noopener"><div class="lbl mono"><span>accelerate.uom.gr</span><span>Platform</span></div><img src="/img/portfolio/accelerate.png" alt="accelerate" loading="lazy" /></a>
+        <a class="card" href="https://metau.unic.ac.cy" target="_blank" rel="noopener"><div class="lbl mono"><span>metau.unic.ac.cy</span><span>Web3 · NFT</span></div><img src="/img/portfolio/metau.unic.ac.cy.png" alt="metau" loading="lazy" /></a>
+        <a class="card" href="https://marlab.ode.uom.gr" target="_blank" rel="noopener"><div class="lbl mono"><span>marlab.ode.uom.gr</span><span>Research lab</span></div><img src="/img/portfolio/marlab.ode.uom.gr.PNG" alt="marlab" loading="lazy" /></a>
+        <a class="card" href="https://verde.uom.gr" target="_blank" rel="noopener"><div class="lbl mono"><span>verde.uom.gr</span><span>Ethereum credentials</span></div><img src="/img/portfolio/verde.uom.gr.PNG" alt="verde" loading="lazy" /></a>
+        <a class="card" href="https://eudem.polsci.auth.gr" target="_blank" rel="noopener"><div class="lbl mono"><span>eudem.polsci.auth.gr</span><span>EU project</span></div><img src="/img/portfolio/eudem.polsci.auth.gr.PNG" alt="eudem" loading="lazy" /></a>
+        <div class="card end">Seven shipped<br />products.<br /><b>More on GitHub →</b></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="xp">
+    <div class="head"><h2 data-reveal>Experience</h2><span class="idx">04</span></div>
+    <div class="xp" data-reveal>
+      <article><span class="mono">05 / 2026 — Present</span><div><h3>Web3 Full-Stack Developer</h3><div class="org">Cyberscope by TAC</div></div><p>End-to-end Web3 products: contracts, on-chain integrations, React/Next frontends, security tooling.</p></article>
+      <article><span class="mono">2024 — 2026</span><div><h3>Blockchain Developer &amp; Researcher</h3><div class="org">Sidroco Holdings LTD</div></div><p>NFT marketplace for 5G, Hyperledger Fabric prototypes, Erasmus+ LMS, multinational EU projects.</p></article>
+      <article><span class="mono">2023 — 2025</span><div><h3>Lecturer &amp; Academic Partner</h3><div class="org">University of Derby / Mediterranean College</div></div><p>Networks &amp; Security, Web Scripting, Application Development. Inclusivity-first assessment.</p></article>
+      <article><span class="mono">2022 — 2024</span><div><h3>Blockchain &amp; Full-Stack Developer</h3><div class="org">University of Nicosia / IFF</div></div><p>Large-scale Next.js / NestJS / Docker apps and a Web3 NFT marketplace.</p></article>
+    </div>
+  </section>
+
+  <section id="proof">
+    <div class="head"><h2 data-reveal>Proof</h2><span class="idx">05</span></div>
+    <div class="certs" data-reveal>
+      <figure><img src="/img/renamed/Certificate-Of-Completion_Rust-Developer.png" alt="" loading="lazy" /><figcaption>Rust Developer</figcaption></figure>
+      <figure><img src="/img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" alt="" loading="lazy" /><figcaption>CCNA</figcaption></figure>
+      <figure><img src="/img/renamed/Certificate-Of-Completion_Cloud-Engineering.png" alt="" loading="lazy" /><figcaption>Cloud Engineering</figcaption></figure>
+      <figure><img src="/img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" alt="" loading="lazy" /><figcaption>ML &amp; DNN</figcaption></figure>
+      <figure><img src="/img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg" alt="" loading="lazy" /><figcaption>NFT Talents</figcaption></figure>
+      <figure><img src="/img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png" alt="" loading="lazy" /><figcaption>Ethical Hacking</figcaption></figure>
+    </div>
+    <div class="pubs" data-reveal>
+      <a class="pub u" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener"><span class="n">32</span><span><b>A process-aware approach for blockchain-based verification of academic qualifications</b><small>Simulation Modelling Practice and Theory 121, 2022</small></span><span class="mono">cited by</span></a>
+      <a class="pub u" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener"><span class="n">11</span><span><b>Verification of Academic Qualifications through Ethereum Blockchain: VerDe</b><small>XIV Balkan Conference on Operational Research, 2020</small></span><span class="mono">cited by</span></a>
+      <a class="pub u" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener"><span class="n">7</span><span><b>Exploring decentralized governance: a framework applied to Compound Finance</b><small>Mathematical Research for Blockchain Economy, 2023</small></span><span class="mono">cited by</span></a>
+    </div>
+  </section>
+
+  <section id="edu">
+    <div class="head"><h2 data-reveal>Education</h2><span class="idx">06</span></div>
+    <div class="edu" data-reveal>
+      <ul>
+        <li><span class="mono">2020 — 2022</span><div><b>MSc Data and Web Science</b>Aristotle University of Thessaloniki<br /><i>DeepMind Scholarship</i></div></li>
+        <li><span class="mono">2015 — 2020</span><div><b>BSc Applied Informatics</b>University of Macedonia<br /><i>Web3 thesis on academic credentials</i></div></li>
+      </ul>
+      <ul>
+        <li><span class="mono">2020 — 2022</span><div><b>DeepMind Scholarship</b>AUTH</div></li>
+        <li><span class="mono">06 / 2022</span><div><b>3rd place, Infinitech Hackathon</b>Crowdpolicy</div></li>
+        <li><span class="mono">2020 — 2021</span><div><b>Basic Research grant</b>University of Macedonia</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <h2><a href="mailto:gmixoulis@gmail.com">Let's build.</a></h2>
+    <div class="socials mono">
+      <a href="https://www.linkedin.com/in/george-michoulis/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/gmixoulis" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener">Scholar</a>
+      <a href="https://twitter.com/GeorgeMicou" target="_blank" rel="noopener">X</a>
+      <span style="margin-left:auto">gmixoulis@gmail.com</span>
+    </div>
+  </section>
+</main>
+
+<script>
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
+  document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+  const c = document.querySelector('.cursor');
+  addEventListener('pointermove', e => { c.style.left = e.clientX + 'px'; c.style.top = e.clientY + 'px'; }, { passive: true });
+</script>
+</body>
+</html>

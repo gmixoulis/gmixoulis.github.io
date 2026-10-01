@@ -1,0 +1,118 @@
+---
+import { Image, getImage } from 'astro:assets';
+import GardenLayout from '@/layouts/GardenLayout.astro';
+import { getPosts, tagCounts, tagHref, fmtDate, readingMinutes } from '@/lib/garden';
+import branch from '@/assets/ink/branch.png';
+import crane from '@/assets/ink/crane.png';
+import sunBrush from '@/assets/ink/sun-brush.png';
+import dragonfly from '@/assets/ink/dragonfly.png';
+import greatWave from '@/assets/ink/great-wave.jpg';
+import ensoSumi from '@/assets/ink/enso-sumi.png';
+
+const posts = await getPosts();
+const tags = tagCounts(posts);
+/** Rake lines hugging the enso (viewBox 600, enso centred). */
+const rakes = [262, 282, 302];
+
+/** Optimised decorative backgrounds, passed into the CSS as inline vars. */
+const wave = await getImage({ src: greatWave, format: 'webp', width: 1600 });
+const enso = await getImage({ src: ensoSumi, format: 'png', width: 800 });
+
+const blogJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: 'Zen Garden',
+  url: new URL('/garden/', Astro.site).href,
+  author: { '@id': new URL('/#person', Astro.site).href },
+  blogPost: posts.map((p) => ({
+    headline: p.data.title,
+    url: new URL(`/garden/${p.id}/`, Astro.site).href,
+    datePublished: p.data.date.toISOString(),
+  })),
+};
+---
+
+<GardenLayout
+  title="Zen Garden — George Michoulis"
+  description="Personal notes: graphs, code, walks, and whatever else gets raked into the sand."
+  jsonLd={blogJsonLd}
+>
+  <div class="z-wrap">
+    <section class="z-hero" aria-labelledby="garden-title">
+      <Image class="z-branch z-reveal" style="--i:5" src={branch} alt="" aria-hidden="true" loading="eager" />
+      <Image class="z-crane z-reveal" style="--i:7" src={crane} alt="" aria-hidden="true" loading="eager" />
+      <div class="z-hero-copy">
+        <div class="z-tick z-reveal"></div>
+        <p class="z-meta z-reveal" style="--i:1">Personal notes · 禅庭</p>
+        <h1 id="garden-title" class="z-display z-reveal z-reveal-text" style="--i:2">
+          Zen Garden
+        </h1>
+        <p class="z-reveal z-reveal-text" style="--i:3">
+          Whatever I feel like keeping. The stones stay; the sand gets raked
+          again each morning.
+        </p>
+      </div>
+
+      <div class="z-stone" aria-hidden="true">
+        <svg class="z-sand" viewBox="0 0 600 600">
+          {rakes.map((r, i) => (
+            <circle cx="300" cy="300" r={r} pathLength="1" style={`--i:${i}`} />
+          ))}
+        </svg>
+        <Image class="z-sun" src={sunBrush} alt="" loading="eager" />
+        <div class="z-enso" style={`--z-enso: url(${enso.src})`}></div>
+        <Image class="z-dragonfly z-reveal" style="--i:6" src={dragonfly} alt="" loading="eager" />
+        <span class="z-hanko" aria-hidden="true">禅庭</span>
+        <span class="z-splat" style="--x:8%;--y:82%;--s:7px"></span>
+        <span class="z-splat" style="--x:14%;--y:88%;--s:3px"></span>
+        <span class="z-splat z-splat--red" style="--x:88%;--y:12%;--s:5px"></span>
+        <span class="z-splat" style="--x:93%;--y:20%;--s:2px"></span>
+      </div>
+
+    </section>
+
+    <hr class="z-cut" />
+
+    {tags.length > 0 && (
+      <nav class="z-taglist" aria-label="Tags">
+        {tags.map(({ tag, count }) => (
+          <a href={tagHref(tag)} rel="tag">#{tag} ({count})</a>
+        ))}
+      </nav>
+    )}
+
+    <ol class="z-entries">
+      {posts.map((post, i) => (
+        <li class="z-entry z-reveal" style={`--i:${i % 4}`}>
+          <a href={`/garden/${post.id}/`}>
+            <span class="z-seal" aria-hidden="true">{post.data.kanji ?? '・'}</span>
+            <span class="z-meta">
+              <time datetime={post.data.date.toISOString()}>{fmtDate(post.data.date)}</time> · {readingMinutes(post.body)} min read
+            </span>
+            <h2 class="z-display">{post.data.title}</h2>
+            {post.data.description && <p>{post.data.description}</p>}
+            {post.data.cover && (
+              <Image class="z-thumb" src={post.data.cover} alt={post.data.coverAlt ?? ''} width={160} height={100} />
+            )}
+          </a>
+          {post.data.tags.length > 0 && (
+            <ul class="z-taglist">
+              {post.data.tags.map((t) => (
+                <li><a href={tagHref(t)} rel="tag">#{t}</a></li>
+              ))}
+            </ul>
+          )}
+          <hr class="z-cut" style="margin-top: clamp(1.75rem, 4vh, 2.75rem)" />
+        </li>
+      ))}
+    </ol>
+
+    {posts.length === 0 && <p class="z-meta" style="padding: 3rem 0">Nothing raked yet.</p>}
+
+    <figure class="z-river z-reveal" aria-hidden="true">
+      <div class="z-river-band" style={`--z-wave: url(${wave.src})`}></div>
+      <figcaption class="z-meta">神奈川沖浪裏 · Hokusai, c. 1831</figcaption>
+    </figure>
+
+  </div>
+</GardenLayout>

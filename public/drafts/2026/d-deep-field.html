@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>D · Deep Field — George Michoulis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --navy:#002942; --navy-2:#00344F; --navy-3:#0B4260;
+    --slate:#C9D3DF; --slate-2:#8FA3B8; --slate-3:#5C7288;
+    --gold:#F2B441; --gold-soft:rgba(242,180,65,.14);
+    --display:"Instrument Serif",Georgia,serif; --body:"Inter",system-ui,sans-serif;
+    --pad:clamp(1.25rem,5vw,4.5rem); --ease:cubic-bezier(.2,.7,.2,1);
+  }
+  *{box-sizing:border-box;margin:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--navy);color:var(--slate);font-family:var(--body);font-size:1.03rem;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:-.02em;line-height:1}
+  em{font-style:italic}
+  .label{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--slate-3)}
+
+  /* liquid glass (adapted from prompt, tuned for navy) */
+  .glass{background:rgba(255,255,255,.02);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:inset 0 1px 1px rgba(255,255,255,.12);position:relative;overflow:hidden}
+  .glass::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.2px;pointer-events:none;
+    background:linear-gradient(180deg,rgba(255,255,255,.45) 0%,rgba(255,255,255,.14) 22%,rgba(255,255,255,0) 42%,rgba(255,255,255,0) 60%,rgba(255,255,255,.14) 80%,rgba(255,255,255,.45) 100%);
+    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+
+  /* field canvas */
+  #field{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+  .veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(0,41,66,0) 0%,rgba(0,41,66,.35) 60%,rgba(0,41,66,.85) 100%)}
+  @supports (animation-timeline: scroll()){
+    #field{animation:fieldDrift linear both;animation-timeline:scroll(root);animation-range:0 120vh}
+    @keyframes fieldDrift{to{transform:translateY(-10vh) scale(1.06);opacity:.55}}
+  }
+
+  /* nav pill */
+  .nav{background:rgba(0,41,66,.62);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);position:fixed;top:1.1rem;left:50%;transform:translateX(-50%);z-index:30;width:min(1040px,calc(100% - 2rem));border-radius:999px;padding:.6rem .6rem .6rem 1.4rem;display:flex;align-items:center;gap:2rem;color:#fff}
+  .nav .brand{font-family:var(--display);font-size:1.35rem;letter-spacing:-.01em;white-space:nowrap}
+  .nav .cta .s{display:none}
+  .nav .brand sup{font-size:.55rem;color:var(--gold);margin-left:.15rem}
+  .nav .links{display:flex;gap:1.6rem;font-size:.85rem;color:rgba(255,255,255,.7)}
+  .nav .links a:hover{color:#fff}
+  .nav .cta{margin-left:auto;border-radius:999px;padding:.6rem 1.2rem;font-size:.85rem;font-weight:500;color:#fff;transition:transform .3s var(--ease),background .3s}
+  .nav .cta:hover{transform:scale(1.03);background:var(--gold-soft)}
+
+  main{position:relative;z-index:2}
+  section{padding:clamp(5rem,12vh,9rem) var(--pad)}
+  .wrap{max-width:1120px;margin:0 auto}
+
+  /* hero */
+  .hero{min-height:100vh;display:grid;align-content:center;justify-items:center;text-align:center;padding-top:7rem}
+  .hero h1{font-size:clamp(3.2rem,9.5vw,8.5rem);color:#fff;max-width:12ch;letter-spacing:-.03em;line-height:.95}
+  .hero h1 em{color:var(--slate-2)}
+  .hero p{max-width:52ch;margin-top:2rem;color:var(--slate-2);font-size:clamp(1rem,1.5vw,1.2rem)}
+  .hero .name{margin-top:3rem;display:flex;align-items:center;gap:1rem;font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate-3)}
+  .hero .name b{color:#fff;font-weight:500}
+  .hero .name i{width:2.2rem;height:1px;background:var(--gold)}
+  .hero .btn{margin-top:2.5rem;border-radius:999px;padding:1.05rem 2.6rem;color:#fff;font-size:.95rem;transition:transform .3s var(--ease),background .3s}
+  .hero .btn:hover{transform:scale(1.03);background:var(--gold-soft)}
+  .rise{animation:rise .9s var(--ease) both}
+  .rise.d1{animation-delay:.18s}.rise.d2{animation-delay:.36s}.rise.d3{animation-delay:.54s}
+  @keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+  @supports (animation-timeline: scroll()){
+    .hero > *{animation:heroOut linear both;animation-timeline:scroll(root);animation-range:0 70vh}
+    @keyframes heroOut{to{transform:translateY(-18vh);opacity:0}}
+    .hero .rise{animation:rise .9s var(--ease) both,heroOut linear both;animation-timeline:auto,scroll(root);animation-range:normal,0 70vh}
+  }
+
+  /* about */
+  .about{display:grid;grid-template-columns:1.1fr .9fr;gap:4rem;align-items:start}
+  .about h2{font-size:clamp(2.4rem,5vw,4.6rem);color:#fff;margin:.8rem 0 1.6rem}
+  .about h2 em{color:var(--slate-2)}
+  .about p{max-width:56ch;color:var(--slate-2)}
+  .orbit{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:2rem}
+  .orbit span{border-radius:999px;padding:.45rem 1rem;font-size:.85rem;color:#fff}
+  .pillars{display:grid;gap:1rem}
+  .pillar{border-radius:1.2rem;padding:1.4rem 1.5rem}
+  .pillar h3{font-size:1.6rem;color:#fff;margin-bottom:.35rem}
+  .pillar p{color:var(--slate-2);font-size:.93rem}
+
+  /* timeline */
+  .tl h2{font-size:clamp(2.4rem,5vw,4.6rem);color:#fff;margin:.8rem 0 3rem}
+  .tl h2 em{color:var(--slate-2)}
+  .tl ol{list-style:none;position:relative;padding-left:2.2rem}
+  .tl ol::before{content:"";position:absolute;left:.55rem;top:0;bottom:0;width:1px;background:var(--slate-3);opacity:.5}
+  .tl li{position:relative;padding:0 0 3rem}
+  .tl li::before{content:"";position:absolute;left:-2.2rem;top:.55rem;width:1.1rem;height:1.1rem;border-radius:50%;border:1px solid var(--slate-3);background:var(--navy);transition:background .5s,box-shadow .5s,border-color .5s}
+  .tl li.in::before{background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 6px var(--gold-soft)}
+  .tl li h3{font-size:1.9rem;color:#fff}
+  .tl li .org{color:var(--gold);font-size:.9rem;font-weight:500;margin:.25rem 0 .55rem}
+  .tl li p{max-width:60ch;color:var(--slate-2)}
+  .tl li time{display:block;font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate-3);margin-bottom:.4rem}
+
+  /* sticky split proof */
+  .proof{display:grid;grid-template-columns:.9fr 1.1fr;gap:4rem;align-items:start}
+  .proof .sticky{position:sticky;top:7rem}
+  .proof h2{font-size:clamp(2.4rem,5vw,4.6rem);color:#fff;margin:.8rem 0 1rem}
+  .proof h2 em{color:var(--slate-2)}
+  .proof .sticky p{color:var(--slate-2);max-width:34ch}
+  .stat{margin-top:2.5rem;display:grid;grid-template-columns:repeat(3,auto);gap:1.5rem;justify-content:start}
+  .stat b{display:block;font-family:var(--display);font-size:3rem;color:#fff;line-height:1}
+  .stat small{color:var(--slate-3);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase}
+  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  .tile{border-radius:1.2rem;overflow:hidden;aspect-ratio:4/3;display:block}
+  .tile img{width:100%;height:100%;object-fit:cover;object-position:top;opacity:.85;filter:saturate(.7);transition:opacity .5s,filter .5s,transform .9s var(--ease)}
+  .tile:hover img{opacity:1;filter:none;transform:scale(1.04)}
+  .tile.wide{grid-column:span 2;aspect-ratio:16/8}
+  .pubs{display:grid;gap:.8rem;margin-top:1rem;grid-column:span 2}
+  .pub{border-radius:1.2rem;padding:1.2rem 1.4rem;display:grid;grid-template-columns:3.5rem 1fr;gap:1rem;align-items:baseline}
+  .pub .n{font-family:var(--display);font-size:2rem;color:var(--gold)}
+  .pub b{display:block;color:#fff;font-weight:500;font-size:.98rem}
+  .pub small{color:var(--slate-3)}
+
+  /* edu + close */
+  .edu{display:grid;grid-template-columns:1fr 1fr;gap:3rem}
+  .edu h3{font-family:var(--body);font-weight:500;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--slate-3);margin-bottom:1rem}
+  .edu li{list-style:none;padding:1rem 0;border-top:1px solid rgba(201,211,223,.14)}
+  .edu li b{display:block;font-family:var(--display);font-size:1.4rem;color:#fff;font-weight:400}
+  .edu li span{color:var(--slate-2);font-size:.92rem}
+  .edu li i{display:block;font-style:normal;color:var(--gold);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;margin-top:.25rem}
+  .close{min-height:80vh;display:grid;place-items:center;text-align:center}
+  .close .card{border-radius:2rem;padding:clamp(2rem,6vw,4.5rem);max-width:820px;width:100%}
+  .close h2{font-size:clamp(2.6rem,7vw,6.5rem);color:#fff}
+  .close h2 em{color:var(--slate-2)}
+  .close p{color:var(--slate-2);margin-top:1rem}
+  .close .btn{display:inline-block;margin-top:2rem;border-radius:999px;padding:1rem 2.4rem;color:#fff;transition:transform .3s var(--ease),background .3s}
+  .close .btn:hover{transform:scale(1.03);background:var(--gold-soft)}
+  .socials{display:flex;justify-content:center;gap:.8rem;margin-top:2.5rem}
+  .socials a{border-radius:999px;padding:.7rem 1.2rem;font-size:.8rem;color:rgba(255,255,255,.8)}
+  .socials a:hover{color:#fff;background:var(--gold-soft)}
+
+  [data-reveal]{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+  [data-reveal].in{opacity:1;transform:none}
+  [data-reveal].d1{transition-delay:.12s}[data-reveal].d2{transition-delay:.24s}[data-reveal].d3{transition-delay:.36s}
+
+  @media (max-width:860px){
+    .about,.proof,.edu{grid-template-columns:1fr;gap:2.5rem}
+    .proof .sticky{position:static}
+    .nav .links{display:none}
+    .nav{padding-left:1rem;gap:1rem}.nav .brand{font-size:1.15rem}.nav .cta{padding:.55rem .95rem}.nav .cta .l{display:none}.nav .cta .s{display:inline}
+    .tiles{grid-template-columns:1fr}
+    .tile.wide,.pubs{grid-column:auto}
+    .stat{grid-template-columns:repeat(3,1fr)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    [data-reveal],.rise{opacity:1;transform:none}
+    .tl li::before{background:var(--gold);border-color:var(--gold)}
+  }
+</style>
+</head>
+<body>
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="veil" aria-hidden="true"></div>
+
+<nav class="nav glass">
+  <a class="brand" href="#top">George Michoulis<sup>®</sup></a>
+  <div class="links"><a href="#about">About</a><a href="#work">Work</a><a href="#proof">Proof</a><a href="#edu">Study</a></div>
+  <a class="cta glass" href="mailto:gmixoulis@gmail.com"><span class="l">Start a conversation</span><span class="s">Say hi</span></a>
+</nav>
+
+<main>
+  <section class="hero" id="top">
+    <h1 class="rise">Where <em>graphs</em> meet the chain.</h1>
+    <p class="rise d1">Blockchain developer and researcher. Smart contracts, graph-based ML, and full-stack Web3 systems, built for people who want the ledger to actually work.</p>
+    <div class="name rise d2"><i></i><b>George Michoulis</b><span>Thessaloniki · Remote</span><i></i></div>
+    <a class="btn glass rise d3" href="#about">Explore the field ↓</a>
+  </section>
+
+  <section id="about"><div class="wrap about">
+    <div data-reveal>
+      <span class="label">01 · About</span>
+      <h2>Researcher <em>who ships.</em></h2>
+      <p>Based in Thessaloniki. BSc Applied Informatics (University of Macedonia) on Ethereum credential verification. MSc Data and Web Science (Aristotle University) on graph-embedding methods for blockchain fraud detection, funded by DeepMind.</p>
+      <div class="orbit">
+        <span class="glass">Blockchain</span><span class="glass">Full-Stack</span><span class="glass">Data Science</span><span class="glass">Web3</span><span class="glass">Machine Learning</span><span class="glass">Research</span>
+      </div>
+    </div>
+    <div class="pillars">
+      <div class="pillar glass" data-reveal><h3>Research</h3><p>Publications and startup work on ledger effectiveness, improvement areas, and practical change across blockchain systems.</p></div>
+      <div class="pillar glass d1" data-reveal><h3>Build</h3><p>Web3 (NFTs, DeFi), data science with graph embeddings, and shipping across Solidity, TypeScript, and cloud.</p></div>
+      <div class="pillar glass d2" data-reveal><h3>Teach</h3><p>Lecturer in networks, security, and application development. Public speaking on Web3 and edge tech.</p></div>
+    </div>
+  </div></section>
+
+  <section id="work"><div class="wrap tl">
+    <span class="label">02 · Experience</span>
+    <h2 data-reveal>Four orbits, <em>one trajectory.</em></h2>
+    <ol>
+      <li data-reveal><time>05 / 2026 — Present</time><h3>Web3 Full-Stack Developer</h3><div class="org">Cyberscope by TAC</div><p>End-to-end Web3 products: contracts, on-chain integrations, React/Next frontends, security tooling.</p></li>
+      <li data-reveal><time>2024 — 2026</time><h3>Blockchain Developer &amp; Researcher</h3><div class="org">Sidroco Holdings LTD</div><p>NFT marketplace for 5G, Hyperledger Fabric prototypes, Erasmus+ LMS, multinational EU projects.</p></li>
+      <li data-reveal><time>2023 — 2025</time><h3>Lecturer &amp; Academic Partner</h3><div class="org">University of Derby / Mediterranean College</div><p>Networks &amp; Security, Web Scripting, Application Development. Inclusivity-first assessment.</p></li>
+      <li data-reveal><time>2022 — 2024</time><h3>Blockchain &amp; Full-Stack Developer</h3><div class="org">University of Nicosia / IFF</div><p>Large-scale Next.js / NestJS / Docker apps and a Web3 NFT marketplace.</p></li>
+    </ol>
+  </div></section>
+
+  <section id="proof"><div class="wrap proof">
+    <div class="sticky">
+      <span class="label">03 · Proof</span>
+      <h2>Shipped, certified, <em>cited.</em></h2>
+      <p>Seven deployed products, thirty-four certificates, twelve indexed publications. The tiles scroll; this column holds still.</p>
+      <div class="stat"><div><b>7</b><small>products</small></div><div><b>34</b><small>certificates</small></div><div><b>50+</b><small>citations</small></div></div>
+    </div>
+    <div class="tiles">
+      <a class="tile glass wide" href="https://accelerate.uom.gr" target="_blank" rel="noopener" data-reveal><img src="/img/portfolio/accelerate.png" alt="accelerate" loading="lazy" /></a>
+      <a class="tile glass" href="https://metau.unic.ac.cy" target="_blank" rel="noopener" data-reveal><img src="/img/portfolio/metau.unic.ac.cy.png" alt="metau" loading="lazy" /></a>
+      <a class="tile glass d1" href="https://verde.uom.gr" target="_blank" rel="noopener" data-reveal><img src="/img/portfolio/verde.uom.gr.PNG" alt="verde" loading="lazy" /></a>
+      <div class="tile glass" data-reveal><img src="/img/renamed/Certificate-Of-Completion_Rust-Developer.png" alt="Rust Developer certificate" loading="lazy" /></div>
+      <div class="tile glass d1" data-reveal><img src="/img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" alt="ML certificate" loading="lazy" /></div>
+      <div class="tile glass" data-reveal><img src="/img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" alt="CCNA certificate" loading="lazy" /></div>
+      <div class="tile glass d1" data-reveal><img src="/img/renamed/Certificate-Of-Completion_Cloud-Engineering.png" alt="Cloud certificate" loading="lazy" /></div>
+      <div class="pubs">
+        <a class="pub glass" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener" data-reveal><span class="n">32</span><span><b>A process-aware approach for blockchain-based verification of academic qualifications</b><small>Simulation Modelling Practice and Theory 121, 2022</small></span></a>
+        <a class="pub glass" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener" data-reveal><span class="n">11</span><span><b>Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe</b><small>XIV Balkan Conference on Operational Research, 2020</small></span></a>
+        <a class="pub glass" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener" data-reveal><span class="n">7</span><span><b>Exploring decentralized governance: a framework applied to Compound Finance</b><small>Mathematical Research for Blockchain Economy, 2023</small></span></a>
+      </div>
+    </div>
+  </div></section>
+
+  <section id="edu"><div class="wrap edu">
+    <div data-reveal><h3>Education</h3><ul>
+      <li><b>MSc Data and Web Science</b><span>Aristotle University of Thessaloniki · 2020 — 2022</span><i>DeepMind Scholarship</i></li>
+      <li><b>BSc Applied Informatics</b><span>University of Macedonia · 2015 — 2020</span><i>Web3 thesis on academic credentials</i></li>
+    </ul></div>
+    <div data-reveal class="d1"><h3>Awards</h3><ul>
+      <li><b>DeepMind Scholarship</b><span>AUTH · 2020 — 2022</span></li>
+      <li><b>3rd place, Infinitech Hackathon</b><span>Crowdpolicy · 06 / 2022</span></li>
+      <li><b>Basic Research grant</b><span>University of Macedonia · 2020 — 2021</span></li>
+    </ul></div>
+  </div></section>
+
+  <section class="close" id="contact">
+    <div class="card glass" data-reveal>
+      <span class="label">04 · Contact</span>
+      <h2>Let's build <em>the next node.</em></h2>
+      <p>Open to Web3 engineering, research collaborations, and teaching.</p>
+      <a class="btn glass" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+      <div class="socials">
+        <a class="glass" href="https://www.linkedin.com/in/george-michoulis/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="glass" href="https://github.com/gmixoulis" target="_blank" rel="noopener">GitHub</a>
+        <a class="glass" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener">Scholar</a>
+        <a class="glass" href="https://twitter.com/GeorgeMicou" target="_blank" rel="noopener">X</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
+  document.querySelectorAll('[data-reveal],.tl li').forEach(el => io.observe(el));
+
+  // Graph field: slow-drifting nodes + proximity edges, gold hubs. Replaces a background video.
+  const cv = document.getElementById('field'), cx = cv.getContext('2d');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W, H, nodes = [], mouse = { x: -1e4, y: -1e4 };
+  const N = innerWidth < 700 ? 45 : 90, LINK = 150;
+  function size() { const d = devicePixelRatio || 1; W = innerWidth; H = innerHeight; cv.width = W * d; cv.height = H * d; cx.setTransform(d, 0, 0, d, 0, 0); }
+  function seed() { nodes = Array.from({ length: N }, (_, i) => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .18, vy: (Math.random() - .5) * .18, r: i % 9 === 0 ? 2.6 : 1.2, hub: i % 9 === 0 })); }
+  function frame() {
+    cx.clearRect(0, 0, W, H);
+    for (const n of nodes) {
+      if (!still) { n.x += n.vx; n.y += n.vy; if (n.x < 0 || n.x > W) n.vx *= -1; if (n.y < 0 || n.y > H) n.vy *= -1;
+        const dx = mouse.x - n.x, dy = mouse.y - n.y, d = Math.hypot(dx, dy); if (d < 220) { n.x -= dx / d * .25; n.y -= dy / d * .25; } }
+    }
+    for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
+      const a = nodes[i], b = nodes[j], d = Math.hypot(a.x - b.x, a.y - b.y);
+      if (d < LINK) { cx.strokeStyle = (a.hub || b.hub) ? `rgba(242,180,65,${(1 - d / LINK) * .35})` : `rgba(201,211,223,${(1 - d / LINK) * .22})`; cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke(); }
+    }
+    for (const n of nodes) { cx.fillStyle = n.hub ? '#F2B441' : 'rgba(201,211,223,.75)'; cx.beginPath(); cx.arc(n.x, n.y, n.r, 0, 7); cx.fill(); }
+    if (!still) requestAnimationFrame(frame);
+  }
+  size(); seed(); frame();
+  addEventListener('resize', () => { size(); seed(); if (still) frame(); });
+  addEventListener('pointermove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+</script>
+</body>
+</html>

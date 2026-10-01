@@ -1,0 +1,14 @@
+TASK: Execute the implementation plan in `plans/003-dead-code-and-play-button.md` in this repository, exactly as written.
+
+Read the plan in full first. It is self-contained (current-state excerpts, steps, verification commands, scope,
+STOP conditions, done criteria). Plans 001 and 002 are already committed on this branch (8046ede, 355be98). They
+don't touch the files in this plan's scope, so the drift check should show no changes to them.
+
+Hard constraints:
+- Do NOT commit, push, or create branches. The orchestrator commits.
+- Only the 9 deletions listed in the plan plus `src/components/site/SiteNav.tsx`. Never touch `public/**`,
+  `scripts/ideas-qa/**`, `plans/**`, `graft/**`, `.gitignore`, `.ignore`.
+- bun only. If a STOP condition occurs, stop and report.
+
+REPORT CONTRACT: per-step status with verification output; the files deleted and modified; the final `git status --porcelain`
+lines for in-scope paths; deviations and uncertainties.

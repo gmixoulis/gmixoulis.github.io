@@ -1,0 +1,124 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { render } from 'astro:content';
+import GardenLayout from '@/layouts/GardenLayout.astro';
+import { getPosts, tagHref, fmtDate, readingMinutes } from '@/lib/garden';
+import treeRight from '@/assets/ink/tree-right.png';
+import bandB from '@/assets/ink/band-b.png';
+import swirl from '@/assets/ink/swirl.png';
+import calligraphy from '@/assets/ink/calligraphy.png';
+import koi from '@/assets/ink/koi.png';
+import tatami from '@/assets/ink/tatami.jpg';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, prev: posts[i + 1], next: posts[i - 1] },
+  }));
+}
+
+const { post, prev, next } = Astro.props;
+const { Content } = await render(post);
+
+const iso = (d: Date) => d.toISOString();
+const date = post.data.date;
+const updated = post.data.updated;
+const canonical = new URL(`/garden/${post.id}/`, Astro.site).href;
+const minutes = readingMinutes(post.body);
+
+/** Optimised tatami paper backdrop, passed into the CSS as an inline var. */
+const tatamiImg = await getImage({ src: tatami, format: 'webp', width: 1600 });
+
+let ogImage: string | undefined;
+if (post.data.cover) {
+  const img = await getImage({ src: post.data.cover, width: 1200, format: 'jpg' });
+  ogImage = new URL(img.src, Astro.site).href;
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: iso(date),
+  dateModified: iso(updated ?? date),
+  author: {
+    '@type': 'Person',
+    '@id': new URL('/#person', Astro.site).href,
+    name: 'George Michoulis',
+    url: new URL('/', Astro.site).href,
+  },
+  mainEntityOfPage: canonical,
+  url: canonical,
+  keywords: post.data.tags.join(', '),
+  inLanguage: 'en',
+  ...(ogImage ? { image: ogImage } : {}),
+  isPartOf: { '@type': 'Blog', name: 'Zen Garden', url: new URL('/garden/', Astro.site).href },
+};
+---
+
+<GardenLayout
+  title={`${post.data.title} — Zen Garden`}
+  description={post.data.description}
+  progress
+  canonical={canonical}
+  ogType="article"
+  ogImage={ogImage}
+  publishedTime={iso(date)}
+  modifiedTime={iso(updated ?? date)}
+  tags={post.data.tags}
+  jsonLd={jsonLd}
+>
+  <article>
+    <header class="z-post-head">
+      <div class="z-tatami" aria-hidden="true" style={`--z-tatami: url(${tatamiImg.src})`}></div>
+      <Image class="z-tree z-reveal" style="--i:4" src={treeRight} alt="" aria-hidden="true" loading="eager" />
+      <div class="z-wrap" style="position: relative">
+        <p class="z-meta z-reveal">
+          <a href="/garden/" style="text-decoration: none">Zen Garden</a> · <time datetime={iso(date)}>{fmtDate(date)}</time> · {minutes} min read
+          {updated && <> · updated <time datetime={iso(updated)}>{fmtDate(updated)}</time></>}
+        </p>
+        {post.data.kanji && (
+          <span class="z-seal z-reveal" style="--i:1" aria-hidden="true">{post.data.kanji}</span>
+        )}
+        <h1 class="z-display z-reveal z-reveal-text" style="--i:2">{post.data.title}</h1>
+        <Image class="z-band z-reveal" style="--i:3" src={bandB} alt="" aria-hidden="true" loading="eager" />
+        {post.data.description && <p class="z-reveal z-reveal-text" style="--i:3">{post.data.description}</p>}
+        {post.data.tags.length > 0 && (
+          <ul class="z-taglist">
+            {post.data.tags.map((t) => (
+              <li><a href={tagHref(t)} rel="tag">#{t}</a></li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </header>
+
+    <div class="z-wrap">
+      {post.data.cover && (
+        <figure class="z-cover">
+          <Image src={post.data.cover} alt={post.data.coverAlt} widths={[480, 800, 1200]}
+            sizes="(max-width: 800px) 100vw, 800px" loading="eager" fetchpriority="high" />
+        </figure>
+      )}
+      <hr class="z-cut" />
+      <div class="z-prose">
+        <Content />
+      </div>
+      <hr class="z-cut" />
+      <footer class="z-plate" aria-hidden="true">
+        <Image class="z-plate-swirl z-reveal" src={swirl} alt="" loading="lazy" />
+        <Image class="z-plate-img z-reveal" style="--i:2" src={calligraphy} alt="" loading="lazy" />
+        <Image class="z-plate-koi z-reveal" style="--i:4" src={koi} alt="" loading="lazy" />
+      </footer>
+      <nav class="z-prevnext" aria-label="More posts">
+        {prev && <a href={`/garden/${prev.id}/`}>← Older: {prev.data.title}</a>}
+        {next && <a href={`/garden/${next.id}/`}>Newer: {next.data.title} →</a>}
+      </nav>
+      <footer class="z-foot">
+        <a href="/garden/" class="z-meta" style="text-decoration: none">← Return to the garden</a>
+      </footer>
+    </div>
+  </article>
+</GardenLayout>

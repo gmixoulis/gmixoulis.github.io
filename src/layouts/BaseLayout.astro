@@ -1,0 +1,101 @@
+---
+import '../styles/global.css';
+import Nav from '@/components/home/Nav.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  ogImage?: string;
+  noindex?: boolean;
+  jsonLd?: object | object[];
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
+  rss?: boolean;
+}
+
+const {
+  title: titleProp,
+  description: descriptionProp,
+  canonical,
+  ogType = 'website',
+  ogImage,
+  noindex,
+  jsonLd,
+  publishedTime,
+  modifiedTime,
+  tags,
+  rss,
+} = Astro.props;
+
+const title = titleProp ?? 'George Michoulis';
+const description =
+  descriptionProp ??
+  'Blockchain developer, researcher, and full-stack Web3 engineer.';
+
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
+/*
+ * The inline head script sets the theme before first paint. One key, gm-theme: 'light' | 'dark' | 'system'
+ * (anything else counts as 'system', which follows the OS). It sets html.dark (garden CSS) and html[data-theme]
+ * (homepage CSS); src/scripts/home/nav.ts keeps both in sync on toggle. It also flags reduced motion as html.rm.
+ */
+const ldJson = jsonLd
+  ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]).map((obj) =>
+      JSON.stringify(obj).replace(/</g, '\\u003c'),
+    )
+  : [];
+---
+
+<!doctype html>
+<html lang="en" class="dark" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#1a1b22" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{title}</title>
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="George Michoulis" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:creator" content="@GeorgeMicou" />
+    {ogType === 'article' && publishedTime && (
+      <meta property="article:published_time" content={publishedTime} />
+    )}
+    {ogType === 'article' && modifiedTime && (
+      <meta property="article:modified_time" content={modifiedTime} />
+    )}
+    {ogType === 'article' && tags && tags.map((t) => <meta property="article:tag" content={t} />)}
+    {noindex && <meta name="robots" content="noindex" />}
+    {rss && (
+      <link rel="alternate" type="application/rss+xml" title="Zen Garden" href="/garden/rss.xml" />
+    )}
+    {ldJson.map((s) => <script type="application/ld+json" set:html={s} />)}
+    <slot name="head" />
+    <script is:inline>
+      (function () {
+        var r = document.documentElement;
+        try {
+          var t = localStorage.getItem('gm-theme');
+          var dark = t === 'dark' || (t !== 'light' && !window.matchMedia('(prefers-color-scheme: light)').matches);
+          r.classList.toggle('dark', dark);
+          r.dataset.theme = dark ? 'dark' : 'light';
+          r.style.colorScheme = dark ? 'dark' : 'light';
+        } catch (e) {}
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) r.classList.add('rm');
+      })();
+    </script>
+  </head>
+  <body class="min-h-dvh">
+    <Nav />
+    <slot />
+  </body>
+</html>

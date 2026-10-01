@@ -1,0 +1,94 @@
+---
+/**
+ * Site header on every page. The homepage gets section anchors, a skip link and the scroll-driven states
+ * (src/scripts/home/main.ts); other pages link the sections as /#id and keep the bar solid and 56px tall,
+ * the height the garden layout already reserves.
+ */
+const path = Astro.url.pathname;
+const home = path === '/';
+const garden = path.startsWith('/garden');
+const sections = [
+  ['about', 'About'], ['skills', 'Skills'], ['work', 'Experience'], ['research', 'Research'], ['certificates', 'Certificates'],
+  ['projects', 'Projects'], ['activities', 'Activities'], ['linkedin', 'LinkedIn'], ['contact', 'Contact'],
+];
+---
+
+{home && <a class="skip" href="#main">Skip to content</a>}
+<header class:list={['nav', !home && 'scrolled inner']} id="nav">
+  <a class="brand" href={home ? '#top' : '/'}>George Michoulis</a>
+  <button class="pill menu" type="button" aria-expanded="false" aria-controls="links"><span>Menu</span></button>
+  <nav aria-label="Sections"><ul class="links" id="links">
+    {sections.map(([id, label]) => <li><a href={home ? `#${id}` : `/#${id}`}>{label}</a></li>)}
+    <li class="ext"><a href="/garden/" class:list={[garden && 'on']} aria-current={garden ? 'page' : undefined}>Writing</a></li>
+    <li aria-hidden="true" class="ind"></li>
+  </ul></nav>
+  <a class="pill play" href="/play/" aria-label="Play Ledger Run, my CV as a platformer"><i aria-hidden="true"></i>Play</a>
+  <button class="pill tg" id="theme" type="button" aria-label="Switch to light theme"><i aria-hidden="true"></i><span>Light</span></button>
+</header>
+
+<script>
+  import '@/scripts/home/nav';
+</script>
+
+<style is:global>
+  /* Design tokens (dark, then light) and the header. Global because the header is on every page;
+     the rest of the homepage CSS is in src/styles/home.css. --rim is the prototype's --ring, renamed so it
+     doesn't override the --ring that global.css (shadcn) uses for the garden's focus outlines. */
+  :root{
+    --bg:#0a0a0b;--panel:#111114;--line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.15);
+    --fg:#ededef;--fg-2:#a6a6b0;--fg-3:#8c8c96;--dim:#74747f;--link:#a9b6ff;
+    --a1:#7ee8f2;--a2:#8ea2ff;--a3:#c49bff;--a4:#ffb9a3;
+    --h1a:#fff;--h1b:#9d9daa;--nav:rgba(10,10,11,.74);--pop:#121215;
+    --btn:#141418;--btn-h:#1b1b21;--rim:#3a3a44;--btn-fg:#fff;--solid:#f2f2f4;--solid-fg:#0a0a0b;
+    --glow:rgba(142,162,255,.22);--spot:rgba(142,162,255,.09);--sel:rgba(142,162,255,.35);--shade:rgba(0,0,0,.9);
+    --ft:rgba(126,232,242,.2);--fl:rgba(142,162,255,.13);--fr:rgba(196,155,255,.07);--beam:rgba(220,228,255,.26);
+    --acc:linear-gradient(90deg,var(--a1),var(--a2) 38%,var(--a3) 68%,var(--a4));
+    /* Fonts API variables (homepage only); other pages fall back to the fonts they already load. */
+    --display:var(--font-funnel,var(--font-shippori,serif));--ui:var(--font-geist,var(--font-source-sans,sans-serif));--mono:var(--font-geist-mono,monospace);
+    --ease:cubic-bezier(.23,1,.32,1);--pad:clamp(16px,4vw,48px);--max:1240px;
+    --rail-pad:max(var(--pad),calc((100vw - var(--max))/2));
+  }
+  [data-theme=light]{
+    --bg:#edeef1;--panel:#f7f8fa;--line:rgba(14,16,24,.09);--line-2:rgba(14,16,24,.17);
+    --fg:#0d0e13;--fg-2:#454853;--fg-3:#585b66;--dim:#7d808b;--link:#3a4fd0;
+    --a1:#0b8793;--a2:#3a4fd0;--a3:#7a3fcf;--a4:#c0583f;
+    --h1a:#0b0c10;--h1b:#4d505b;--nav:rgba(237,238,241,.8);--pop:#fbfbfc;
+    --btn:#fbfbfc;--btn-h:#fff;--rim:#c9ccd4;--btn-fg:#0d0e13;--solid:#0d0e13;--solid-fg:#f4f5f7;
+    --glow:rgba(58,79,208,.12);--spot:rgba(58,79,208,.06);--sel:rgba(58,79,208,.2);--shade:rgba(40,44,60,.28);
+    --ft:rgba(11,135,147,.14);--fl:rgba(58,79,208,.12);--fr:rgba(122,63,207,.08);--beam:rgba(58,79,208,.16);
+  }
+  .skip{position:fixed;left:12px;top:-60px;z-index:50;background:var(--solid);color:var(--solid-fg);padding:8px 14px;border-radius:8px}
+  .skip:focus{top:12px}
+  .nav :focus-visible,.skip:focus-visible{outline:2px solid var(--a2);outline-offset:3px;border-radius:6px}
+
+  .nav{position:fixed;inset:0 0 auto;z-index:20;height:60px;display:flex;align-items:center;gap:18px;padding:0 var(--pad);border-bottom:1px solid transparent;transition:background-color .4s,border-color .4s;
+    font:400 16px/1.6 var(--ui);color:var(--fg)}
+  .nav.inner{height:56px}
+  .nav.scrolled{background:var(--nav);-webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);border-color:var(--line)}
+  .brand{font:600 16px var(--display);letter-spacing:-.02em;white-space:nowrap;opacity:0;transform:translateY(4px);transition:opacity .4s,transform .4s var(--ease)}
+  .scrolled .brand,.brand:focus-visible{opacity:1;transform:none}
+  .links{margin:0 0 0 auto;padding:0;list-style:none;display:flex;gap:0;position:relative}
+  .links a{display:block;padding:8px 9px;font-size:13.5px;color:var(--fg-2);white-space:nowrap;transition:color .25s}
+  .links a:hover,.links a.on{color:var(--fg)}
+  .links .ext{margin-left:8px;padding-left:8px;border-left:1px solid var(--line-2)}
+  .ind{position:absolute;left:0;bottom:1px;height:1px;width:0;background:var(--acc);opacity:0;transition:transform .55s var(--ease),width .55s var(--ease),opacity .3s}
+  .pill{height:34px;display:inline-flex;align-items:center;gap:8px;padding:0 13px;border-radius:9px;border:1px solid var(--line-2);background:transparent;color:var(--fg);font:500 13.5px var(--ui);cursor:pointer;white-space:nowrap;transition:border-color .25s,transform .16s var(--ease)}
+  .pill:hover{border-color:var(--fg-3)}.pill:active{transform:scale(.97)}
+  .play{border-color:transparent;background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--acc) border-box}
+  .play i{width:8px;height:9px;background:var(--acc);clip-path:polygon(0 0,100% 50%,0 100%)}
+  .tg i{width:10px;height:10px;border:1.5px solid currentColor;border-radius:2.5px;transform:rotate(45deg);background:linear-gradient(90deg,currentColor 50%,transparent 50%)}
+  .menu{display:none}
+
+  @media (max-width:1180px){
+    .nav{gap:10px}
+    .links{display:none;position:absolute;top:62px;left:var(--pad);right:var(--pad);flex-direction:column;padding:8px;border-radius:14px;border:1px solid var(--line-2);background:var(--pop);box-shadow:0 24px 60px var(--shade)}
+    .nav.inner .links{top:58px}
+    .nav.open .links{display:flex}
+    .links a{padding:11px 14px;font-size:16px}
+    .links .ext{margin:6px 0 0;padding:6px 0 0;border-left:0;border-top:1px solid var(--line)}
+    .ind{display:none}
+    .menu{display:inline-flex;margin-left:auto}
+  }
+  @media (max-width:860px){ .brand{display:none} }
+  @media (max-width:560px){ .pill{padding:0 11px} }
+</style>

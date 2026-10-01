@@ -1,0 +1,140 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import { Font } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/home/Hero.astro';
+import About from '@/components/home/About.astro';
+import Skills from '@/components/home/Skills.astro';
+import Experience from '@/components/home/Experience.astro';
+import Research from '@/components/home/Research.astro';
+import Certificates from '@/components/home/Certificates.astro';
+import Projects from '@/components/home/Projects.astro';
+import Activities from '@/components/home/Activities.astro';
+import LinkedIn from '@/components/home/LinkedIn.astro';
+import Contact from '@/components/home/Contact.astro';
+import Footer from '@/components/home/Footer.astro';
+import CertDialog from '@/components/home/CertDialog.astro';
+import { site, person, papers as curated, hiddenPubs, certificates, type Stats, type Paper, type Cert } from '@/data/profile';
+import '@/styles/home.css';
+
+/* ---- Build-time data: both files are rewritten by CI, so nothing here is hard-coded. ---- */
+const pub = (...p: string[]) => path.join(process.cwd(), 'public', ...p);
+const norm = (t: string) => t.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
+const https = (u: unknown) => (typeof u === 'string' && /^https:\/\//.test(u) ? u : undefined);
+
+type Json = { title?: unknown; link?: unknown; year?: unknown; publication?: unknown; cited_by?: { value?: unknown } | null };
+let json: Json[] = [];
+try {
+  const raw = JSON.parse(fs.readFileSync(pub('publications.json'), 'utf8'));
+  if (Array.isArray(raw)) json = raw.filter((p) => p && typeof p.title === 'string');
+} catch {}
+const count = (p?: Json) => (typeof p?.cited_by?.value === 'number' && p.cited_by.value > 0 ? p.cited_by.value : 0);
+const byTitle = new Map(json.map((p) => [norm(p.title as string), p]));
+const known = new Set([...curated.map((p) => norm(p.title)), ...hiddenPubs.map(norm)]);
+
+const listed: Paper[] = [
+  ...curated.map((c) => ({
+    title: c.title, year: c.year, venue: c.venue, firstAuthor: c.firstAuthor, isPartOf: c.isPartOf,
+    url: c.doi && `https://doi.org/${c.doi}`,
+    cites: Math.max(count(byTitle.get(norm(c.title))), c.scholar ?? 0),
+  })),
+  // New Scholar items (after a monthly CI run) are listed as they come.
+  ...json.filter((p) => !known.has(norm(p.title as string))).map((p) => {
+    const venue = typeof p.publication === 'string' ? p.publication.replace(/,\s*\d{4}\s*$/, '') : '';
+    return { title: p.title as string, year: String(p.year ?? ''), venue, url: https(p.link), cites: count(p),
+      isPartOf: { '@type': 'CreativeWork', name: venue } };
+  }),
+];
+const sorted = [...listed].sort((a, b) => b.cites - a.cites || b.year.localeCompare(a.year));
+
+// Totals and h-index over every Scholar item (hidden ones too), as Scholar counts them.
+const all = [...listed.map((p) => p.cites), ...json.filter((p) => hiddenPubs.some((h) => norm(h) === norm(p.title as string))).map(count)]
+  .sort((a, b) => b - a);
+const cites = all.reduce((a, b) => a + b, 0);
+const h = all.filter((c, i) => c >= i + 1).length;
+
+/* Certificates: whatever the rename workflow left in public/img/renamed. */
+const files = fs.readdirSync(pub('img', 'renamed'), { withFileTypes: true })
+  .filter((d) => d.isFile() && /\.(jpe?g|png|webp|gif)$/i.test(d.name)).map((d) => d.name);
+const sentence = (s: string) => { const t = s.replace(/^1/, '').replace(/-/g, ' ').trim().toLowerCase(); return t && t[0].toUpperCase() + t.slice(1); };
+const certs: Cert[] = [
+  ...certificates.items.filter((c) => files.includes(c.file)),
+  ...files.filter((f) => !certificates.items.some((c) => c.file === f)).sort().map((file) => {
+    const [kind, ...rest] = file.replace(/\.[^.]+$/, '').split('_');
+    return { file, title: sentence(rest.join(' ') || kind), by: sentence(kind) };
+  }),
+].map((c) => ({ ...c, src: `/img/renamed/${encodeURIComponent(c.file)}` }));
+
+const built = new Date();
+const stats: Stats = {
+  papers: listed.length, cites, h, certs: certs.length, featured: certs.filter((c) => c.featured).length,
+  asOf: built.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }),
+};
+const today = built.toISOString().slice(0, 10);
+
+/* JSON-LD: papers keep the curated (newest-first) numbering; no citation counts in it at all. */
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebSite', '@id': `${site.url}#website`, url: site.url, name: 'George Michoulis', inLanguage: 'en', publisher: { '@id': person['@id'] } },
+    { '@type': 'ProfilePage', '@id': `${site.url}#profile`, url: site.url, name: site.title, isPartOf: { '@id': `${site.url}#website` },
+      mainEntity: { '@id': person['@id'] }, dateModified: today, inLanguage: 'en' },
+    person,
+    ...listed.map((p, i) => ({
+      '@type': 'ScholarlyArticle', '@id': `${site.url}#paper-${i + 1}`, headline: p.title, name: p.title,
+      ...(p.year && { datePublished: p.year }), author: { '@id': person['@id'] }, isPartOf: p.isPartOf, inLanguage: 'en',
+      ...(p.url && { url: p.url, ...(p.url.startsWith('https://doi.org/') && { sameAs: p.url }) }),
+    })),
+  ],
+};
+---
+
+<BaseLayout title={site.title} description={site.description} canonical={site.url} ogType="profile" ogImage={site.ogImage} jsonLd={jsonLd}>
+  <Fragment slot="head">
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="author" content="George Michoulis" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="alternate" type="text/plain" href="https://george-michoulis.com/llms.txt" title="LLM-readable summary" />
+    <meta property="profile:first_name" content="George" />
+    <meta property="profile:last_name" content="Michoulis" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={site.ogImageAlt} />
+    <meta name="twitter:title" content={site.title} />
+    <meta name="twitter:description" content={site.shortDescription} />
+    <meta name="twitter:image" content={site.ogImage} />
+    {/* Preload only the two above-the-fold faces. Funnel Display is one variable file per subset, listed under its
+         first weight (500), so the h1's 600 is matched by subset rather than weight. */}
+    <Font cssVariable="--font-funnel" preload={[{ style: 'normal', subset: 'latin' }]} />
+    <Font cssVariable="--font-geist" preload={[{ weight: 400, style: 'normal', subset: 'latin' }]} />
+    <Font cssVariable="--font-geist-mono" />
+  </Fragment>
+
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="fallback" aria-hidden="true"></div>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--a1)" /><stop offset=".5" style="stop-color:var(--a2)" /><stop offset="1" style="stop-color:var(--a3)" /></linearGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--beam);stop-opacity:0" /><stop offset="1" style="stop-color:var(--beam)" /></linearGradient>
+  </defs></svg>
+
+  <main id="main">
+    <Hero />
+    <About />
+    <Skills stats={stats} />
+    <Experience />
+    <Research papers={sorted} stats={stats} />
+    <Certificates certs={certs} stats={stats} />
+    <Projects />
+    <Activities />
+    <LinkedIn />
+    <Contact />
+  </main>
+  <Footer built={built} />
+  <CertDialog certs={certs} />
+</BaseLayout>
+
+<script>
+  import '@/scripts/home/main';
+</script>

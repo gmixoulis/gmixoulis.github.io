@@ -1,0 +1,14 @@
+---
+import { profile } from '@/data/profile';
+---
+
+<section class="hero" id="top" tabindex="-1" aria-label="Introduction">
+  <a class="latest" href="#linkedin">Latest on LinkedIn <span class="ar" aria-hidden="true">→</span></a>
+  <h1 class="h1"><span class="w"><span>George</span></span> <span class="w"><span>Michoulis</span></span></h1>
+  <p class="lede">{profile.lede}</p>
+  <div class="ctas">
+    <a class="btn btn-p mag" href={`mailto:${profile.email}`}>Email me</a>
+    <a class="btn btn-s mag" href="#work">Experience <span class="ar" aria-hidden="true">→</span></a>
+  </div>
+  <div class="stage" data-stage="0" aria-hidden="true"></div>
+</section>

@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terrarium — George Michoulis resume study</title>
+  <meta name="description" content="Botanical-modernism resume study for George Michoulis, blockchain developer and researcher." />
+  <link rel="stylesheet" href="common.css" />
+  <style>
+    :root {
+      --paper: #E9F0E8;
+      --ink: #3E5C48;
+      --accent: #F26D5B;
+      --accent-text: #B34436;
+      --rule: rgba(62, 92, 72, 0.18);
+      --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+      --font-label: 'Courier New', ui-monospace, monospace;
+    }
+
+    body { background: var(--paper); color: var(--ink); }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: clamp(2.6rem, 7vw, 5.5rem) clamp(1.1rem, 4vw, 2.4rem);
+      min-height: 84vh;
+      align-items: center;
+    }
+    .hero .copy { position: relative; z-index: 2; }
+    .hero .name {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(3rem, 12vw, 7.6rem);
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+    .hero .name em { font-style: italic; color: var(--accent-text); }
+    .hero .deck { margin-top: 1.6rem; max-width: 36ch; font-size: 1rem; line-height: 1.6; opacity: 0.9; }
+    .hero .labels { margin-top: 1.4rem; font-family: var(--font-label); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.9; }
+
+    /* botanical composition */
+    .garden { position: relative; height: clamp(16rem, 42vw, 26rem); min-height: 15rem; }
+    .garden .arch {
+      position: absolute;
+      right: 4%; bottom: 0;
+      width: 46%;
+      height: 82%;
+      background: var(--ink);
+      border-radius: 50% 50% 0 0;
+    }
+    .garden .arch::after {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      background: var(--paper);
+      border-radius: 50% 50% 0 0;
+    }
+    .garden .leaf1 { position: absolute; top: 0; right: 8%; width: 26%; }
+    .garden .leaf2 { position: absolute; top: 34%; right: 2%; width: 18%; }
+    .garden .stone {
+      position: absolute;
+      bottom: 6%; left: 6%;
+      width: 20%; aspect-ratio: 1.1;
+      background: var(--accent);
+      border-radius: 55% 45% 60% 40% / 50% 55% 45% 50%;
+    }
+
+    .band { display: grid; gap: 2.4rem; padding: clamp(2.4rem, 7vw, 5rem) clamp(1.1rem, 4vw, 2.4rem); }
+    .band-head { display: grid; gap: 0.5rem; }
+    .band-head .kicker { font-family: var(--font-label); font-size: 0.72rem; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.9; }
+    .band-head h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.9rem, 5.5vw, 3rem); letter-spacing: -0.01em; }
+
+    /* stepping stones */
+    .stones { display: grid; gap: 1rem; }
+    .stone-card {
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: grid;
+      gap: 0.5rem;
+      box-shadow: 0 14px 30px -30px rgba(62,92,72,0.6);
+    }
+    .stone-card .dot { width: 11px; height: 11px; border-radius: 50%; background: var(--accent); margin-bottom: 0.4rem; }
+    .stone-card .when { font-family: var(--font-label); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.9; }
+    .stone-card h3 { font-family: var(--font-display); font-weight: 400; font-size: 1.4rem; }
+    .stone-card .org { font-size: 0.9rem; opacity: 0.9; }
+    .stone-card p { font-size: 0.94rem; opacity: 0.9; max-width: 52ch; }
+    @media (min-width: 720px) {
+      .hero { grid-template-columns: 1.1fr 1fr; }
+      .stones .stone-card:nth-child(even) { margin-left: clamp(2rem, 8vw, 7rem); }
+      .stones .stone-card:nth-child(odd) { margin-right: clamp(2rem, 8vw, 7rem); }
+    }
+
+    /* research garden panel */
+    .panel {
+      margin: 0 clamp(1.1rem, 4vw, 2.4rem) clamp(2rem, 5vw, 4rem);
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 20px;
+      padding: clamp(1.8rem, 5vw, 3.4rem);
+      display: grid;
+      gap: 1.4rem;
+    }
+    .panel .kicker { font-family: var(--font-label); font-size: 0.72rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--paper); }
+    .panel h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem, 5vw, 2.8rem); max-width: 22ch; }
+    .panel p { max-width: 60ch; opacity: 0.9; line-height: 1.6; }
+    .panel .row { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-family: var(--font-label); font-size: 0.8rem; letter-spacing: 0.06em; }
+
+    .edu { display: grid; gap: 1rem; padding: 0 clamp(1.1rem, 4vw, 2.4rem) clamp(2rem, 5vw, 4rem); }
+    .edu .leaf-card {
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: grid;
+      gap: 0.4rem;
+    }
+    .edu .leaf-card .when { font-family: var(--font-label); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.9; }
+    .edu .leaf-card h3 { font-family: var(--font-display); font-weight: 400; font-size: 1.35rem; }
+    .edu .leaf-card .org { font-size: 0.92rem; opacity: 0.9; }
+    .edu .leaf-card .note { color: var(--accent-text); font-family: var(--font-label); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    @media (min-width: 720px) { .edu { grid-template-columns: 1fr 1fr; } }
+
+    .skills { padding: 0 clamp(1.1rem, 4vw, 2.4rem) clamp(2rem, 5vw, 4rem); }
+    .skills h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.9rem, 5.5vw, 3rem); margin-bottom: 1.2rem; }
+    .skills ul { display: grid; gap: 0.7rem; }
+    .skills li { display: flex; align-items: center; gap: 0.9rem; font-size: 1.05rem; }
+    .skills li::before { content: ""; width: 12px; height: 12px; border-radius: 60% 60% 40% 40%; background: var(--accent); flex: none; }
+
+    .contact { padding: clamp(2rem, 5vw, 3.4rem) clamp(1.1rem, 4vw, 2.4rem); border-top: 1px solid var(--rule); display: grid; gap: 1.1rem; }
+    .contact h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.7rem, 4.5vw, 2.4rem); }
+    .contact .links { display: flex; flex-wrap: wrap; gap: 0.7rem 1.8rem; font-size: 0.9rem; }
+    .contact a { text-decoration: none; border-bottom: 1px solid var(--accent-text); }
+    .contact a:hover { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="draft-nav">
+    <a class="brand" href="index.html">George Michoulis</a>
+    <span class="tag">Study 03 / 06</span>
+    <nav class="links" aria-label="Concept"><a href="index.html">All concepts</a><a href="concrete-light.html">Next →</a></nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="name3">
+      <div class="copy">
+        <h1 class="name" id="name3">George<br /><em>Michoulis</em></h1>
+        <p class="deck">Blockchain developer and researcher — smart contracts, graph-based ML, and full-stack Web3 systems.</p>
+        <p class="labels">Thessaloniki · Remote — botanical study</p>
+        <a class="explore-link" href="#experience">Explore experience ↓</a>
+      </div>
+      <div class="garden" aria-hidden="true">
+        <span class="arch" data-parallax="0.08"></span>
+        <span class="stone" data-parallax="0.3"></span>
+        <span class="leaf1" data-parallax="0.36">
+          <svg viewBox="0 0 120 190" focusable="false"><path d="M60 4 C 100 55, 106 140, 60 186 C 14 140, 20 55, 60 4 Z" fill="#3E5C48"/><path d="M60 12 L 60 178" stroke="#E9F0E8" stroke-width="2" opacity="0.5"/></svg>
+        </span>
+        <span class="leaf2" data-parallax="0.5">
+          <svg viewBox="0 0 120 190" focusable="false"><path d="M60 4 C 100 55, 106 140, 60 186 C 14 140, 20 55, 60 4 Z" fill="#F26D5B"/><path d="M60 12 L 60 178" stroke="#E9F0E8" stroke-width="2" opacity="0.5"/></svg>
+        </span>
+      </div>
+    </section>
+
+    <section class="band" id="experience" aria-labelledby="exp-h">
+      <div class="band-head">
+        <p class="kicker">Growing — experience</p>
+        <h2 id="exp-h">Experience</h2>
+      </div>
+      <div class="stones">
+        <article class="stone-card"><span class="dot" aria-hidden="true"></span>
+          <p class="when">05 / 2026 — Present</p><h3>Web3 Full-Stack Developer</h3>
+          <p class="org">Cyberscope by TAC</p><p>Contracts, on-chain integrations, React/Next frontends, security tooling.</p></article>
+        <article class="stone-card"><span class="dot" aria-hidden="true"></span>
+          <p class="when">2024 — 2026</p><h3>Blockchain Developer &amp; Researcher</h3>
+          <p class="org">Sidroco Holdings LTD</p><p>NFT marketplace for 5G, Hyperledger Fabric prototypes, EU projects.</p></article>
+        <article class="stone-card"><span class="dot" aria-hidden="true"></span>
+          <p class="when">2023 — 2025</p><h3>Lecturer &amp; Academic Partner</h3>
+          <p class="org">University of Derby / Mediterranean College</p><p>Networks &amp; Security, Web Scripting, Application Development.</p></article>
+        <article class="stone-card"><span class="dot" aria-hidden="true"></span>
+          <p class="when">2022 — 2024</p><h3>Blockchain &amp; Full-Stack Developer</h3>
+          <p class="org">University of Nicosia / IFF</p><p>Next.js / NestJS / Docker apps and a Web3 NFT marketplace.</p></article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="res-h">
+      <p class="kicker">Research</p>
+      <h2 id="res-h">Graph-embedding methods for blockchain fraud detection</h2>
+      <p>MSc work funded by DeepMind, carried into publications and applied blockchain systems — from ledger effectiveness to practical change.</p>
+      <div class="row"><span>Graph ML</span><span>Fraud detection</span><span>Ledger research</span><span>Publications</span></div>
+    </section>
+
+    <section class="edu" aria-labelledby="edu-h">
+      <h2 id="edu-h" class="sr-only">Education</h2>
+      <article class="leaf-card">
+        <p class="when">2020 — 2022</p><h3>MSc Data &amp; Web Science</h3>
+        <p class="org">Aristotle University of Thessaloniki</p><p class="note">DeepMind Scholarship</p></article>
+      <article class="leaf-card">
+        <p class="when">2015 — 2020</p><h3>BSc Applied Informatics</h3>
+        <p class="org">University of Macedonia</p><p class="note">Web3 thesis · academic credentials</p></article>
+    </section>
+
+    <section class="skills" aria-labelledby="skills-h">
+      <h2 id="skills-h">Skills &amp; methods</h2>
+      <ul>
+        <li>Smart contracts &amp; Solidity</li>
+        <li>Graph-based machine learning</li>
+        <li>Full-stack Web3</li>
+        <li>React / Next.js · NestJS</li>
+        <li>Docker · Hyperledger Fabric</li>
+        <li>Security tooling</li>
+      </ul>
+    </section>
+
+    <section class="contact" aria-labelledby="contact-h">
+      <h2 id="contact-h">Contact</h2>
+      <p class="links">
+        <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+        <a href="https://github.com/gmixoulis">github.com/gmixoulis</a>
+        <a href="https://www.linkedin.com/in/george-michoulis/">linkedin.com/in/george-michoulis</a>
+        <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&amp;hl=el">Google Scholar</a>
+      </p>
+    </section>
+  </main>
+
+  <footer class="draft-footer">
+    <nav class="foot-nav" aria-label="Footer"><a href="index.html">All concepts</a><a href="concrete-light.html">04 Concrete Light →</a></nav>
+    <p class="note">Draft study — sample resume content, no live-site change.</p>
+  </footer>
+
+  <script src="motion.js" defer></script>
+</body>
+</html>

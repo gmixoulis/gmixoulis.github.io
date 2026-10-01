@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="noir">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>B · Projection room — George Michoulis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,400&family=Yuji+Boku&family=Zen+Kurenaido&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./tokens.css" />
+    <style>
+      body {
+        background: var(--black);
+        color: var(--cream);
+      }
+
+      .hero {
+        position: relative;
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: clamp(4rem, 12vh, 7rem) var(--pad-x);
+        overflow: hidden;
+      }
+
+      .hero-enso {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        opacity: 0.32;
+        pointer-events: none;
+      }
+
+      .hero-enso [data-enso] {
+        position: relative;
+        width: min(62vw, 480px);
+        z-index: 1;
+      }
+
+      .hero-enso .enso-canvas {
+        width: 100%;
+        height: auto;
+      }
+
+      .slate {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        max-width: 42rem;
+        padding: 1.75rem 1.5rem;
+        background: radial-gradient(
+          ellipse 75% 70% at 50% 45%,
+          color-mix(in srgb, var(--black) 88%, transparent) 0%,
+          color-mix(in srgb, var(--black) 70%, transparent) 55%,
+          transparent 78%
+        );
+      }
+
+      .reel-meta {
+        font-family: var(--font-meta);
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        margin: 0 0 1.75rem;
+      }
+
+      .brand-name {
+        font-size: clamp(2.5rem, 7.5vw, 5rem);
+        color: var(--cream);
+        margin-bottom: 1.25rem;
+      }
+
+      .brand-name .given,
+      .brand-name .family {
+        display: inline;
+      }
+
+      .brand-name .family::before {
+        content: " ";
+      }
+
+      .slate .thesis {
+        margin: 0 auto 1.75rem;
+        color: var(--ink-muted);
+      }
+
+      .slate .roles {
+        justify-content: center;
+        margin-bottom: 2rem;
+      }
+
+      .slate .cta-row {
+        justify-content: center;
+      }
+
+      .cta {
+        border-bottom-color: var(--cream);
+        color: var(--cream);
+      }
+
+      .cta-primary {
+        border-bottom-color: var(--accent);
+      }
+
+      .dossier {
+        max-width: 44rem;
+        margin: 0 auto;
+      }
+
+      .dossier-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .dossier-head .jp {
+        font-family: var(--font-brush-display);
+        font-size: 1.5rem;
+        opacity: 0.55;
+      }
+
+      .entry {
+        display: grid;
+        gap: 0.35rem 2rem;
+        padding: 1.35rem 0;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      @media (min-width: 640px) {
+        .entry {
+          grid-template-columns: 8.5rem 1fr;
+        }
+      }
+
+      .entry .when {
+        font-family: var(--font-meta);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        color: var(--ink-faint);
+      }
+
+      .entry h3 {
+        font-family: var(--font-display);
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+        color: var(--cream);
+      }
+
+      .entry .org {
+        font-size: 0.9rem;
+        color: var(--ink-muted);
+        margin: 0.15rem 0 0;
+      }
+
+      .entry .body {
+        grid-column: 1 / -1;
+        margin: 0.35rem 0 0;
+        color: var(--ink-muted);
+        font-size: 0.95rem;
+      }
+
+      @media (min-width: 640px) {
+        .entry .body {
+          grid-column: 2;
+        }
+      }
+
+      .close-reel {
+        text-align: center;
+        padding: 5rem var(--pad-x) 6rem;
+      }
+
+      .close-reel .inscription {
+        font-family: var(--font-brush-hand);
+        font-size: 1.15rem;
+        color: var(--ink-faint);
+        margin: 1.5rem 0 0;
+      }
+
+      .font-swap {
+        padding: 1.25rem var(--pad-x) 3rem;
+        border-top: 1px solid var(--rule);
+      }
+    </style>
+  </head>
+  <body class="theme-noir">
+    <header class="draft-chrome">
+      <a href="./index.html">← Japan drafts</a>
+      <span class="draft-badge">B · Projection room</span>
+    </header>
+
+    <section class="hero letterbox" aria-label="Hero">
+      <div class="hero-enso" aria-hidden="true">
+        <div
+          data-enso
+          data-enso-variant="noir"
+          data-enso-size="520"
+          data-enso-seed="23"
+          data-enso-inscribe="true"
+        ></div>
+      </div>
+      <div class="slate">
+        <p class="reel-meta">Reel 01 · Brand plate</p>
+        <h1 class="brand-name">
+          <span class="given">George</span><span class="family">Michoulis</span>
+        </h1>
+        <p class="thesis">
+          Blockchain developer and researcher. Smart contracts, graph-based ML, and full-stack
+          Web3 systems.
+        </p>
+        <ul class="roles">
+          <li>Blockchain</li>
+          <li>Full-Stack</li>
+          <li>Research</li>
+          <li>Web3</li>
+        </ul>
+        <div class="cta-row">
+          <a class="cta cta-primary" href="#dossier">Open dossier</a>
+          <a class="cta cta-ghost" href="mailto:gmixoulis@gmail.com">Contact</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="dossier">
+      <div class="dossier">
+        <div class="dossier-head">
+          <div>
+            <p class="section-label" style="margin-bottom: 0.35rem">Projection · Experience</p>
+            <h2 class="section-title" style="margin: 0">Selected reels</h2>
+          </div>
+          <span class="jp" aria-hidden="true">映</span>
+        </div>
+
+        <article class="entry">
+          <span class="when">05 / 2026 — Present</span>
+          <div>
+            <h3>Web3 Full-Stack Developer</h3>
+            <p class="org">Cyberscope by TAC</p>
+          </div>
+          <p class="body">
+            End-to-end Web3 products: contracts, on-chain integrations, React/Next frontends,
+            security tooling.
+          </p>
+        </article>
+        <article class="entry">
+          <span class="when">2024 — 2026</span>
+          <div>
+            <h3>Blockchain Developer &amp; Researcher</h3>
+            <p class="org">Sidroco Holdings LTD</p>
+          </div>
+          <p class="body">
+            NFT marketplace for 5G, Hyperledger Fabric prototypes, Erasmus+ LMS, multinational EU
+            projects.
+          </p>
+        </article>
+        <article class="entry">
+          <span class="when">2023 — 2025</span>
+          <div>
+            <h3>Lecturer &amp; Academic Partner</h3>
+            <p class="org">University of Derby / Mediterranean College</p>
+          </div>
+          <p class="body">
+            Networks &amp; Security, Web Scripting, Application Development. Inclusivity-first
+            assessment.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <div class="close-reel letterbox">
+      <span class="brush-divider" aria-hidden="true" style="margin: 0 auto 1.75rem"></span>
+      <div
+        class="enso-wrap"
+        style="width: 140px; margin: 0 auto; opacity: 0.55"
+        data-enso
+        data-enso-variant="noir"
+        data-enso-size="140"
+        data-enso-seed="41"
+      ></div>
+      <p class="inscription">What is this?</p>
+    </div>
+
+    <p class="font-swap font-note">
+      Cream on noir · letterbox bars · enso in darkness.
+      Fonts: Shippori Mincho · Yuji Boku (<em>swap to KokuryuSou via Adobe Fonts web project</em>) ·
+      Zen Kurenaido (<em>swap to Harukaze Brush</em>).
+    </p>
+
+    <script src="./enso.js"></script>
+  </body>
+</html>

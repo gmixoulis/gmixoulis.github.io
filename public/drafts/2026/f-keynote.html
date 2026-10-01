@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>F · Keynote — George Michoulis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#F5F5F7; --white:#FFFFFF; --ink:#1D1D1F; --ink-2:#6E6E73; --ink-3:#A1A1A6; --line:#D2D2D7;
+    --blue:#0066CC; --blue-2:#0071E3;
+    --display:"Inter Tight",-apple-system,"SF Pro Display",system-ui,sans-serif; --body:"Inter",-apple-system,system-ui,sans-serif;
+    --pad:clamp(1.25rem,5vw,4rem); --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box;margin:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.0625rem;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.035em;line-height:1.02}
+  .wrap{max-width:1180px;margin:0 auto}
+  .kicker{font-size:.8rem;font-weight:600;letter-spacing:.02em;color:var(--blue);text-transform:uppercase}
+  .blue{color:var(--blue)}
+  .muted{color:var(--ink-2)}
+
+  /* nav */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:50;height:52px;background:rgba(245,245,247,.72);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.08)}
+  .nav .in{max-width:1180px;margin:0 auto;height:100%;display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);font-size:.82rem}
+  .nav .brand{font-weight:600;letter-spacing:-.01em}
+  .nav .links{display:flex;gap:1.8rem;color:var(--ink-2)}
+  .nav .links a:hover{color:var(--ink)}
+  .nav .pill{background:var(--blue-2);color:#fff;border-radius:999px;padding:.35rem .85rem;font-weight:500;transition:background .2s}
+  .nav .pill:hover{background:var(--blue)}
+  .nav.dark{background:rgba(29,29,31,.72);border-color:rgba(255,255,255,.1);color:#fff}.nav.dark .links{color:rgba(255,255,255,.65)}.nav.dark .links a:hover{color:#fff}
+
+  /* scrub scenes: --p goes 0..1 while sticky */
+  [data-scene]{position:relative}
+  .sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:grid;align-items:center}
+
+  /* S1 hero zoom */
+  .s1{height:260vh}
+  .s1 .sticky{padding-top:52px}
+  .s1 .txt{position:absolute;left:0;right:0;top:0;bottom:0;display:grid;place-content:center;text-align:center;padding:0 var(--pad);
+    opacity:calc(1 - var(--p,0) * 2.4);transform:scale(calc(1 - var(--p,0) * .12)) translateY(calc(var(--p,0) * -12vh))}
+  .s1 h1{font-size:clamp(3rem,9vw,8.4rem);max-width:11ch;margin:0 auto}
+  .s1 .sub{font-size:clamp(1.1rem,1.8vw,1.6rem);color:var(--ink-2);margin-top:1.4rem;max-width:40ch;margin-inline:auto;font-weight:500}
+  .s1 .cta{margin-top:1.8rem;display:inline-flex;gap:1.5rem;font-size:1.05rem;color:var(--blue)}
+  .s1 .cta a:hover{text-decoration:underline}
+  .s1 .shot{position:absolute;left:50%;top:50%;
+    width:calc(52% + 48% * var(--p,0));aspect-ratio:16/10;max-height:calc(100vh - 52px);
+    transform:translate(-50%,-50%) translateY(calc((1 - var(--p,0)) * 42vh));
+    border-radius:calc(22px * (1 - var(--p,0)));overflow:hidden;background:#111;box-shadow:0 40px 80px -30px rgba(0,0,0,.35)}
+  .s1 .shot img{width:100%;height:100%;object-fit:cover;object-position:top;opacity:calc(.72 + var(--p,0) * .28);display:block}
+  .s1 .over{position:absolute;left:0;right:0;bottom:0;padding:clamp(1.5rem,5vw,4rem);color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.65));
+    opacity:clamp(0,calc((var(--p,0) - .6) * 3),1);transform:translateY(calc((1 - clamp(0,calc((var(--p,0) - .6) * 3),1)) * 20px))}
+  .s1 .over h2{font-size:clamp(1.6rem,3.6vw,3rem);color:#fff}
+  .s1 .over p{opacity:.8;margin-top:.4rem;max-width:44ch}
+
+  /* S2 pinned steps */
+  .s2{height:320vh;--q:clamp(.17,var(--p,0),.83)}
+  .s2 .sticky > .wrap{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;width:100%;padding:0 var(--pad)}
+  .s2 .steps{position:relative;min-height:22rem}
+  .s2 .step{position:absolute;inset:0;display:grid;align-content:center;--s:calc(var(--q) * 3 - .5 - var(--i));
+    opacity:clamp(0,calc(1 - abs(var(--s)) * 2.4),1);transform:translateY(calc(var(--s) * -40px))}
+  .s2 .step h2{font-size:clamp(2.2rem,4.6vw,4rem);margin:.6rem 0 1rem}
+  .s2 .step p{font-size:1.15rem;color:var(--ink-2);max-width:40ch}
+  .s2 .n{font-family:var(--display);font-size:.85rem;font-weight:600;color:var(--ink-3)}
+  .s2 .pin{position:relative;aspect-ratio:4/3;border-radius:22px;overflow:hidden;background:var(--white);box-shadow:0 30px 60px -30px rgba(0,0,0,.3)}
+  .s2 .pin img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;--s:calc(var(--q) * 3 - .5 - var(--i));
+    opacity:clamp(0,calc(1 - abs(var(--s)) * 2),1);transform:scale(calc(1 + abs(var(--s)) * .06))}
+  .s2 .dots{position:absolute;left:1.2rem;bottom:1rem;display:flex;gap:.4rem}
+  .s2 .dots i{width:.5rem;height:.5rem;border-radius:50%;background:rgba(0,0,0,.2);--s:calc(var(--q) * 3 - .5 - var(--i));opacity:clamp(.35,calc(1 - abs(var(--s)) * 2),1);background:var(--ink)}
+
+  /* S3 horizontal roles */
+  .s3{height:300vh;background:var(--ink);color:#fff}
+  .s3 .head{position:absolute;top:calc(52px + 5vh);left:0;right:0;padding:0 var(--pad)}
+  .s3 .head h2{font-size:clamp(2rem,4.2vw,3.6rem);color:#fff}
+  .s3 .head p{color:rgba(255,255,255,.6);margin-top:.5rem}
+  .s3 .track{display:flex;gap:1.2rem;width:max-content;padding:0 var(--pad);transform:translateX(calc(var(--p,0) * (100vw - 100%)))}
+  .s3 .card{width:min(72vw,640px);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:clamp(1.4rem,3vw,2.4rem);display:grid;grid-template-rows:auto 1fr auto;min-height:min(58vh,420px)}
+  .s3 .card .idx{font-family:var(--display);font-size:.85rem;color:rgba(255,255,255,.45);font-weight:600}
+  .s3 .card h3{font-size:clamp(1.6rem,3vw,2.6rem);margin:.8rem 0 .3rem;color:#fff}
+  .s3 .card .org{color:#6EB3FF;font-weight:500}
+  .s3 .card p{color:rgba(255,255,255,.7);margin-top:1rem;max-width:44ch}
+  .s3 .card time{font-size:.8rem;color:rgba(255,255,255,.45);align-self:end}
+
+  /* S4 proof grid */
+  section.flat{padding:clamp(5rem,12vh,9rem) var(--pad)}
+  .s4 h2{font-size:clamp(2.2rem,5vw,4.4rem);max-width:16ch;margin:.6rem 0 2.4rem}
+  .stats{display:grid;grid-template-columns:repeat(3,auto);gap:3rem;justify-content:start;margin-bottom:3rem}
+  .stats b{display:block;font-family:var(--display);font-size:clamp(2.6rem,5vw,4.4rem);font-weight:600;letter-spacing:-.04em;color:var(--blue)}
+  .stats small{color:var(--ink-2);font-weight:500}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+  .tile{background:var(--white);border-radius:18px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);opacity:0;transform:translateY(40px) scale(.96);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  .tile.in{opacity:1;transform:none}
+  .tile img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:top;display:block}
+  .tile .cap{padding:.9rem 1.1rem;display:flex;justify-content:space-between;font-size:.85rem;font-weight:500}
+  .tile .cap span:last-child{color:var(--ink-2)}
+  .tile.wide{grid-column:span 2}
+  .tile.wide img{aspect-ratio:16/8}
+
+  /* S5 publications rows */
+  .s5 h2{font-size:clamp(2.2rem,5vw,4.4rem);margin:.6rem 0 2rem}
+  .rows{border-top:1px solid var(--line)}
+  .row{display:grid;grid-template-columns:5rem 1fr auto;gap:1.5rem;align-items:center;padding:1.3rem 0;border-bottom:1px solid var(--line);transition:background .2s;margin:0 -1rem;padding-inline:1rem;border-radius:12px}
+  .row:hover{background:var(--white)}
+  .row .n{font-family:var(--display);font-size:2rem;font-weight:600;letter-spacing:-.03em}
+  .row b{display:block;font-weight:500}
+  .row small{color:var(--ink-2)}
+  .row .go{color:var(--blue);font-size:.9rem;white-space:nowrap}
+  .edu{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:4rem}
+  .edu h3{font-family:var(--body);font-size:.8rem;font-weight:600;color:var(--ink-2);margin-bottom:.8rem}
+  .edu li{list-style:none;padding:.9rem 0;border-top:1px solid var(--line)}
+  .edu li b{display:block;font-weight:600}
+  .edu li span{color:var(--ink-2);font-size:.92rem}
+  .edu li i{font-style:normal;color:var(--blue);font-size:.8rem;font-weight:500}
+
+  /* S6 close: word reveal on scrub */
+  .s6{height:200vh}
+  .s6 .sticky{text-align:center;padding:0 var(--pad)}
+  .s6 h2{font-size:clamp(2.6rem,8vw,7.5rem);max-width:12ch;margin:0 auto}
+  .s6 h2 span{display:inline-block;--s:calc(var(--p,0) * 1.4 - var(--i) * .11);opacity:clamp(.12,calc(var(--s) * 3),1);transform:translateY(calc((1 - clamp(0,calc(var(--s) * 3),1)) * 14px))}
+  .s6 .links{margin-top:2.4rem;display:flex;justify-content:center;gap:2rem;font-size:1.05rem;color:var(--blue);opacity:clamp(0,calc((var(--p,0) - .55) * 4),1)}
+  .s6 .links a:hover{text-decoration:underline}
+  .s6 .mail{display:inline-block;margin-top:2rem;background:var(--blue-2);color:#fff;border-radius:999px;padding:.9rem 1.6rem;font-weight:500;opacity:clamp(0,calc((var(--p,0) - .45) * 4),1)}
+  footer{padding:2rem var(--pad);font-size:.78rem;color:var(--ink-2);border-top:1px solid var(--line)}
+
+  @media (max-width:860px){
+    .nav .links{display:none}
+    .s2 .sticky > .wrap{grid-template-columns:1fr;gap:1.5rem;align-content:center}
+    .s2 .steps{min-height:16rem;order:2}
+    .s2 .pin{aspect-ratio:16/10}
+    .grid{grid-template-columns:1fr}.tile.wide{grid-column:auto}
+    .row{grid-template-columns:3.5rem 1fr}.row .go{grid-column:2}
+    .edu{grid-template-columns:1fr}
+    .stats{grid-template-columns:repeat(3,1fr);gap:1rem}
+    .s1 .shot{width:calc(88% + 12% * var(--p,0));aspect-ratio:4/5}
+  }
+  @media (prefers-reduced-motion:reduce){
+    [data-scene]{height:auto!important;--p:1}
+    .sticky{position:static;height:auto;padding:4rem 0}
+    .s1 .txt{position:static;opacity:1;transform:none;padding:6rem var(--pad) 2rem}
+    .s1 .shot{position:static;transform:none;width:100%;margin:0 auto}
+    .s2 .step{position:static;opacity:1;transform:none;margin-bottom:2rem}
+    .s2 .pin img{position:static;opacity:1;transform:none}.s2 .pin img+img{display:none}
+    .s3 .track{transform:none;flex-wrap:wrap;width:auto}
+    .s3 .head{position:static;padding-bottom:2rem}
+    .tile{opacity:1;transform:none;transition:none}
+    .s6 h2 span,.s6 .links,.s6 .mail{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<nav class="nav"><div class="in">
+  <a class="brand" href="#top">George Michoulis</a>
+  <div class="links"><a href="#about">About</a><a href="#work">Work</a><a href="#proof">Proof</a><a href="#papers">Papers</a></div>
+  <a class="pill" href="mailto:gmixoulis@gmail.com">Contact</a>
+</div></nav>
+
+<main>
+  <div class="s1" data-scene id="top"><div class="sticky">
+    <div class="txt">
+      <h1>Blockchain systems that hold up in production.</h1>
+      <p class="sub">George Michoulis. Smart contracts, graph-based machine learning, and full-stack Web3, from research paper to shipped product.</p>
+      <div class="cta"><a href="#about">Learn more ›</a><a href="#work">See the work ›</a></div>
+    </div>
+    <div class="shot">
+      <img src="/img/portfolio/eudem.polsci.auth.gr.PNG" alt="EUDEM platform" style="object-position:center 12%" />
+      <div class="over"><h2>Web3 Full-Stack Developer at Cyberscope by TAC</h2><p>Contracts, on-chain integrations, React and Next frontends, security tooling. End to end.</p></div>
+    </div>
+  </div></div>
+
+  <div class="s2" data-scene id="about"><div class="sticky"><div class="wrap">
+    <div class="steps">
+      <div class="step" style="--i:0"><span class="n">01 — Research</span><h2>Graph ML for ledgers that need to be trusted.</h2><p>MSc Data and Web Science at Aristotle University on graph-embedding methods for blockchain fraud detection, funded by DeepMind. Twelve indexed publications.</p></div>
+      <div class="step" style="--i:1"><span class="n">02 — Build</span><h2>NFTs, DeFi, and the boring parts that make them work.</h2><p>Solidity, TypeScript, and cloud. Marketplaces, Hyperledger Fabric prototypes, large Next.js and NestJS systems, Docker everywhere.</p></div>
+      <div class="step" style="--i:2"><span class="n">03 — Teach</span><h2>Lecturer in networks, security, and app development.</h2><p>University of Derby and Mediterranean College. Inclusivity-first assessment, public talks on Web3 and edge tech. Based in Thessaloniki, works remote.</p></div>
+    </div>
+    <div class="pin">
+      <img src="/img/portfolio/verde.uom.gr.PNG" alt="" style="--i:0" />
+      <img src="/img/portfolio/metau.unic.ac.cy.png" alt="" style="--i:1" />
+      <img src="/img/portfolio/marlab.ode.uom.gr.PNG" alt="" style="--i:2" />
+      <div class="dots"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i></div>
+    </div>
+  </div></div></div>
+
+  <div class="s3" data-scene id="work"><div class="sticky">
+    <div class="head"><h2>Four roles. One trajectory.</h2><p class="muted">Scroll to move through them.</p></div>
+    <div class="track">
+      <div class="card"><span class="idx">01</span><div><h3>Web3 Full-Stack Developer</h3><div class="org">Cyberscope by TAC</div><p>End-to-end Web3 products: contracts, on-chain integrations, React/Next frontends, security tooling.</p></div><time>05 / 2026 — Present</time></div>
+      <div class="card"><span class="idx">02</span><div><h3>Blockchain Developer &amp; Researcher</h3><div class="org">Sidroco Holdings LTD</div><p>NFT marketplace for 5G, Hyperledger Fabric prototypes, Erasmus+ LMS, multinational EU projects.</p></div><time>2024 — 2026</time></div>
+      <div class="card"><span class="idx">03</span><div><h3>Lecturer &amp; Academic Partner</h3><div class="org">University of Derby / Mediterranean College</div><p>Networks &amp; Security, Web Scripting, Application Development. Inclusivity-first assessment.</p></div><time>2023 — 2025</time></div>
+      <div class="card"><span class="idx">04</span><div><h3>Blockchain &amp; Full-Stack Developer</h3><div class="org">University of Nicosia / IFF</div><p>Large-scale Next.js / NestJS / Docker apps and a Web3 NFT marketplace.</p></div><time>2022 — 2024</time></div>
+    </div>
+  </div></div>
+
+  <section class="flat s4" id="proof"><div class="wrap">
+    <span class="kicker">Proof</span>
+    <h2>Shipped, certified, cited.</h2>
+    <div class="stats"><div><b data-count="7">0</b><small>products live</small></div><div><b data-count="34">0</b><small>certificates</small></div><div><b data-count="50">0</b><small>citations</small></div></div>
+    <div class="grid">
+      <a class="tile wide" href="https://accelerate.uom.gr" target="_blank" rel="noopener" data-reveal><img src="/img/portfolio/accelerate.png" alt="accelerate" loading="lazy" style="object-position:center 12%" /><div class="cap"><span>accelerate</span><span>Platform</span></div></a>
+      <a class="tile" href="https://celc.web.auth.gr" target="_blank" rel="noopener" data-reveal><img src="/img/portfolio/celc.web.auth.gr.PNG" alt="celc" loading="lazy" /><div class="cap"><span>celc.web.auth.gr</span><span>Platform</span></div></a>
+      <div class="tile" data-reveal><img src="/img/renamed/Certificate-Of-Completion_Rust-Developer.png" alt="Rust certificate" loading="lazy" /><div class="cap"><span>Rust Developer</span><span>Certificate</span></div></div>
+      <div class="tile" data-reveal><img src="/img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" alt="ML certificate" loading="lazy" /><div class="cap"><span>ML &amp; Deep Networks</span><span>Certificate</span></div></div>
+      <div class="tile" data-reveal><img src="/img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" alt="CCNA" loading="lazy" /><div class="cap"><span>CCNA</span><span>Certificate</span></div></div>
+    </div>
+  </div></section>
+
+  <section class="flat s5" id="papers" style="padding-top:0"><div class="wrap">
+    <span class="kicker">Papers</span>
+    <h2>Most cited.</h2>
+    <div class="rows">
+      <a class="row" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener"><span class="n">32</span><span><b>A process-aware approach for blockchain-based verification of academic qualifications</b><small>Simulation Modelling Practice and Theory 121, 2022</small></span><span class="go">Scholar ›</span></a>
+      <a class="row" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener"><span class="n">11</span><span><b>Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe</b><small>XIV Balkan Conference on Operational Research, 2020</small></span><span class="go">Scholar ›</span></a>
+      <a class="row" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener"><span class="n">7</span><span><b>Exploring decentralized governance: a framework applied to Compound Finance</b><small>Mathematical Research for Blockchain Economy, 2023</small></span><span class="go">Scholar ›</span></a>
+    </div>
+    <div class="edu">
+      <div><h3>Education</h3><ul>
+        <li><b>MSc Data and Web Science</b><span>Aristotle University of Thessaloniki · 2020 — 2022</span><br /><i>DeepMind Scholarship</i></li>
+        <li><b>BSc Applied Informatics</b><span>University of Macedonia · 2015 — 2020</span><br /><i>Web3 thesis on academic credentials</i></li>
+      </ul></div>
+      <div><h3>Awards</h3><ul>
+        <li><b>DeepMind Scholarship</b><span>AUTH · 2020 — 2022</span></li>
+        <li><b>3rd place, Infinitech Hackathon</b><span>Crowdpolicy · 06 / 2022</span></li>
+        <li><b>Basic Research grant</b><span>University of Macedonia · 2020 — 2021</span></li>
+      </ul></div>
+    </div>
+  </div></section>
+
+  <div class="s6" data-scene id="contact"><div class="sticky"><div>
+    <h2><span style="--i:0">Let's</span> <span style="--i:1">build</span> <span style="--i:2">the</span> <span style="--i:3">next</span> <span style="--i:4">one</span> <span style="--i:5" class="blue">together.</span></h2>
+    <a class="mail" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+    <div class="links">
+      <a href="https://www.linkedin.com/in/george-michoulis/" target="_blank" rel="noopener">LinkedIn ›</a>
+      <a href="https://github.com/gmixoulis" target="_blank" rel="noopener">GitHub ›</a>
+      <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener">Scholar ›</a>
+      <a href="https://twitter.com/GeorgeMicou" target="_blank" rel="noopener">X ›</a>
+    </div>
+  </div></div></div>
+</main>
+<footer>Thessaloniki · Remote · © 2026 George Michoulis</footer>
+
+<script>
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const scenes = [...document.querySelectorAll('[data-scene]')];
+  // scrub driver: --p = 0 while the scene's sticky child is at top, 1 when it releases
+  function tick() { for (const s of scenes) { const r = s.getBoundingClientRect(); const p = reduced ? 1 : Math.min(1, Math.max(0, -r.top / (r.height - innerHeight))); s.style.setProperty('--p', p.toFixed(4)); } }
+  let raf = 0; addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); }, { passive: true }); addEventListener('resize', tick); tick();
+  const io = new IntersectionObserver(es => es.forEach((e, i) => { if (e.isIntersecting) { e.target.style.transitionDelay = (e.target.dataset.reveal !== undefined ? (i * 80) : 0) + 'ms'; e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
+  document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+  const co = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; co.unobserve(e.target); const end = +e.target.dataset.count, t0 = performance.now();
+    (function step(t) { const k = Math.min(1, (t - t0) / 1200), v = Math.round(end * (1 - Math.pow(1 - k, 3))); e.target.textContent = v + (end === 50 ? '+' : ''); if (k < 1) requestAnimationFrame(step); })(t0); }), { threshold: .5 });
+  document.querySelectorAll('[data-count]').forEach(el => co.observe(el));
+  const nav = document.querySelector('.nav'), dark = document.querySelector('.s3');
+  new IntersectionObserver(es => es.forEach(e => nav.classList.toggle('dark', e.isIntersecting)), { rootMargin: '-52px 0px -100% 0px', threshold: 0 }).observe(dark);
+</script>
+</body>
+</html>

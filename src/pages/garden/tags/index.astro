@@ -1,0 +1,27 @@
+---
+import GardenLayout from '@/layouts/GardenLayout.astro';
+import { getPosts, tagCounts, tagHref } from '@/lib/garden';
+
+const tags = tagCounts(await getPosts());
+---
+
+<GardenLayout title="Tags — Zen Garden" description="Every tag in the Zen Garden, with post counts.">
+  <div class="z-wrap">
+    <header style="padding: clamp(3rem, 10vh, 5.5rem) 0 2rem">
+      <p class="z-meta">Zen Garden</p>
+      <h1 class="z-display" style="font-size: clamp(2.2rem, 5.5vw, 3.6rem); margin: 0.5rem 0 0">Tags</h1>
+    </header>
+
+    <hr class="z-cut" />
+
+    {tags.length > 0 ? (
+      <ul class="z-taglist" style="margin-top: 1.5rem">
+        {tags.map(({ tag, count }) => (
+          <li><a href={tagHref(tag)} rel="tag">#{tag} ({count})</a></li>
+        ))}
+      </ul>
+    ) : (
+      <p class="z-meta" style="padding: 2rem 0 4rem">No tags yet.</p>
+    )}
+  </div>
+</GardenLayout>

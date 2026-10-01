@@ -1,0 +1,14 @@
+TASK: Execute the implementation plan in `plans/004-garden-performance.md` in this repository, exactly as written.
+
+Read the plan in full first. It is self-contained, with measured causes, exact steps, verification commands,
+scope, STOP conditions and done criteria. Plans 001–003 are committed on this branch. The plan's drift check uses
+commit 3b6bebd (the next commit only added the plan file and a script).
+
+Hard constraints:
+- Do NOT commit, push, or create branches. The orchestrator commits.
+- Only the plan's in-scope files. Never touch `public/drafts/**`, `public/play/**`, `public/img/**` (copy from it,
+  never move or edit), `scripts/ideas-qa/**` (except running the scripts), `plans/**`, `graft/**`, `.gitignore`, `.ignore`.
+- bun only. Stop on STOP conditions. Kill any server you start.
+
+REPORT CONTRACT: per-step status with verification output; the files created, modified and deleted; the full
+page-check output; the Lighthouse scores for the 3 URLs; the screenshot paths; deviations and uncertainties.

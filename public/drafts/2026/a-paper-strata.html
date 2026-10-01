@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A · Paper Strata — George Michoulis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#F4EFE6; --paper-2:#EBE4D8; --ink:#2B2D31; --ink-2:#5B5E66; --ink-3:#9A9CA3;
+    --accent:#E2662B; --rule:#D9D2C4;
+    --display:"Fraunces",Georgia,serif; --body:"Inter",system-ui,sans-serif;
+    --pad:clamp(1.25rem,5vw,5rem); --ease:cubic-bezier(.2,.7,.2,1);
+  }
+  *{box-sizing:border-box;margin:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--ink);font-family:var(--body);font-size:1.0625rem;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  h1,h2,h3{font-family:var(--display);font-weight:300;letter-spacing:-.02em;line-height:1}
+
+  /* progress rail */
+  .rail{position:fixed;left:0;top:0;width:4px;height:100vh;background:var(--rule);z-index:50}
+  .rail i{display:block;width:100%;height:100%;background:var(--accent);transform-origin:top;transform:scaleY(var(--p,0))}
+  @supports (animation-timeline: scroll()){
+    .rail i{animation:grow linear both;animation-timeline:scroll(root);transform:none}
+    @keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+  }
+
+  /* nav */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:1rem var(--pad);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;mix-blend-mode:multiply}
+  .nav b{font-family:var(--display);font-weight:600;letter-spacing:0;text-transform:none;font-size:1.1rem}
+  .nav a+a{margin-left:1.5rem}
+
+  /* sheets */
+  .sheet{position:sticky;top:0;min-height:100vh;background:var(--paper);padding:calc(var(--pad) + 3rem) var(--pad) var(--pad);box-shadow:0 -20px 60px rgba(43,45,49,.25)}
+  .sheet::before{content:"";position:absolute;left:0;right:0;top:-18px;height:20px;
+    background:var(--paper);
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 20' preserveAspectRatio='none'%3E%3Cpath d='M0 20V12l8-4 6 6 9-9 7 7 6-3 9 6 7-8 8 5 6-6 9 9 6-4 8 5 7-8 9 8 5-4 9 5 7-8 6 8 9-6 6 4 8-9 7 8 6-2 8 5 8-8 6 6 8-5 7 7 8-9 6 8 7-3 8 6 7-8 6 5 9-5 7 8 6-5 8 5 7-8 8 8 6-4 8 5 7-8 9 8 5-4 9 5 7-8 6 8 9-6 6 4 8-9 7 8 6-2 8 5 8-8 6 6 8-5 7 7 8-9 6 8 7-3 8 6 7-8 6 5 9-5 7 8v9z'/%3E%3C/svg%3E") center/100% 100% no-repeat;
+            mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 20' preserveAspectRatio='none'%3E%3Cpath d='M0 20V12l8-4 6 6 9-9 7 7 6-3 9 6 7-8 8 5 6-6 9 9 6-4 8 5 7-8 9 8 5-4 9 5 7-8 6 8 9-6 6 4 8-9 7 8 6-2 8 5 8-8 6 6 8-5 7 7 8-9 6 8 7-3 8 6 7-8 6 5 9-5 7 8 6-5 8 5 7-8 8 8 6-4 8 5 7-8 9 8 5-4 9 5 7-8 6 8 9-6 6 4 8-9 7 8 6-2 8 5 8-8 6 6 8-5 7 7 8-9 6 8 7-3 8 6 7-8 6 5 9-5 7 8v9z'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+  .sheet.alt{background:var(--paper-2)}
+  .sheet.alt::before{background:var(--paper-2)}
+  .sheet.dark{background:var(--ink);color:var(--paper)}
+  .sheet.dark::before{background:var(--ink)}
+  .sheet:first-of-type{box-shadow:none}
+  .sheet:first-of-type::before{display:none}
+
+  .eyebrow{font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2);display:flex;align-items:center;gap:.75rem;margin-bottom:2rem}
+  .eyebrow::before{content:"";width:2rem;height:2px;background:var(--accent)}
+  .dark .eyebrow{color:var(--ink-3)}
+  .wrap{max-width:1180px;margin:0 auto;width:100%}
+
+  /* hero */
+  .hero{display:grid;align-content:end;overflow:hidden}
+  .hero .ghost{position:absolute;right:-.05em;top:-.1em;font-family:var(--display);font-size:38vw;line-height:1;color:transparent;-webkit-text-stroke:1px var(--rule);pointer-events:none;user-select:none}
+  .hero h1{font-size:clamp(3.2rem,13.5vw,12rem);color:var(--ink);position:relative}
+  .hero h1 em{font-style:italic;color:var(--accent)}
+  .hero .thesis{max-width:34ch;font-size:clamp(1.1rem,2vw,1.5rem);font-family:var(--display);font-weight:300;margin:1.5rem 0 3rem;color:var(--ink-2)}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:2rem;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);border-top:1px solid var(--rule);padding-top:1rem}
+  @supports (animation-timeline: scroll()){
+    .hero .ghost{animation:para-far linear both;animation-timeline:scroll(root);animation-range:0 100vh}
+    .hero h1{animation:para-near linear both;animation-timeline:scroll(root);animation-range:0 100vh}
+    .hero .thesis,.hero .meta{animation:para-mid linear both;animation-timeline:scroll(root);animation-range:0 100vh}
+    @keyframes para-far{to{transform:translateY(-55vh) rotate(-4deg)}}
+    @keyframes para-near{to{transform:translateY(-14vh);opacity:.15}}
+    @keyframes para-mid{to{transform:translateY(-30vh);opacity:0}}
+  }
+
+  /* about */
+  .about{display:grid;grid-template-columns:1.1fr .9fr;gap:4rem;align-items:start}
+  .about h2{font-size:clamp(2.2rem,5vw,4.5rem);margin-bottom:1.5rem}
+  .about p{font-size:1.15rem;max-width:52ch;color:var(--ink-2)}
+  .stamps{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2.5rem}
+  .stamp{font-family:var(--display);font-weight:600;font-size:.95rem;letter-spacing:.06em;text-transform:uppercase;padding:.45rem .9rem;border:2px solid var(--accent);color:var(--accent);border-radius:3px;transform:rotate(calc(var(--r,0) * 1deg));opacity:0;scale:1.4}
+  .in .stamp{animation:stamp .5s var(--ease) forwards;animation-delay:calc(var(--i) * 90ms)}
+  @keyframes stamp{to{opacity:1;scale:1}}
+  .pillars{display:grid;gap:1.5rem}
+  .pillar{border-top:1px solid var(--rule);padding-top:1rem}
+  .pillar h3{font-size:1.6rem;margin-bottom:.4rem}
+  .pillar p{font-size:.95rem;color:var(--ink-2)}
+
+  /* experience ledger */
+  .ledger h2{font-size:clamp(2.2rem,5vw,4.5rem);margin-bottom:3rem}
+  .row{display:grid;grid-template-columns:11rem 1fr;gap:2rem;padding:1.6rem 0;border-top:1px solid var(--rule);position:relative}
+  .row::before{content:"";position:absolute;left:0;top:-1px;height:2px;width:0;background:var(--accent);transition:width .6s var(--ease)}
+  .row.in::before{width:100%}
+  .row time{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);padding-top:.35rem}
+  .row h3{font-size:1.6rem;margin-bottom:.15rem}
+  .row .org{font-weight:500;color:var(--accent);margin-bottom:.5rem}
+  .row p{color:var(--ink-2);max-width:60ch}
+
+  /* proof */
+  .proof h2{font-size:clamp(2.2rem,5vw,4.5rem);margin-bottom:2.5rem;color:var(--paper)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem}
+  .tile{aspect-ratio:4/3;overflow:hidden;background:#1f2124;border:1px solid #3a3d43}
+  .tile img{width:100%;height:100%;object-fit:cover;filter:saturate(.85);transition:transform .8s var(--ease)}
+  .tile:hover img{transform:scale(1.05)}
+  .pubs{margin-top:3.5rem;display:grid;gap:0}
+  .pub{display:grid;grid-template-columns:4rem 1fr auto;gap:1.5rem;padding:1.2rem 0;border-top:1px solid #3a3d43;align-items:baseline}
+  .pub .n{font-family:var(--display);font-size:2rem;color:var(--accent)}
+  .pub b{font-weight:500;display:block}
+  .pub small{color:var(--ink-3)}
+  .pub .cite{font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+  .dark .eyebrow::before{background:var(--accent)}
+
+  /* education + contact */
+  .edu{display:grid;grid-template-columns:1fr 1fr;gap:4rem}
+  .edu h2{font-size:clamp(2rem,4vw,3.5rem);margin-bottom:1.5rem}
+  .edu li{list-style:none;border-top:1px solid var(--rule);padding:1rem 0}
+  .edu li b{display:block;font-family:var(--display);font-size:1.3rem;font-weight:300}
+  .edu li span{color:var(--ink-2);font-size:.95rem}
+  .edu li i{font-style:normal;color:var(--accent);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase}
+  .contact{margin-top:6rem;border-top:2px solid var(--ink);padding-top:2rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:2rem}
+  .contact h2{font-size:clamp(2.5rem,8vw,7rem)}
+  .contact h2 a{border-bottom:3px solid var(--accent)}
+  .socials{display:flex;gap:1.5rem;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase}
+  .socials a{border-bottom:1px solid var(--rule)}
+  .socials a:hover{border-color:var(--accent)}
+
+  /* reveal */
+  [data-reveal]{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  [data-reveal].in{opacity:1;transform:none}
+
+  @media (max-width:820px){
+    .about,.edu{grid-template-columns:1fr;gap:2.5rem}
+    .row{grid-template-columns:1fr;gap:.4rem}
+    .pub{grid-template-columns:3rem 1fr}
+    .pub .cite{grid-column:2}
+    .nav a+a{margin-left:1rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    [data-reveal],.stamp{opacity:1;transform:none;scale:1}
+    .row::before{width:100%}
+    .rail i{transform:scaleY(1)}
+  }
+</style>
+</head>
+<body>
+<div class="rail" aria-hidden="true"><i></i></div>
+<nav class="nav">
+  <b>George Michoulis</b>
+  <span><a href="#about">About</a><a href="#work">Work</a><a href="#proof">Proof</a><a href="#contact">Contact</a></span>
+</nav>
+
+<main>
+  <section class="sheet hero" id="top">
+    <div class="ghost" aria-hidden="true">GM</div>
+    <div class="wrap">
+      <h1>George<br /><em>Michoulis</em></h1>
+      <p class="thesis">Blockchain developer and researcher. Smart contracts, graph-based ML, and full-stack Web3 systems.</p>
+      <div class="meta"><span>Thessaloniki · Remote</span><span>Web3 Full-Stack · Cyberscope by TAC</span><span>Scroll ↓</span></div>
+    </div>
+  </section>
+
+  <section class="sheet about-sheet" id="about">
+    <div class="wrap about">
+      <div data-reveal>
+        <p class="eyebrow">01 · About</p>
+        <h2>Researcher who ships.</h2>
+        <p>Based in Thessaloniki. BSc Applied Informatics (University of Macedonia) on Ethereum credential verification. MSc Data and Web Science (Aristotle University) on graph-embedding methods for blockchain fraud detection, funded by DeepMind.</p>
+        <div class="stamps">
+          <span class="stamp" style="--i:0;--r:-3">Blockchain</span>
+          <span class="stamp" style="--i:1;--r:2">Full-Stack</span>
+          <span class="stamp" style="--i:2;--r:-1">Data Science</span>
+          <span class="stamp" style="--i:3;--r:3">Web3</span>
+          <span class="stamp" style="--i:4;--r:-2">Machine Learning</span>
+          <span class="stamp" style="--i:5;--r:1">Research</span>
+        </div>
+      </div>
+      <div class="pillars" data-reveal>
+        <div class="pillar"><h3>Research</h3><p>Publications and startup work on ledger effectiveness, improvement areas, and practical change across blockchain systems.</p></div>
+        <div class="pillar"><h3>Build</h3><p>Web3 (NFTs, DeFi), data science with graph embeddings, and shipping across Solidity, TypeScript, and cloud.</p></div>
+        <div class="pillar"><h3>Teach</h3><p>Lecturer in networks, security, and application development. Public speaking on Web3 and edge tech.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet alt ledger" id="work">
+    <div class="wrap">
+      <p class="eyebrow">02 · Experience</p>
+      <h2 data-reveal>Four chapters, one ledger.</h2>
+      <div class="row" data-reveal><time>05 / 2026 — Present</time><div><h3>Web3 Full-Stack Developer</h3><div class="org">Cyberscope by TAC</div><p>End-to-end Web3 products: contracts, on-chain integrations, React/Next frontends, security tooling.</p></div></div>
+      <div class="row" data-reveal><time>2024 — 2026</time><div><h3>Blockchain Developer &amp; Researcher</h3><div class="org">Sidroco Holdings LTD</div><p>NFT marketplace for 5G, Hyperledger Fabric prototypes, Erasmus+ LMS, multinational EU projects.</p></div></div>
+      <div class="row" data-reveal><time>2023 — 2025</time><div><h3>Lecturer &amp; Academic Partner</h3><div class="org">University of Derby / Mediterranean College</div><p>Networks &amp; Security, Web Scripting, Application Development. Inclusivity-first assessment.</p></div></div>
+      <div class="row" data-reveal><time>2022 — 2024</time><div><h3>Blockchain &amp; Full-Stack Developer</h3><div class="org">University of Nicosia / IFF</div><p>Large-scale Next.js / NestJS / Docker apps and a Web3 NFT marketplace.</p></div></div>
+    </div>
+  </section>
+
+  <section class="sheet dark proof" id="proof">
+    <div class="wrap">
+      <p class="eyebrow">03 · Proof</p>
+      <h2 data-reveal>Shipped, certified, cited.</h2>
+      <div class="grid" data-reveal>
+        <a class="tile" href="https://accelerate.uom.gr" target="_blank" rel="noopener"><img src="/img/portfolio/accelerate.png" alt="accelerate" loading="lazy" /></a>
+        <a class="tile" href="https://metau.unic.ac.cy" target="_blank" rel="noopener"><img src="/img/portfolio/metau.unic.ac.cy.png" alt="metau.unic.ac.cy" loading="lazy" /></a>
+        <a class="tile" href="https://marlab.ode.uom.gr" target="_blank" rel="noopener"><img src="/img/portfolio/marlab.ode.uom.gr.PNG" alt="marlab.ode.uom.gr" loading="lazy" /></a>
+        <a class="tile" href="https://verde.uom.gr" target="_blank" rel="noopener"><img src="/img/portfolio/verde.uom.gr.PNG" alt="verde.uom.gr" loading="lazy" /></a>
+        <div class="tile"><img src="/img/renamed/Certificate-Of-Completion_Rust-Developer.png" alt="Rust Developer certificate" loading="lazy" /></div>
+        <div class="tile"><img src="/img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" alt="CCNA certificate" loading="lazy" /></div>
+        <div class="tile"><img src="/img/renamed/Certificate-Of-Completion_Cloud-Engineering.png" alt="Cloud Engineering certificate" loading="lazy" /></div>
+        <div class="tile"><img src="/img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" alt="Machine Learning certificate" loading="lazy" /></div>
+      </div>
+      <div class="pubs" data-reveal>
+        <a class="pub" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener"><span class="n">32</span><span><b>A process-aware approach for blockchain-based verification of academic qualifications</b><small>Simulation Modelling Practice and Theory 121, 2022</small></span><span class="cite">citations</span></a>
+        <a class="pub" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener"><span class="n">11</span><span><b>Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe</b><small>XIV Balkan Conference on Operational Research, 2020</small></span><span class="cite">citations</span></a>
+        <a class="pub" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener"><span class="n">7</span><span><b>Exploring decentralized governance: a framework applied to Compound Finance</b><small>Mathematical Research for Blockchain Economy, 2023</small></span><span class="cite">citations</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" id="contact">
+    <div class="wrap">
+      <p class="eyebrow">04 · Education &amp; Awards</p>
+      <div class="edu">
+        <div data-reveal>
+          <h2>Education</h2>
+          <ul>
+            <li><b>MSc Data and Web Science</b><span>Aristotle University of Thessaloniki · 2020 — 2022</span><br /><i>DeepMind Scholarship</i></li>
+            <li><b>BSc Applied Informatics</b><span>University of Macedonia · 2015 — 2020</span><br /><i>Web3 thesis on academic credentials</i></li>
+          </ul>
+        </div>
+        <div data-reveal>
+          <h2>Awards</h2>
+          <ul>
+            <li><b>DeepMind Scholarship</b><span>AUTH · 2020 — 2022</span></li>
+            <li><b>3rd place, Infinitech Hackathon</b><span>Crowdpolicy · 06 / 2022</span></li>
+            <li><b>Basic Research grant</b><span>University of Macedonia · 2020 — 2021</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="contact" data-reveal>
+        <h2><a href="mailto:gmixoulis@gmail.com">Say hello.</a></h2>
+        <div class="socials">
+          <a href="https://www.linkedin.com/in/george-michoulis/" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://github.com/gmixoulis" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&hl=el" target="_blank" rel="noopener">Scholar</a>
+          <a href="https://twitter.com/GeorgeMicou" target="_blank" rel="noopener">X</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
+  document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+  if (!CSS.supports('animation-timeline: scroll()')) {
+    const set = () => document.documentElement.style.setProperty('--p', window.scrollY / (document.documentElement.scrollHeight - innerHeight));
+    addEventListener('scroll', set, { passive: true }); set();
+  }
+</script>
+</body>
+</html>

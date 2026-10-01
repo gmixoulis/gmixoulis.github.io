@@ -1,0 +1,24 @@
+TASK: Execute the implementation plan in `plans/002-site-seo-security.md` in this repository, exactly as written.
+
+Read `plans/002-site-seo-security.md` in full before changing anything. It is self-contained: goal, current-state
+excerpts, exact steps, per-step verification commands, scope, STOP conditions and done criteria. Plan 001 (the
+garden blog) is already committed on this branch (commit 8046ede), so the garden routes (/garden/, posts,
+/garden/tags/, /garden/rss.xml) exist and must be covered by your sitemap and CSP checks.
+
+Hard constraints (in addition to the plan):
+- Do NOT commit, push, or create branches. The orchestrator reviews and commits.
+- Only modify files in the plan's "In scope" list. Never modify or delete: `public/drafts/**`, `public/play/**`,
+  `public/llms.txt` (written by the orchestrator), `scripts/ideas-qa/**` (except running page-check.cjs),
+  `plans/**`, `graft/**`, `.gitignore`, `.ignore`.
+- Package manager is bun. Don't use npm/yarn/pnpm to install.
+- The drift check will show commit 8046ede touching `package.json`: that's expected (it added @astrojs/rss).
+  Compare only the plan's excerpts of `astro.config.mjs`, `public/robots.txt` and `public/sitemap.xml`, which are unchanged.
+- Never add 'unsafe-inline' or 'unsafe-eval' to script-src. If that seems required, STOP.
+- If a STOP condition occurs, stop and report. Kill any http.server you start.
+
+REPORT CONTRACT (your final message must contain):
+1. Step-by-step status with the verification output of each step (short).
+2. Files created, modified and deleted.
+3. The final CSP meta content string from build/garden/index.html.
+4. The full output of the final page-check command.
+5. Deviations and uncertainties.

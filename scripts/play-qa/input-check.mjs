@@ -1,0 +1,36 @@
+import puppeteer from 'puppeteer-core';
+import assert from 'node:assert/strict';
+const browser = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: 'new' });
+try {
+  const page = await browser.newPage();
+  await page.setViewport({ width: 1000, height: 600 });
+  const errors = [];
+  page.on('pageerror', e => errors.push(String(e)));
+  await page.goto('http://localhost:4321/play/');
+  await page.waitForFunction(() => flags.preloadShiftUpDone && ale.canRunSwim);
+  const pause = ms => new Promise(r => setTimeout(r, ms));
+  const sample = () => page.evaluate(() => ({ y: scrollY, bottom: parseFloat(getComputedStyle(aleContainerDiv).bottom), row: aleFramesDiv.style.top, frame: aleFramesDiv.style.left }));
+  await page.keyboard.down('ArrowRight');
+  await pause(80); const early = await sample();
+  await pause(400); const cruising = await sample();
+  await page.keyboard.up('ArrowRight');
+  await pause(80); const coasting = await sample();
+  await pause(550); const stopped = await sample();
+  await pause(200); const resting = await sample();
+  assert(early.y > 0 && early.y < 40, 'Walking should ease in');
+  assert(cruising.y > early.y + 100, 'Holding should continue walking');
+  assert(coasting.y > cruising.y, 'Release should coast');
+  assert.equal(stopped.y, resting.y, 'Release must settle');
+  await page.keyboard.press('Space');
+  await pause(260); const peak = await sample();
+  await pause(500); const landed = await sample();
+  assert(peak.bottom > resting.bottom + 140, 'Space should jump');
+  assert(Math.abs(landed.bottom - resting.bottom) < 2, 'Jump should land at ground level');
+  await page.keyboard.down('ArrowLeft');
+  await pause(300); const left = await sample();
+  await page.keyboard.up('ArrowLeft');
+  assert(left.y < landed.y, 'Left should reverse movement');
+  assert.equal(left.row, '-200px', 'Left should use the left-facing sprite row');
+  assert.deepEqual(errors, []);
+  console.log(JSON.stringify({ status: 'PASS', early, cruising, coasting, stopped, peak, landed, left, errors }));
+} finally { await browser.close(); }

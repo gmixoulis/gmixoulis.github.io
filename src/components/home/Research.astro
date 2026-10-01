@@ -1,0 +1,30 @@
+---
+import { profile, research, type Paper, type Stats } from '@/data/profile';
+interface Props { papers: Paper[]; stats: Stats }
+const { papers, stats } = Astro.props;
+const [h, dim] = research.h(stats);
+const top = Math.max(0, ...papers.map((p) => p.cites));
+---
+
+<section class="sec research" id="research" tabindex="-1" aria-labelledby="h-res">
+  <div class="wrap res-g">
+    <div class="res-l">
+      <p class="eyebrow" data-rv>Research</p>
+      <h2 class="h2" id="h-res" data-rv>{h} <span class="dim">{dim}</span></h2>
+      <p class="note" data-rv>{research.note(stats)}<a class="lnk" href={profile.scholar} target="_blank" rel="noopener noreferrer">Scholar profile <span aria-hidden="true">↗</span></a></p>
+      <div class="stage r" data-stage="4" aria-hidden="true"></div>
+    </div>
+    <div>
+    <ol class="papers" data-rv>
+      {papers.map((p) => (
+        <li><article class="paper spot">
+          <h3>{p.url ? <a href={p.url} target="_blank" rel="noopener noreferrer">{p.title}</a> : p.title}</h3>
+          <p class="venue">{p.venue}{p.firstAuthor && <span class="fa">First author</span>}</p>
+          <p class="pm">{p.year && <time datetime={p.year}>{p.year}</time>}{p.cites > 0 && <b class:list={[p.cites === top && 'hi']}>{p.cites} citation{p.cites === 1 ? '' : 's'}</b>}</p>
+        </article></li>
+      ))}
+    </ol>
+    <p class="note also" data-rv>{research.also}</p>
+    </div>
+  </div>
+</section>
