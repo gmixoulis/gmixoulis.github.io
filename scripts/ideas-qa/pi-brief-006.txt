@@ -1,0 +1,15 @@
+TASK: Execute `plans/006-easy-read-and-skills.md` in this repository, exactly as written. Read it in full first.
+You are on branch `feat/easy-read` (from master cfc4b60). Read `src/data/profile.ts`, `src/components/home/*.astro`,
+`src/scripts/home/nav.ts`, `src/scripts/home/main.ts`, `src/layouts/BaseLayout.astro` and `src/styles/home.css` before editing.
+
+Hard constraints:
+- Do NOT commit, push or create branches. The orchestrator commits.
+- Never touch `src/scripts/home/scene.ts` (another agent is changing it in parallel), `scripts/*.js`, `.github/**`,
+  `public/**`, `plans/**`, `graft/**`, `.gitignore`, `.ignore`.
+- Soft-skill and summary copy must be used VERBATIM from the plan; do not invent facts or numbers.
+- No `set:html`/innerHTML with data; keep the strict CSP working (bundled scripts only; the inline bootstrap in
+  BaseLayout stays above the CSP meta).
+- bun only. Kill any server you start. Stop on STOP conditions.
+
+REPORT CONTRACT: per-step status with verification output; files created/modified; the axe summary per URL/mode/theme/width;
+the WCAG 1.4.12 check result; page-check output; the easy-read contrast table; the font actually used; deviations.
