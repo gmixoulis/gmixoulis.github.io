@@ -42,7 +42,7 @@ header,main,footer{position:relative;z-index:1}
 .hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;text-align:center;padding:clamp(92px,12vh,118px) var(--pad) 0}
 .stage{width:100%;pointer-events:none}
 .hero .stage{flex:1 0 300px}
-.note{max-width:46ch;margin:0 auto 22px;font-size:15px;line-height:1.55;color:var(--fg-2);text-wrap:balance}
+.note{max-width:54ch;margin:0 auto 22px;font-size:15px;line-height:1.55;color:var(--fg-2);text-wrap:balance}
 .note a{color:var(--fg);text-decoration:underline;text-underline-offset:.22em;white-space:nowrap}
 .latest{display:inline-flex;align-items:center;gap:8px;padding:4px 0;font-size:14px;color:var(--fg-2);border-bottom:1px solid var(--line-2);transition:color .2s,border-color .3s}
 .latest:hover{color:var(--fg);border-color:var(--a2)}
