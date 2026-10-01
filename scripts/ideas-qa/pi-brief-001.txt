@@ -1,0 +1,21 @@
+TASK: Execute the implementation plan in `plans/001-garden-blog.md` in this repository, exactly as written.
+
+Read `plans/001-garden-blog.md` in full before changing anything. It is self-contained: goal, current-state
+excerpts, exact steps, per-step verification commands, scope, STOP conditions and done criteria. Follow it
+step by step and run every verification command.
+
+Hard constraints (in addition to the plan):
+- Do NOT commit, push, or create branches. The orchestrator reviews and commits.
+- Only modify files in the plan's "In scope" list. The working tree also contains untracked work by other
+  agents (`public/drafts/**`, `scripts/ideas-qa/**`, `plans/**`, `graft/**`). Never modify or delete those,
+  except running `node scripts/ideas-qa/page-check.cjs` as the plan instructs.
+- Package manager is bun (`bun add`, `bun run build`). Don't use npm/yarn/pnpm to install.
+- If a STOP condition occurs, stop and report instead of improvising.
+- Kill any `python3 -m http.server` you start before finishing.
+
+REPORT CONTRACT (your final message must contain):
+1. Step-by-step status: done / skipped / stopped, with the verification output of each step (short).
+2. The list of files created, modified and deleted.
+3. The full output of the final page-check command.
+4. Any deviation from the plan and why.
+5. Anything you were unsure about.

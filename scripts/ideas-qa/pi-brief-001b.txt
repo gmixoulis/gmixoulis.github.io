@@ -1,0 +1,12 @@
+DELTA BRIEF (continuing plans/001-garden-blog.md).
+
+Orchestrator decision on your STOP at Step 2: you were right, and the plan's claim was wrong. Do NOT edit
+George's post text. Instead, relax the schema: in `src/content.config.ts` change the description rule to
+`description: z.string().min(20).max(170),`. The plan file `plans/001-garden-blog.md` has been updated to say this.
+
+Then:
+1. Re-run Step 2's verification (`bun run build` → exit 0, both garden posts still built).
+2. Continue with Steps 3 through 9 exactly as written in `plans/001-garden-blog.md` (re-read them now; they're unchanged).
+Same hard constraints as before: don't commit, only in-scope files, bun only, stop on STOP conditions, and kill any
+http.server you start. Final report: the same contract as the first brief (per-step status with verification
+output, files created/modified/deleted, the full page-check output, deviations, uncertainties).

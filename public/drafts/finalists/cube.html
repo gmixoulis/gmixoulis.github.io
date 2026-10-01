@@ -1,0 +1,1019 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-XR23KE0r+TaNhOI2z5lnlsuYijrb/vLpEU65nM8jR44=' 'sha256-l3iWrluANCY9JtIK409pIg+2htgF6v/PMnZScbC52sY=' 'sha256-cQHvXPRUZRipeRBwNmHW58EV7QwqO29BE8J1nW5iHrY=' 'sha256-f5CFZQUYgZIMiOZ3AEVtXaVGlltZUxbn6uIh4/5NvYA=' 'sha256-noWW2camoWdBeIIbViydInM9T0WhD0JE63QxxF1tf3s='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net; frame-src https://widgets.sociablekit.com; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<!-- frame-ancestors can't be set from a meta tag. When hosting allows headers, also send:
+     Content-Security-Policy: frame-ancestors 'none'  (plus the policy above). -->
+<meta name="robots" content="noindex, nofollow"> <!-- DRAFT ONLY: remove when promoted to / -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>George Michoulis · Blockchain developer and researcher</title>
+<meta name="description" content="George Michoulis is a blockchain developer and researcher in Thessaloniki, Greece. Smart contracts, full-stack Web3 systems and blockchain research.">
+<link rel="canonical" href="https://george-michoulis.com/">
+<link rel="alternate" type="text/plain" href="https://george-michoulis.com/llms.txt" title="LLM-readable summary">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="author" content="George Michoulis">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0a0a0b">
+<!-- og.png: this draft's copy is finalists/og-cube.png; the orchestrator moves it to /og.png on promotion. -->
+<meta property="og:type" content="profile">
+<meta property="profile:first_name" content="George">
+<meta property="profile:last_name" content="Michoulis">
+<meta property="og:title" content="George Michoulis · Blockchain developer and researcher">
+<meta property="og:description" content="Blockchain developer and researcher in Thessaloniki, Greece. Smart contracts, full-stack Web3 systems and blockchain research.">
+<meta property="og:url" content="https://george-michoulis.com/">
+<meta property="og:site_name" content="George Michoulis">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://george-michoulis.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="George Michoulis, blockchain developer and researcher: an iridescent glass block linked to a short chain of smaller blocks.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@GeorgeMicou">
+<meta name="twitter:title" content="George Michoulis · Blockchain developer and researcher">
+<meta name="twitter:description" content="Blockchain developer and researcher in Thessaloniki, Greece. Smart contracts, full-stack Web3 systems and blockchain research.">
+<meta name="twitter:image" content="https://george-michoulis.com/og.png">
+<script>(()=>{const r=document.documentElement;let t=null;try{t=localStorage.getItem('theme')}catch(e){}const saved=t==='light'||t==='dark';r.dataset.theme=saved?t:matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';const rm=matchMedia('(prefers-reduced-motion: reduce)').matches;if(rm)r.classList.add('rm');window.S={t:0,px:0,py:0,pointer:false,reduced:rm,saved}})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+:root{
+  --bg:#0a0a0b;--panel:#111114;--line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.15);
+  --fg:#ededef;--fg-2:#a6a6b0;--fg-3:#8c8c96;--dim:#74747f;--link:#a9b6ff;
+  --a1:#7ee8f2;--a2:#8ea2ff;--a3:#c49bff;--a4:#ffb9a3;
+  --h1a:#fff;--h1b:#9d9daa;--nav:rgba(10,10,11,.74);--pop:#121215;
+  --btn:#141418;--btn-h:#1b1b21;--ring:#3a3a44;--btn-fg:#fff;--solid:#f2f2f4;--solid-fg:#0a0a0b;
+  --glow:rgba(142,162,255,.22);--spot:rgba(142,162,255,.09);--sel:rgba(142,162,255,.35);--shade:rgba(0,0,0,.9);
+  --ft:rgba(126,232,242,.2);--fl:rgba(142,162,255,.13);--fr:rgba(196,155,255,.07);--beam:rgba(220,228,255,.26);
+  --acc:linear-gradient(90deg,var(--a1),var(--a2) 38%,var(--a3) 68%,var(--a4));
+  --display:'Funnel Display','Geist',sans-serif;--ui:'Geist',sans-serif;--mono:'Geist Mono',monospace;
+  --ease:cubic-bezier(.23,1,.32,1);--pad:clamp(16px,4vw,48px);--max:1240px;
+  --rail-pad:max(var(--pad),calc((100vw - var(--max))/2));
+}
+[data-theme=light]{
+  --bg:#edeef1;--panel:#f7f8fa;--line:rgba(14,16,24,.09);--line-2:rgba(14,16,24,.17);
+  --fg:#0d0e13;--fg-2:#454853;--fg-3:#585b66;--dim:#7d808b;--link:#3a4fd0;
+  --a1:#0b8793;--a2:#3a4fd0;--a3:#7a3fcf;--a4:#c0583f;
+  --h1a:#0b0c10;--h1b:#4d505b;--nav:rgba(237,238,241,.8);--pop:#fbfbfc;
+  --btn:#fbfbfc;--btn-h:#fff;--ring:#c9ccd4;--btn-fg:#0d0e13;--solid:#0d0e13;--solid-fg:#f4f5f7;
+  --glow:rgba(58,79,208,.12);--spot:rgba(58,79,208,.06);--sel:rgba(58,79,208,.2);--shade:rgba(40,44,60,.28);
+  --ft:rgba(11,135,147,.14);--fl:rgba(58,79,208,.12);--fr:rgba(122,63,207,.08);--beam:rgba(58,79,208,.16);
+}
+*{box-sizing:border-box}
+html{background:var(--bg);-webkit-text-size-adjust:100%;color-scheme:dark}
+[data-theme=light]{color-scheme:light}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.6 var(--ui);-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;height:auto}
+:focus-visible{outline:2px solid var(--a2);outline-offset:3px;border-radius:6px}
+::selection{background:var(--sel)}
+.skip{position:fixed;left:12px;top:-60px;z-index:50;background:var(--solid);color:var(--solid-fg);padding:8px 14px;border-radius:8px}
+.skip:focus{top:12px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* stage */
+#gl{position:fixed;inset:0;width:100%;height:100vh;height:100lvh;display:block;z-index:0;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
+#gl.on{opacity:1}
+.fallback{display:none;position:absolute;inset:0 0 auto;height:100vh;height:100svh;z-index:0;pointer-events:none;
+  background:radial-gradient(22% 60% at 50% 0,var(--glow),transparent 72%),radial-gradient(34% 9% at 50% 86%,var(--glow),transparent 70%)}
+.fallback::before,.no-gl .tile::before,.rm .tile::before{content:'';position:absolute;left:50%;top:70%;width:min(170px,34vw);aspect-ratio:1;border-radius:22%;
+  transform:translate(-50%,-50%) rotate(45deg);border:1.5px solid transparent;
+  background:linear-gradient(var(--bg),var(--bg)) padding-box,conic-gradient(var(--a1),var(--a2),var(--a3),var(--a4),var(--a1)) border-box;box-shadow:0 0 60px var(--glow)}
+.no-gl .tile::before,.rm .tile::before{top:50%;width:min(130px,30%)}
+.no-gl #gl{display:none}.no-gl .fallback{display:block}
+.no-gl .stage.r,.rm .stage.r{display:none}.no-gl .contact .stage,.rm .contact .stage{height:64px}
+header,main,footer{position:relative;z-index:1}
+
+/* nav */
+.nav{position:fixed;inset:0 0 auto;z-index:20;height:60px;display:flex;align-items:center;gap:18px;padding:0 var(--pad);border-bottom:1px solid transparent;transition:background-color .4s,border-color .4s}
+.nav.scrolled{background:var(--nav);-webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);border-color:var(--line)}
+.back{font-size:13px;color:var(--fg-3);white-space:nowrap;transition:color .2s}.back:hover{color:var(--fg)}
+.brand{font:600 16px var(--display);letter-spacing:-.02em;white-space:nowrap;opacity:0;transform:translateY(4px);transition:opacity .4s,transform .4s var(--ease)}
+.scrolled .brand,.brand:focus-visible{opacity:1;transform:none}
+.links{margin:0 0 0 auto;padding:0;list-style:none;display:flex;gap:0;position:relative}
+.links a{display:block;padding:8px 9px;font-size:13.5px;color:var(--fg-2);white-space:nowrap;transition:color .25s}
+.links a:hover,.links a.on{color:var(--fg)}
+.links .ext{margin-left:8px;padding-left:8px;border-left:1px solid var(--line-2)}
+.ind{position:absolute;left:0;bottom:1px;height:1px;width:0;background:var(--acc);opacity:0;transition:transform .55s var(--ease),width .55s var(--ease),opacity .3s}
+.pill{height:34px;display:inline-flex;align-items:center;gap:8px;padding:0 13px;border-radius:9px;border:1px solid var(--line-2);background:transparent;color:var(--fg);font:500 13.5px var(--ui);cursor:pointer;white-space:nowrap;transition:border-color .25s,transform .16s var(--ease)}
+.pill:hover{border-color:var(--fg-3)}.pill:active{transform:scale(.97)}
+.play{border-color:transparent;background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--acc) border-box}
+.play i{width:8px;height:9px;background:var(--acc);clip-path:polygon(0 0,100% 50%,0 100%)}
+.tg i{width:10px;height:10px;border:1.5px solid currentColor;border-radius:2.5px;transform:rotate(45deg);background:linear-gradient(90deg,currentColor 50%,transparent 50%)}
+.menu{display:none}
+
+/* buttons */
+.btn{position:relative;display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 24px;border-radius:13px;font:500 15px var(--ui);white-space:nowrap;transition:transform .6s var(--ease),color .2s;will-change:transform}
+.btn-p{color:var(--btn-fg);border:1px solid transparent;isolation:isolate;
+  background:linear-gradient(var(--btn),var(--btn)) padding-box,conic-gradient(from var(--ang),var(--ring) 0 55%,var(--a1) 66%,var(--a2) 76%,var(--a3) 86%,var(--ring) 96%) border-box;animation:spin 5s linear infinite}
+.btn-p::after{content:'';position:absolute;inset:-1px;border-radius:inherit;z-index:-1;background:conic-gradient(from var(--ang),transparent 0 55%,var(--a1) 66%,var(--a2) 76%,var(--a3) 86%,transparent 96%);filter:blur(16px);opacity:.4;animation:spin 5s linear infinite}
+.btn-p:hover{background:linear-gradient(var(--btn-h),var(--btn-h)) padding-box,conic-gradient(from var(--ang),var(--ring) 0 50%,var(--a1) 62%,var(--a2) 74%,var(--a3) 86%,var(--ring) 98%) border-box}
+.btn-s{color:var(--fg-2)}.btn-s:hover{color:var(--fg)}
+.btn .ar{transition:transform .4s var(--ease)}.btn:hover .ar{transform:translateX(3px)}
+@keyframes spin{to{--ang:360deg}}
+
+/* hero */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;text-align:center;padding:clamp(92px,12vh,118px) var(--pad) 0}
+.stage{width:100%;pointer-events:none}
+.hero .stage{flex:1 0 300px}
+.latest{display:inline-flex;align-items:center;gap:8px;padding:4px 0;font-size:14px;color:var(--fg-2);border-bottom:1px solid var(--line-2);transition:color .2s,border-color .3s}
+.latest:hover{color:var(--fg);border-color:var(--a2)}
+.latest .ar{transition:transform .3s var(--ease)}.latest:hover .ar{transform:translateX(3px)}
+.h1{margin:20px 0 0;font:600 clamp(56px,10vw,156px)/.9 var(--display);letter-spacing:-.055em}
+.h1 .w{display:inline-block;overflow:hidden;padding:0 .06em .22em;margin:0 -.06em -.22em}
+.h1 .w>span{display:inline-block;padding:0 .06em .22em;margin:0 -.06em -.22em;background:linear-gradient(180deg,var(--h1a) 35%,var(--h1b) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{margin:20px auto 0;max-width:40em;font-size:clamp(17px,1.45vw,20px);line-height:1.5;color:var(--fg-2);text-wrap:balance}
+.ctas{display:flex;gap:6px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+
+/* sections */
+.sec{position:relative;padding:clamp(72px,11vh,124px) var(--pad);outline:none}
+.wrap{max-width:var(--max);margin:0 auto}
+.eyebrow{display:flex;align-items:center;gap:12px;margin:0 0 18px;font-size:14px;font-weight:500;color:var(--fg-2)}
+.eyebrow::before{content:'';width:22px;height:1px;background:var(--acc)}
+.h2{margin:0;font:600 clamp(34px,4vw,56px)/1.03 var(--display);letter-spacing:-.042em;text-wrap:balance}
+.h2 .dim{color:var(--dim)}
+.body{margin:22px 0 0;font-size:17px;color:var(--fg-2);max-width:60ch}
+.spot{position:relative}
+.spot::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(380px circle at var(--mx,-999px) var(--my,-999px),var(--spot),transparent 60%)}
+.spot::after{content:'';position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;border:1px solid transparent;
+  background:radial-gradient(260px circle at var(--mx,-999px) var(--my,-999px),var(--fg-3),transparent 70%) border-box;
+  -webkit-mask:linear-gradient(#000 0 0) padding-box exclude,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) padding-box exclude,linear-gradient(#000 0 0);opacity:0;transition:opacity .3s}
+@media (hover:hover) and (pointer:fine){.spot:hover::after{opacity:1}}
+.lnk{display:inline-flex;gap:6px;align-items:center;color:var(--fg);border-bottom:1px solid var(--line-2);padding-bottom:2px;transition:border-color .3s}
+.lnk:hover{border-color:var(--a2)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px}
+
+/* about: text left, his two quotes set large on the right */
+.about-g{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px 72px;align-items:end}
+.def{color:var(--fg)}
+.quotes{display:grid;gap:34px;padding-bottom:4px}
+.q{margin:0}.q blockquote{margin:0}
+.q p{margin:0;font:500 clamp(25px,2.4vw,34px)/1.16 var(--display);letter-spacing:-.03em;text-wrap:balance}
+.q p b{font-weight:inherit;background:var(--acc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.q figcaption{margin-top:10px;font-size:14px;color:var(--fg-3)}
+.q+.q{margin-left:14%}
+
+/* soft skills: bento, the live block sits in its own tile */
+.bento{margin-top:40px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"teach res cube cube" "cur learn cube cube" "cli team team lang";gap:12px}
+.sk{padding:22px 22px 24px}
+.sk h3{margin:0 0 8px;font:600 19px/1.25 var(--display);letter-spacing:-.02em}
+.sk p{margin:0;font-size:14.5px;line-height:1.55;color:var(--fg-2)}
+.tile{grid-area:cube;position:relative;min-height:360px;border-radius:16px;border:1px solid var(--line)}
+
+/* experience: each role is a block that points to the previous one */
+.work-g{display:grid;grid-template-columns:minmax(0,8fr) minmax(0,4fr);gap:40px 64px;align-items:start}
+.work-g>.h2{grid-column:1/-1}
+.chain{list-style:none;margin:0;padding:0;position:relative}
+.chain::before,.chain-fill{content:'';position:absolute;left:30px;top:26px;bottom:34px;width:1px;background:var(--line-2)}
+.chain-fill{background:linear-gradient(var(--a1),var(--a2) 50%,var(--a3));transform-origin:top;transform:scaleY(0)}
+.chain>li{position:relative;padding-bottom:30px}
+.chain>li::after{content:'prev';position:absolute;left:42px;bottom:8px;font:500 11.5px/1 var(--mono);color:var(--fg-3)}
+.chain>li:last-of-type::after{content:'genesis'}
+.blk{display:grid;grid-template-columns:106px minmax(0,1fr);gap:4px 18px;padding:18px 22px;border-radius:14px;background:var(--panel);border:1px solid var(--line);transition:border-color .5s var(--ease)}
+.blk.on{border-color:transparent;background:linear-gradient(var(--panel),var(--panel)) padding-box,var(--acc) border-box}
+.when{margin:0;font:500 13px/1.9 var(--mono);color:var(--fg-3);font-variant-numeric:tabular-nums}
+.blk h3{margin:0;font:600 19px/1.3 var(--display);letter-spacing:-.02em}
+.co{margin:2px 0 6px;font-size:15px}
+.co span{color:var(--fg-3)}
+.blk .d{margin:0;font-size:15px;color:var(--fg-2)}
+.side{position:sticky;top:88px;display:grid;gap:30px}
+.mini{margin:0 0 12px;font:600 15px var(--display);color:var(--fg-2);letter-spacing:-.01em}
+.plain{list-style:none;margin:0;padding:0;display:grid;gap:13px;font-size:14.5px;line-height:1.45}
+.plain b{display:block;font-weight:500}
+.plain span{color:var(--fg-3);font-size:13.5px}
+
+/* research: sticky block on the left, papers on the right */
+.res-g{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px 64px;align-items:start}
+.res-l{position:sticky;top:88px}
+.res-l .h2{font-size:clamp(30px,3vw,44px)}
+.note{margin:18px 0 0;font-size:14.5px;color:var(--fg-3);max-width:44ch}
+.stage.r{height:clamp(240px,34vh,360px);margin-top:12px}
+.papers{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.paper{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 28px;padding:16px 18px;border-radius:12px}
+.paper h3{margin:0;font:500 16.5px/1.42 var(--ui);letter-spacing:-.005em;text-wrap:pretty}
+.venue{margin:0;font-size:13.5px;color:var(--fg-3)}
+.pm{grid-column:2;grid-row:1/3;margin:0;text-align:right;font:500 13px/1.75 var(--mono);color:var(--fg-3);font-variant-numeric:tabular-nums}
+.pm b{display:block;font-weight:500;color:var(--fg)}
+.paper h3 a{background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;transition:background-size .4s var(--ease)}
+.paper h3 a:hover{background-size:100% 1px}
+.fa{margin-left:10px;padding-left:10px;border-left:1px solid var(--line-2);color:var(--fg-2)}
+.also{max-width:62ch;margin:22px 18px 0}
+.pm b.hi{background:var(--acc);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* certificates */
+.certs{padding-left:0;padding-right:0}
+.certs .head{padding:0 var(--pad);display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap}
+.certs .head>div:first-child{max-width:640px}
+.ctrl{display:flex;gap:8px;align-items:center}
+.ibtn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--fg);display:grid;place-items:center;cursor:pointer;transition:border-color .3s,opacity .3s,transform .16s var(--ease)}
+.ibtn:hover{border-color:var(--fg-3)}.ibtn:active{transform:scale(.96)}.ibtn:disabled{opacity:.35;cursor:default}
+.tbtn{height:44px;padding:0 16px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--fg);font:500 14px var(--ui);cursor:pointer;margin-left:8px;transition:border-color .3s,transform .16s var(--ease)}
+.tbtn:hover{border-color:var(--fg-3)}.tbtn:active{transform:scale(.97)}
+.rail{margin-top:36px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:var(--rail-pad);padding:6px var(--rail-pad) 10px;scrollbar-width:none;cursor:grab;overscroll-behavior-x:contain;-webkit-user-select:none;user-select:none}
+.rail::-webkit-scrollbar{display:none}
+.rail.drag{scroll-snap-type:none;cursor:grabbing}
+.rail.drag a{pointer-events:none}
+.track{display:flex;gap:16px;list-style:none;margin:0;padding:0;width:max-content}
+.card{scroll-snap-align:start;width:clamp(220px,21vw,290px)}
+.card a{display:block;aspect-ratio:4/3;padding:16px;border-radius:16px;background:var(--panel);border:1px solid var(--line);transition:border-color .35s,transform .6s var(--ease)}
+.card img{display:block;width:100%;height:100%;object-fit:contain;-webkit-user-drag:none}
+.card:hover a{border-color:var(--line-2);transform:translateY(-4px)}
+.card p{margin:12px 2px 0;font-size:14.5px;line-height:1.4}
+.card small{display:block;color:var(--fg-3);font-size:12.5px;margin-bottom:3px}
+.rbar{margin:22px var(--rail-pad) 0;height:1px;background:var(--line);position:relative;overflow:hidden}
+.rbar i{position:absolute;inset:0;background:var(--acc);transform-origin:left;transform:scaleX(.1)}
+
+/* projects: compact grid */
+.pgrid{list-style:none;margin:34px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:26px 16px}
+.pj{margin:0}
+.pj-f{grid-column:span 2}
+.th{height:clamp(130px,11.5vw,168px);border-radius:10px;overflow:hidden;background:#fff;border:1px solid var(--line-2);box-shadow:0 24px 50px -30px var(--shade)}
+.th img,.th canvas{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 0;transition:transform .8s var(--ease)}
+.pj:hover .th img,.pj:hover .th canvas{transform:scale(1.035)}
+.pj figcaption{margin-top:12px}
+.pt{margin:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.pt b{font:600 16px/1.3 var(--display);letter-spacing:-.015em}
+.host{font:12px var(--mono);color:var(--fg-3)}
+.pd{margin:4px 0 0;font-size:14px;line-height:1.5;color:var(--fg-2)}
+.tag{margin:6px 0 0;font:500 12px var(--mono);color:var(--fg-3)}
+
+/* activities: small isometric glyphs standing on one floor line */
+.shelf{list-style:none;margin:38px 0 0;padding:0;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:34px 0}
+.act{padding:0 10px}
+.gw{height:132px;display:flex;align-items:flex-end;justify-content:center;border-bottom:1px solid var(--line-2)}
+.gl{display:block;height:120px;width:auto;overflow:visible;-webkit-box-reflect:below 1px linear-gradient(transparent 58%,rgba(0,0,0,.2))}
+.gl polygon,.gl ellipse{stroke:url(#edge);stroke-width:1;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.gl .ft{fill:var(--ft)}.gl .fl{fill:var(--fl)}.gl .fr{fill:var(--fr)}
+.gl .slip{fill:var(--panel)}
+.gl .hi{stroke-width:1.6}
+.gl .mk{fill:var(--fg-2);stroke:none}
+.gl .ln path{fill:none;stroke:var(--fg-3);stroke-width:1.2;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.gl .tx{font:600 .62px var(--display);fill:var(--fg);text-anchor:middle}
+.gl .tx.hi{fill:var(--a2)}
+.gl .beam{fill:url(#beam);stroke:none}.gl .pool{fill:var(--beam);stroke:none}
+.act h3{margin:40px 0 4px;font:600 16px/1.25 var(--display);letter-spacing:-.015em}
+.act p{margin:0;font-size:13.5px;line-height:1.45;color:var(--fg-2)}
+
+/* linkedin */
+.li-g{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:40px 64px;align-items:start}
+.li-t .pill{margin-top:26px;height:44px;padding:0 18px;font-size:14.5px}
+.fine{margin:18px 0 0;font-size:13.5px;color:var(--fg-3);max-width:34ch}
+.frame{margin:0;border-radius:14px;overflow:hidden;background:var(--panel);border:1px solid var(--line-2);box-shadow:0 40px 90px -40px var(--shade)}
+.bar{height:34px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid var(--line)}
+.bar::before{content:'';position:absolute;left:14px;top:14px;width:6px;height:6px;border-radius:50%;background:var(--line-2);box-shadow:11px 0 var(--line-2),22px 0 var(--line-2)}
+.url{max-width:70%;padding:2px 12px;border-radius:6px;background:var(--line);font:12px var(--mono);color:var(--fg-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.feed{position:relative;height:clamp(460px,62vh,600px);background:#f3f4f6;color:#30333c}
+.feed iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;opacity:0;transition:opacity .5s ease}
+.feed[data-state=ready] iframe{opacity:1}
+.fb{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:12px;padding:24px;text-align:center;font-size:15px}
+.fb p{margin:0;max-width:34ch}
+.fb a{color:#1f3bb3;border-bottom:1px solid currentColor;padding-bottom:1px}
+.feed .ld{display:none}.feed[data-state=loading] .ld{display:block}.feed[data-state=loading] .fb>:not(.ld){display:none}
+.feed[data-state=ready] .fb{visibility:hidden}
+
+/* contact */
+.contact{text-align:center;padding-top:clamp(84px,13vh,140px);padding-bottom:0}
+.contact .stage{height:clamp(260px,40vh,420px)}
+.contact .eyebrow{justify-content:center}
+.contact .h2{font-size:clamp(38px,5.2vw,76px);max-width:15ch;margin:0 auto}
+.mail{display:inline-flex;align-items:center;gap:14px;margin-top:36px;padding:8px 8px 8px 24px;border-radius:18px;border:1px solid var(--line-2);background:var(--panel);font-style:normal}
+.mail a{font:500 clamp(18px,2vw,24px) var(--ui);letter-spacing:-.01em}
+.copy{height:44px;padding:0 18px;border:0;border-radius:12px;background:var(--solid);color:var(--solid-fg);font:500 14px var(--ui);cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:transform .16s var(--ease),opacity .2s}
+.copy:hover{opacity:.9}.copy:active{transform:scale(.97)}
+.socials{list-style:none;margin:28px 0 0;padding:0;display:flex;justify-content:center;flex-wrap:wrap;gap:6px 26px;font-size:15px}
+.socials a{color:var(--fg-2);transition:color .2s}.socials a:hover{color:var(--fg)}
+footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px 24px;padding:0 var(--pad) 28px;font-size:13.5px;color:var(--fg-3)}
+footer nav{display:flex;gap:22px}footer a:hover{color:var(--fg)}
+
+/* dialog */
+dialog{width:min(1100px,calc(100vw - 24px));max-height:88vh;padding:0;border:1px solid var(--line-2);border-radius:18px;background:var(--pop);color:var(--fg);overscroll-behavior:contain}
+dialog::backdrop{background:rgba(5,5,6,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.dh{position:sticky;top:0;z-index:1;display:flex;justify-content:space-between;align-items:center;padding:16px 22px;background:var(--pop);border-bottom:1px solid var(--line)}
+.dh h2{margin:0;font:600 22px var(--display);letter-spacing:-.02em}
+.all{list-style:none;margin:0;padding:22px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:18px}
+.all a{display:block;aspect-ratio:4/3;padding:10px;border-radius:12px;background:var(--panel);border:1px solid var(--line)}
+.all img{width:100%;height:100%;object-fit:contain;display:block}
+.all p{margin:8px 0 0;font-size:13px;color:var(--fg);line-height:1.35}
+.all small{display:block;color:var(--fg-3)}
+
+@media (max-width:1180px){
+  .nav{gap:10px}
+  .links{display:none;position:absolute;top:62px;left:var(--pad);right:var(--pad);flex-direction:column;padding:8px;border-radius:14px;border:1px solid var(--line-2);background:var(--pop);box-shadow:0 24px 60px var(--shade)}
+  .nav.open .links{display:flex}
+  .links a{padding:11px 14px;font-size:16px}
+  .links .ext{margin:6px 0 0;padding:6px 0 0;border-left:0;border-top:1px solid var(--line)}
+  .ind{display:none}
+  .menu{display:inline-flex;margin-left:auto}
+}
+@media (max-width:860px){
+  .brand{display:none}
+  .h1{font-size:19.5vw;line-height:.92}
+  .h1 .w{display:block}
+  .lede{font-size:17px}
+  .about-g,.work-g,.res-g,.li-g{grid-template-columns:minmax(0,1fr)}
+  .q+.q{margin-left:0}
+  .bento{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"cube cube" "teach res" "cur learn" "cli lang" "team team"}
+  .tile{min-height:clamp(260px,42vh,340px)}
+  .side,.res-l{position:static}
+  .stage.r{height:220px;margin:4px 0 -8px}
+  .blk{grid-template-columns:minmax(0,1fr);gap:2px;padding:16px 18px}
+  .chain::before,.chain-fill{left:24px}.chain>li::after{left:36px}
+  .paper{padding:14px 6px}
+  .pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .th{height:clamp(110px,27vw,190px)}
+  .shelf{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .mail{flex-wrap:wrap;justify-content:center;padding:14px;gap:12px}
+}
+@media (max-width:560px){
+  .back{font-size:12px}
+  .bento{grid-template-columns:minmax(0,1fr);grid-template-areas:"cube" "teach" "res" "cur" "learn" "cli" "team" "lang"}
+  .shelf{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 0}
+  .gw{height:104px}.gl{height:92px}.act h3{margin-top:30px}
+  .pill{padding:0 11px}
+  .paper{grid-template-columns:minmax(0,1fr)}.pm{grid-column:1;grid-row:auto;text-align:left;display:flex;gap:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  #gl{position:absolute;height:100vh}
+}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://george-michoulis.com/#website","url":"https://george-michoulis.com/","name":"George Michoulis","inLanguage":"en","publisher":{"@id":"https://george-michoulis.com/#person"}},{"@type":"ProfilePage","@id":"https://george-michoulis.com/#profile","url":"https://george-michoulis.com/","name":"George Michoulis · Blockchain developer and researcher","isPartOf":{"@id":"https://george-michoulis.com/#website"},"mainEntity":{"@id":"https://george-michoulis.com/#person"},"dateModified":"2026-09-30","inLanguage":"en"},{"@type":"Person","@id":"https://george-michoulis.com/#person","name":"George Michoulis","givenName":"George","familyName":"Michoulis","alternateName":["Γεώργιος Μιχούλης","Georgios Michoulis"],"url":"https://george-michoulis.com/","email":"mailto:gmixoulis@gmail.com","image":"https://george-michoulis.com/og.png","jobTitle":"Blockchain Developer and Researcher","description":"George Michoulis is a blockchain developer and researcher based in Thessaloniki, Greece, who builds smart contracts and full-stack Web3 systems and studies how blockchains perform in real institutions.","identifier":{"@type":"PropertyValue","propertyID":"ORCID","value":"0000-0002-5139-448X","url":"https://orcid.org/0000-0002-5139-448X"},"homeLocation":{"@type":"Place","name":"Thessaloniki, Greece","address":{"@type":"PostalAddress","addressLocality":"Thessaloniki","addressCountry":"GR"}},"address":{"@type":"PostalAddress","addressLocality":"Thessaloniki","addressCountry":"GR"},"worksFor":{"@type":"Organization","name":"Cyberscope by TAC"},"alumniOf":[{"@type":"CollegeOrUniversity","name":"University of Macedonia"},{"@type":"CollegeOrUniversity","name":"Aristotle University of Thessaloniki"}],"hasCredential":[{"@type":"EducationalOccupationalCredential","name":"BSc Applied Informatics","credentialCategory":"degree","recognizedBy":{"@type":"CollegeOrUniversity","name":"University of Macedonia"}},{"@type":"EducationalOccupationalCredential","name":"MSc Data and Web Science","credentialCategory":"degree","recognizedBy":{"@type":"CollegeOrUniversity","name":"Aristotle University of Thessaloniki"}}],"award":["DeepMind scholarship, Aristotle University of Thessaloniki (2020-2022)","3rd place, Infinitech Hackathon, Crowdpolicy (06/2022)","1st place, Basic Research Awards 2020-21 (University of Macedonia), for the VerDe dApp","Move/Sui Bootcamp Thessaloniki award","Progress Award, Greek Ministry of Education (2015)"],"knowsAbout":["Blockchain","Ethereum","Smart contracts","Solidity","TypeScript","Web3","NFTs","DeFi","Hyperledger Fabric","Blockchain benchmarking","5G network slicing","Graph embeddings","Next.js","NestJS","Docker","Networks and security","WordPress"],"knowsLanguage":["English"],"sameAs":["https://www.linkedin.com/in/george-michoulis/","https://github.com/gmixoulis","https://scholar.google.com/citations?user=nk0lq8YAAAAJ","https://orcid.org/0000-0002-5139-448X","https://twitter.com/GeorgeMicou","https://www.semanticscholar.org/author/2180238066"]},{"@type":"ScholarlyArticle","@id":"https://george-michoulis.com/#paper-1","headline":"Benchmarking blockchain technologies for agricultural applications","name":"Benchmarking blockchain technologies for agricultural applications","datePublished":"2026","author":{"@id":"https://george-michoulis.com/#person"},"isPartOf":{"@type":"CreativeWork","name":"IEEE DCOSS-IoT 2026, 22nd International Conference on Distributed Computing in Smart Systems and the IoT"},"inLanguage":"en","url":"https://doi.org/10.1109/DCOSS-IoT69657.2026.00085","sameAs":"https://doi.org/10.1109/DCOSS-IoT69657.2026.00085"},{"@type":"ScholarlyArticle","@id":"https://george-michoulis.com/#paper-2","headline":"Data security for smart cities","name":"Data security for smart cities","datePublished":"2025","author":{"@id":"https://george-michoulis.com/#person"},"isPartOf":{"@type":"Book","name":"Enabling Technologies for Sustainable Smart Cities","publisher":{"@type":"Organization","name":"IET"}},"inLanguage":"en","url":"https://doi.org/10.1049/PBBE009E_ch8","sameAs":"https://doi.org/10.1049/PBBE009E_ch8"},{"@type":"ScholarlyArticle","@id":"https://george-michoulis.com/#paper-3","headline":"Unlocking 5G network slicing: a comprehensive survey on blockchain marketplace utilizing NFTs, AI, and advanced resource management","name":"Unlocking 5G network slicing: a comprehensive survey on blockchain marketplace utilizing NFTs, AI, and advanced resource management","datePublished":"2025","author":{"@id":"https://george-michoulis.com/#person"},"isPartOf":{"@type":"CreativeWork","name":"2025 IEEE International Conference on Consumer Electronics (ICCE)"},"inLanguage":"en","url":"https://doi.org/10.1109/ICCE63647.2025.10929953","sameAs":"https://doi.org/10.1109/ICCE63647.2025.10929953"},{"@type":"ScholarlyArticle","@id":"https://george-michoulis.com/#paper-4","headline":"FraMark: a blockchain marketplace for a 5G network management using fractional NFTs","name":"FraMark: a blockchain marketplace for a 5G network management using fractional NFTs","datePublished":"2024","author":{"@id":"https://george-michoulis.com/#person"},"isPartOf":{"@type":"CreativeWork","name":"2024 7th World Symposium on Communication Engineering (WSCE)"},"inLanguage":"en","url":"https://doi.org/10.1109/WSCE65107.2024.00009","sameAs":"https://doi.org/10.1109/WSCE65107.2024.00009"},{"@type":"ScholarlyArticle","@id":"https://george-michoulis.com/#paper-5","headline":"Exploring decentralized governance: a framework applied to Compound Finance","name":"Exploring decentralized governance: a framework applied to Compound Finance","datePublished":"2023","author":{"@id":"https://george-michoulis.com/#person"},"isPartOf":{"@type":"CreativeWork","name":"MARBLE 2023, Mathematical Research for Blockchain Economy, London"},"inLanguage":"en","url":"https://doi.org/10.1007/978-3-031-48731-6_9","sameAs":"https://doi.org/10.1007/978-3-031-48731-6_9"},{"@type":"ScholarlyArticle","@id":"https://george-michoulis.com/#paper-6","headline":"A process-aware approach for blockchain-based verification of academic qualifications","name":"A process-aware approach for blockchain-based verification of academic qualifications","datePublished":"2022","author":{"@id":"https://george-michoulis.com/#person"},"isPartOf":{"@type":"PublicationVolume","volumeNumber":"121","isPartOf":{"@type":"Periodical","name":"Simulation Modelling Practice and Theory","publisher":{"@type":"Organization","name":"Elsevier"}}},"inLanguage":"en","url":"https://doi.org/10.1016/j.simpat.2022.102642","sameAs":"https://doi.org/10.1016/j.simpat.2022.102642"},{"@type":"ScholarlyArticle","@id":"https://george-michoulis.com/#paper-7","headline":"Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe","name":"Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe","datePublished":"2020","author":{"@id":"https://george-michoulis.com/#person"},"isPartOf":{"@type":"CreativeWork","name":"XIV Balkan Conference on Operational Research (BALCOR 2020)"},"inLanguage":"en"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="fallback" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--a1)"/><stop offset=".5" style="stop-color:var(--a2)"/><stop offset="1" style="stop-color:var(--a3)"/></linearGradient>
+  <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--beam);stop-opacity:0"/><stop offset="1" style="stop-color:var(--beam)"/></linearGradient>
+</defs></svg>
+
+<header class="nav" id="nav">
+  <a class="back" href="../ideas/index.html">← All ideas</a>
+  <a class="brand" href="#top">George Michoulis</a>
+  <button class="pill menu" type="button" aria-expanded="false" aria-controls="links"><span>Menu</span></button>
+  <nav aria-label="Sections"><ul class="links" id="links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#work">Experience</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#certificates">Certificates</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#activities">Activities</a></li>
+    <li><a href="#linkedin">LinkedIn</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li class="ext"><a href="../../garden/">Writing</a></li>
+    <li aria-hidden="true" class="ind"></li>
+  </ul></nav>
+  <a class="pill play" href="../../play/" aria-label="Play Ledger Run, my CV as a platformer"><i aria-hidden="true"></i>Play</a>
+  <button class="pill tg" id="theme" type="button" aria-label="Switch to light theme"><i aria-hidden="true"></i><span>Light</span></button>
+</header>
+
+<main id="main">
+<section class="hero" id="top" tabindex="-1" aria-label="Introduction">
+  <a class="latest" href="#linkedin">Latest on LinkedIn <span class="ar" aria-hidden="true">→</span></a>
+  <h1 class="h1"><span class="w"><span>George</span></span> <span class="w"><span>Michoulis</span></span></h1>
+  <p class="lede">Blockchain developer and researcher. I build smart contracts, graph-based ML and full-stack Web3 systems.</p>
+  <div class="ctas">
+    <a class="btn btn-p mag" href="mailto:gmixoulis@gmail.com">Email me</a>
+    <a class="btn btn-s mag" href="#work">Experience <span class="ar" aria-hidden="true">→</span></a>
+  </div>
+  <div class="stage" data-stage="0" aria-hidden="true"></div>
+</section>
+
+<section class="sec about" id="about" tabindex="-1" aria-labelledby="h-about">
+  <div class="wrap about-g">
+    <div>
+      <p class="eyebrow" data-rv>About</p>
+      <h2 class="h2" id="h-about" data-rv>I build blockchain systems <span class="dim">and study how well they work in practice.</span></h2>
+      <p class="body def" data-rv>George Michoulis is a blockchain developer and researcher based in Thessaloniki, Greece, who builds smart contracts and full-stack Web3 systems and studies how blockchains perform in real institutions.</p>
+      <p class="body" data-rv>My BSc in Applied Informatics at the University of Macedonia ended with a thesis on verifying academic credentials on Ethereum. My MSc in Data and Web Science at Aristotle University of Thessaloniki was funded by a DeepMind scholarship, and my thesis there used graph embeddings to predict drug-target interactions. I write Solidity and TypeScript, build NFT and DeFi products, and work remotely.</p>
+    </div>
+    <div class="quotes">
+      <figure class="q" data-rv><blockquote><p><b>“</b>I enjoy building and breaking things to understand how they work.<b>”</b></p></blockquote><figcaption>I call it the hacker attitude.</figcaption></figure>
+      <figure class="q" data-rv><blockquote><p><b>“</b>Lifelong learning is my way of life.<b>”</b></p></blockquote></figure>
+    </div>
+  </div>
+</section>
+
+<section class="sec skills" id="skills" tabindex="-1" aria-labelledby="h-skills">
+  <div class="wrap">
+    <h2 class="h2" id="h-skills" data-rv>Soft skills, <span class="dim">with the evidence for each.</span></h2>
+    <div class="bento" data-rv>
+      <div class="sk panel spot" style="grid-area:teach"><h3>Teaching and explaining</h3><p>I lectured in Networks &amp; Security, Web Scripting and Application Development at the University of Derby / Mediterranean College from 2023 to 2025. I give public talks on Web3 and edge tech, and gave two poster flash talks at GEC'22.</p></div>
+      <div class="sk panel spot" style="grid-area:res"><h3>Research and analysis</h3><p>Seven publications and two posters, with 56 citations and an h-index of 3 on Google Scholar. I study how blockchains perform in real institutions.</p></div>
+      <div class="tile" data-stage="2" aria-hidden="true"></div>
+      <div class="sk panel spot" style="grid-area:cur"><h3>Curiosity</h3><p>I enter hackathons and bootcamps: 3rd place at Infinitech in 2022, and the Move/Sui Bootcamp Thessaloniki award.</p></div>
+      <div class="sk panel spot" style="grid-area:learn"><h3>Lifelong learning</h3><p>34 certificates so far, from CCNA and Rust to machine learning, cloud and security.</p></div>
+      <div class="sk panel spot" style="grid-area:cli"><h3>Working with clients</h3><p>As a freelance WordPress developer from 2018 to 2021, I met each client to plan the site's design and function.</p></div>
+      <div class="sk panel spot" style="grid-area:team"><h3>Working across teams and countries</h3><p>At Sidroco Holdings (2024-2026) I coordinated multinational EU projects and helped write Horizon, MSCA and KA2 proposals.</p></div>
+      <div class="sk panel spot" style="grid-area:lang"><h3>Languages</h3><p>English at C2 (Michigan ECPE, 2018) and a TOEIC score of 860. I keep learning other languages.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec work" id="work" tabindex="-1" aria-labelledby="h-work">
+  <div class="wrap work-g">
+    <h2 class="h2" id="h-work" data-rv>Six roles since 2018. <span class="dim">Web3 product teams, EU research, university teaching and client sites.</span></h2>
+    <ol class="chain" data-rv>
+      <li><article class="blk spot"><p class="when">Since <time datetime="2026-05">05/2026</time></p><div><h3>Web3 Full-Stack Developer</h3><p class="co">Cyberscope by TAC</p><p class="d">I build Web3 products end to end: contracts, on-chain integrations, React and Next frontends, and security tooling.</p></div></article></li>
+      <li><article class="blk spot"><p class="when"><time datetime="2024">2024</time>-<time datetime="2026">2026</time></p><div><h3>Blockchain Developer &amp; Researcher</h3><p class="co">Sidroco Holdings Ltd</p><p class="d">I built an NFT marketplace for 5G, Hyperledger Fabric prototypes and an Erasmus+ Moodle LMS, worked on multinational EU projects, and co-authored the Horizon Europe NANCY deliverable D3.3 (12/2024).</p></div></article></li>
+      <li><article class="blk spot"><p class="when"><time datetime="2023">2023</time>-<time datetime="2025">2025</time></p><div><h3>Lecturer &amp; Academic Partner</h3><p class="co">University of Derby <span>/</span> Mediterranean College</p><p class="d">I taught Networks &amp; Security, Web Scripting and Application Development, with labs in coding, networking and cryptography.</p></div></article></li>
+      <li><article class="blk spot"><p class="when"><time datetime="2022">2022</time>-<time datetime="2024">2024</time></p><div><h3>Blockchain &amp; Full-Stack Developer</h3><p class="co">University of Nicosia <span>/</span> IFF</p><p class="d">I led frontend work on Next.js, NestJS and Docker applications, and delivered a Web3 NFT marketplace.</p></div></article></li>
+      <li><article class="blk spot"><p class="when"><time datetime="2019-10">Oct</time>-<time datetime="2019-12">Dec 2019</time></p><div><h3>Volunteer Web Developer</h3><p class="co">MKI Hellas</p><p class="d">I built a chatbot with Dialogflow, and a web page and database with Vue.js and Firebase.</p></div></article></li>
+      <li><article class="blk spot"><p class="when"><time datetime="2018">2018</time>-<time datetime="2021">2021</time></p><div><h3>Freelance WordPress Developer</h3><p class="co">Self-employed</p><p class="d">I built and maintained the MarLab, CELC and EUDEM sites and planned each one with its client. For AUTH's Jean Monnet Chair I was WordPress developer and video editor, and I interned at AUTH's Center for European Legal Culture from 10/2019 to 05/2020.</p></div></article></li>
+      <li aria-hidden="true" class="chain-fill" style="list-style:none;padding:0"></li>
+    </ol>
+    <aside class="side" data-rv aria-label="Education and awards">
+      <div><h3 class="mini">Education</h3><ul class="plain">
+        <li><b>MSc Data and Web Science</b><span>Aristotle University of Thessaloniki, 2020-2022, DeepMind scholarship, <a class="lnk" href="https://doi.org/10.26262/heal.auth.ir.338875" target="_blank" rel="noopener noreferrer">thesis on graph embeddings for drug-target interaction prediction</a></span></li>
+        <li><b>BSc Applied Informatics</b><span>University of Macedonia, 2015-2020, thesis on verifying academic qualifications with blockchain</span></li>
+      </ul></div>
+      <div><h3 class="mini">Awards</h3><ul class="plain">
+        <li><b>DeepMind scholarship</b><span>Aristotle University of Thessaloniki, 2020-2022</span></li>
+        <li><b>3rd place, Infinitech Hackathon</b><span>Crowdpolicy, 06/2022</span></li>
+        <li><b>1st place, Basic Research Awards 2020-21</b><span>University of Macedonia, for the VerDe dApp</span></li>
+        <li><b>Move/Sui Bootcamp Thessaloniki award</b><span>Move Bootcamp Thessaloniki</span></li>
+        <li><b>Progress Award</b><span>Greek Ministry of Education, 2015: first in my final-year class at the 1st Lyceum of Kalamaria</span></li>
+      </ul></div>
+    </aside>
+  </div>
+</section>
+
+<section class="sec research" id="research" tabindex="-1" aria-labelledby="h-res">
+  <div class="wrap res-g">
+    <div class="res-l">
+      <p class="eyebrow" data-rv>Research</p>
+      <h2 class="h2" id="h-res" data-rv>Seven papers <span class="dim">on blockchain benchmarking, credentials, governance and 5G.</span></h2>
+      <p class="note" data-rv>56 citations and an h-index of 3 on Google Scholar, as of September 2026. <a class="lnk" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ" target="_blank" rel="noopener noreferrer">Scholar profile <span aria-hidden="true">↗</span></a></p>
+      <div class="stage r" data-stage="4" aria-hidden="true"></div>
+    </div>
+    <div>
+    <ol class="papers" data-rv>
+      <li><article class="paper spot"><h3><a href="https://doi.org/10.1109/DCOSS-IoT69657.2026.00085" target="_blank" rel="noopener noreferrer">Benchmarking blockchain technologies for agricultural applications</a></h3><p class="venue">IEEE DCOSS-IoT 2026, 22nd International Conference on Distributed Computing in Smart Systems and the IoT<span class="fa">First author</span></p><p class="pm"><time datetime="2026">2026</time></p></article></li>
+      <li><article class="paper spot"><h3><a href="https://doi.org/10.1049/PBBE009E_ch8" target="_blank" rel="noopener noreferrer">Data security for smart cities</a></h3><p class="venue">Book chapter in Enabling Technologies for Sustainable Smart Cities, IET</p><p class="pm"><time datetime="2025">2025</time><b>1 citation</b></p></article></li>
+      <li><article class="paper spot"><h3><a href="https://doi.org/10.1109/ICCE63647.2025.10929953" target="_blank" rel="noopener noreferrer">Unlocking 5G network slicing: a comprehensive survey on blockchain marketplace utilizing NFTs, AI, and advanced resource management</a></h3><p class="venue">2025 IEEE International Conference on Consumer Electronics (ICCE)</p><p class="pm"><time datetime="2025">2025</time></p></article></li>
+      <li><article class="paper spot"><h3><a href="https://doi.org/10.1109/WSCE65107.2024.00009" target="_blank" rel="noopener noreferrer">FraMark: a blockchain marketplace for a 5G network management using fractional NFTs</a></h3><p class="venue">2024 7th World Symposium on Communication Engineering (WSCE), IEEE<span class="fa">First author</span></p><p class="pm"><time datetime="2024">2024</time><b>2 citations</b></p></article></li>
+      <li><article class="paper spot"><h3><a href="https://doi.org/10.1007/978-3-031-48731-6_9" target="_blank" rel="noopener noreferrer">Exploring decentralized governance: a framework applied to Compound Finance</a></h3><p class="venue">MARBLE 2023, Mathematical Research for Blockchain Economy, London (Springer)</p><p class="pm"><time datetime="2023">2023</time><b>8 citations</b></p></article></li>
+      <li><article class="paper spot"><h3><a href="https://doi.org/10.1016/j.simpat.2022.102642" target="_blank" rel="noopener noreferrer">A process-aware approach for blockchain-based verification of academic qualifications</a></h3><p class="venue">Simulation Modelling Practice and Theory 121, 102642 (Elsevier)</p><p class="pm"><time datetime="2022">2022</time><b class="hi">34 citations</b></p></article></li>
+      <li><article class="paper spot"><h3>Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe</h3><p class="venue">XIV Balkan Conference on Operational Research (BALCOR 2020)<span class="fa">First author</span></p><p class="pm"><time datetime="2020">2020</time><b>11 citations</b></p></article></li>
+    </ol>
+    <p class="note also" data-rv>I also gave two poster flash talks at GEC'22, the 4th Summit on Gender Equality in Computing, on 16 June 2022: one on blockchain in higher education, one on a gender equality observatory for scientific research. In Greek, I wrote a BSc thesis (2020) and a student-conference paper (2021) on verifying academic titles with Ethereum.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec certs" id="certificates" tabindex="-1" aria-labelledby="h-cert">
+  <div class="wrap head">
+    <div>
+      <h2 class="h2" id="h-cert" data-rv>34 certificates. <span class="dim">Twelve are here, from both degrees to Cisco and Rust.</span></h2>
+    </div>
+    <div class="ctrl" data-rv>
+      <button class="ibtn mag" id="prev" type="button" aria-label="Previous certificates"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg></button>
+      <button class="ibtn mag" id="next" type="button" aria-label="Next certificates"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></button>
+      <button class="tbtn mag" id="seeall" type="button" aria-haspopup="dialog">See all 34</button>
+    </div>
+  </div>
+  <div class="rail" id="rail" tabindex="0" role="region" aria-label="Certificates. Scroll sideways, drag, or use the arrow buttons.">
+    <ul class="track">
+      <li class="card"><a href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" target="_blank" rel="noopener noreferrer" draggable="false"><img src="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" width="1240" height="1755" alt="Scan of the certificate: MSc Data and Web Science" loading="lazy" decoding="async" draggable="false"></a><p><small>Aristotle University of Thessaloniki, 2022</small>MSc Data and Web Science</p></li>
+      <li class="card"><a href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" target="_blank" rel="noopener noreferrer" draggable="false"><img src="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" width="1742" height="2460" alt="Scan of the certificate: BSc Applied Informatics" loading="lazy" decoding="async" draggable="false"></a><p><small>University of Macedonia</small>BSc Applied Informatics</p></li>
+      <li class="card"><a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png" target="_blank" rel="noopener noreferrer" draggable="false"><img src="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png" width="3543" height="3542" alt="Scan of the certificate: Move/Sui Bootcamp Thessaloniki award" loading="lazy" decoding="async" draggable="false"></a><p><small>Move Bootcamp Thessaloniki</small>Move/Sui Bootcamp Thessaloniki award</p></li>
+      <li class="card"><a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" target="_blank" rel="noopener noreferrer" draggable="false"><img src="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" width="2175" height="1439" alt="Scan of the certificate: Accelerated CCNA, 132 hours" loading="lazy" decoding="async" draggable="false"></a><p><small>University of Thessaly, 2020</small>Accelerated CCNA, 132 hours</p></li>
+      <li class="card"><a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" target="_blank" rel="noopener noreferrer" draggable="false"><img src="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" width="2342" height="1656" alt="Scan of the certificate: Certified Rust developer" loading="lazy" decoding="async" draggable="false"></a><p><small>W3Schools, 2025</small>Certified Rust developer</p></li>
+      <li class="card"><a href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" target="_blank" rel="noopener noreferrer" draggable="false"><img src="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" width="1755" height="1240" alt="Scan of the certificate: Machine learning and deep neural networks" loading="lazy" decoding="async" draggable="false"></a><p><small>Aristotle University of Thessaloniki, 2021</small>Machine learning and deep neural networks</p></li>
+      <li class="card"><a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" target="_blank" rel="noopener noreferrer" draggable="false"><img src="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" width="1650" height="1275" alt="Scan of the certificate: How to get published with IEEE" loading="lazy" decoding="async" draggable="false"></a><p><small>IEEE, 2020</small>How to get published with IEEE</p></li>
+      <li class="card"><a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" target="_blank" rel="noopener noreferrer" draggable="false"><img src="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" width="1754" height="1241" alt="Scan of the certificate: Introduction to digital currencies" loading="lazy" decoding="async" draggable="false"></a><p><small>University of Nicosia, 2020</small>Introduction to digital currencies</p></li>
+      <li class="card"><a href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png" target="_blank" rel="noopener noreferrer" draggable="false"><img src="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png" width="2481" height="3509" alt="Scan of the certificate: Cloud engineering (Azure), 90 hours" loading="lazy" decoding="async" draggable="false"></a><p><small>Code.Hub, 2024</small>Cloud engineering (Azure), 90 hours</p></li>
+      <li class="card"><a href="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg" target="_blank" rel="noopener noreferrer" draggable="false"><img src="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg" width="1500" height="844" alt="Scan of the certificate: NFT talents program" loading="lazy" decoding="async" draggable="false"></a><p><small>Frankfurt School Blockchain Center, 2022</small>NFT talents program</p></li>
+      <li class="card"><a href="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg" target="_blank" rel="noopener noreferrer" draggable="false"><img src="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg" width="1754" height="1241" alt="Scan of the certificate: Launch event and RippleX workshop" loading="lazy" decoding="async" draggable="false"></a><p><small>University of Nicosia IFF, 2020</small>Launch event and RippleX workshop</p></li>
+      <li class="card"><a href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png" target="_blank" rel="noopener noreferrer" draggable="false"><img src="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png" width="800" height="600" alt="Scan of the certificate: Advanced ethical hacking, 48 hours" loading="lazy" decoding="async" draggable="false"></a><p><small>Audax Cybersecurity, 2021</small>Advanced ethical hacking, 48 hours</p></li>
+    </ul>
+  </div>
+  <div class="rbar" aria-hidden="true"><i id="rbar"></i></div>
+</section>
+
+<section class="sec projects" id="projects" tabindex="-1" aria-labelledby="h-proj">
+  <div class="wrap">
+    <h2 class="h2" id="h-proj" data-rv>Sites and systems I've built. <span class="dim">Most of them live on university domains.</span></h2>
+    <ul class="pgrid" data-rv>
+      <li class="pj-f"><figure class="pj"><div class="th"><img src="../../img/portfolio/verde.uom.gr.PNG" width="1840" height="907" alt="VerDe website, contact page with a map of the University of Macedonia" loading="lazy" decoding="async"></div><figcaption><p class="pt"><b>VerDe</b><span class="host">verde.uom.gr</span></p><p class="pd">The Ethereum system for verifying academic qualifications that I introduced at the Balkan Conference on Operational Research.</p><p class="tag">From my thesis</p></figcaption></figure></li>
+      <li><figure class="pj"><div class="th"><img src="../../img/portfolio/bbf-gui.ddns.net.gif" width="1377" height="956" alt="Blockchain Benchmarking Framework landing page" loading="lazy" decoding="async" data-freeze></div><figcaption><p class="pt"><b>Blockchain Benchmarking Framework</b><span class="host">bbf-gui.ddns.net</span></p><p class="pd">A framework that deploys and evaluates blockchain protocols.</p></figcaption></figure></li>
+      <li><figure class="pj"><div class="th"><img src="../../img/portfolio/metau.unic.ac.cy.png" width="1698" height="943" alt="University of Nicosia metaverse course site with a Connect Wallet button" loading="lazy" decoding="async"></div><figcaption><p class="pt"><b>UNIC metaverse course</b><span class="host">metau.unic.ac.cy</span></p><p class="pd">A course site for education that is “decentralised, on-chain and in the metaverse”.</p></figcaption></figure></li>
+      <li><figure class="pj"><div class="th"><img src="../../img/portfolio/accelerate.png" width="1910" height="998" alt="Sign-in page of the UNIC Accelerate platform" loading="lazy" decoding="async"></div><figcaption><p class="pt"><b>UNIC Accelerate</b><span class="host">accelerate.unic.ac.cy</span></p><p class="pd">The sign-in page of the University of Nicosia's Accelerate platform.</p></figcaption></figure></li>
+      <li><figure class="pj"><div class="th"><img src="../../img/portfolio/celc.web.auth.gr.PNG" width="1600" height="936" alt="Centre for European Legal Culture website in Greek" loading="lazy" decoding="async"></div><figcaption><p class="pt"><b>Centre for European Legal Culture</b><span class="host">celc.web.auth.gr</span></p><p class="pd">A Greek-language site with news, publications and member pages.</p><p class="tag">Freelance, WordPress</p></figcaption></figure></li>
+      <li><figure class="pj"><div class="th"><img src="../../img/portfolio/eudem.polsci.auth.gr.PNG" width="1896" height="944" alt="EUDEM Jean Monnet Chair website" loading="lazy" decoding="async"></div><figcaption><p class="pt"><b>EUDEM Jean Monnet Chair</b><span class="host">eudem.polsci.auth.gr</span></p><p class="pd">The chair's activities, staff members and news.</p><p class="tag">Freelance, WordPress</p></figcaption></figure></li>
+      <li><figure class="pj"><div class="th"><img src="../../img/portfolio/marlab.ode.uom.gr.PNG" width="1835" height="917" alt="MarLab, the University of Macedonia Marketing Laboratory website" loading="lazy" decoding="async"></div><figcaption><p class="pt"><b>MarLab</b><span class="host">marlab.ode.uom.gr</span></p><p class="pd">The University of Macedonia's Marketing Laboratory: membership, research, education and publications.</p><p class="tag">Freelance, WordPress</p></figcaption></figure></li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec acts" id="activities" tabindex="-1" aria-labelledby="h-acts">
+  <div class="wrap">
+    <h2 class="h2" id="h-acts" data-rv>Outside work. <span class="dim">Theatre, languages, politics and hackathons.</span></h2>
+    <ul class="shelf" data-rv>
+      <li class="act"><div class="gw"><svg class="gl" viewBox="-24.0 -54.3 77.6 95" width="78" height="95" aria-hidden="true" focusable="false"><polygon class="fl" points="-21.0,9.9 -13.7,14.1 -13.7,-10.1 -21.0,-14.3"/><polygon class="fr" points="7.2,2.0 -13.7,14.1 -13.7,-10.1 7.2,-22.2"/><polygon class="ft" points="0.0,-26.4 7.2,-22.2 -13.7,-10.1 -21.0,-14.3"/><polygon class="fl" points="-5.1,-0.8 31.1,20.1 31.1,15.7 -5.1,-5.2"/><polygon class="fr" points="34.9,17.9 31.1,20.1 31.1,15.7 34.9,13.5"/><polygon class="ft" points="-1.3,-7.4 34.9,13.5 31.1,15.7 -5.1,-5.2"/><polygon class="fl" points="22.5,35.0 29.7,39.2 29.7,15.0 22.5,10.8"/><polygon class="fr" points="50.7,27.1 29.7,39.2 29.7,15.0 50.7,2.9"/><polygon class="ft" points="43.4,-1.3 50.7,2.9 29.7,15.0 22.5,10.8"/></svg></div><h3>Fitness</h3><p>Workouts and staying fit.</p></li>
+      <li class="act"><div class="gw"><svg class="gl" viewBox="-30.6 -58.9 70.6 95" width="71" height="95" aria-hidden="true" focusable="false"><polygon class="fl" points="-27.6,15.9 4.8,34.6 4.8,31.8 -27.6,13.1"/><polygon class="fr" points="28.6,20.9 4.8,34.6 4.8,31.8 28.6,18.0"/><polygon class="ft" points="-3.8,-0.7 28.6,18.0 4.8,31.8 -27.6,13.1"/><polygon class="fl" points="-23.4,14.2 9.0,32.9 9.0,30.0 -23.4,11.3"/><polygon class="fr" points="32.8,19.1 9.0,32.9 9.0,30.0 32.8,16.3"/><polygon class="ft" points="0.4,-2.4 32.8,16.3 9.0,30.0 -23.4,11.3"/><polygon class="fl" points="-19.2,12.4 13.1,31.1 13.1,28.0 -19.2,9.4"/><polygon class="fr" points="37.0,17.4 13.1,31.1 13.1,28.0 37.0,14.3"/><polygon class="ft" points="4.6,-4.4 37.0,14.3 13.1,28.0 -19.2,9.4"/><g transform="matrix(19.053,11.000,-19.053,11.000,4.57,-4.40)" class="ln"><path d="M.25 .3H1.25M.25 .58H1.45M.25 .8H1.3M.25 1.02H.95"/></g></svg></div><h3>The news</h3><p>I keep up with it.</p></li>
+      <li class="act"><div class="gw"><svg class="gl" viewBox="-22.1 -65.5 69.8 95" width="70" height="95" aria-hidden="true" focusable="false"><polygon class="fl" points="-19.1,11.0 0.0,22.0 0.0,0.0 -19.1,-11.0"/><polygon class="fr" points="19.1,11.0 0.0,22.0 0.0,0.0 19.1,-11.0"/><polygon class="ft" points="0.0,-22.0 19.1,-11.0 0.0,0.0 -19.1,-11.0"/><text transform="matrix(19.053,11.000,0,22.000,-19.05,-11.00)" x=".5" y=".74" class="tx">A</text><polygon class="fl" points="10.5,18.2 27.6,28.1 27.6,8.2 10.5,-1.6"/><polygon class="fr" points="44.8,18.2 27.6,28.1 27.6,8.2 44.8,-1.6"/><polygon class="ft" points="27.6,-11.6 44.8,-1.6 27.6,8.2 10.5,-1.6"/><text transform="matrix(19.053,11.000,0,22.000,10.48,-1.65)" x=".45" y=".68" class="tx">Ω</text></svg></div><h3>Languages</h3><p>I keep learning new ones.</p></li>
+      <li class="act"><div class="gw"><svg class="gl" viewBox="-12.3 -74.2 46.8 95" width="47" height="95" aria-hidden="true" focusable="false"><polygon class="fl" points="4.8,15.9 10.5,19.2 10.5,10.0 4.8,6.7"/><polygon class="fr" points="16.2,15.9 10.5,19.2 10.5,10.0 16.2,6.7"/><polygon class="ft" points="10.5,3.4 16.2,6.7 10.5,10.0 4.8,6.7"/><polygon class="fl" points="-9.3,-3.9 28.8,18.1 28.8,-9.3 -9.3,-31.3"/><polygon class="fr" points="31.4,16.6 28.8,18.1 28.8,-9.3 31.4,-10.9"/><polygon class="ft" points="-6.7,-32.9 31.4,-10.9 28.8,-9.3 -9.3,-31.3"/><g transform="matrix(19.053,11.000,0,22.000,-9.34,-31.35)"><polygon class="mk" points=".82,.38 .82,.88 1.26,.63"/></g></svg></div><h3>Anime</h3><p>Watching it.</p></li>
+      <li class="act"><div class="gw"><svg class="gl" viewBox="-31.6 -51.7 78.4 95" width="78" height="95" aria-hidden="true" focusable="false"><polygon class="fl" points="-28.6,16.5 15.2,41.8 15.2,35.2 -28.6,9.9"/><polygon class="fr" points="43.8,25.3 15.2,41.8 15.2,35.2 43.8,18.7"/><polygon class="ft" points="0.0,-6.6 43.8,18.7 15.2,35.2 -28.6,9.9"/><polygon class="fl" points="0.8,14.3 9.5,19.4 9.5,9.2 0.8,4.2"/><polygon class="fr" points="18.3,14.3 9.5,19.4 9.5,9.2 18.3,4.2"/><polygon class="ft" points="9.5,-0.9 18.3,4.2 9.5,9.2 0.8,4.2"/><polygon class="beam" points="9.5,-47.3 -7.2,14.3 26.2,14.3"/><ellipse class="pool" cx="9.5" cy="14.3" rx="16.7" ry="9.6"/></svg></div><h3>Theatre</h3><p>Acting on stage and watching plays.</p></li>
+      <li class="act"><div class="gw"><svg class="gl" viewBox="-24.9 -66.0 53.6 95" width="54" height="95" aria-hidden="true" focusable="false"><polygon class="fl" points="-21.9,12.6 3.8,27.5 3.8,3.3 -21.9,-11.6"/><polygon class="fr" points="25.7,14.9 3.8,27.5 3.8,3.3 25.7,-9.4"/><polygon class="ft" points="0.0,-24.2 25.7,-9.4 3.8,3.3 -21.9,-11.6"/><g transform="matrix(19.053,11.000,-19.053,11.000,0.00,-24.20)" class="ln"><path d="M.3 .6H1.05"/></g><polygon class="fl slip" points="-4.8,-13.5 7.0,-6.7 7.0,-20.4 -4.8,-27.2"/><polygon class="fr slip" points="8.0,-7.3 7.0,-6.7 7.0,-20.4 8.0,-20.9"/><polygon class="ft slip" points="-3.8,-27.7 8.0,-20.9 7.0,-20.4 -4.8,-27.2"/><g transform="matrix(19.053,11.000,0,22.000,-4.76,-27.17)" class="ln"><path d="M.16 .3L.27 .42L.47 .18"/></g></svg></div><h3>Active citizen</h3><p>Politically engaged.</p></li>
+      <li class="act"><div class="gw"><svg class="gl" viewBox="-20.1 -53.9 74.6 95" width="75" height="95" aria-hidden="true" focusable="false"><polygon class="fl" points="-17.1,9.9 0.0,19.8 0.0,-2.2 -17.1,-12.1"/><polygon class="fr" points="17.1,9.9 0.0,19.8 0.0,-2.2 17.1,-12.1"/><polygon class="ft" points="0.0,-22.0 17.1,-12.1 0.0,-2.2 -17.1,-12.1"/><text transform="matrix(19.053,11.000,0,22.000,-17.15,-12.10)" x=".45" y=".62" class="tx">2</text><polygon class="fl" points="0.0,19.8 17.1,29.7 17.1,-2.2 0.0,-12.1"/><polygon class="fr" points="34.3,19.8 17.1,29.7 17.1,-2.2 34.3,-12.1"/><polygon class="ft" points="17.1,-22.0 34.3,-12.1 17.1,-2.2 0.0,-12.1"/><text transform="matrix(19.053,11.000,0,22.000,0.00,-12.10)" x=".45" y=".62" class="tx">1</text><polygon class="fl hi" points="17.1,29.7 34.3,39.6 34.3,24.2 17.1,14.3"/><polygon class="fr hi" points="51.4,29.7 34.3,39.6 34.3,24.2 51.4,14.3"/><polygon class="ft hi" points="34.3,4.4 51.4,14.3 34.3,24.2 17.1,14.3"/><text transform="matrix(19.053,11.000,0,22.000,17.15,14.30)" x=".45" y=".55" class="tx hi">3</text></svg></div><h3>Hackathons</h3><p>3rd at Infinitech 2022, and the Move/Sui Bootcamp award in Thessaloniki.</p></li>
+      <li class="act"><div class="gw"><svg class="gl" viewBox="-13.3 -75.5 46.8 95" width="47" height="95" aria-hidden="true" focusable="false"><polygon class="fl" points="-10.3,-4.0 27.8,18.0 27.8,-8.4 -10.3,-30.4"/><polygon class="fr" points="30.5,16.5 27.8,18.0 27.8,-8.4 30.5,-9.9"/><polygon class="ft" points="-7.6,-31.9 30.5,-9.9 27.8,-8.4 -10.3,-30.4"/><g transform="matrix(19.053,11.000,0,22.000,-10.29,-30.36)"><polygon class="fl" points=".35,1.19 .35,1.55 .8,1.19"/><circle class="mk" cx=".62" cy=".6" r=".1"/><circle class="mk" cx="1" cy=".6" r=".1"/><circle class="mk" cx="1.38" cy=".6" r=".1"/></g></svg></div><h3>Volunteering</h3><p>MKI Hellas, 2019: a Dialogflow chatbot and a web page.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec li" id="linkedin" tabindex="-1" aria-labelledby="h-li">
+  <div class="wrap li-g">
+    <div class="li-t">
+      <h2 class="h2" id="h-li" data-rv>Latest on LinkedIn.</h2>
+      <p class="body" data-rv>My recent posts, loaded from my LinkedIn profile.</p>
+      <a class="pill" data-rv href="https://www.linkedin.com/in/george-michoulis/" target="_blank" rel="noopener noreferrer">Follow on LinkedIn <span aria-hidden="true">↗</span></a>
+      <p class="fine" data-rv>Third-party embed: the feed loads from sociablekit.com.</p>
+    </div>
+    <figure class="frame" data-rv>
+      <div class="bar"><span class="url">linkedin.com/in/george-michoulis</span></div>
+      <div class="feed" id="feed">
+        <div class="fb">
+          <p class="ld">Loading posts from LinkedIn…</p>
+          <p>The LinkedIn feed isn't showing here. Your browser may be blocking it, or you may be offline.</p>
+          <a href="https://www.linkedin.com/in/george-michoulis/recent-activity/all/" target="_blank" rel="noopener noreferrer">Read my posts on LinkedIn ↗</a>
+        </div>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<section class="sec contact" id="contact" tabindex="-1" aria-labelledby="h-contact">
+  <div class="wrap">
+    <p class="eyebrow" data-rv>Contact</p>
+    <h2 class="h2" id="h-contact" data-rv>Have a project, a role or a research idea? <span class="dim">Write to me.</span></h2>
+    <address class="mail" data-rv><a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a><button class="copy mag" id="copy" type="button"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="4.5" y="4.5" width="8" height="8" rx="2"/><path d="M9.5 4.5V3a1.5 1.5 0 0 0-1.5-1.5H3A1.5 1.5 0 0 0 1.5 3v5A1.5 1.5 0 0 0 3 9.5h1.5"/></svg><span>Copy email</span></button></address>
+    <p class="sr" id="live" aria-live="polite"></p>
+    <ul class="socials" data-rv>
+      <li><a href="https://www.linkedin.com/in/george-michoulis/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+      <li><a href="https://github.com/gmixoulis" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+      <li><a href="https://twitter.com/GeorgeMicou" target="_blank" rel="noopener noreferrer">X ↗</a></li>
+      <li><a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ" target="_blank" rel="noopener noreferrer">Google Scholar ↗</a></li>
+      <li><a href="https://orcid.org/0000-0002-5139-448X" target="_blank" rel="noopener noreferrer">ORCID ↗</a></li>
+      <li><a href="https://www.semanticscholar.org/author/2180238066" target="_blank" rel="noopener noreferrer">Semantic Scholar ↗</a></li>
+    </ul>
+  </div>
+  <div class="stage" data-stage="9" aria-hidden="true"></div>
+</section>
+</main>
+
+<footer>
+  <span>© 2026 George Michoulis (Georgios Michoulis, <span lang="el">Γεώργιος Μιχούλης</span>), Thessaloniki, Greece</span>
+  <span>Updated <time datetime="2026-09-30">September 2026</time></span>
+  <nav aria-label="Elsewhere on the site"><a href="../../garden/">Writing</a><a href="../../play/">Ledger Run</a></nav>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dlg-h" data-lenis-prevent>
+  <div class="dh"><h2 id="dlg-h">All 34 certificates</h2><button class="ibtn" id="dlg-x" type="button" aria-label="Close"><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m2 2 10 10M12 2 2 12"/></svg></button></div>
+  <ul class="all">
+    <li><a href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" width="1240" height="1755" alt="Scan: MSc Data and Web Science" loading="lazy" decoding="async"></a><p>MSc Data and Web Science<small>Aristotle University of Thessaloniki, 2022</small></p></li>
+    <li><a href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" width="1742" height="2460" alt="Scan: BSc Applied Informatics" loading="lazy" decoding="async"></a><p>BSc Applied Informatics<small>University of Macedonia</small></p></li>
+    <li><a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png" width="3543" height="3542" alt="Scan: Move/Sui Bootcamp Thessaloniki award" loading="lazy" decoding="async"></a><p>Move/Sui Bootcamp Thessaloniki award<small>Move Bootcamp Thessaloniki</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" width="2175" height="1439" alt="Scan: Accelerated CCNA, 132 hours" loading="lazy" decoding="async"></a><p>Accelerated CCNA, 132 hours<small>University of Thessaly, 2020</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" width="2342" height="1656" alt="Scan: Certified Rust developer" loading="lazy" decoding="async"></a><p>Certified Rust developer<small>W3Schools, 2025</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" width="1755" height="1240" alt="Scan: Machine learning and deep neural networks" loading="lazy" decoding="async"></a><p>Machine learning and deep neural networks<small>Aristotle University of Thessaloniki, 2021</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" width="1650" height="1275" alt="Scan: How to get published with IEEE" loading="lazy" decoding="async"></a><p>How to get published with IEEE<small>IEEE, 2020</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" width="1754" height="1241" alt="Scan: Introduction to digital currencies" loading="lazy" decoding="async"></a><p>Introduction to digital currencies<small>University of Nicosia, 2020</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png" width="2481" height="3509" alt="Scan: Cloud engineering (Azure), 90 hours" loading="lazy" decoding="async"></a><p>Cloud engineering (Azure), 90 hours<small>Code.Hub, 2024</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg" width="1500" height="844" alt="Scan: NFT talents program" loading="lazy" decoding="async"></a><p>NFT talents program<small>Frankfurt School Blockchain Center, 2022</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg" width="1754" height="1241" alt="Scan: Launch event and RippleX workshop" loading="lazy" decoding="async"></a><p>Launch event and RippleX workshop<small>University of Nicosia IFF, 2020</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png" width="800" height="600" alt="Scan: Advanced ethical hacking, 48 hours" loading="lazy" decoding="async"></a><p>Advanced ethical hacking, 48 hours<small>Audax Cybersecurity, 2021</small></p></li>
+    <li><a href="../../img/renamed/Award_Academic-Achievement.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Award_Academic-Achievement.jpg" width="2269" height="1593" alt="Scan: Progress Award" loading="lazy" decoding="async"></a><p>Progress Award<small>Greek Ministry of Education, 2015</small></p></li>
+    <li><a href="../../img/renamed/English-Certificate_English-Certificate-English-Proficiency.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/English-Certificate_English-Certificate-English-Proficiency.jpg" width="1532" height="2163" alt="Scan: Certificate of Proficiency in English, C2" loading="lazy" decoding="async"></a><p>Certificate of Proficiency in English, C2<small>Michigan Language Assessment, 2018</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg" width="2284" height="1620" alt="Scan: TOEIC listening and reading, 860" loading="lazy" decoding="async"></a><p>TOEIC listening and reading, 860<small>ETS, 2018</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png" width="303" height="303" alt="Scan: Networking essentials" loading="lazy" decoding="async"></a><p>Networking essentials<small>Cisco Networking Academy</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg" width="6667" height="4959" alt="Scan: Cybersecurity eLearning Academy, 20 hours" loading="lazy" decoding="async"></a><p>Cybersecurity eLearning Academy, 20 hours<small>College Link, 2023</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg" width="2127" height="1496" alt="Scan: Software development for telecommunication networks" loading="lazy" decoding="async"></a><p>Software development for telecommunication networks<small>Intracom Telecom, 2019</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg" width="1495" height="2171" alt="Scan: GNU/Linux command line" loading="lazy" decoding="async"></a><p>GNU/Linux command line<small>University of Macedonia and GreekLUG, 2017</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_The-Hour-Of-Code.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_The-Hour-Of-Code.jpg" width="2066" height="1498" alt="Scan: The Hour of Code" loading="lazy" decoding="async"></a><p>The Hour of Code<small>Code.org, 2013</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png" width="1575" height="1112" alt="Scan: Founding, funding and development of startups" loading="lazy" decoding="async"></a><p>Founding, funding and development of startups<small>Athens University of Economics and Business, 2023</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png" width="1654" height="2339" alt="Scan: Marketing mix and brand" loading="lazy" decoding="async"></a><p>Marketing mix and brand<small>National and Kapodistrian University of Athens, 2023</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_Discover-Customer.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_Discover-Customer.jpg" width="2157" height="1547" alt="Scan: Discover customer" loading="lazy" decoding="async"></a><p>Discover customer<small>PepsiCo School, 2018</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg" width="1650" height="1275" alt="Scan: Digital skills for tourism" loading="lazy" decoding="async"></a><p>Digital skills for tourism<small>Grow Greek Tourism Online (Google), 2017</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg" width="1650" height="1275" alt="Scan: How to design and build a website" loading="lazy" decoding="async"></a><p>How to design and build a website<small>Grow Greek Tourism Online (Google), 2018</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg" width="1754" height="1241" alt="Scan: Blockchain for the legal industry: how is the coronavirus crisis making adoption more imminent?" loading="lazy" decoding="async"></a><p>Blockchain for the legal industry: how is the coronavirus crisis making adoption more imminent?<small>Block.co and University of Nicosia, 2020</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg" width="1754" height="1241" alt="Scan: Blockchain in education: remote learning, social distancing and the certification case" loading="lazy" decoding="async"></a><p>Blockchain in education: remote learning, social distancing and the certification case<small>Block.co and University of Nicosia, 2020</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg" width="1754" height="1241" alt="Scan: VeChain ToolChain: digital transformation of the healthcare industry" loading="lazy" decoding="async"></a><p>VeChain ToolChain: digital transformation of the healthcare industry<small>University of Nicosia IFF and VeChain, 2020</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg" width="1754" height="1241" alt="Scan: Data analytics to strengthen healthcare cybersecurity" loading="lazy" decoding="async"></a><p>Data analytics to strengthen healthcare cybersecurity<small>AUTH Data and Web Science MSc, 2021</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg" width="1754" height="1241" alt="Scan: Processing data in the fog: the RAINBOW fog computing platform" loading="lazy" decoding="async"></a><p>Processing data in the fog: the RAINBOW fog computing platform<small>AUTH Data and Web Science MSc, 2022</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Participation_EY-Cyber-Day.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Participation_EY-Cyber-Day.jpg" width="2876" height="1941" alt="Scan: First EY Cyber Day" loading="lazy" decoding="async"></a><p>First EY Cyber Day<small>EY</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg" width="2219" height="1519" alt="Scan: skg.code project: a real-estate chatbot" loading="lazy" decoding="async"></a><p>skg.code project: a real-estate chatbot<small>skg.code, 2019</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg" width="2157" height="1509" alt="Scan: Hydrobot marine educational robotics" loading="lazy" decoding="async"></a><p>Hydrobot marine educational robotics<small>Eugenides Foundation, 2015</small></p></li>
+    <li><a href="../../img/renamed/Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg" target="_blank" rel="noopener noreferrer"><img src="../../img/renamed/Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg" width="1755" height="1241" alt="Scan: Internship, Center for European Legal Culture" loading="lazy" decoding="async"></a><p>Internship, Center for European Legal Culture<small>Aristotle University of Thessaloniki, 2019-2020</small></p></li>
+  </ul>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" integrity="sha384-B2WBjDzEjJpYvhmi2UyEn7rektqkf5suS6sNoyyrf0EBAwBHdkiXxIlU0V5Ru2ed" crossorigin="anonymous" defer></script>
+<script>
+addEventListener('DOMContentLoaded', () => {
+const S = window.S, reduce = S.reduced, root = document.documentElement, $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+
+/* theme: follows the OS until the visitor picks one; only 'light' / 'dark' are ever read back */
+const tb = $('#theme'), tc = $('meta[name="theme-color"]');
+const setTheme = (t, save) => {
+  const next = t === 'dark' ? 'light' : 'dark';
+  root.dataset.theme = t; tb.lastChild.textContent = next === 'light' ? 'Light' : 'Dark';
+  tb.setAttribute('aria-label', `Switch to ${next} theme`); tc.setAttribute('content', t === 'dark' ? '#0a0a0b' : '#edeef1');
+  if (save) { S.saved = true; try { localStorage.setItem('theme', t) } catch (e) {} }
+  if (S.relight) S.relight();
+};
+tb.addEventListener('click', () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark', true));
+matchMedia('(prefers-color-scheme: light)').addEventListener('change', e => { if (!S.saved) setTheme(e.matches ? 'light' : 'dark') });
+setTheme(root.dataset.theme === 'light' ? 'light' : 'dark');
+
+const G = window.gsap, ST = window.ScrollTrigger, hasG = !!(G && ST);
+let lenis = null;
+if (!reduce && window.Lenis) {
+  lenis = new Lenis({ duration: 1.15 });
+  if (hasG) { lenis.on('scroll', ST.update); G.ticker.add(t => lenis.raf(t * 1000)); G.ticker.lagSmoothing(0); }
+  else { const r = t => { lenis.raf(t); requestAnimationFrame(r) }; requestAnimationFrame(r) }
+}
+/* in-page anchors: smooth via Lenis, then move focus for keyboard users */
+const nav = $('#nav'), menu = $('.menu');
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#"]'); if (!a) return;
+  const el = document.getElementById(a.getAttribute('href').slice(1)); if (!el) return;
+  e.preventDefault(); nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false');
+  if (lenis) lenis.scrollTo(el, { offset: 0, duration: 1.6 }); else el.scrollIntoView();
+  el.focus({ preventScroll: true });
+});
+menu.addEventListener('click', () => menu.setAttribute('aria-expanded', nav.classList.toggle('open')));
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); menu.focus() } });
+
+/* pointer: moves the specular light on the block and the spotlight on cards, never the camera */
+addEventListener('pointermove', e => {
+  if (e.pointerType !== 'mouse') return;
+  S.pointer = true; S.px = e.clientX / innerWidth * 2 - 1; S.py = e.clientY / innerHeight * 2 - 1;
+  const sp = e.target.closest && e.target.closest('.spot');
+  if (sp) { const r = sp.getBoundingClientRect(); sp.style.setProperty('--mx', e.clientX - r.left + 'px'); sp.style.setProperty('--my', e.clientY - r.top + 'px') }
+}, { passive: true });
+if (!reduce && matchMedia('(pointer:fine)').matches) $$('.mag').forEach(b => {
+  b.addEventListener('pointermove', e => { const r = b.getBoundingClientRect(); b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .22}px,${(e.clientY - r.top - r.height / 2) * .32}px)` });
+  b.addEventListener('pointerleave', () => b.style.transform = '');
+});
+
+/* the benchmarking GIF loops; show its first frame only */
+$$('img[data-freeze]').forEach(i => {
+  const f = () => { const c = document.createElement('canvas'); c.width = i.naturalWidth; c.height = i.naturalHeight; c.getContext('2d').drawImage(i, 0, 0);
+    c.setAttribute('role', 'img'); c.setAttribute('aria-label', i.alt); i.replaceWith(c) };
+  i.complete && i.naturalWidth ? f() : i.addEventListener('load', f, { once: true });
+});
+
+/* certificate rail: native scroll + snap, mouse drag, buttons, progress */
+const rail = $('#rail'), bar = $('#rbar'), prev = $('#prev'), next = $('#next');
+const step = () => (rail.querySelector('.card').offsetWidth + 16) * (innerWidth < 700 ? 1 : 2);
+prev.onclick = () => rail.scrollBy({ left: -step(), behavior: reduce ? 'auto' : 'smooth' });
+next.onclick = () => rail.scrollBy({ left: step(), behavior: reduce ? 'auto' : 'smooth' });
+const upd = () => { const m = rail.scrollWidth - rail.clientWidth, p = m > 0 ? rail.scrollLeft / m : 1; bar.style.transform = `scaleX(${.12 + p * .88})`; prev.disabled = rail.scrollLeft < 4; next.disabled = rail.scrollLeft > m - 4 };
+rail.addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
+let drag = null;
+rail.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse' || e.button) return; drag = { x: e.clientX, l: rail.scrollLeft, moved: false } });
+addEventListener('pointermove', e => { if (!drag) return; const dx = e.clientX - drag.x; if (Math.abs(dx) > 5 && !drag.moved) { drag.moved = true; rail.classList.add('drag') } if (drag.moved) rail.scrollLeft = drag.l - dx });
+addEventListener('pointerup', () => { if (!drag) return; drag = null; requestAnimationFrame(() => rail.classList.remove('drag')) });
+rail.addEventListener('wheel', e => { if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) e.stopPropagation() }, { passive: true });
+
+/* all 34 (the list is static HTML; its images load when the dialog opens) */
+const dlg = $('#dlg');
+$('#seeall').onclick = () => dlg.showModal();
+$('#dlg-x').onclick = () => dlg.close();
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close() });
+
+/* copy email */
+$('#copy').onclick = async () => {
+  const b = $('#copy span');
+  try { await navigator.clipboard.writeText('gmixoulis@gmail.com'); b.textContent = 'Copied'; $('#live').textContent = 'Email address copied' }
+  catch (e) { const r = document.createRange(); r.selectNodeContents($('.mail a')); getSelection().removeAllRanges(); getSelection().addRange(r); b.textContent = 'Selected' }
+  setTimeout(() => b.textContent = 'Copy email', 1800);
+};
+
+/* LinkedIn: the third-party iframe is created only when its section comes near */
+const feed = $('#feed');
+const liFail = () => { feed.dataset.state = 'failed'; const f = feed.querySelector('iframe'); if (f) f.remove() };
+new IntersectionObserver((es, o) => {
+  if (!es[0].isIntersecting) return; o.disconnect();
+  if (!navigator.onLine) return liFail();
+  feed.dataset.state = 'loading';
+  const f = document.createElement('iframe'), t = setTimeout(liFail, 15000);
+  f.title = 'George Michoulis on LinkedIn: latest posts'; f.loading = 'lazy'; f.referrerPolicy = 'strict-origin-when-cross-origin';
+  f.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
+  f.addEventListener('load', () => { clearTimeout(t); if (feed.dataset.state === 'loading') feed.dataset.state = 'ready' }, { once: true });
+  f.src = 'https://widgets.sociablekit.com/linkedin-profile-posts/iframe/97069';
+  feed.append(f);
+}, { rootMargin: '900px 0px' }).observe(feed);
+
+/* nav state */
+const secs = ['top', 'about', 'skills', 'work', 'research', 'certificates', 'projects', 'activities', 'linkedin', 'contact'].map(id => document.getElementById(id));
+const links = $$('.links a[href^="#"]'), ind = $('.ind');
+const setActive = i => {
+  let on = null;
+  links.forEach(a => { const m = a.hash === '#' + secs[i].id; a.classList.toggle('on', m); m ? (a.setAttribute('aria-current', 'true'), on = a) : a.removeAttribute('aria-current') });
+  if (on && on.offsetWidth) { ind.style.width = on.offsetWidth - 18 + 'px'; ind.style.transform = `translateX(${on.parentNode.offsetLeft + 9}px)`; ind.style.opacity = 1 } else ind.style.opacity = 0;
+  menu.firstChild.textContent = on && innerWidth <= 1180 ? on.textContent : 'Menu';
+};
+const onScroll = () => nav.classList.toggle('scrolled', scrollY > innerHeight * .45);
+addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+if (!hasG) return;
+G.registerPlugin(ST);
+/* scene progress: 0 = hero … 9 = contact; each section eases the stage into its own state as it enters */
+const prog = secs.map(() => 0);
+secs.forEach((s, i) => {
+  if (i) ST.create({ trigger: s, start: 'top 96%', end: 'top 36%', onUpdate: st => { prog[i] = st.progress; S.t = prog.reduce((a, b) => a + b, 0) } });
+  ST.create({ trigger: s, start: 'top 50%', end: 'bottom 50%', onToggle: st => st.isActive && setActive(i) });
+});
+$$('.blk').forEach(r => ST.create({ trigger: r, start: 'top 60%', end: 'bottom 60%', toggleClass: { targets: r, className: 'on' } }));
+G.fromTo('.chain-fill', { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: '.chain', start: 'top 60%', end: 'bottom 60%', scrub: .5 } });
+
+if (!reduce) {
+  G.timeline({ delay: .1, defaults: { ease: 'expo.out', duration: 1.4 } })
+    .from('.h1 .w>span', { yPercent: 108, stagger: .09 })
+    .from('.latest', { y: 12, opacity: 0, duration: 1 }, .15)
+    .from('.lede,.ctas', { y: 18, opacity: 0, stagger: .08, duration: 1.2 }, .35)
+    .from('.nav', { opacity: 0, duration: 1.1 }, .6);
+  G.set('[data-rv]', { opacity: 0, y: 24 });
+  ST.batch('[data-rv]', { start: 'top 90%', once: true, onEnter: els => G.to(els, { opacity: 1, y: 0, stagger: .06, duration: .8, ease: 'power3.out', overwrite: true }) });
+}
+addEventListener('load', () => ST.refresh());
+document.fonts && document.fonts.ready.then(() => ST.refresh());
+});
+</script>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"},"integrity":{"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js":"sha384-qOubuRxWZ0I7rXTjcuhcKNHKvPM7q0ztN8/82sJnxnyKS0OXTeB5FsIcysc2T9EY","https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/geometries/RoundedBoxGeometry.js":"sha384-S52/WAm3DaIIFna675h5dmavqea/akLlPFtPdnzgWWhnz+/nMqR6PPsSXPOd8Gpw","https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/postprocessing/EffectComposer.js":"sha384-L+Ns9skCAqjab7aG8LH5VLknBCoENW7p37sOj39jnITwlWZFabWc29JwzgYf6ygy","https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/postprocessing/RenderPass.js":"sha384-JBzMcXwTgF2e9tw3AU4+jg+nVDdl7hTHlT0C5qZVa/1DUUe/KIm4L3e2jorIH28/","https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/postprocessing/UnrealBloomPass.js":"sha384-NLbvCtTvm5zjFCKW1mFWUjcnFLVOn258z3hKOAoYCXJ1DtQO54I+x5LPquFbIig+","https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/postprocessing/OutputPass.js":"sha384-pAQ55aG4oXjA92n2goVLMWU14Ik/bNUs29MfxOM6meGyGzTJoFm7WxEU0D0SqsNI","https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/postprocessing/ShaderPass.js":"sha384-zetU6HhR/vTtgSvnS9DE+GQPZhVT/ZOSLa/1+DSM6rkM9hvBgQWr9bCEosZt93ch","https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/postprocessing/MaskPass.js":"sha384-SDM80tiGflO8UDV/QzR/mASjcc/+wF7KfRVFNHJUIPcTctwoPI8GoWVTlccZw7V4","https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/postprocessing/Pass.js":"sha384-gSqIFh8vMmp1veyOysIS3KPVUl/A5JPefYvW4b89OeYeW0bwkrjN7qcC1h0XJK/K","https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/shaders/CopyShader.js":"sha384-kzVlcj2amFaRNIWZ5zE0PmIN+QTNWWvrgKk31S8N/7w0nf7Qq3xqxHRLbD2UPPSl","https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/shaders/LuminosityHighPassShader.js":"sha384-a6qrIDfNt1Ss7Z4VtgMalz9gq8H/Up3lSSf1Agc4HRaDMvNd9eP9k7DckAv5JxQF","https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/shaders/OutputShader.js":"sha384-CdpJL3xlIkjJQAbzgyazSoOx+/oBcwUCsBVSU25SKy8/PEdYEn24U+4mnmx3R4YX"}}</script>
+<script type="module">
+/* The stage: an iridescent 2×2×2 "genesis" block on a glossy floor under a light beam, hash-linked to a short
+   chain of smaller blocks that a pulse travels along. Techniques: instanced RoundedBox cubelets with a custom
+   thin-film interference shader (optical path difference → per-channel cosine, the usual Airy-style
+   approximation), procedural softbox environment (a dark stage, or a white studio with black flags in the light
+   theme), seam glow from an inner core, mirrored instanced draw for the floor reflection, additive volumetric
+   beam and dust, UnrealBloom (dark theme only). */
+const S = window.S, root = document.documentElement, cv = document.getElementById('gl');
+try {
+  if (!document.createElement('canvas').getContext('webgl2')) throw new Error('no webgl2');
+  await new Promise(r => requestAnimationFrame(() => setTimeout(r, 0))); // after first paint, so the h1 stays the LCP
+  const [THREE, { RoundedBoxGeometry }, { EffectComposer }, { RenderPass }, { UnrealBloomPass }, { OutputPass }] = await Promise.all([
+    import('three'), import('three/addons/geometries/RoundedBoxGeometry.js'), import('three/addons/postprocessing/EffectComposer.js'),
+    import('three/addons/postprocessing/RenderPass.js'), import('three/addons/postprocessing/UnrealBloomPass.js'), import('three/addons/postprocessing/OutputPass.js')]);
+  run(THREE, RoundedBoxGeometry, EffectComposer, RenderPass, UnrealBloomPass, OutputPass);
+} catch (e) { root.classList.add('no-gl'); console.warn('Stage fallback:', e.message) }
+
+function run(THREE, RoundedBoxGeometry, EffectComposer, RenderPass, UnrealBloomPass, OutputPass) {
+  const coarse = matchMedia('(pointer:coarse)').matches;
+  let mob = innerWidth < 860, W = 0, H = 0, dpr = Math.min(devicePixelRatio || 1, mob || coarse ? 1.5 : 2);
+  const renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: false, powerPreference: 'high-performance' });
+  const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, .1, 100);
+  const U = { uTime: { value: 0 }, uHue: { value: 0 }, uCore: { value: .5 }, uBeam: { value: 0 }, uDim: { value: 1 }, uChain: { value: 1 }, uP: { value: 0 },
+    uLight: { value: 0 }, uL: { value: new THREE.Vector3(0, 1, 1) }, uB: { value: new THREE.Vector3() }, uBg: { value: new THREE.Vector3() }, uPR: { value: dpr } };
+
+  const ENV = `
+  vec3 env(vec3 R){
+    float a=atan(R.x,R.z);
+    float top=smoothstep(.5,1.,R.y)*2.4*uBeam;
+    float s1=exp(-pow((a+1.95)*3.,2.))*smoothstep(-.15,.5,R.y)*1.25;
+    float s2=exp(-pow((a-1.25)*4.2,2.))*smoothstep(-.25,.6,R.y)*.8;
+    float s3=exp(-pow((a-2.9)*2.6,2.))*smoothstep(.0,.7,R.y)*.35;
+    float hz=exp(-pow(R.y*7.,2.))*.1;
+    float sky=smoothstep(-.05,.9,R.y)*.12*(.4+.6*uBeam);
+    return vec3(top+s1+s2+s3+hz+sky);
+  }
+  vec3 envL(vec3 R){
+    float a=atan(R.x,R.z);
+    float band=smoothstep(-.3,.05,R.y)*smoothstep(.8,.35,R.y);
+    float dome=.5+1.7*smoothstep(.15,.95,R.y);
+    float box=exp(-pow((a-.55)*2.6,2.))*smoothstep(.12,.4,R.y)*smoothstep(.95,.62,R.y)*1.5;
+    float f1=exp(-pow((a+1.95)*2.4,2.))*band,f2=exp(-pow((a-1.9)*3.,2.))*band*.8;
+    float fl=smoothstep(.02,-.4,R.y);float hz=exp(-pow(R.y*6.,2.));
+    return vec3((dome+box)*(1.-.9*f1)*(1.-.8*f2)*(1.-.55*fl)*(1.-.3*hz));
+  }`;
+  const COMMON = `uniform float uTime,uHue,uCore,uBeam,uDim,uChain,uP,uLight;uniform vec3 uL,uB,uBg;`;
+  const cubeVS = `attribute vec3 aSgn;attribute float aG;varying vec3 vW,vN,vO,vS;varying float vG;
+  void main(){vec4 w=modelMatrix*instanceMatrix*vec4(position,1.);vW=w.xyz;vN=normalize(mat3(modelMatrix)*mat3(instanceMatrix)*normal);vO=position;vS=aSgn;vG=aG;gl_Position=projectionMatrix*viewMatrix*w;}`;
+  const cubeFS = COMMON + `varying vec3 vW,vN,vO,vS;varying float vG;` + ENV + `
+  vec3 film(float c,float d){float ct=sqrt(max(0.,1.-(1.-c*c)/2.1));float o=2.9*d*ct;return .5+.5*cos(6.2831*o/vec3(.65,.53,.45));}
+  void main(){
+    vec3 N=normalize(vN),V=normalize(cameraPosition-vW);float c=clamp(dot(N,V),0.,1.);vec3 R=reflect(-V,N);
+    vec3 a=abs(vO)*2.;float mid=max(min(a.x,a.y),min(max(a.x,a.y),a.z));float edge=smoothstep(.8,.97,mid);
+    float th=.42+.09*sin(dot(vO+vS*.5,vec3(2.1,1.7,2.6))+uTime*.12)+.05*sin(vW.y*2.6+uTime*.2)+uHue*.22;
+    vec3 fc=film(c,th);fc=mix(vec3(dot(fc,vec3(.333))),fc,.85);
+    float F=.04+.96*pow(1.-c,5.);
+    vec3 Hh=normalize(uL+V);float nh=max(dot(N,Hh),0.);vec3 sp=(pow(nh,300.)*2.4+pow(nh,26.)*.07)*mix(vec3(1.),fc,.45);
+    vec3 g3=exp(-(.5+vO*vS)*17.);vec3 dc=vW-uB;float g=min(g3.x+g3.y+g3.z,1.3)*(.25+exp(-dot(dc,dc)*1.1))*(1.+vG*5.);
+    vec3 gc=mix(vec3(.06,.58,1.),vec3(.62,.24,1.),.5+.5*sin(dot(vW,vec3(.9,.6,.4))+uHue*4.));
+    vec3 cd=vec3(.007,.007,.009)+env(R)*fc*(.1+.9*F)*1.25+sp+edge*(.04+.3*F+vG*.6)*fc+gc*g*uCore*.5;
+    vec3 cl=vec3(.02,.021,.026)+envL(R)*mix(vec3(1.),fc,.2+.45*F)*(.22+.78*F)*1.3+sp+edge*(.08+.25*F)*fc*.5;
+    vec3 o=mix(1.-exp(-cd*1.15),1.-exp(-cl*1.15),uLight);
+    o=mix(o,gc*.8,uLight*min(g*uCore*.45,.75));
+    #ifdef REFL
+    o=mix(uBg,o,exp(-max(-vW.y,0.)*.85)*.5);
+    #endif
+    #ifdef CHAIN
+    float dm=uDim*uChain;
+    #else
+    float dm=uDim;
+    #endif
+    gl_FragColor=vec4(mix(uBg,o,dm),1.);
+  }`;
+  const mk = (vs, fs, o = {}) => new THREE.ShaderMaterial({ uniforms: U, vertexShader: vs, fragmentShader: fs, ...o });
+  const geo = new RoundedBoxGeometry(1, 1, 1, mob ? 3 : 5, .1);
+  const sg = new Float32Array(24);
+  for (let i = 0; i < 8; i++) { sg[i * 3] = i & 1 ? 1 : -1; sg[i * 3 + 1] = i & 2 ? 1 : -1; sg[i * 3 + 2] = i & 4 ? 1 : -1 }
+  const cgeo = geo.clone(), csg = new Float32Array(96);
+  for (let k = 0; k < 32; k++) csg.set(sg.subarray(k % 8 * 3, k % 8 * 3 + 3), k * 3);
+  geo.setAttribute('aSgn', new THREE.InstancedBufferAttribute(sg, 3)); geo.setAttribute('aG', new THREE.InstancedBufferAttribute(new Float32Array(8), 1));
+  const aG = new THREE.InstancedBufferAttribute(new Float32Array(32), 1);
+  cgeo.setAttribute('aSgn', new THREE.InstancedBufferAttribute(csg, 3)); cgeo.setAttribute('aG', aG);
+  const cubes = new THREE.InstancedMesh(geo, mk(cubeVS, cubeFS), 8);
+  const cubesR = new THREE.InstancedMesh(geo, mk(cubeVS, cubeFS, { defines: { REFL: 1 } }), 8);
+  cubesR.instanceMatrix = cubes.instanceMatrix;
+  const chain = new THREE.InstancedMesh(cgeo, mk(cubeVS, cubeFS, { defines: { CHAIN: 1 } }), 32);
+  const chainR = new THREE.InstancedMesh(cgeo, mk(cubeVS, cubeFS, { defines: { CHAIN: 1, REFL: 1 } }), 32);
+  chainR.instanceMatrix = chain.instanceMatrix;
+  const coreVS = `varying vec3 vW,vN;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;vN=normalize(mat3(modelMatrix)*normal);gl_Position=projectionMatrix*viewMatrix*w;}`;
+  const coreFS = COMMON + `uniform float uF;varying vec3 vW,vN;void main(){float c=abs(dot(normalize(vN),normalize(cameraPosition-vW)));float k=pow(1.-c,1.5);
+    vec3 o=1.-exp(-mix(vec3(.55,.85,1.)*1.4,vec3(.7,.35,1.),k)*uCore*.8*uF);
+    o=mix(o,mix(vec3(.2,.42,.95),vec3(.5,.26,.92),k)*(.55+.45*uF),uLight);gl_FragColor=vec4(mix(uBg,o,uDim),1.);}`;
+  const coreGeo = new RoundedBoxGeometry(.62, .62, .62, 3, .12);
+  const core = new THREE.Mesh(coreGeo, new THREE.ShaderMaterial({ uniforms: { ...U, uF: { value: 1 } }, vertexShader: coreVS, fragmentShader: coreFS }));
+  const coreR = new THREE.Mesh(coreGeo, new THREE.ShaderMaterial({ uniforms: { ...U, uF: { value: .3 } }, vertexShader: coreVS, fragmentShader: coreFS }));
+  /* hash-links: thin tubes from each block to the next; uv.y runs from the older block to the newer one */
+  const lgeo = new THREE.CylinderGeometry(1, 1, 1, 6, 1, true); lgeo.translate(0, .5, 0);
+  lgeo.setAttribute('aK', new THREE.InstancedBufferAttribute(new Float32Array([0, 1, 2, 3]), 1));
+  const links = new THREE.InstancedMesh(lgeo, mk(`attribute float aK;varying float vY,vK;void main(){vY=uv.y;vK=aK;gl_Position=projectionMatrix*viewMatrix*modelMatrix*instanceMatrix*vec4(position,1.);}`,
+    COMMON + `varying float vY,vK;void main(){float u=uP-vK;float p=exp(-pow((vY-u)*5.,2.))*step(-.3,u)*step(u,1.3);
+      vec3 o=mix(1.-exp(-(vec3(.2,.26,.46)*.5+vec3(.55,.9,1.)*p*2.2)),mix(vec3(.5,.52,.6),vec3(.16,.28,.9),p),uLight);
+      gl_FragColor=vec4(mix(uBg,o,uDim*uChain),1.);}`), 4);
+  for (const m of [cubes, cubesR, chain, chainR, links]) m.frustumCulled = false;
+  const block = new THREE.Group(), blockR = new THREE.Group(), mirror = new THREE.Group();
+  block.add(cubes, core); blockR.add(cubesR, coreR); mirror.scale.y = -1; mirror.add(blockR, chainR); scene.add(block, chain, links, mirror);
+
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(48, 24, 12), mk(
+    `varying vec3 vW;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}`,
+    COMMON + `varying vec3 vW;void main(){vec3 d=normalize(vW-cameraPosition);
+      float h=exp(-pow(d.x*2.2,2.))*smoothstep(-.1,.6,d.y)*.004*uBeam*uDim*(1.-uLight);
+      gl_FragColor=vec4(uBg+vec3(h*.8,h*.85,h),1.);}`, { side: THREE.BackSide, depthWrite: false }));
+  sky.renderOrder = -1; scene.add(sky);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), mk(
+    `varying vec3 vW;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}`,
+    COMMON + `varying vec3 vW;void main(){vec2 d=vW.xz-uB.xz;float r2=dot(d,d);float near=smoothstep(3.6,1.,uB.y);
+      float pool=exp(-r2*.085)*uBeam;float sh=1.-.8*exp(-r2*.8)*near;
+      vec3 dk=uBg+1.-exp(-(vec3(.042,.044,.054)*pool*sh+vec3(.25,.35,.7)*exp(-r2*.45)*uCore*.025)*uDim);
+      vec3 lt=uBg*(1.-(.2*exp(-r2*.7)*near+.05*exp(-r2*.12))*uDim);
+      gl_FragColor=vec4(mix(dk,lt,uLight),.8);}`, { transparent: true, depthWrite: false }));
+  floor.rotation.x = -Math.PI / 2; floor.renderOrder = 1; scene.add(floor);
+
+  const beam = new THREE.Mesh(new THREE.CylinderGeometry(.5, 1.75, 11, 64, 1, true), mk(
+    `varying vec3 vW,vN;varying float vY;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;vN=normalize(mat3(modelMatrix)*normal);vY=uv.y;gl_Position=projectionMatrix*viewMatrix*w;}`,
+    COMMON + `varying vec3 vW,vN;varying float vY;void main(){float f=abs(dot(normalize(vN),normalize(cameraPosition-vW)));
+      float an=atan(vW.z-uB.z,vW.x-uB.x);
+      float a=pow(f,2.6)*smoothstep(0.,.3,vY)*(.25+.75*vY)*(.72+.28*sin(an*7.+uTime*.25)*sin(an*3.-uTime*.17));
+      gl_FragColor=vec4(vec3(.72,.8,1.)*a*uBeam*uDim*.032,1.);}`,
+    { transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide }));
+  beam.position.y = 5.5; beam.renderOrder = 2; scene.add(beam);
+
+  const N = mob || coarse ? 140 : 360, pp = new Float32Array(N * 3), pr = new Float32Array(N * 4);
+  for (let i = 0; i < N; i++) { const y = Math.random() * 9, rad = (2.1 - y * .13) * Math.sqrt(Math.random()), an = Math.random() * 6.283; pp.set([Math.cos(an) * rad, y, Math.sin(an) * rad], i * 3); pr.set([Math.random(), Math.random(), Math.random(), Math.random()], i * 4) }
+  const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(pp, 3)); dg.setAttribute('aR', new THREE.BufferAttribute(pr, 4));
+  const dust = new THREE.Points(dg, mk(
+    COMMON + `uniform float uPR;attribute vec4 aR;varying float vA;void main(){vec3 p=position;p.y=mod(p.y+uTime*(.04+.07*aR.x),9.)+.15;
+      p.x+=sin(uTime*.3+aR.y*6.28)*.12;p.z+=cos(uTime*.25+aR.z*6.28)*.12;vec4 mv=modelViewMatrix*vec4(p,1.);gl_Position=projectionMatrix*mv;
+      gl_PointSize=(1.+aR.w*2.2)*uPR*(9./-mv.z);float tw=.5+.5*sin(uTime*(1.+aR.x*2.)+aR.y*20.);
+      vA=tw*uBeam*uDim*smoothstep(9.,6.,p.y)*smoothstep(.15,1.,p.y)*max(0.,1.-length(p.xz)/2.3);}`,
+    `varying float vA;void main(){float d=length(gl_PointCoord-.5);gl_FragColor=vec4(vec3(.85,.9,1.)*smoothstep(.5,0.,d)*vA*.8,1.);}`,
+    { transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+  dust.renderOrder = 3; scene.add(dust);
+
+  const rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: dpr >= 2 || mob ? 0 : 4 });
+  const composer = new EffectComposer(renderer, rt);
+  const bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), .7, .45, .32);
+  composer.addPass(new RenderPass(scene, cam)); composer.addPass(bloom); composer.addPass(new OutputPass());
+
+  /* scene states per section: ox, oy (screen offset as a share of the viewport), dist, elevation, yaw, tiltX, tiltZ,
+     explode, lift, hue, beam, core, dim, chain. Sections with a [data-stage] anchor frame the block in that box. */
+  const KD = [
+    [0, .195, 13, .2, 0, 0, 0, 0, 1.3, 0, 1, .8, 1, 1],          // hero: genesis block + chain, centred
+    [0, .1, 14, .3, .8, .3, .2, .3, 1.8, .15, .6, .9, 0, 0],      // about: the stage goes dark
+    [.25, 0, 11, .3, 1.9, .12, -.14, .14, 1.6, .32, .45, .95, 1, 0], // soft skills: inside its bento tile
+    [.25, 0, 11, .35, 2.3, .1, -.1, .2, 1.6, .4, .45, .9, 0, 0],  // experience: dark (the roles are the chain)
+    [-.3, 0, 14, .6, 2.7, 0, 0, .32, 1.8, .5, .6, 1, 1, 0],       // research: sticky, left of the papers
+    [-.3, 0, 14, .5, 3.4, .3, .2, .1, 1.5, .68, .5, .8, 0, 0],
+    [0, .2, 16, .5, 4.1, .1, -.2, .12, 1.5, .82, .45, .8, 0, 0],
+    [0, .3, 15, .3, 5, 0, 0, .3, 1.6, .9, .6, .9, 0, 0],
+    [0, .3, 15, .2, 5.6, 0, 0, .35, 1.6, .95, .8, 1, 0, 0],
+    [0, .3, 15, .16, 6.28, 0, 0, .4, 1.6, 1, 1.1, 1, 1, 1]];    // contact: genesis + chain again
+  const NS = KD.length - 1;
+  /* chain block offsets from the genesis block (x, y, z, scale): receding right and back; steeper on phones */
+  const CHD = [[2.7, -.35, -1.3, .42], [4.5, -.55, -3.1, .34], [6, -.7, -5.1, .28], [7.3, -.8, -7.3, .23]];
+  const CHM = [[1.7, -.35, -2, .42], [2.6, -.55, -4.6, .34], [3.2, -.7, -7.3, .28], [3.6, -.8, -10.2, .23]];
+  const anc = []; document.querySelectorAll('[data-stage]').forEach(el => anc[+el.dataset.stage] = el);
+  const anchor = i => { const el = anc[i]; if (!el || !el.offsetHeight) return null; const r = el.getBoundingClientRect();
+    return { ox: (r.left + r.width / 2) / W - .5, oy: (r.top + (S.reduced ? scrollY : 0) + r.height / 2) / H - .5,
+      d: Math.min(45, Math.max(9, 4.94 * H / (.8 * r.height), 5.41 * H / Math.min(.8 * r.width, (mob ? .56 : .4) * W))) } };
+  const smoothstep = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t) };
+  const sample = t => {
+    const x = Math.max(0, Math.min(NS, t)), i = Math.min(NS - 1, Math.floor(x)); let f = x - i; f = f * f * (3 - 2 * f);
+    const A = KD[i].slice(), B = KD[i + 1].slice();
+    if (!mob) { const a = anchor(i), b = anchor(i + 1), pa = a || b, pb = b || a;
+      if (pa) A[0] = pa.ox, A[1] = pa.oy, A[2] = pa.d; if (pb) B[0] = pb.ox, B[1] = pb.oy, B[2] = pb.d }
+    const o = A.map((v, j) => v + (B[j] - v) * f);
+    if (mob) { let best = null; for (let j = 0; j <= (S.reduced ? 0 : NS); j++) { const a = anchor(j); if (a && (!best || Math.abs(a.oy) < Math.abs(best.oy))) best = a }
+      if (best) { o[0] = 0; o[1] = best.oy; o[2] = best.d; o[12] *= 1 - smoothstep(.42, .78, Math.abs(best.oy)) } }
+    return o;
+  };
+  let tS = S.reduced ? 0 : S.t;
+
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), q2 = new THREE.Quaternion(), ax = new THREE.Vector3(), p3 = new THREE.Vector3(), one = new THREE.Vector3(1, 1, 1),
+    sc = new THREE.Vector3(), dv = new THREE.Vector3(), Y = new THREE.Vector3(0, 1, 0), L = new THREE.Vector3(), G0 = new THREE.Vector3(), P = [0, 1, 2, 3].map(() => new THREE.Vector3());
+  let px = 0, py = 0;
+  function resize() {
+    const w = cv.clientWidth, h = cv.clientHeight; if (w === W && Math.abs(h - H) < 80 && W) return;
+    W = w; H = h; mob = W < 860;
+    renderer.setPixelRatio(dpr); renderer.setSize(W, H, false); composer.setPixelRatio(dpr); composer.setSize(W, H);
+    U.uPR.value = dpr; cam.aspect = W / H;
+  }
+  function update(dt, time) {
+    const io = S.reduced ? 0 : Math.pow(Math.max(0, 1 - time / 2.1), 3);
+    if (!S.reduced) tS += (S.t - tS) * (1 - Math.exp(-dt * 3.2));
+    const cur = sample(tS); if (S.reduced) cur[7] = .3, cur[11] = 1.1, cur[4] = .5;
+    const [ox, oy, d, el, ry, rx, rz, ex, lift, hue, bm, cr, dim, chn] = cur;
+    const e = ex + io * 2.2, spin = io * 2.4;
+    for (let i = 0; i < 8; i++) {
+      ax.set(sg[i * 3], sg[i * 3 + 1], sg[i * 3 + 2]);
+      p3.copy(ax).multiplyScalar(.518 + e * .34 + io * (i % 3) * .25);
+      q.setFromAxisAngle(ax.normalize(), e * .2 + spin * (i % 2 ? 1 : -1) * .5);
+      cubes.setMatrixAt(i, m4.compose(p3, q, one));
+    }
+    cubes.instanceMatrix.needsUpdate = true;
+    const bob = S.reduced ? 0 : Math.sin(time * .9) * .05, y = lift + bob;
+    block.position.set(0, y, 0);
+    block.rotation.set(rx, ry + (S.reduced ? 0 : time * .14) + spin * .4, rz, 'YXZ');
+    blockR.position.copy(block.position); blockR.quaternion.copy(block.quaternion);
+    U.uB.value.set(0, y, 0);
+    /* the chain: blocks hang behind the genesis block; a pulse leaves it every few seconds and lights each block it reaches */
+    const up = S.reduced ? 2.35 : (time * .4) % 6 - .5, on = chn * dim > .004;
+    U.uP.value = up; U.uChain.value = chn; chain.visible = chainR.visible = links.visible = on;
+    if (on) {
+      const CH = mob ? CHM : CHD; G0.set(0, y, 0);
+      for (let c = 0; c < 4; c++) {
+        const [cx, cy, cz, s] = CH[c], gl = Math.exp(-Math.pow((up - c - 1) * 2.5, 2));
+        P[c].set(cx, y + cy + (S.reduced ? 0 : Math.sin(time * .8 + c * 1.7) * .04), cz);
+        q2.setFromAxisAngle(Y, c * .9 + (S.reduced ? 0 : time * .06));
+        for (let i = 0; i < 8; i++) {
+          p3.set(sg[i * 3], sg[i * 3 + 1], sg[i * 3 + 2]).multiplyScalar(.54 * s).applyQuaternion(q2).add(P[c]);
+          chain.setMatrixAt(c * 8 + i, m4.compose(p3, q2, sc.setScalar(s))); aG.array[c * 8 + i] = gl;
+        }
+        const a = c ? P[c - 1] : G0; dv.subVectors(P[c], a); const len = dv.length();
+        links.setMatrixAt(c, m4.compose(a, q.setFromUnitVectors(Y, dv.divideScalar(len)), sc.set(.011, len, .011)));
+      }
+      chain.instanceMatrix.needsUpdate = links.instanceMatrix.needsUpdate = aG.needsUpdate = true;
+    }
+    cam.position.set(0, y + Math.sin(el) * d, Math.cos(el) * d); cam.lookAt(0, y, 0);
+    cam.setViewOffset(W, H, -ox * W, -oy * H, W, H);
+    const beamOn = S.reduced ? 1 : Math.min(1, Math.max(0, (time - .15) / 1.3));
+    const flash = S.reduced ? 0 : Math.exp(-Math.pow((time - 1.75) * 3.2, 2)) * 1.6;
+    U.uTime.value = S.reduced ? 3 : time; U.uHue.value = hue; U.uBeam.value = bm * beamOn * beamOn; U.uCore.value = cr + flash; U.uDim.value = dim;
+    if (S.pointer) { px += (S.px - px) * (1 - Math.exp(-dt * 5)); py += (S.py - py) * (1 - Math.exp(-dt * 5)) }
+    else if (!S.reduced) { px = Math.sin(time * .23) * .6; py = Math.cos(time * .17) * .3 - .2 }
+    L.set(-.3 + px * 1.3, .85 - py * .8, .9).normalize(); U.uL.value.copy(L);
+    return dim;
+  }
+
+  addEventListener('resize', resize); resize();
+  let t0 = performance.now(), last = t0, frames = 0, slow = 0, raf = 0, dark = 0;
+  /* when the block is fully faded out, stop drawing until it returns */
+  const draw = now => { const dt = Math.min(.25, (now - last) / 1000); last = now; const dim = update(dt, (now - t0) / 1000); dark = dim < .002 ? dark + 1 : 0; if (dark < 3) composer.render(dt) };
+  const loop = now => {
+    raf = requestAnimationFrame(loop); const dt = now - last; draw(now);
+    if (++frames > 40 && frames < 160) { slow += dt; if (frames === 159 && slow / 119 > 30 && dpr > 1) { dpr = Math.max(1, dpr - .5); W = 0; resize() } }
+  };
+  /* the light theme re-lights the scene: white studio, black flags, soft contact shadow, no bloom, beam or dust */
+  const BG = [new THREE.Color('#0a0a0b'), new THREE.Color('#edeef1')];
+  S.relight = () => {
+    const l = root.dataset.theme === 'light' ? 1 : 0;
+    U.uLight.value = l; U.uBg.value.set(BG[l].r, BG[l].g, BG[l].b); renderer.setClearColor(BG[l], 1);
+    bloom.enabled = !l; beam.visible = dust.visible = !l; dark = 0;
+    if (S.reduced) draw(t0 + 3000);
+  };
+  S.relight();
+  if (S.reduced) addEventListener('resize', () => draw(t0 + 3000));
+  else {
+    raf = requestAnimationFrame(loop);
+    document.addEventListener('visibilitychange', () => { cancelAnimationFrame(raf); if (!document.hidden) { last = performance.now(); raf = requestAnimationFrame(loop) } });
+  }
+  requestAnimationFrame(() => cv.classList.add('on'));
+}
+</script>
+</body>
+</html>
