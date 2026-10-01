@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Deep Field — George Michoulis resume study</title>
+  <meta name="description" content="Observatory-style resume study for George Michoulis, blockchain developer and researcher." />
+  <link rel="stylesheet" href="common.css" />
+  <style>
+    :root {
+      --paper: #0E1A2B;
+      --ink: #C9D3DF;
+      --accent: #F2B441;
+      --rule: rgba(201, 211, 223, 0.16);
+      --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --font-display: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --font-label: 'Courier New', ui-monospace, monospace;
+    }
+
+    body { background: var(--paper); color: var(--ink); }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: clamp(2.6rem, 7vw, 5.5rem) clamp(1.1rem, 4vw, 2.4rem);
+      min-height: 84vh;
+      align-items: center;
+    }
+    .hero .name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(3rem, 12vw, 8rem);
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    .hero .name .thin { font-weight: 300; display: block; }
+    .hero .goldline {
+      width: 2px;
+      height: 3.2rem;
+      background: var(--accent);
+      margin: 1.6rem 0;
+    }
+    .hero .deck { max-width: 40ch; font-size: 1rem; line-height: 1.6; opacity: 0.85; }
+    .hero .labels {
+      margin-top: 1.6rem;
+      font-family: var(--font-label);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+
+    /* orbital diagram */
+    .orbit {
+      position: relative;
+      height: clamp(16rem, 42vw, 26rem);
+      min-height: 15rem;
+    }
+    .orbit .ell {
+      position: absolute;
+      top: 50%; left: 50%;
+      border: 1px solid rgba(201, 211, 223, 0.35);
+      border-radius: 50%;
+    }
+    .orbit .e1 { width: 88%; height: 52%; transform: translate(-50%, -50%) rotate(-18deg); }
+    .orbit .e2 { width: 64%; height: 40%; transform: translate(-50%, -50%) rotate(26deg); }
+    .orbit .e3 { width: 40%; height: 26%; transform: translate(-50%, -50%) rotate(-8deg); }
+    .orbit .dot {
+      position: absolute;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .orbit .d1 { top: 18%; left: 56%; }
+    .orbit .d2 { top: 62%; left: 30%; }
+    .orbit .d3 { top: 40%; left: 72%; }
+    .orbit .pale { background: rgba(201, 211, 223, 0.6); }
+    .orbit .arc {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 88%; height: 52%;
+      border: 2px solid transparent;
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) rotate(-18deg);
+    }
+
+    .ruleline {
+      height: 1px;
+      background: var(--rule);
+    }
+
+    /* atlas */
+    .atlas { padding: clamp(2.2rem, 6vw, 4.5rem) clamp(1.1rem, 4vw, 2.4rem); }
+    .atlas-head {
+      display: flex;
+      align-items: baseline;
+      gap: 1.2rem;
+      padding-bottom: 1.4rem;
+      font-family: var(--font-label);
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0.65;
+    }
+    .atlas-head .accent { color: var(--accent); opacity: 1; }
+
+    .entry {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.1rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--rule);
+    }
+    .entry .rail {
+      width: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .entry .rail .tick { width: 10px; height: 1px; background: var(--accent); }
+    .entry .coord {
+      font-family: var(--font-label);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+    .entry .body { display: grid; gap: 0.4rem; }
+    .entry h2 { font-family: var(--font-display); font-size: clamp(1.3rem, 3.6vw, 1.9rem); font-weight: 600; letter-spacing: -0.01em; }
+    .entry .org { font-family: var(--font-label); font-size: 0.82rem; letter-spacing: 0.05em; opacity: 0.75; }
+    .entry .body p:last-child { max-width: 56ch; opacity: 0.8; font-size: 0.96rem; }
+
+    /* methods */
+    .methods {
+      padding: clamp(2.2rem, 6vw, 4.5rem) clamp(1.1rem, 4vw, 2.4rem);
+      border-top: 1px solid var(--rule);
+    }
+    .methods h2 { font-family: var(--font-display); font-size: clamp(1.7rem, 5vw, 2.6rem); font-weight: 600; text-transform: uppercase; letter-spacing: -0.02em; }
+    .methods .grid {
+      margin-top: 1.6rem;
+      display: grid;
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+    .methods .cell {
+      background: var(--paper);
+      padding: 1.1rem 1.2rem;
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+    .methods .cell .n { font-family: var(--font-label); font-size: 0.68rem; color: var(--accent); letter-spacing: 0.14em; display: block; margin-bottom: 0.3rem; }
+    @media (min-width: 720px) {
+      .hero { grid-template-columns: 1.15fr 1fr; }
+      .methods .grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .contact {
+      padding: clamp(2.2rem, 6vw, 4.5rem) clamp(1.1rem, 4vw, 2.4rem);
+      border-top: 1px solid var(--rule);
+      display: grid;
+      gap: 1.2rem;
+    }
+    .contact h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 600; text-transform: uppercase; }
+    .contact .links { display: flex; flex-wrap: wrap; gap: 0.7rem 1.8rem; font-family: var(--font-label); font-size: 0.85rem; }
+    .contact a { text-decoration: none; border-bottom: 1px solid var(--accent); color: var(--ink); }
+    .contact a:hover { border-bottom-width: 2px; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="draft-nav">
+    <a class="brand" href="index.html">George Michoulis</a>
+    <span class="tag">Study 02 / 06</span>
+    <nav class="links" aria-label="Concept"><a href="index.html">All concepts</a><a href="terrarium.html">Next →</a></nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="name2">
+      <div>
+        <h1 class="name" id="name2">George<span class="thin">Michoulis</span></h1>
+        <div class="goldline" aria-hidden="true"></div>
+        <p class="deck">Blockchain developer and researcher. Smart contracts, graph-based ML, and full-stack Web3 systems.</p>
+        <p class="labels">Thessaloniki · Remote — Field notes, 2026</p>
+        <a class="explore-link" href="#experience">Explore experience ↓</a>
+      </div>
+      <div class="orbit" aria-hidden="true">
+        <span class="ell e1" data-parallax="0.1"></span>
+        <span class="ell e2" data-parallax="0.22"></span>
+        <span class="ell e3" data-parallax="0.34"></span>
+        <span class="arc" data-parallax="0.16"></span>
+        <span class="dot d1" data-parallax="0.2"></span>
+        <span class="dot d2 pale" data-parallax="0.3"></span>
+        <span class="dot d3" data-parallax="0.26"></span>
+      </div>
+    </section>
+
+    <div class="ruleline"></div>
+
+    <section class="atlas" id="experience" aria-labelledby="exp-h">
+      <h2 id="exp-h" class="sr-only">Experience</h2>
+      <div class="atlas-head"><span class="accent">Atlas</span><span>Positions — coordinates by date</span></div>
+
+      <article class="entry">
+        <div class="rail" aria-hidden="true"><span class="tick"></span><span class="coord">05·26</span></div>
+        <div class="body">
+          <span class="sr-only">05 / 2026 — Present</span>
+          <h2>Web3 Full-Stack Developer</h2>
+          <p class="org">Cyberscope by TAC</p>
+          <p>Contracts, on-chain integrations, React/Next frontends, security tooling.</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="rail" aria-hidden="true"><span class="tick"></span><span class="coord">24·26</span></div>
+        <div class="body">
+          <span class="sr-only">2024 — 2026</span>
+          <h2>Blockchain Developer &amp; Researcher</h2>
+          <p class="org">Sidroco Holdings LTD</p>
+          <p>NFT marketplace for 5G, Hyperledger Fabric prototypes, multinational EU projects.</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="rail" aria-hidden="true"><span class="tick"></span><span class="coord">23·25</span></div>
+        <div class="body">
+          <span class="sr-only">2023 — 2025</span>
+          <h2>Lecturer &amp; Academic Partner</h2>
+          <p class="org">University of Derby / Mediterranean College</p>
+          <p>Networks &amp; Security, Web Scripting, Application Development.</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="rail" aria-hidden="true"><span class="tick"></span><span class="coord">22·24</span></div>
+        <div class="body">
+          <span class="sr-only">2022 — 2024</span>
+          <h2>Blockchain &amp; Full-Stack Developer</h2>
+          <p class="org">University of Nicosia / IFF</p>
+          <p>Large-scale Next.js / NestJS / Docker applications and a Web3 NFT marketplace.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="atlas" aria-labelledby="edu-h">
+      <h2 id="edu-h" class="sr-only">Education &amp; Fellowships</h2>
+      <div class="atlas-head"><span class="accent">Atlas</span><span>Education &amp; fellowships</span></div>
+
+      <article class="entry">
+        <div class="rail" aria-hidden="true"><span class="tick"></span><span class="coord">20·22</span></div>
+        <div class="body">
+          <span class="sr-only">2020 — 2022</span>
+          <h2>MSc Data &amp; Web Science</h2>
+          <p class="org">Aristotle University of Thessaloniki</p>
+          <p>DeepMind Scholarship. Graph-embedding methods for blockchain fraud detection.</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="rail" aria-hidden="true"><span class="tick"></span><span class="coord">15·20</span></div>
+        <div class="body">
+          <span class="sr-only">2015 — 2020</span>
+          <h2>BSc Applied Informatics</h2>
+          <p class="org">University of Macedonia</p>
+          <p>Web3 thesis on academic credential verification.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="methods" aria-labelledby="meth-h">
+      <h2 id="meth-h">Methods</h2>
+      <div class="grid">
+        <div class="cell"><span class="n">01</span>Smart contracts</div>
+        <div class="cell"><span class="n">02</span>Graph-based ML</div>
+        <div class="cell"><span class="n">03</span>Full-stack Web3</div>
+        <div class="cell"><span class="n">04</span>Solidity · TypeScript</div>
+        <div class="cell"><span class="n">05</span>React / Next.js · NestJS</div>
+        <div class="cell"><span class="n">06</span>Docker · Hyperledger Fabric</div>
+      </div>
+    </section>
+
+    <section class="contact" aria-labelledby="contact-h">
+      <h2 id="contact-h">Contact</h2>
+      <p class="links">
+        <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+        <a href="https://github.com/gmixoulis">github.com/gmixoulis</a>
+        <a href="https://www.linkedin.com/in/george-michoulis/">linkedin.com/in/george-michoulis</a>
+        <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&amp;hl=el">Google Scholar</a>
+      </p>
+    </section>
+  </main>
+
+  <footer class="draft-footer">
+    <nav class="foot-nav" aria-label="Footer"><a href="index.html">All concepts</a><a href="terrarium.html">03 Terrarium →</a></nav>
+    <p class="note">Draft study — sample resume content, no live-site change.</p>
+  </footer>
+
+  <script src="motion.js" defer></script>
+</body>
+</html>

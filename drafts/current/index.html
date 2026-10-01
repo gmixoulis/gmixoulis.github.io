@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Current. An independent, motion-led portfolio concept for George Michoulis, blockchain developer and researcher.">
+<title>George Michoulis — Current</title>
+<link rel="preload" href="assets/plex.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/coast.png" as="image">
+<style>
+@font-face{font-family:Plex;src:url('assets/plex.woff2') format('woff2');font-weight:100 700;font-style:normal;font-display:swap}
+:root{--blue:#1939be;--deep:#152545;--sky:#e9eff8;--paper:#faf8f4;--peach:#ffc3a3;--line:rgba(21,37,69,.22);--ease:cubic-bezier(.23,1,.32,1)}
+*{box-sizing:border-box}html{scroll-behavior:auto;scroll-padding-top:100px}body{margin:0;background:var(--paper);color:var(--deep);font-family:Plex,Arial,sans-serif;-webkit-font-smoothing:antialiased}h1,h2,h3,p{margin:0}a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;cursor:pointer}button:disabled{cursor:default}img{display:block;width:100%;height:100%;object-fit:cover}a,button{-webkit-tap-highlight-color:transparent}a:focus-visible,button:focus-visible{outline:3px solid currentColor;outline-offset:6px}::selection{background:var(--peach);color:var(--blue)}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.skip{position:fixed;top:12px;left:12px;z-index:100;background:var(--blue);color:white;padding:14px;transform:translateY(-200%)}.skip:focus{transform:none}.label{font-size:.69rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500}.underlink{border-bottom:1px solid currentColor;padding-bottom:3px}.arrow{display:inline-block;margin-left:.45em}.container{padding-inline:clamp(24px,6vw,96px)}
+.nav-shell{position:absolute;z-index:20;top:24px;left:24px;right:24px}.nav{max-width:1370px;margin:auto;border-radius:100px;background:rgba(249,251,255,.72);border:1px solid rgba(255,255,255,.8);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 3px 30px #20377f08;display:flex;align-items:center;justify-content:space-between;padding:13px 14px 13px 26px;color:var(--blue);gap:24px}.brand{font-size:1rem;letter-spacing:-.04em;display:flex;gap:8px;align-items:center;font-weight:600}.brand-symbol{width:21px;height:21px;border-radius:50%;border:1px solid currentColor;position:relative;display:inline-block}.brand-symbol::before{content:'';position:absolute;inset:5px;border-radius:50%;border:1px solid currentColor}.nav-links{display:flex;gap:28px;font-size:.8rem}.nav-links a:hover{text-decoration:underline;text-underline-offset:5px}.nav-contact{background:var(--blue);color:white;padding:13px 21px;border-radius:100px;font-size:.79rem;white-space:nowrap}.page-progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:30;background:var(--blue);transform-origin:left;transform:scaleX(0)}
+.hero-scroll{position:relative}.hero-sticky{position:relative;min-height:900px;height:100svh;overflow:hidden;background:#c8dbe9}.hero-scene{position:absolute;inset:0;will-change:transform}.scene-ambient{position:absolute;inset:-4%;transform:scale(1.02);transform-origin:50% 65%}.scene-ambient img{object-position:50% 63%}.hero-wash{position:absolute;inset:0;background:linear-gradient(180deg,#eaf3ff6b 0%,#eaf3ff38 42%,transparent 68%);pointer-events:none}.hero-copy{position:absolute;top:19%;left:6vw;right:6vw;z-index:2;color:var(--blue);transform-origin:25% 20%}.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:24px}.hero-eyebrow::before{content:'';height:5px;width:5px;border-radius:50%;background:currentColor}.hero-title{font-size:clamp(5rem,12.6vw,12rem);line-height:.85;letter-spacing:-.079em;font-weight:500}.hero-title .line{display:block;overflow:hidden;padding:0 .08em .11em 0;margin-bottom:-.08em}.hero-title .line span{display:inline-block;transform-origin:left bottom}.hero-title .line:last-child{margin-left:11vw;font-weight:400}.hero-bottom{position:absolute;left:6vw;right:6vw;bottom:5vh;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;z-index:3}.hero-intro{max-width:345px;padding:24px 28px;border:1px solid #ffffffad;border-radius:18px;background:rgba(250,248,244,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 14px 50px #1a2a4510}.hero-intro p{font-size:.89rem;line-height:1.6;margin-bottom:20px}.hero-intro a{font-size:.78rem;font-weight:500}.hero-corner{display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--blue);margin-bottom:40px}.scroll-seal{width:108px;height:108px;position:relative}.scroll-seal svg{width:100%;height:100%;fill:currentColor}.scroll-seal>span{position:absolute;inset:0;display:grid;place-items:center;font-size:34px}.hero-caption{position:absolute;right:35px;top:46%;writing-mode:vertical-rl;color:var(--blue);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase}.hero-curtain{position:absolute;inset:0;pointer-events:none;background:var(--sky);opacity:0}
+.motion .hero-scroll{height:220svh}.motion .hero-sticky{position:sticky;top:0;min-height:0;height:100svh}.motion .scene-ambient{animation:sea-drift 18s ease-in-out infinite alternate}.motion .scroll-seal svg{animation:turn 24s linear infinite}.motion .hero-title .line span{animation:arrive 1.15s var(--ease) both}.motion .hero-title .line:last-child span{animation-delay:.12s}.ambience-paused .ambient{animation-play-state:paused!important}
+@keyframes sea-drift{from{transform:scale(1.025) translate3d(0,0,0)}to{transform:scale(1.085) translate3d(-1%,-1%,0)}}@keyframes turn{to{transform:rotate(360deg)}}@keyframes arrive{from{transform:translate3d(0,115%,0) rotate(7deg);opacity:.1}to{transform:translate3d(0,0,0) rotate(0);opacity:1}}
+.about{position:relative;background:var(--blue);color:var(--paper);padding-block:clamp(88px,12vw,180px);overflow:hidden}.about-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:80px}.about-title{font-weight:400;letter-spacing:-.067em;font-size:clamp(3.9rem,8.7vw,9rem);line-height:.96;max-width:1180px}.about-title span{display:block}.about-title span:last-child{color:var(--peach);margin-left:10vw}.about-bottom{display:grid;grid-template-columns:1fr 1fr;gap:8vw;margin-top:75px;align-items:start}.about-bottom p{max-width:490px;line-height:1.7;font-size:1.05rem}.about-meta{display:flex;justify-content:flex-end;gap:45px;padding-top:6px}.about-meta p{font-size:.76rem;line-height:1.7}.about-meta span{display:block;font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;color:var(--peach)}.about-asterisk{font-size:55px;line-height:1}.ribbon{overflow:hidden;background:var(--peach);color:var(--blue);padding:24px 0;position:relative}.ribbon-track{display:flex;gap:3vw;width:max-content;font-size:clamp(2.5rem,6vw,6rem);font-weight:400;letter-spacing:-.055em;line-height:1.15}.ribbon-track span{white-space:nowrap}.ribbon-track i{font-style:normal;font-weight:300}
+.journey-scroll{background:var(--sky);position:relative}.journey-stage{padding-top:90px;padding-bottom:100px}.journey-heading{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:24px;margin-bottom:50px}.journey-layout{display:grid;grid-template-columns:1fr;gap:40px}.journey-intro h2{font-size:clamp(2.6rem,4vw,4.7rem);line-height:1.04;letter-spacing:-.06em;font-weight:400;max-width:360px;color:var(--blue)}.journey-intro>p{font-size:.85rem;line-height:1.7;max-width:260px;margin-top:24px}.step-nav{display:none;gap:9px;margin-top:45px}.step-nav a{height:43px;width:43px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;font-size:.7rem;background:transparent}.step-nav a[aria-current]{background:var(--blue);color:white;border-color:var(--blue)}.deck{display:grid;gap:28px;perspective:1600px}.chapter{position:relative;min-height:500px;display:flex;flex-direction:column;border-radius:24px;padding:38px;background:#fbfcff;border:1px solid #ffffffd9;box-shadow:0 20px 60px -30px #27396752;overflow:hidden;transform-origin:55% 65%}.chapter-research{color:var(--blue);background:rgba(255,255,255,.78);backdrop-filter:blur(20px)}.chapter-build{background:var(--blue);color:white;border-color:#4261d7}.chapter-teach{background:var(--peach);color:var(--deep);border-color:#ffd6bf}.chapter-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:38px}.chapter-top .index{font-size:.85rem}.chapter h3{font-size:clamp(2.6rem,4.2vw,4.4rem);letter-spacing:-.06em;font-weight:400;line-height:1;position:relative;z-index:1;max-width:75%}.chapter p{font-size:.87rem;line-height:1.7;max-width:370px;margin-top:24px;position:relative;z-index:1}.chapter .card-foot{margin-top:auto;padding-top:40px;display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid currentColor;margin-top:40px;font-size:.68rem;letter-spacing:.02em}.card-foot a{white-space:nowrap;border-bottom:1px solid currentColor;padding-bottom:4px}.card-symbol{position:absolute;right:26px;top:112px;font-size:clamp(8rem,13vw,13rem);line-height:1;font-weight:300;opacity:.18;pointer-events:none}.chapter-build .card-symbol{opacity:.32;transform:rotate(-10deg)}.chapter-teach .card-symbol{opacity:.14}.chapter h3 .emphasis{display:block}.journey-end{margin-top:35px;font-size:.7rem;color:var(--blue);text-align:right}.wide-motion .journey-scroll{height:330svh}.wide-motion .journey-stage{position:sticky;top:0;height:100svh;padding-top:5vh;padding-bottom:5vh;overflow:hidden}.wide-motion .journey-heading{margin-bottom:4vh}.wide-motion .journey-layout{grid-template-columns:.7fr 1.3fr;align-items:center;gap:7vw}.wide-motion .deck{height:min(65vh,610px);position:relative;display:block}.wide-motion .chapter{position:absolute;inset:0;min-height:0;height:100%;will-change:transform,opacity}.wide-motion .step-nav{display:flex}.wide-motion .journey-end{margin-top:3vh}
+.experience{padding-top:120px;padding-bottom:130px;background:var(--paper)}.section-kicker{display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;color:var(--blue)}.experience h2{font-size:clamp(3rem,6.2vw,6.4rem);line-height:1;letter-spacing:-.055em;font-weight:400;max-width:830px;margin-bottom:70px}.work-row{padding:34px 0;display:grid;grid-template-columns:.65fr 1.5fr 1.25fr 30px;gap:30px;border-top:1px solid var(--line);align-items:start}.work-date{font-size:.73rem;padding-top:8px;line-height:1.7}.work-row h3{font-size:1.55rem;letter-spacing:-.035em;font-weight:500;line-height:1.13}.work-role{font-size:.77rem;line-height:1.6;margin-top:11px}.work-description{font-size:.87rem;line-height:1.65}.work-arrow{font-size:25px;color:var(--blue)}.education-line{padding-top:60px;display:grid;grid-template-columns:.65fr 1.5fr 1.25fr 30px;gap:30px;border-top:1px solid var(--line)}.education-line h3{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:500}.education-line p{font-size:.86rem;line-height:1.7}.education-line strong{font-weight:500}.scholarship{display:inline-block;background:var(--peach);color:var(--deep);font-size:.65rem;border-radius:5px;padding:5px 9px;margin-top:10px}@media(hover:hover) and (pointer:fine){.work-row:hover .work-arrow{transform:translate(3px,-3px)}}
+.contact{background:var(--peach);padding-top:100px;padding-bottom:38px;position:relative;overflow:hidden;color:var(--blue)}.contact-main{display:grid;grid-template-columns:1.4fr .6fr;gap:8vw;align-items:center;min-height:65svh;padding-bottom:80px}.contact h2{font-size:clamp(3.8rem,7vw,7.5rem);font-weight:400;letter-spacing:-.066em;line-height:1;max-width:810px;margin-bottom:40px}.contact h2 em{font-family:Georgia,serif;font-weight:400;letter-spacing:-.06em}.email{display:inline-block;border-bottom:1px solid currentColor;font-size:clamp(1.2rem,2.5vw,2.5rem);letter-spacing:-.025em;overflow-wrap:anywhere;max-width:100%;padding-bottom:10px}.contact-image{position:relative;aspect-ratio:3/4;border-radius:150px 150px 14px 14px;overflow:hidden;box-shadow:0 25px 65px -35px #1939be6b}.contact-image img{object-position:75% 70%;transform:scale(1.1)}.contact-bottom{border-top:1px solid #1939be50;padding-top:25px;display:flex;align-items:center;justify-content:space-between;gap:25px;flex-wrap:wrap;font-size:.74rem}.socials{display:flex;gap:25px}.socials a:hover{text-decoration:underline;text-underline-offset:5px}.closing{margin-top:80px;font-size:clamp(2.6rem,10vw,10rem);line-height:.95;letter-spacing:-.065em;text-transform:uppercase;white-space:nowrap;font-weight:400;color:#1939be;overflow:hidden}.closing span{display:inline-block}.draft-note{margin-top:35px;font-size:.67rem;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.draft-note a{text-decoration:underline;text-underline-offset:4px}.ambience-button{position:fixed;bottom:18px;right:20px;z-index:25;border-radius:100px;border:1px solid #fff;background:#f9fbfff2;box-shadow:0 3px 20px #15254518;padding:11px 15px;font-size:.64rem;color:var(--deep);display:flex;align-items:center;gap:8px;backdrop-filter:blur(12px)}.ambience-button[hidden]{display:none}.ambience-icon{font-size:.8rem;letter-spacing:1px}
+@media(hover:hover) and (pointer:fine){.nav-contact{transition:background .2s ease,transform .2s var(--ease)}.nav-contact:hover{background:var(--deep);transform:translateY(-2px)}.work-arrow{transition:transform .2s var(--ease)}.card-foot a:hover{opacity:.7}}
+@media(min-width:1500px){.hero-title{font-size:12vw}.hero-copy{top:19%}}
+@media(max-width:899px){.hero-sticky{min-height:900px}.hero-copy{top:20%}.hero-title{font-size:13vw}.hero-title .line:last-child{margin-left:3vw}.hero-bottom{bottom:40px}.hero-corner{display:none}.about-top{margin-bottom:50px}.about-bottom{gap:30px}.about-meta{gap:24px}.journey-stage{padding-top:65px;padding-bottom:65px}.journey-intro{display:grid;grid-template-columns:1fr 1fr;gap:40px}.journey-intro>p{margin-top:5px}.deck{margin-top:15px}.chapter{min-height:450px}.chapter h3{font-size:3.5rem}.chapter p{font-size:.95rem;max-width:70%}.card-symbol{font-size:11rem}.work-row{grid-template-columns:110px 1fr 1fr;gap:20px}.work-arrow{display:none}.education-line{grid-template-columns:110px 1fr 1fr;gap:20px}.contact-main{gap:35px;grid-template-columns:1.3fr .7fr}.contact h2{font-size:6.4vw}.closing{font-size:9.7vw}}
+@media(max-width:599px){.nav-shell{top:15px;left:15px;right:15px}.nav{padding:10px 10px 10px 16px;gap:12px}.nav-links{display:none}.brand{font-size:.82rem}.nav-contact{font-size:.68rem;padding:11px 15px}.hero-sticky{height:100svh;min-height:760px}.motion .hero-scroll{height:175svh}.motion .hero-sticky{height:100svh;min-height:0}.hero-copy{top:22%;left:24px;right:18px}.hero-eyebrow{font-size:.57rem;letter-spacing:.1em;margin-bottom:22px}.hero-title{font-size:15vw;line-height:.98;letter-spacing:-.073em}.hero-title .line:last-child{margin-left:0;font-size:.94em}.hero-bottom{left:24px;right:24px;bottom:60px}.hero-intro{padding:18px 20px;max-width:300px}.hero-intro p{font-size:.8rem;margin-bottom:14px}.hero-intro a{font-size:.7rem}.hero-caption{display:none}.scene-ambient img{object-position:62% 50%}.about{padding-block:75px}.about-top{margin-bottom:45px}.about-title{font-size:14.5vw;line-height:1}.about-title span:last-child{margin-left:0}.about-bottom{grid-template-columns:1fr;gap:40px;margin-top:38px}.about-bottom p{font-size:.9rem}.about-meta{justify-content:flex-start;gap:38px}.about-meta p{font-size:.7rem}.about-asterisk{font-size:40px}.ribbon{padding:17px 0}.ribbon-track{font-size:2.6rem;gap:24px}.journey-heading{margin-bottom:30px}.journey-heading .label:last-child{display:none}.journey-intro{grid-template-columns:1fr;gap:18px}.journey-intro h2{font-size:2.9rem}.journey-intro>p{max-width:330px}.chapter{padding:26px;min-height:450px;border-radius:19px}.chapter-top{margin-bottom:34px}.chapter h3{font-size:2.8rem;max-width:90%}.chapter p{font-size:.84rem;max-width:100%}.card-symbol{font-size:8rem;right:13px;top:125px;opacity:.1}.chapter .card-foot{gap:12px;font-size:.6rem;padding-top:22px}.journey-end{text-align:left;font-size:.66rem}.experience{padding-top:72px;padding-bottom:75px}.section-kicker .label:last-child{display:none}.experience h2{font-size:2.95rem;margin-bottom:40px}.work-row{grid-template-columns:1fr;gap:16px;padding-block:27px}.work-date{font-size:.66rem;padding-top:0}.work-row h3{font-size:1.7rem}.work-description{font-size:.85rem;max-width:350px}.work-role{margin-top:8px}.education-line{grid-template-columns:1fr;gap:26px;padding-top:35px}.contact{padding-top:65px;padding-bottom:75px}.contact-main{grid-template-columns:1fr;gap:45px;padding-bottom:50px}.contact h2{font-size:14.3vw;margin-bottom:28px}.contact-image{width:150px;justify-self:end;aspect-ratio:3/4;border-radius:90px 90px 10px 10px;margin-right:15px}.email{font-size:1.4rem}.contact-bottom{font-size:.66rem;gap:18px}.socials{gap:22px}.closing{font-size:9.1vw;margin-top:45px}.draft-note{font-size:.62rem}.ambience-button{bottom:12px;right:12px;padding:10px 12px}.label{font-size:.63rem}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.page-progress{display:none}.hero-scroll,.journey-scroll{height:auto!important}.hero-sticky,.journey-stage{position:relative!important}.hero-scene,.hero-copy,.hero-bottom,.ribbon-track,.contact-image,.closing span,.about-title span{transform:none!important;opacity:1!important}.hero-curtain{opacity:0!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="page-progress" aria-hidden="true"></div>
+<header class="nav-shell"><nav class="nav" aria-label="Main navigation"><a class="brand" href="#home"><span class="brand-symbol" aria-hidden="true"></span>George Michoulis</a><div class="nav-links"><a href="#about">About</a><a href="#practice">Practice</a><a href="#experience">Experience</a></div><a class="nav-contact" href="#contact">Let’s talk <span aria-hidden="true">↗</span></a></nav></header>
+<main id="main">
+<section class="hero-scroll" id="home" aria-labelledby="hero-name"><div class="hero-sticky">
+ <div class="hero-scene" aria-hidden="true"><div class="scene-ambient ambient"><img src="assets/coast.png" alt="" fetchpriority="high" width="1536" height="1024"></div><div class="hero-wash"></div></div>
+ <div class="hero-copy"><p class="hero-eyebrow label">Independent mind. Connected world.</p><h1 class="hero-title" id="hero-name" aria-label="George Michoulis"><span class="line"><span>George</span></span><span class="line"><span>Michoulis.</span></span></h1></div>
+ <p class="hero-caption" aria-hidden="true">CURRENT / A PORTFOLIO IN MOTION / 07</p>
+ <div class="hero-bottom"><div class="hero-intro"><p>Blockchain developer &amp; researcher.<br>Turning complex questions into<br>systems people can use.</p><a class="underlink" href="#about">Follow the current <span class="arrow" aria-hidden="true">↓</span></a></div><a class="hero-corner" href="#about" aria-label="Scroll to about"><div class="scroll-seal" aria-hidden="true"><svg class="ambient" viewBox="0 0 100 100"><defs><path id="seal-path" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs><text font-family="Plex, sans-serif" font-size="8.3" letter-spacing="2.2"><textPath href="#seal-path">RESEARCH · BUILD · SHARE · </textPath></text></svg><span>↓</span></div><span class="label">Scroll to explore</span></a></div><div class="hero-curtain" aria-hidden="true"></div>
+</div></section>
+<section class="about container" id="about" aria-labelledby="about-title"><div class="about-top"><p class="label">01 / A little context</p><span class="about-asterisk" aria-hidden="true">✳</span></div><h2 class="about-title" id="about-title"><span>Curiosity.</span><span>Made useful.</span></h2><div class="about-bottom"><p>I work where research meets software: smart contracts, graph-based machine learning, and full-stack Web3. I like understanding a difficult problem, building something with that understanding, and sharing what I learn.</p><div class="about-meta"><p><span>Based in</span>Thessaloniki, Greece<br>Working remotely</p><p><span>Perspective</span>Researcher<br>Developer · Lecturer</p></div></div></section>
+<div class="ribbon" aria-hidden="true"><div class="ribbon-track"><span>Ask better questions <i>↗</i> Build useful things <i>↗</i> Pass it on <i>↗</i></span><span>Ask better questions <i>↗</i> Build useful things <i>↗</i> Pass it on <i>↗</i></span></div></div>
+<section class="journey-scroll" id="practice" aria-labelledby="practice-title"><div class="journey-stage container"><div class="journey-heading"><p class="label">02 / How I work</p><p class="label">Three perspectives. One practice.</p></div><div class="journey-layout"><div class="journey-intro"><h2 id="practice-title">Think it<br>through.<br>Make it real.</h2><p>From a research question to a working system, then back to the next question.</p><nav class="step-nav" aria-label="Choose a perspective"><a href="#research" data-step="0" aria-label="Research">01</a><a href="#build" data-step="1" aria-label="Build">02</a><a href="#teach" data-step="2" aria-label="Teach">03</a></nav></div><div class="deck">
+<article class="chapter chapter-research" id="research"><div class="chapter-top"><p class="label">Research / Find the signal</p><span class="index">01</span></div><span class="card-symbol" aria-hidden="true">?</span><h3>Good questions.<span class="emphasis">Better signals.</span></h3><p>My MSc explored graph-embedding methods for blockchain fraud detection, supported by a DeepMind Scholarship.</p><div class="card-foot"><span>Graph ML / Data &amp; Web Science</span><a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&amp;hl=el">Publications ↗</a></div></article>
+<article class="chapter chapter-build" id="build"><div class="chapter-top"><p class="label">Build / Connect the pieces</p><span class="index">02</span></div><span class="card-symbol" aria-hidden="true">↗</span><h3>From a contract.<span class="emphasis">To a product.</span></h3><p>Contracts, on-chain integrations, interfaces, and infrastructure. I build across the stack to make the whole system work.</p><div class="card-foot"><span>Solidity / TypeScript / React</span><a href="https://github.com/gmixoulis">On GitHub ↗</a></div></article>
+<article class="chapter chapter-teach" id="teach"><div class="chapter-top"><p class="label">Teach / Share the understanding</p><span class="index">03</span></div><span class="card-symbol" aria-hidden="true">✳</span><h3>Understanding<span class="emphasis">is for sharing.</span></h3><p>Lecturing in networks, security, and application development. Making complex ideas approachable is part of the work.</p><div class="card-foot"><span>University of Derby / Mediterranean College</span><span aria-hidden="true">↗</span></div></article>
+</div></div><p class="journey-end">Research sharpens the work. Building tests the ideas. Teaching makes them clearer.</p></div></section>
+<section class="experience container" id="experience" aria-labelledby="experience-title"><div class="section-kicker"><p class="label">03 / Selected experience</p><p class="label">2022 — Now</p></div><h2 id="experience-title">Ideas need somewhere<br>to become real.</h2>
+<article class="work-row"><p class="work-date">May 2026 — Present</p><div><h3>Cyberscope by TAC</h3><p class="work-role">Web3 Full-Stack Developer</p></div><p class="work-description">End-to-end Web3 products, on-chain integrations, React/Next frontends, and security tooling.</p><span class="work-arrow" aria-hidden="true">↗</span></article>
+<article class="work-row"><p class="work-date">2024 — 2026</p><div><h3>Sidroco Holdings</h3><p class="work-role">Blockchain Developer &amp; Researcher</p></div><p class="work-description">An NFT marketplace for 5G, Hyperledger Fabric prototypes, and multinational EU projects.</p><span class="work-arrow" aria-hidden="true">↗</span></article>
+<article class="work-row"><p class="work-date">2023 — 2025</p><div><h3>University of Derby<br>× Mediterranean College</h3><p class="work-role">Lecturer &amp; Academic Partner</p></div><p class="work-description">Networks and security, web scripting, and application development. Teaching with inclusive assessment.</p><span class="work-arrow" aria-hidden="true">↗</span></article>
+<article class="work-row"><p class="work-date">2022 — 2024</p><div><h3>University of Nicosia / IFF</h3><p class="work-role">Blockchain &amp; Full-Stack Developer</p></div><p class="work-description">Next.js, NestJS, and Docker applications, alongside a Web3 NFT marketplace.</p><span class="work-arrow" aria-hidden="true">↗</span></article>
+<div class="education-line"><h3>The foundations</h3><p><strong>MSc Data &amp; Web Science</strong><br>Aristotle University of Thessaloniki<br>2020–2022<br><span class="scholarship">DeepMind Scholarship</span></p><p><strong>BSc Applied Informatics</strong><br>University of Macedonia<br>2015–2020</p></div></section>
+<section class="contact container" id="contact" aria-labelledby="contact-title"><p class="label">04 / Keep the conversation moving</p><div class="contact-main"><div><h2 id="contact-title">Something<br>on your <em>mind?</em></h2><a class="email" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com <span aria-hidden="true">↗</span></a></div><div class="contact-image" aria-hidden="true"><img src="assets/coast.png" alt="" loading="lazy" width="1536" height="1024"></div></div><div class="contact-bottom"><span>George Michoulis / Thessaloniki, GR</span><nav class="socials" aria-label="Social links"><a href="https://github.com/gmixoulis">GitHub ↗</a><a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn ↗</a><a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&amp;hl=el">Scholar ↗</a></nav></div><p class="closing" aria-hidden="true"><span>Stay in the current.</span></p><div class="draft-note"><span>Current / Independent design study 07</span><a href="../scroll-studies/index.html">Explore the other studies ↗</a></div></section>
+</main>
+<button class="ambience-button" type="button" aria-pressed="false" hidden><span class="ambience-icon" aria-hidden="true">Ⅱ</span><span class="ambience-label">Pause ambience</span></button>
+<script>
+(() => {
+  const root = document.documentElement;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const wide = matchMedia('(min-width: 900px) and (min-height: 760px)');
+  const hero = document.querySelector('.hero-scroll');
+  const scene = document.querySelector('.hero-scene');
+  const heroCopy = document.querySelector('.hero-copy');
+  const heroBottom = document.querySelector('.hero-bottom');
+  const curtain = document.querySelector('.hero-curtain');
+  const about = document.querySelector('.about');
+  const words = [...document.querySelectorAll('.about-title span')];
+  const ribbon = document.querySelector('.ribbon');
+  const ribbonTrack = document.querySelector('.ribbon-track');
+  const journey = document.querySelector('.journey-scroll');
+  const cards = [...document.querySelectorAll('.chapter')];
+  const steps = [...document.querySelectorAll('[data-step]')];
+  const contact = document.querySelector('.contact');
+  const contactImage = document.querySelector('.contact-image');
+  const closing = document.querySelector('.closing span');
+  const progressBar = document.querySelector('.page-progress');
+  const ambience = document.querySelector('.ambience-button');
+  let frame = 0;
+  let ambiencePaused = false;
+  const clamp = value => Math.max(0, Math.min(1, value));
+  const ease = value => { const t = clamp(value); return t * t * (3 - 2 * t); };
+  const passage = el => clamp((innerHeight - el.getBoundingClientRect().top) / (innerHeight + el.offsetHeight));
+  const pinned = el => clamp(-el.getBoundingClientRect().top / Math.max(1, el.offsetHeight - innerHeight));
+
+  function render() {
+    frame = 0;
+    if (reduce.matches) return;
+    const h = pinned(hero);
+    scene.style.transform = `translate3d(0,${-h * 8}%,0) scale(${1 + h * .26})`;
+    heroCopy.style.transform = `translate3d(${-h * 7}%,${-h * 220}px,0) scale(${1 - h * .14})`;
+    heroCopy.style.opacity = 1 - ease(h / .58);
+    heroBottom.style.transform = `translate3d(0,${h * 150}px,0)`;
+    heroBottom.style.opacity = 1 - ease(h / .44);
+    curtain.style.opacity = ease((h - .78) / .22);
+    const a = clamp((innerHeight * .9 - about.getBoundingClientRect().top) / (innerHeight * .75));
+    words.forEach((word, i) => {
+      const t = ease((a - i * .18) / .72);
+      word.style.transform = `translate3d(${(i ? 1 : -1) * (1 - t) * 60}px,0,0)`;
+      word.style.opacity = .2 + t * .8;
+    });
+    ribbonTrack.style.transform = `translate3d(${-passage(ribbon) * 25}%,0,0)`;
+    if (wide.matches) {
+      const p = pinned(journey);
+      const first = ease((p - .18) / .2);
+      const second = ease((p - .60) / .2);
+      cards[0].style.transform = `translate3d(${-first * 115}%,${-first * 130}px,${-first * 160}px) rotateY(${first * 18}deg) rotateZ(${-first * 18}deg)`;
+      cards[0].style.opacity = 1 - first;
+      cards[1].style.transform = `translate3d(${(1 - first) * 110 - second * 115}%,${(1 - first) * 110 - second * 130}px,${-(1 - first) * 190 - second * 160}px) rotateY(${-(1 - first) * 24 + second * 18}deg) rotateZ(${(1 - first) * 15 - second * 18}deg)`;
+      cards[1].style.opacity = Math.min(first, 1 - second);
+      cards[2].style.transform = `translate3d(${(1 - second) * 110}%,${(1 - second) * 110}px,${-(1 - second) * 190}px) rotateY(${-(1 - second) * 24}deg) rotateZ(${(1 - second) * 15}deg)`;
+      cards[2].style.opacity = second;
+      const active = p < .28 ? 0 : p < .7 ? 1 : 2;
+      cards.forEach((card, i) => { card.inert = i !== active; });
+      steps.forEach((step, i) => { if (i === active) step.setAttribute('aria-current', 'step'); else step.removeAttribute('aria-current'); });
+    }
+    const c = passage(contact);
+    contactImage.style.transform = `translate3d(0,${(1 - c) * 90}px,0) rotate(${6 - c * 12}deg)`;
+    closing.style.transform = `translate3d(${(1 - c) * 6}%,0,0)`;
+    const distance = document.documentElement.scrollHeight - innerHeight;
+    progressBar.style.transform = `scaleX(${distance > 0 ? clamp(scrollY / distance) : 0})`;
+  }
+  function schedule() { if (!frame && !reduce.matches) frame = requestAnimationFrame(render); }
+  function layout() {
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0;
+    root.classList.toggle('motion', !reduce.matches);
+    root.classList.toggle('wide-motion', !reduce.matches && wide.matches);
+    cards.forEach(card => { card.style.transform = ''; card.style.opacity = ''; card.inert = false; });
+    if (reduce.matches) {
+      [scene, heroCopy, heroBottom, curtain, ...words, ribbonTrack, contactImage, closing, progressBar].forEach(el => { el.style.transform = ''; el.style.opacity = ''; });
+      steps.forEach(step => step.removeAttribute('aria-current'));
+    }
+    ambience.disabled = reduce.matches;
+    ambience.querySelector('.ambience-label').textContent = reduce.matches ? 'Reduced motion' : ambiencePaused ? 'Play ambience' : 'Pause ambience';
+    schedule();
+  }
+  steps.forEach(step => step.addEventListener('click', event => {
+    if (reduce.matches || !wide.matches) return;
+    event.preventDefault();
+    const target = [0.07, .48, .91][Number(step.dataset.step)];
+    scrollTo({ top: scrollY + journey.getBoundingClientRect().top + target * (journey.offsetHeight - innerHeight), behavior: 'smooth' });
+  }));
+  ambience.hidden = false;
+  ambience.addEventListener('click', () => {
+    ambiencePaused = !ambiencePaused;
+    root.classList.toggle('ambience-paused', ambiencePaused);
+    ambience.setAttribute('aria-pressed', String(ambiencePaused));
+    ambience.querySelector('.ambience-icon').textContent = ambiencePaused ? '▷' : 'Ⅱ';
+    ambience.querySelector('.ambience-label').textContent = ambiencePaused ? 'Play ambience' : 'Pause ambience';
+  });
+  addEventListener('scroll', schedule, { passive: true });
+  addEventListener('resize', schedule, { passive: true });
+  reduce.addEventListener('change', layout);
+  wide.addEventListener('change', layout);
+  document.fonts.ready.then(schedule);
+  layout();
+})();
+</script>
+<!-- Artwork: assets/coast.png, created with the built-in Imagegen tool for this draft.
+Prompt: Editorial architectural photograph of a peach plaster curved wall and whitewashed
+platform over a cobalt Aegean sea, expansive powder-blue sky, morning light, no people or text.
+All resume facts are drawn from src/data/profile.ts. This is a design draft, not a deployed change. -->
+</body>
+</html>

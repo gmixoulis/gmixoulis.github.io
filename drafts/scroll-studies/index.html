@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Six ways forward — George Michoulis resume design studies</title>
+  <meta name="description" content="Six standalone HTML resume design drafts for George Michoulis, blockchain developer and researcher. A comparison gallery of distinct visual directions." />
+  <link rel="stylesheet" href="common.css" />
+  <style>
+    :root {
+      --paper: #F4F1EA;
+      --ink: #1B1A17;
+      --accent: #E2662B;
+      --rule: rgba(27, 26, 23, 0.14);
+      --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+    }
+
+    body { padding-bottom: 0; }
+
+    .shell {
+      max-width: 68rem;
+      margin: 0 auto;
+      padding: clamp(1.6rem, 4vw, 3.4rem) clamp(1.1rem, 3vw, 2.2rem);
+    }
+
+    .masthead {
+      display: grid;
+      gap: 0.9rem;
+      padding-bottom: clamp(2rem, 5vw, 3.6rem);
+      border-bottom: 1px solid var(--rule);
+    }
+    .masthead .kicker {
+      font-size: 0.78rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+    .masthead h1 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(2.6rem, 9vw, 5.4rem);
+      line-height: 0.98;
+      letter-spacing: -0.02em;
+    }
+    .masthead .sub {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1.4rem;
+      font-size: 0.95rem;
+      opacity: 0.8;
+      align-items: baseline;
+    }
+    .masthead .sub .rule-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(1.1rem, 2.4vw, 1.6rem);
+      padding-top: clamp(1.6rem, 4vw, 2.6rem);
+    }
+    @media (min-width: 720px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .card {
+      position: relative;
+      display: block;
+      text-decoration: none;
+      border: 1px solid var(--rule);
+      background: #fff;
+      padding: 1.1rem;
+      display: grid;
+      gap: 0.9rem;
+      transition: transform 0.28s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .card:hover { transform: translateY(-4px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .card { transition: none; }
+    }
+
+    .card .mini {
+      position: relative;
+      height: clamp(9rem, 22vw, 12.5rem);
+      overflow: hidden;
+    }
+    .card .meta { display: grid; gap: 0.45rem; }
+    .card .num { font-size: 0.72rem; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.8; }
+    .card h2 { font-size: 1.25rem; letter-spacing: 0.01em; }
+    .card .feel { font-size: 0.9rem; opacity: 0.8; line-height: 1.45; }
+    .card .swatches { display: flex; gap: 0.45rem; }
+    .card .swatches i { width: 1.35rem; height: 1.35rem; border-radius: 50%; border: 1px solid rgba(0,0,0,0.14); }
+
+    .card .go {
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* ---- CSS miniatures (one per concept) ---- */
+    .mini p, .mini span { margin: 0; }
+    .m1 { background: #F4EFE6; }
+    .m1 .sq { position: absolute; top: 12%; right: 14%; width: 34%; aspect-ratio: 1; background: #E2662B; transform: rotate(45deg); }
+    .m1 .g { position: absolute; left: 9%; top: 8%; font-family: var(--font-display); font-size: 3.4rem; line-height: 1; color: #2B2D31; }
+    .m1 .rule { position: absolute; left: 9%; right: 9%; height: 1px; background: rgba(43,45,49,0.28); }
+    .m1 .r1 { top: 62%; } .m1 .r2 { top: 72%; } .m1 .r3 { top: 82%; }
+
+    .m2 { background: #0E1A2B; }
+    .m2 .ring { position: absolute; top: 50%; left: 58%; width: 62%; aspect-ratio: 1.6; border: 1px solid rgba(201,211,223,0.4); border-radius: 50%; transform: translate(-50%, -50%) rotate(-16deg); }
+    .m2 .ring2 { position: absolute; top: 50%; left: 62%; width: 46%; aspect-ratio: 1.5; border: 1px solid rgba(201,211,223,0.22); border-radius: 50%; transform: translate(-50%, -50%) rotate(24deg); }
+    .m2 .dot { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #F2B441; }
+    .m2 .d1 { top: 30%; left: 68%; } .m2 .d2 { top: 66%; left: 52%; }
+    .m2 .name { position: absolute; left: 9%; top: 34%; color: #C9D3DF; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+
+    .m3 { background: #E9F0E8; }
+    .m3 .leaf { position: absolute; top: 12%; right: 10%; width: 42%; height: 72%; background: #3E5C48; border-radius: 60% 60% 60% 60% / 90% 90% 30% 30%; transform: rotate(22deg); }
+    .m3 .leaf::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: #3E5C48; }
+    .m3 .coral { position: absolute; bottom: 14%; left: 12%; width: 14%; aspect-ratio: 1; border-radius: 50%; background: #F26D5B; }
+    .m3 .nm { position: absolute; left: 9%; top: 30%; color: #2f4639; font-size: 1.4rem; font-weight: 700; }
+
+    .m4 { background: #D9D4CC; }
+    .m4 .stripes { position: absolute; top: 10%; right: 10%; width: 40%; height: 62%; background: repeating-linear-gradient(45deg, #1C1B19 0 10px, transparent 10px 20px); }
+    .m4 .lime { position: absolute; top: 22%; left: 9%; width: 26%; height: 14%; background: #C6F53B; }
+    .m4 .bar { position: absolute; top: 44%; left: 9%; right: 9%; height: 3px; background: #1C1B19; }
+    .m4 .bar.b2 { top: 52%; } .m4 .bar.b3 { top: 60%; }
+    .m4 .n { position: absolute; bottom: 10%; left: 9%; font-size: 2.4rem; font-weight: 800; color: #1C1B19; line-height: 1; }
+
+    .m5 { background: #F7F8FA; }
+    .m5 .vio { position: absolute; top: 14%; left: 9%; width: 30%; aspect-ratio: 1; background: #6D4AFF; }
+    .m5 .outline { position: absolute; top: 34%; right: 8%; font-size: 1.9rem; font-weight: 800; color: transparent; -webkit-text-stroke: 1px #4A5568; letter-spacing: -0.02em; }
+    .m5 .line { position: absolute; left: 9%; right: 9%; height: 3px; background: #4A5568; }
+    .m5 .l1 { bottom: 24%; } .m5 .l2 { bottom: 15%; }
+
+    .m6 { background: #FFFFFF; }
+    .m6 .bar { position: absolute; left: 0; right: 0; height: 9%; background: #0A0A0A; }
+    .m6 .bar.t { top: 0; } .m6 .bar.b { bottom: 0; }
+    .m6 .enso { position: absolute; top: 50%; right: 12%; width: 38%; aspect-ratio: 1; background-image: url('../japan/enso-sumi.png'); background-size: contain; background-repeat: no-repeat; background-position: center; transform: translateY(-50%); opacity: 0.9; }
+    .m6 .verm { position: absolute; bottom: 22%; left: 9%; width: 34%; height: 3px; background: #C43C2C; }
+    .m6 .nm { position: absolute; left: 9%; top: 28%; color: #0A0A0A; font-size: 1.5rem; font-family: var(--font-display); }
+
+    .foot-note {
+      margin-top: clamp(2rem, 5vw, 3rem);
+      padding-top: 1.4rem;
+      border-top: 1px solid var(--rule);
+      font-size: 0.82rem;
+      opacity: 0.8;
+      max-width: 50em;
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to gallery</a>
+
+  <header class="draft-nav">
+    <span class="brand">George Michoulis · Resume studies</span>
+    <span class="tag">6 draft directions</span>
+  </header>
+
+  <main id="main" class="shell">
+    <div class="masthead">
+      <p class="kicker">Draft studies — visual prototypes only</p>
+      <h1>Six ways forward.</h1>
+      <div class="sub">
+        <span>George Michoulis</span>
+        <span class="rule-dot" aria-hidden="true"></span>
+        <span>Resume design studies</span>
+        <span class="rule-dot" aria-hidden="true"></span>
+        <span>Blockchain developer &amp; researcher</span>
+      </div>
+    </div>
+
+    <nav class="grid" aria-label="Concept gallery">
+
+      <a class="card" href="paper-strata.html">
+        <span class="mini m1" aria-hidden="true"><span class="sq"></span><span class="g">G</span><span class="rule r1"></span><span class="rule r2"></span><span class="rule r3"></span></span>
+        <span class="meta">
+          <span class="num">01 · Paper Strata</span>
+          <h2>Editorial broadsheet</h2>
+          <span class="feel">Oversize serif masthead, ruled columns, stacked paper sheets drifting on scroll.</span>
+          <span class="swatches"><i style="background:#F4EFE6"></i><i style="background:#2B2D31"></i><i style="background:#E2662B"></i></span>
+          <span class="go">View concept</span>
+        </span>
+      </a>
+
+      <a class="card" href="deep-field.html">
+        <span class="mini m2" aria-hidden="true"><span class="ring"></span><span class="ring2"></span><span class="dot d1"></span><span class="dot d2"></span><span class="name">G·M</span></span>
+        <span class="meta">
+          <span class="num">02 · Deep Field</span>
+          <h2>Observatory atlas</h2>
+          <span class="feel">Ink navy science book, orbital ellipses and numbered coordinates on hairline rules.</span>
+          <span class="swatches"><i style="background:#0E1A2B"></i><i style="background:#C9D3DF"></i><i style="background:#F2B441"></i></span>
+          <span class="go">View concept</span>
+        </span>
+      </a>
+
+      <a class="card" href="terrarium.html">
+        <span class="mini m3" aria-hidden="true"><span class="leaf"></span><span class="coral"></span><span class="nm">G·M</span></span>
+        <span class="meta">
+          <span class="num">03 · Terrarium</span>
+          <h2>Botanical modernism</h2>
+          <span class="feel">Flat moss leaves and cutout arches; experience as offset stepping stones.</span>
+          <span class="swatches"><i style="background:#E9F0E8"></i><i style="background:#3E5C48"></i><i style="background:#F26D5B"></i></span>
+          <span class="go">View concept</span>
+        </span>
+      </a>
+
+      <a class="card" href="concrete-light.html">
+        <span class="mini m4" aria-hidden="true"><span class="stripes"></span><span class="lime"></span><span class="bar"></span><span class="bar b2"></span><span class="bar b3"></span><span class="n">06</span></span>
+        <span class="meta">
+          <span class="num">04 · Concrete Light</span>
+          <h2>Architectural gallery</h2>
+          <span class="feel">Brutalist type, bold rules, and a scroll-driven horizontal career filmstrip.</span>
+          <span class="swatches"><i style="background:#D9D4CC"></i><i style="background:#1C1B19"></i><i style="background:#C6F53B"></i></span>
+          <span class="go">View concept</span>
+        </span>
+      </a>
+
+      <a class="card" href="slate-kinetic.html">
+        <span class="mini m5" aria-hidden="true"><span class="vio"></span><span class="outline">DEV</span><span class="line l1"></span><span class="line l2"></span></span>
+        <span class="meta">
+          <span class="num">05 · Slate Kinetic</span>
+          <h2>Swiss poster</h2>
+          <span class="feel">Stacked name lockup, outline words sliding sideways, a Swiss-grid work table.</span>
+          <span class="swatches"><i style="background:#F7F8FA"></i><i style="background:#4A5568"></i><i style="background:#6D4AFF"></i></span>
+          <span class="go">View concept</span>
+        </span>
+      </a>
+
+      <a class="card" href="sumi-cinema.html">
+        <span class="mini m6" aria-hidden="true"><span class="bar t"></span><span class="bar b"></span><span class="enso"></span><span class="verm"></span><span class="nm">G·M</span></span>
+        <span class="meta">
+          <span class="num">06 · Sumi Cinema</span>
+          <h2>Film title card</h2>
+          <span class="feel">Letterbox hero, a real ink enso, and one dark cinematic chapter transition.</span>
+          <span class="swatches"><i style="background:#FFFFFF"></i><i style="background:#0A0A0A"></i><i style="background:#C43C2C"></i></span>
+          <span class="go">View concept</span>
+        </span>
+      </a>
+
+    </nav>
+
+    <p class="foot-note">Draft studies with sample resume content. Nothing here changes the live site; these are visual prototypes for choosing a direction.</p>
+  </main>
+
+  <footer class="draft-footer">
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="index.html">All concepts</a>
+      <a href="paper-strata.html">01 Paper Strata</a>
+      <a href="deep-field.html">02 Deep Field</a>
+      <a href="terrarium.html">03 Terrarium</a>
+      <a href="concrete-light.html">04 Concrete Light</a>
+      <a href="slate-kinetic.html">05 Slate Kinetic</a>
+      <a href="sumi-cinema.html">06 Sumi Cinema</a>
+    </nav>
+    <p class="note">Draft studies — sample resume content, no live-site change. George Michoulis · gmixoulis@gmail.com</p>
+  </footer>
+</body>
+</html>

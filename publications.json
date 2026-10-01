@@ -6,7 +6,7 @@
     "authors": "N Nousias, G Tsakalidis, G Michoulis, S Petridou, K Vergidis",
     "publication": "Simulation Modelling Practice and Theory 121, 102642, 2022",
     "cited_by": {
-      "value": 33,
+      "value": 34,
       "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=4344624537370951382",
       "serpapi_link": "https://serpapi.com/search.json?cites=4344624537370951382&engine=google_scholar&hl=en",
       "cites_id": "4344624537370951382"
@@ -34,12 +34,26 @@
     "authors": "S Papangelou, K Christodoulou, G Michoulis",
     "publication": "The International Conference on Mathematical Research for Blockchain Economy …, 2023",
     "cited_by": {
-      "value": 6,
+      "value": 8,
       "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11681317484715115016",
       "serpapi_link": "https://serpapi.com/search.json?cites=11681317484715115016&engine=google_scholar&hl=en",
       "cites_id": "11681317484715115016"
     },
     "year": "2023"
+  },
+  {
+    "title": "FraMark: A Blockchain Marketplace for a 5G Network Management using Fractional NFTs",
+    "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=nk0lq8YAAAAJ&citation_for_view=nk0lq8YAAAAJ:YsMSGLbcyi4C",
+    "citation_id": "nk0lq8YAAAAJ:YsMSGLbcyi4C",
+    "authors": "G Michoulis, K Tsourdinis, G Niotis, K Kyranou, E Fountoukidis, T Lagkas, ...",
+    "publication": "2024 7th World Symposium on Communication Engineering (WSCE), 15-21, 2024",
+    "cited_by": {
+      "value": 2,
+      "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=9671337437471723734",
+      "serpapi_link": "https://serpapi.com/search.json?cites=9671337437471723734&engine=google_scholar&hl=en",
+      "cites_id": "9671337437471723734"
+    },
+    "year": "2024"
   },
   {
     "title": "Data security for smart cities",
@@ -55,18 +69,15 @@
     "year": "2025"
   },
   {
-    "title": "FraMark: A Blockchain Marketplace for a 5G Network Management using Fractional NFTs",
-    "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=nk0lq8YAAAAJ&citation_for_view=nk0lq8YAAAAJ:YsMSGLbcyi4C",
-    "citation_id": "nk0lq8YAAAAJ:YsMSGLbcyi4C",
-    "authors": "G Michoulis, K Tsourdinis, G Niotis, K Kyranou, E Fountoukidis, T Lagkas, ...",
-    "publication": "2024 7th World Symposium on Communication Engineering (WSCE), 15-21, 2024",
+    "title": "Benchmarking blockchain technologies for agricultural applications",
+    "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=nk0lq8YAAAAJ&citation_for_view=nk0lq8YAAAAJ:LkGwnXOMwfcC",
+    "citation_id": "nk0lq8YAAAAJ:LkGwnXOMwfcC",
+    "authors": "G Michoulis, K Tsourdinis, K Kyranou, C Eleftheriadis, EM Pechlivani, ...",
+    "publication": "2026 22nd International Conference on Distributed Computing in Smart Systems …, 2026",
     "cited_by": {
-      "value": 1,
-      "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=9671337437471723734",
-      "serpapi_link": "https://serpapi.com/search.json?cites=9671337437471723734&engine=google_scholar&hl=en",
-      "cites_id": "9671337437471723734"
+      "value": null
     },
-    "year": "2024"
+    "year": "2026"
   },
   {
     "title": "Unlocking 5G network slicing: a comprehensive survey on blockchain marketplace utilizing NFTs, AI, and advanced resource management",

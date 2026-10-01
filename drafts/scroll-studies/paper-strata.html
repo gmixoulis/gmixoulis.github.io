@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Paper Strata — George Michoulis resume study</title>
+  <meta name="description" content="Editorial broadsheet resume study for George Michoulis, blockchain developer and researcher." />
+  <link rel="stylesheet" href="common.css" />
+  <style>
+    :root {
+      --paper: #F4EFE6;
+      --ink: #2B2D31;
+      --accent: #E2662B;
+      --accent-text: #A74417;
+      --rule: rgba(43, 45, 49, 0.22);
+      --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
+      --font-label: 'Courier New', ui-monospace, monospace;
+    }
+
+    body { background: var(--paper); }
+
+    .masthead {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1.6rem;
+      justify-content: space-between;
+      padding: 1rem clamp(1.1rem, 4vw, 2.4rem);
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--font-label);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .masthead span { white-space: nowrap; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding: clamp(2.4rem, 7vw, 5.5rem) clamp(1.1rem, 4vw, 2.4rem) clamp(3rem, 7vw, 5rem);
+      border-bottom: 1px solid var(--rule);
+    }
+    .hero .name {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(3.4rem, 13vw, 9rem);
+      line-height: 0.88;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+    .hero .name em { font-style: italic; }
+    .hero .deck {
+      margin-top: 1.6rem;
+      max-width: 34ch;
+      font-size: 1.02rem;
+      line-height: 1.5;
+      opacity: 0.9;
+    }
+    .hero .labels {
+      margin-top: 1.4rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.6rem;
+      font-family: var(--font-label);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    /* abstract paper art: rotated orange square + sun disc */
+    .sunart { position: relative; height: clamp(12rem, 34vw, 20rem); }
+    .sunart .sq {
+      position: absolute;
+      top: 8%; right: 12%;
+      width: clamp(7rem, 24vw, 13rem);
+      aspect-ratio: 1;
+      background: var(--accent);
+      transform: rotate(45deg);
+    }
+    .sunart .disc {
+      position: absolute;
+      top: 2%; right: 30%;
+      width: clamp(4rem, 13vw, 7rem);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.9;
+    }
+    .sunart .ring {
+      position: absolute;
+      bottom: 0; right: 4%;
+      width: clamp(6rem, 20vw, 11rem);
+      aspect-ratio: 1;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      opacity: 0.4;
+    }
+    .sunart .paper {
+      position: absolute;
+      top: 0; left: 6%;
+      width: 46%;
+      height: 70%;
+      background: #fff;
+      box-shadow: 0 1px 0 var(--rule), 0 18px 40px -30px rgba(43,45,49,0.5);
+    }
+
+    /* chapter label */
+    .chapter-label {
+      font-family: var(--font-label);
+      font-size: 0.72rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      opacity: 0.8;
+      padding: 2rem clamp(1.1rem, 4vw, 2.4rem) 0.6rem;
+    }
+
+    /* sticky paper sheets */
+    .stack { padding: 0 clamp(1.1rem, 4vw, 2.4rem) clamp(2rem, 5vw, 4rem); }
+    .sheet {
+      position: relative;
+      background: #FCFAF4;
+      border: 1px solid var(--rule);
+      padding: clamp(1.4rem, 4vw, 2.6rem);
+      margin-bottom: 1.2rem;
+      display: grid;
+      gap: 0.8rem;
+      box-shadow: 0 1px 0 rgba(43,45,49,0.08), 0 22px 44px -38px rgba(43,45,49,0.55);
+    }
+    .sheet .num {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 10vw, 5.5rem);
+      line-height: 0.8;
+      color: var(--accent);
+      font-weight: 400;
+    }
+    .sheet .when {
+      font-family: var(--font-label);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+    .sheet h2 { font-family: var(--font-display); font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 400; }
+    .sheet .org { font-family: var(--font-label); font-size: 0.8rem; letter-spacing: 0.04em; opacity: 0.8; }
+    .sheet .body { max-width: 52ch; opacity: 0.85; }
+
+    @media (min-width: 720px) {
+      .hero { grid-template-columns: 1.4fr 1fr; align-items: end; }
+      .sheet { grid-template-columns: auto 1fr; column-gap: 1.6rem; align-items: start; }
+      .sheet .num { grid-row: span 4; }
+      @media (prefers-reduced-motion: no-preference) {
+        .sheet { position: sticky; }
+        .sheet:nth-child(1) { top: 6.5rem; z-index: 1; }
+        .sheet:nth-child(2) { top: 8rem; z-index: 2; }
+        .sheet:nth-child(3) { top: 9.5rem; z-index: 3; }
+        .sheet:nth-child(4) { top: 11rem; z-index: 4; }
+      }
+    }
+
+    /* ruled education columns */
+    .edu {
+      padding: clamp(2rem, 6vw, 4rem) clamp(1.1rem, 4vw, 2.4rem);
+      border-top: 1px solid var(--rule);
+      display: grid;
+      gap: 1.6rem;
+    }
+    .edu h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 400; }
+    .edu .cols { display: grid; gap: 1.4rem; }
+    @media (min-width: 720px) { .edu .cols { grid-template-columns: 1fr 1fr; } }
+    .edu .entry {
+      border-top: 1px solid var(--rule);
+      padding-top: 0.9rem;
+      display: grid;
+      gap: 0.3rem;
+    }
+    .edu .entry .when { font-family: var(--font-label); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; }
+    .edu .entry strong { font-family: var(--font-display); font-size: 1.2rem; font-weight: 400; }
+    .edu .entry span { opacity: 0.8; font-size: 0.92rem; }
+    .edu .entry .note { opacity: 1; color: var(--accent-text); font-family: var(--font-label); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* skills sheet */
+    .skills {
+      padding: clamp(2rem, 6vw, 4rem) clamp(1.1rem, 4vw, 2.4rem);
+      border-top: 1px solid var(--rule);
+      background: #fff;
+    }
+    .skills h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 400; }
+    .skills .band {
+      margin-top: 1.4rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 2rem;
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 3vw, 1.6rem);
+    }
+    .skills .band span { border-bottom: 1px solid var(--rule); padding-bottom: 0.2rem; }
+    .skills .band .hot { color: var(--accent-text); }
+
+    .contact {
+      padding: clamp(2rem, 6vw, 4rem) clamp(1.1rem, 4vw, 2.4rem);
+      border-top: 1px solid var(--rule);
+      display: grid;
+      gap: 1rem;
+    }
+    .contact h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 400; }
+    .contact .links { display: flex; flex-wrap: wrap; gap: 0.6rem 1.6rem; font-family: var(--font-label); font-size: 0.85rem; }
+    .contact a { text-decoration: none; border-bottom: 1px solid var(--accent); }
+    .contact a:hover { background: var(--accent-text); color: #fff; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="draft-nav">
+    <a class="brand" href="index.html">George Michoulis</a>
+    <span class="tag">Study 01 / 06</span>
+    <nav class="links" aria-label="Concept"><a href="index.html">All concepts</a><a href="deep-field.html">Next →</a></nav>
+  </header>
+
+  <main id="main">
+    <div class="masthead">
+      <span>Resume studies</span>
+      <span>Issue No. 06</span>
+      <span>Thessaloniki · Remote</span>
+      <span>Blockchain developer &amp; researcher</span>
+    </div>
+
+    <section class="hero" aria-labelledby="name1">
+      <div>
+        <h1 class="name" id="name1">George<br /><em>Michoulis</em></h1>
+        <p class="deck">Smart contracts, graph-based ML, and full-stack Web3 systems — built, taught, and written about.</p>
+        <div class="labels"><span>MSc Data &amp; Web Science</span><span>BSc Applied Informatics</span></div>
+        <a class="explore-link" href="#experience">Explore experience ↓</a>
+      </div>
+      <div class="sunart" aria-hidden="true">
+        <span class="paper" data-parallax="0.12"></span>
+        <span class="ring" data-parallax="0.3"></span>
+        <span class="disc" data-parallax="0.18"></span>
+        <span class="sq" data-parallax="0.24"></span>
+      </div>
+    </section>
+
+    <p class="chapter-label">Chapter I — Experience</p>
+    <section class="stack" id="experience" aria-label="Experience">
+      <article class="sheet">
+        <div class="num" aria-hidden="true">01</div>
+        <p class="when">05 / 2026 — Present</p>
+        <h2>Web3 Full-Stack Developer</h2>
+        <p class="org">Cyberscope by TAC</p>
+        <p class="body">End-to-end Web3 products — contracts, on-chain integrations, React/Next frontends, and security tooling.</p>
+      </article>
+      <article class="sheet">
+        <div class="num" aria-hidden="true">02</div>
+        <p class="when">2024 — 2026</p>
+        <h2>Blockchain Developer &amp; Researcher</h2>
+        <p class="org">Sidroco Holdings LTD</p>
+        <p class="body">An NFT marketplace for 5G, Hyperledger Fabric prototypes, and multinational EU research projects.</p>
+      </article>
+      <article class="sheet">
+        <div class="num" aria-hidden="true">03</div>
+        <p class="when">2023 — 2025</p>
+        <h2>Lecturer &amp; Academic Partner</h2>
+        <p class="org">University of Derby / Mediterranean College</p>
+        <p class="body">Networks &amp; Security, Web Scripting, and Application Development with inclusivity-first assessment.</p>
+      </article>
+      <article class="sheet">
+        <div class="num" aria-hidden="true">04</div>
+        <p class="when">2022 — 2024</p>
+        <h2>Blockchain &amp; Full-Stack Developer</h2>
+        <p class="org">University of Nicosia / IFF</p>
+        <p class="body">Large-scale Next.js / NestJS / Docker applications and a Web3 NFT marketplace.</p>
+      </article>
+    </section>
+
+    <p class="chapter-label">Chapter II — Education</p>
+    <section class="edu" aria-labelledby="edu-h">
+      <h2 id="edu-h">Education</h2>
+      <div class="cols">
+        <div class="entry">
+          <p class="when">2020 — 2022</p>
+          <strong>MSc Data &amp; Web Science</strong>
+          <span>Aristotle University of Thessaloniki</span>
+          <span class="note">DeepMind Scholarship</span>
+        </div>
+        <div class="entry">
+          <p class="when">2015 — 2020</p>
+          <strong>BSc Applied Informatics</strong>
+          <span>University of Macedonia</span>
+          <span class="note">Web3 thesis on academic credentials</span>
+        </div>
+      </div>
+    </section>
+
+    <p class="chapter-label">Chapter III — Practice</p>
+    <section class="skills" aria-labelledby="skills-h">
+      <h2 id="skills-h">Skills &amp; research</h2>
+      <div class="band">
+        <span class="hot">Smart contracts</span>
+        <span>Graph-based ML</span>
+        <span>Full-stack Web3</span>
+        <span>Solidity</span>
+        <span>TypeScript</span>
+        <span>React / Next.js</span>
+        <span>NestJS</span>
+        <span>Docker</span>
+        <span>Hyperledger Fabric</span>
+        <span class="hot">Security tooling</span>
+      </div>
+    </section>
+
+    <section class="contact" aria-labelledby="contact-h">
+      <h2 id="contact-h">Contact</h2>
+      <p class="links">
+        <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+        <a href="https://github.com/gmixoulis">github.com/gmixoulis</a>
+        <a href="https://www.linkedin.com/in/george-michoulis/">linkedin.com/in/george-michoulis</a>
+        <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ&amp;hl=el">Google Scholar</a>
+      </p>
+    </section>
+  </main>
+
+  <footer class="draft-footer">
+    <nav class="foot-nav" aria-label="Footer"><a href="index.html">All concepts</a><a href="deep-field.html">02 Deep Field →</a></nav>
+    <p class="note">Draft study — sample resume content, no live-site change.</p>
+  </footer>
+
+  <script src="motion.js" defer></script>
+</body>
+</html>
