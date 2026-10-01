@@ -54,15 +54,15 @@ export type Stats = { papers: number; cites: number; h: number; certs: number; f
 const citesClause = (s: Stats) => (s.cites > 0 ? `${s.cites} citation${s.cites === 1 ? '' : 's'} and an h-index of ${s.h} on Google Scholar` : '');
 
 export const skills = {
-  h: ['Soft skills,', 'with the evidence for each.'],
-  items: (s: Stats) => [
-    { area: 'teach', h: 'Teaching and explaining', p: "I lectured in Networks & Security, Web Scripting and Application Development at the University of Derby / Mediterranean College from 2023 to 2025. I give public talks on Web3 and edge tech, and gave two poster flash talks at GEC'22." },
-    { area: 'res', h: 'Research and analysis', p: `${Word(s.papers)} publications and two posters${citesClause(s) ? `, with ${citesClause(s)}` : ''}. I study how blockchains perform in real institutions.` },
-    { area: 'cur', h: 'Curiosity', p: 'I enter hackathons and bootcamps: 3rd place at Infinitech in 2022, and the Move/Sui Bootcamp Thessaloniki award.' },
-    { area: 'learn', h: 'Lifelong learning', p: `${s.certs} certificates so far, from CCNA and Rust to machine learning, cloud and security.` },
-    { area: 'cli', h: 'Working with clients', p: "As a freelance WordPress developer from 2018 to 2021, I met each client to plan the site's design and function." },
-    { area: 'team', h: 'Working across teams and countries', p: 'At Sidroco Holdings (2024-2026) I coordinated multinational EU projects and helped write Horizon, MSCA and KA2 proposals.' },
-    { area: 'lang', h: 'Languages', p: 'English at C2 (Michigan ECPE, 2018) and a TOEIC score of 860. I keep learning other languages.' },
+  h: ['How I work,', 'with proof for each.'],
+  items: (_s: Stats) => [
+    { area: 'teach', h: 'Leadership', p: 'I led the blockchain work at Sidroco, including an NFT marketplace for 5G networks, and the frontend work on large apps at the University of Nicosia, where I ran the agile sprints.' },
+    { area: 'res', h: 'Ownership', p: 'At Cyberscope I take products from the smart contract to the frontend and the Node services. VerDe went from my BSc thesis to a live system at verde.uom.gr.' },
+    { area: 'cur', h: 'Critical thinking', p: 'I build audit workflows and security tooling for smart contracts, and as first author I benchmarked blockchain platforms for agricultural use.' },
+    { area: 'learn', h: 'Communication', p: "I taught three modules at the University of Derby and Mediterranean College, gave two flash talks at GEC'22 and presented EU project work at workshops." },
+    { area: 'cli', h: 'Collaboration', p: 'I contributed to Horizon Europe, MSCA and KA2 proposals that secured EU funding, and co-authored the NANCY D3.3 deliverable with partners across Europe.' },
+    { area: 'team', h: 'Problem solving', p: "3rd place at the Infinitech hackathon in 2022, and 1st place in the University of Macedonia's Basic Research Awards for the VerDe dApp." },
+    { area: 'lang', h: 'Mentoring', p: 'I assessed students through oral exams, projects and personal feedback, so every student had a fair way to show what they had learned.' },
   ],
 };
 

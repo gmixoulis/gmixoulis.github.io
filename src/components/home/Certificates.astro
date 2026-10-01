@@ -9,6 +9,7 @@ const [h, dim] = certificates.h(stats);
   <div class="wrap head">
     <div>
       <h2 class="h2" id="h-cert" data-rv>{h} <span class="dim">{dim}</span></h2>
+      <p class="tldr er-only">{stats.certs} certificates, from Cisco networking to Rust.</p>
     </div>
     <div class="ctrl" data-rv>
       <button class="ibtn mag" id="prev" type="button" aria-label="Previous certificates"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg></button>
@@ -24,4 +25,9 @@ const [h, dim] = certificates.h(stats);
     </ul>
   </div>
   <div class="rbar" aria-hidden="true"><i id="rbar"></i></div>
+  <div class="certs-plain er-only">
+    <ul style="list-style:none;margin:1.4em 0 0;padding:0;display:grid;gap:.45em">
+      {certs.map((c) => <li><a href={c.src} target="_blank" rel="noopener noreferrer">{c.title}</a></li>)}
+    </ul>
+  </div>
 </section>

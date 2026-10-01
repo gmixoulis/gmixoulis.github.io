@@ -25,13 +25,29 @@ const $$ = <T extends Element = HTMLElement>(s: string) => [...document.querySel
   }
 })();
 
+/* Lenis smooth scroll: off in easy read (and for reduced motion). Toggled by the 'gm:read' event from nav.ts;
+   the easy-read CSS also forces scroll-behavior:auto and hides the WebGL stage. */
+const isRead = () => root.getAttribute('data-read') === 'easy';
 let lenis: Lenis | null = null;
-if (!reduce) {
-  const l = (lenis = new Lenis({ duration: 1.15 }));
+let raf: ((t: number) => void) | null = null;
+const makeLenis = () => {
+  if (reduce || isRead() || lenis) return;
+  const l = new Lenis({ duration: 1.15 });
   l.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add((t) => l.raf(t * 1000));
+  raf = (t) => l.raf(t * 1000);
+  gsap.ticker.add(raf);
   gsap.ticker.lagSmoothing(0);
-}
+  lenis = l;
+};
+const killLenis = () => {
+  if (!lenis) return;
+  lenis.destroy();
+  if (raf) gsap.ticker.remove(raf);
+  raf = null;
+  lenis = null;
+};
+makeLenis();
+document.addEventListener('gm:read', () => (isRead() ? killLenis() : makeLenis()));
 /* in-page anchors: smooth via Lenis, then move focus for keyboard users */
 const nav = $('#nav'), menu = $('.menu'), menuLabel = $('.menu span');
 document.addEventListener('click', (e) => {
@@ -158,7 +174,7 @@ secs.forEach((s, i) => {
 $$('.blk').forEach((r) => ScrollTrigger.create({ trigger: r, start: 'top 60%', end: 'bottom 60%', toggleClass: { targets: r, className: 'on' } }));
 gsap.fromTo('.chain-fill', { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: '.chain', start: 'top 60%', end: 'bottom 60%', scrub: 0.5 } });
 
-if (!reduce) {
+if (!reduce && !isRead()) {
   gsap.timeline({ delay: 0.1, defaults: { ease: 'expo.out', duration: 1.4 } })
     .from('.h1 .w>span', { yPercent: 108, stagger: 0.09 })
     .from('.latest', { y: 12, opacity: 0, duration: 1 }, 0.15)

@@ -5,6 +5,7 @@ import { work } from '@/data/profile';
 <section class="sec work" id="work" tabindex="-1" aria-labelledby="h-work">
   <div class="wrap work-g">
     <h2 class="h2" id="h-work" data-rv>{work.h[0]} <span class="dim">{work.h[1]}</span></h2>
+    <p class="tldr er-only">Six roles since 2018; now at Cyberscope by TAC.</p>
     <ol class="chain" data-rv>
       {work.roles.map((r) => (
         <li><article class="blk spot"><p class="when">{r.since && 'Since '}{r.when.map(([dt, label], i) => <>{i > 0 && '-'}<time datetime={dt}>{label}</time></>)}</p><div><h3>{r.title}</h3><p class="co">{r.org.map((o, i) => <>{i > 0 && ' '}{i > 0 && <span>/</span>}{i > 0 && ' '}{o}</>)}</p><p class="d">{r.d}</p></div></article></li>

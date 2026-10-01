@@ -11,6 +11,7 @@ const top = Math.max(0, ...papers.map((p) => p.cites));
     <div class="res-l">
       <p class="eyebrow" data-rv>Research</p>
       <h2 class="h2" id="h-res" data-rv>{h} <span class="dim">{dim}</span></h2>
+      <p class="tldr er-only">{stats.papers} papers and {stats.cites} citations; the most cited one verifies degrees on a blockchain.</p>
       <p class="note" data-rv>{research.note(stats)}<a class="lnk" href={profile.scholar} target="_blank" rel="noopener noreferrer">Scholar profile <span aria-hidden="true">↗</span></a></p>
       <div class="stage r" data-stage="4" aria-hidden="true"></div>
     </div>

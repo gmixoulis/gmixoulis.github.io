@@ -5,9 +5,15 @@ import { projects } from '@/data/profile';
 <section class="sec projects" id="projects" tabindex="-1" aria-labelledby="h-proj">
   <div class="wrap">
     <h2 class="h2" id="h-proj" data-rv>{projects.h[0]} <span class="dim">{projects.h[1]}</span></h2>
+    <p class="tldr er-only">Websites I built, most of them for universities.</p>
     <ul class="pgrid" data-rv>
       {projects.items.map((p) => (
         <li class:list={[p.wide && 'pj-f']}><figure class="pj"><div class="th"><img src={p.img} width={p.w} height={p.h} alt={p.alt} loading="lazy" decoding="async" data-freeze={p.freeze} /></div><figcaption><p class="pt"><b>{p.name}</b><span class="host">{p.host}</span></p><p class="pd">{p.d}</p>{p.tag && <p class="tag">{p.tag}</p>}</figcaption></figure></li>
+      ))}
+    </ul>
+    <ul class="pj-plain er-only">
+      {projects.items.map((p) => (
+        <li><strong>{p.name}</strong> — {p.d} <a href={`https://${p.host}`} target="_blank" rel="noopener noreferrer">{p.host}</a></li>
       ))}
     </ul>
   </div>

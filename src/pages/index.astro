@@ -4,6 +4,7 @@ import path from 'node:path';
 import { Font } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/home/Hero.astro';
+import Summary from '@/components/home/Summary.astro';
 import About from '@/components/home/About.astro';
 import Skills from '@/components/home/Skills.astro';
 import Experience from '@/components/home/Experience.astro';
@@ -112,6 +113,7 @@ const jsonLd = {
     <Font cssVariable="--font-geist-mono" />
   </Fragment>
 
+  <div class="read-progress" aria-hidden="true"></div>
   <canvas id="gl" aria-hidden="true"></canvas>
   <div class="fallback" aria-hidden="true"></div>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
@@ -121,6 +123,7 @@ const jsonLd = {
 
   <main id="main">
     <Hero />
+    <Summary stats={stats} />
     <About />
     <Skills stats={stats} />
     <Experience />

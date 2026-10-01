@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import '../styles/easy-read.css';
+import { Font } from 'astro:assets';
 import Nav from '@/components/home/Nav.astro';
 
 interface Props {
@@ -79,6 +81,9 @@ const ldJson = jsonLd
       <link rel="alternate" type="application/rss+xml" title="Zen Garden" href="/garden/rss.xml" />
     )}
     {ldJson.map((s) => <script type="application/ld+json" set:html={s} />)}
+    {/* Easy read font: @font-face is emitted everywhere, but not preloaded; the file is fetched only when
+        html[data-read="easy"] text actually uses --font-atkinson. */}
+    <Font cssVariable="--font-atkinson" />
     <slot name="head" />
     <script is:inline>
       (function () {
@@ -90,6 +95,14 @@ const ldJson = jsonLd
           r.dataset.theme = dark ? 'dark' : 'light';
           r.style.colorScheme = dark ? 'dark' : 'light';
         } catch (e) {}
+        /* Easy read: ?read=easy sets+stores, ?read=off clears; stored value 'easy' only. The URL wins even if storage throws. */
+        var q = new URLSearchParams(location.search).get('read'), easy = q === 'easy';
+        try {
+          if (easy) localStorage.setItem('gm-read', 'easy');
+          else if (q === 'off') localStorage.removeItem('gm-read');
+          else easy = localStorage.getItem('gm-read') === 'easy';
+        } catch (e) {}
+        if (easy) r.dataset.read = 'easy';
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) r.classList.add('rm');
       })();
     </script>

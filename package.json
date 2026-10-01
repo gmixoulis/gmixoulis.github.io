@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@types/three": "0.169",
+    "axe-core": "^4.13.0",
     "puppeteer-core": "^25.8.0",
     "typescript": "^7.0.2",
     "ws": "^8.21.3"

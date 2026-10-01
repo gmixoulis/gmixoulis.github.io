@@ -79,6 +79,8 @@ function publicDirIndex() {
 export default defineConfig({
   site: 'https://george-michoulis.com',
   outDir: 'build',
+  // github-dark's comment colour is 3.05:1 on its background; the high-contrast variant passes AA.
+  markdown: { shikiConfig: { theme: 'github-dark-high-contrast' } },
   fonts: [
     // ponytail: Latin-only local files. The Google provider can't drop Shippori's 240 un-tagged
     // Japanese slices (subsets only filters tagged faces); CJK glyphs come from the Yuji Syuku text= subset.
@@ -102,6 +104,9 @@ export default defineConfig({
       weights: [400, 500, 600], styles: ['normal'], subsets: ['latin', 'latin-ext'] },
     { provider: fontProviders.google(), name: 'Geist Mono', cssVariable: '--font-geist-mono',
       weights: [400, 500], styles: ['normal'], subsets: ['latin', 'latin-ext'] },
+    // Easy read mode (opt-in, not preloaded): downloaded only when html[data-read="easy"] turns it on.
+    { provider: fontProviders.google(), name: 'Atkinson Hyperlegible Next', cssVariable: '--font-atkinson',
+      weights: [400, 700], styles: ['normal'], subsets: ['latin', 'latin-ext'] },
   ],
   integrations: [
     sitemap({
