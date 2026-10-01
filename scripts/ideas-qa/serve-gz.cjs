@@ -14,7 +14,8 @@ http.createServer((req, res) => {
   if (fs.existsSync(f) && fs.statSync(f).isDirectory()) f = path.join(f, 'index.html');
   if (!fs.existsSync(f)) { res.writeHead(404).end('not found'); return; }
   const type = types[path.extname(f).toLowerCase()] || 'application/octet-stream';
-  const headers = { 'Content-Type': type, 'Cache-Control': 'max-age=600' };
+  // HTML always revalidates so a rebuilt page shows on a normal reload; assets mimic GitHub Pages' 10 min.
+  const headers = { 'Content-Type': type, 'Cache-Control': type.startsWith('text/html') ? 'no-cache' : 'max-age=600' };
   const body = fs.readFileSync(f);
   if (compressible.test(type) && /\bgzip\b/.test(req.headers['accept-encoding'] || '')) {
     res.writeHead(200, { ...headers, 'Content-Encoding': 'gzip', Vary: 'Accept-Encoding' }).end(zlib.gzipSync(body));
