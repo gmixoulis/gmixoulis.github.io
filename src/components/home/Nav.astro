@@ -7,24 +7,30 @@
 const path = Astro.url.pathname;
 const home = path === '/';
 const garden = path.startsWith('/garden');
+/* The blog shows no header, only a way back: the blog index goes home, posts and tag pages go to the index. */
+const back = path.replace(/\/$/, '') === '/garden' ? { href: '/', label: 'Home' } : { href: '/garden/', label: 'Blog' };
 const sections = [
   ['about', 'About'], ['skills', 'Skills'], ['work', 'Experience'], ['research', 'Research'], ['certificates', 'Certificates'],
   ['projects', 'Projects'], ['activities', 'Activities'], ['linkedin', 'LinkedIn'], ['contact', 'Contact'],
 ];
 ---
 
+{garden ? (
+  <a class="back" href={back.href}><span aria-hidden="true">←</span>{back.label}</a>
+) : (<>
 {home && <a class="skip" href="#main">Skip to content</a>}
 <header class:list={['nav', !home && 'scrolled inner']} id="nav">
   <a class="brand" href={home ? '#top' : '/'}>George Michoulis</a>
   <button class="pill menu" type="button" aria-expanded="false" aria-controls="links"><span>Menu</span></button>
   <nav aria-label="Sections"><ul class="links" id="links">
     {sections.map(([id, label]) => <li><a href={home ? `#${id}` : `/#${id}`}>{label}</a></li>)}
-    <li class="ext"><a href="/garden/" class:list={[garden && 'on']} aria-current={garden ? 'page' : undefined}>Writing</a></li>
+    <li class="ext"><a href="/garden/">Blog</a></li>
     <li aria-hidden="true" class="ind"></li>
   </ul></nav>
   <a class="pill play" href="/play/" aria-label="Play Ledger Run, my CV as a platformer"><i aria-hidden="true"></i>Play</a>
   <button class="pill tg" id="theme" type="button" aria-label="Switch to light theme"><i aria-hidden="true"></i><span>Light</span></button>
 </header>
+</>)}
 
 <script>
   import '@/scripts/home/nav';
@@ -57,6 +63,11 @@ const sections = [
     --glow:rgba(58,79,208,.12);--spot:rgba(58,79,208,.06);--sel:rgba(58,79,208,.2);--shade:rgba(40,44,60,.28);
     --ft:rgba(11,135,147,.14);--fl:rgba(58,79,208,.12);--fr:rgba(122,63,207,.08);--beam:rgba(58,79,208,.16);
   }
+  .back{position:fixed;top:14px;left:var(--pad);z-index:30;height:38px;display:inline-flex;align-items:center;gap:8px;padding:0 15px;border-radius:10px;border:1px solid transparent;background:linear-gradient(var(--nav),var(--nav)) padding-box,var(--acc) border-box;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:var(--fg);font:500 14px var(--ui);text-decoration:none;transition:transform .16s var(--ease)}
+  .back span{transition:transform .25s var(--ease)}
+  .back:hover span{transform:translateX(-3px)}
+  .back:active{transform:scale(.97)}
+  .back:focus-visible{outline:2px solid var(--a2);outline-offset:3px}
   .skip{position:fixed;left:12px;top:-60px;z-index:50;background:var(--solid);color:var(--solid-fg);padding:8px 14px;border-radius:8px}
   .skip:focus{top:12px}
   .nav :focus-visible,.skip:focus-visible{outline:2px solid var(--a2);outline-offset:3px;border-radius:6px}

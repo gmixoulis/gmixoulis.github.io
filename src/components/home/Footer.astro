@@ -7,5 +7,5 @@ const { built } = Astro.props;
 <footer>
   <span>© {built.getFullYear()} {profile.footer}<span lang="el">{profile.greekName}</span>{profile.footerPlace}</span>
   <span>Updated <time datetime={built.toISOString().slice(0, 10)}>{built.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}</time></span>
-  <nav aria-label="Elsewhere on the site"><a href="/garden/">Writing</a><a href="/play/">Ledger Run</a></nav>
+  <nav aria-label="Elsewhere on the site"><a href="/garden/">Blog</a><a href="/play/">Ledger Run</a></nav>
 </footer>
