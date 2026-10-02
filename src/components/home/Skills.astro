@@ -8,9 +8,9 @@ const items = skills.items(Astro.props.stats);
   <div class="wrap">
     <h2 class="h2" id="h-skills" data-rv>{skills.h[0]} <span class="dim">{skills.h[1]}</span></h2>
     <div class="bento" data-rv>
-      {items.slice(0, 2).map((s) => <div class="sk panel spot" style={`grid-area:${s.area}`}><h3>{s.h}</h3><p>{s.p}</p></div>)}
+      {items.slice(0, 2).map((s) => <div class="sk panel spot" style={`grid-area:${s.area}`}><h3>{s.h}</h3><p>{s.p.split('**').map((t, i) => (i % 2 ? <b>{t}</b> : t))}</p></div>)}
       <div class="tile" data-stage="2" aria-hidden="true"></div>
-      {items.slice(2).map((s) => <div class="sk panel spot" style={`grid-area:${s.area}`}><h3>{s.h}</h3><p>{s.p}</p></div>)}
+      {items.slice(2).map((s) => <div class="sk panel spot" style={`grid-area:${s.area}`}><h3>{s.h}</h3><p>{s.p.split('**').map((t, i) => (i % 2 ? <b>{t}</b> : t))}</p></div>)}
     </div>
   </div>
 </section>

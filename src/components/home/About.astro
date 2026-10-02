@@ -1,19 +1,13 @@
 ---
-import { about } from '@/data/profile';
+import { about, type Stats } from '@/data/profile';
+interface Props { stats: Stats }
+const parts = about.body(Astro.props.stats).split('**');
 ---
 
 <section class="sec about" id="about" tabindex="-1" aria-labelledby="h-about">
-  <div class="wrap about-g">
-    <div>
-      <p class="eyebrow" data-rv>About</p>
-      <h2 class="h2" id="h-about" data-rv>{about.h[0]} <span class="dim">{about.h[1]}</span></h2>
-      <p class="body def" data-rv>{about.def}</p>
-      <p class="body" data-rv>{about.body}</p>
-    </div>
-    <div class="quotes">
-      {about.quotes.map((q) => (
-        <figure class="q" data-rv><blockquote><p><b>“</b>{q.text}<b>”</b></p></blockquote>{q.caption && <figcaption>{q.caption}</figcaption>}</figure>
-      ))}
-    </div>
+  <div class="wrap">
+    <p class="eyebrow" data-rv>About</p>
+    <h2 class="h2" id="h-about" data-rv>{about.h[0]} <span class="dim">{about.h[1]}</span></h2>
+    <p class="body one" data-rv>{parts.map((t, i) => (i % 2 ? <b>{t}</b> : t))}</p>
   </div>
 </section>

@@ -1,6 +1,6 @@
 # George Michoulis
 
-> George Michoulis (Greek: Γεώργιος Μιχούλης; also published as Georgios Michoulis) is a blockchain developer and researcher based in Thessaloniki, Greece. He builds smart contracts and full-stack Web3 products, publishes research on blockchain verification, governance and 5G marketplaces, and has lectured in networks, security and application development.
+> George Michoulis (Greek: Γεώργιος Μιχούλης; also published as Georgios Michoulis) is a software engineer based in Thessaloniki, Greece, moving into agentic software engineering (Software Engineer → Agentic Software Engineer). He builds full-stack and Web3 products, publishes research on blockchain verification, governance and 5G marketplaces, and has lectured in networks, security and application development.
 
 - Website: https://george-michoulis.com/
 - Email: gmixoulis@gmail.com

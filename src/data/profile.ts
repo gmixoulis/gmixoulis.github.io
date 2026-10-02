@@ -5,14 +5,14 @@
 
 export const site = {
   url: 'https://george-michoulis.com/',
-  title: 'George Michoulis · Blockchain developer and researcher',
+  title: 'George Michoulis · Software Engineer → Agentic Software Engineer',
   description:
-    'George Michoulis is a blockchain developer and researcher in Thessaloniki, Greece. Smart contracts, full-stack Web3 systems and blockchain research.',
+    'George Michoulis is a software engineer in Thessaloniki, Greece, moving into agentic software engineering. Full-stack and Web3 products, plus published blockchain research.',
   shortDescription:
-    'Blockchain developer and researcher in Thessaloniki, Greece. Smart contracts, full-stack Web3 systems and blockchain research.',
+    'Software Engineer → Agentic Software Engineer in Thessaloniki, Greece. Full-stack and Web3 products, plus blockchain research.',
   ogImage: 'https://george-michoulis.com/og.png',
   ogImageAlt:
-    'George Michoulis, blockchain developer and researcher: an iridescent glass block linked to a short chain of smaller blocks.',
+    'George Michoulis, Software Engineer → Agentic Software Engineer: an iridescent glass block linked to a short chain of smaller blocks.',
 };
 
 export const profile = {
@@ -23,7 +23,7 @@ export const profile = {
   linkedinPosts: 'https://www.linkedin.com/in/george-michoulis/recent-activity/all/',
   linkedinWidget: 'https://widgets.sociablekit.com/linkedin-profile-posts/iframe/97069',
   note: "I'm a human being with dyslexia, dysgraphia, ADHD, OCD and a short attention span. I built this site for people like me. If reading it already feels like a lot, I feel that too. We're all human.",
-  lede: 'Blockchain developer and researcher. I build smart contracts, graph-based ML and full-stack Web3 systems.',
+  lede: 'Software Engineer → Agentic Software Engineer',
   footer: 'George Michoulis (Georgios Michoulis, ',
   greekName: 'Γεώργιος Μιχούλης',
   footerPlace: '), Thessaloniki, Greece',
@@ -31,13 +31,11 @@ export const profile = {
 
 /** Headings are [text, dimmed continuation]. */
 export const about = {
-  h: ['I build blockchain systems', 'and study how well they work in practice.'],
-  def: 'George Michoulis is a blockchain developer and researcher based in Thessaloniki, Greece, who builds smart contracts and full-stack Web3 systems and studies how blockchains perform in real institutions.',
-  body: 'My BSc in Applied Informatics at the University of Macedonia ended with a thesis on verifying academic credentials on Ethereum. My MSc in Data and Web Science at Aristotle University of Thessaloniki was funded by a DeepMind scholarship, and my thesis there used graph embeddings to predict drug-target interactions. I write Solidity and TypeScript, build NFT and DeFi products, and work remotely.',
-  quotes: [
-    { text: 'I enjoy building and breaking things to understand how they work.', caption: 'I call it the hacker attitude.' },
-    { text: 'Lifelong learning is my way of life.' },
-  ],
+  h: ['Software Engineer →', 'Agentic Software Engineer.'],
+  /** Definitional sentence for structured data and AI answers (not shown on the page). */
+  def: 'George Michoulis is a software engineer based in Thessaloniki, Greece, moving into agentic software engineering. He builds full-stack and Web3 products and has published research on blockchain systems.',
+  /** The one paragraph shown. **bold** marks the key facts for skimming. */
+  body: (s: { papers: number }) => `I build full-stack and Web3 products at **Cyberscope** and have published **${s.papers} blockchain papers**. MSc in Data and Web Science, funded by a **DeepMind scholarship**.`,
 };
 
 const words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve',
@@ -57,13 +55,13 @@ const citesClause = (s: Stats) => (s.cites > 0 ? `${s.cites} citation${s.cites =
 export const skills = {
   h: ['How I work,', 'with proof for each.'],
   items: (_s: Stats) => [
-    { area: 'teach', h: 'Leadership', p: 'I led the blockchain work at Sidroco, including an NFT marketplace for 5G networks, and the frontend work on large apps at the University of Nicosia, where I ran the agile sprints.' },
-    { area: 'res', h: 'Ownership', p: 'At Cyberscope I take products from the smart contract to the frontend and the Node services. VerDe went from my BSc thesis to a live system at verde.uom.gr.' },
-    { area: 'cur', h: 'Critical thinking', p: 'I build audit workflows and security tooling for smart contracts, and as first author I benchmarked blockchain platforms for agricultural use.' },
-    { area: 'learn', h: 'Communication', p: "I taught three modules at the University of Derby and Mediterranean College, gave two flash talks at GEC'22 and presented EU project work at workshops." },
-    { area: 'cli', h: 'Collaboration', p: 'I contributed to Horizon Europe, MSCA and KA2 proposals that secured EU funding, and co-authored the NANCY D3.3 deliverable with partners across Europe.' },
-    { area: 'team', h: 'Problem solving', p: "3rd place at the Infinitech hackathon in 2022, and 1st place in the University of Macedonia's Basic Research Awards for the VerDe dApp." },
-    { area: 'lang', h: 'Mentoring', p: 'I assessed students through oral exams, projects and personal feedback, so every student had a fair way to show what they had learned.' },
+    { area: 'teach', h: 'Leadership', p: '**Led blockchain work** at Sidroco and **frontend teams** at the University of Nicosia.' },
+    { area: 'res', h: 'Ownership', p: '**Contract to frontend** at Cyberscope. Took **VerDe from thesis to a live system**.' },
+    { area: 'cur', h: 'Critical thinking', p: 'I build **smart-contract audit tooling** and **benchmarked blockchains** as first author.' },
+    { area: 'learn', h: 'Communication', p: "**Taught three university modules**; talks at GEC'22 and EU workshops." },
+    { area: 'cli', h: 'Collaboration', p: 'Worked on **EU proposals that won funding**; co-authored NANCY D3.3.' },
+    { area: 'team', h: 'Problem solving', p: "**3rd** at the Infinitech hackathon, **1st** in UoM's Basic Research Awards." },
+    { area: 'lang', h: 'Mentoring', p: '**Fair assessment**: oral exams, projects and personal feedback.' },
   ],
 };
 
@@ -261,7 +259,7 @@ export const person = {
   url: 'https://george-michoulis.com/',
   email: 'mailto:gmixoulis@gmail.com',
   image: 'https://george-michoulis.com/og.png',
-  jobTitle: 'Blockchain Developer and Researcher',
+  jobTitle: 'Software Engineer',
   description: about.def,
   identifier: { '@type': 'PropertyValue', propertyID: 'ORCID', value: '0000-0002-5139-448X', url: 'https://orcid.org/0000-0002-5139-448X' },
   homeLocation: { '@type': 'Place', name: 'Thessaloniki, Greece', address: { '@type': 'PostalAddress', addressLocality: 'Thessaloniki', addressCountry: 'GR' } },

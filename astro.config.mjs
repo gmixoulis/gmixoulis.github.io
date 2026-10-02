@@ -100,6 +100,9 @@ export default defineConfig({
     // Homepage (Cube). Latin fonts, so `subsets` filters the Google faces correctly.
     { provider: fontProviders.google(), name: 'Funnel Display', cssVariable: '--font-funnel',
       weights: [500, 600], styles: ['normal'], subsets: ['latin', 'latin-ext'] },
+    // Body text: designed for legibility (distinct b/d/p/q); headings and UI keep Funnel Display / Geist.
+    { provider: fontProviders.google(), name: 'Atkinson Hyperlegible Next', cssVariable: '--font-atkinson',
+      weights: [400, 700], styles: ['normal'], subsets: ['latin', 'latin-ext'] },
     { provider: fontProviders.google(), name: 'Geist', cssVariable: '--font-geist',
       weights: [400, 500, 600], styles: ['normal'], subsets: ['latin', 'latin-ext'] },
     { provider: fontProviders.google(), name: 'Geist Mono', cssVariable: '--font-geist-mono',

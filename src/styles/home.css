@@ -273,3 +273,7 @@ body{font-size:17px;line-height:1.7;word-spacing:.04em}
 .paper h3{font-size:17.5px;line-height:1.5}
 .venue,.plain span,.fine,.q figcaption,.socials{font-size:15px}
 .host,.tag,.card small{font-size:14px}
+/* One text per section: the paragraph reads in full colour with bold key facts for skimming. */
+body{font-family:var(--font-atkinson,var(--ui))}
+.body.one{color:var(--fg);max-width:52ch}
+.body b,.sk p b{color:var(--fg);font-weight:700}

@@ -110,6 +110,7 @@ const jsonLd = {
     <Font cssVariable="--font-funnel" preload={[{ style: 'normal', subset: 'latin' }]} />
     <Font cssVariable="--font-geist" preload={[{ weight: 400, style: 'normal', subset: 'latin' }]} />
     <Font cssVariable="--font-geist-mono" />
+    <Font cssVariable="--font-atkinson" preload={[{ weight: 400, style: 'normal', subset: 'latin' }]} />
   </Fragment>
 
   <div class="read-progress" aria-hidden="true"></div>
@@ -122,7 +123,7 @@ const jsonLd = {
 
   <main id="main">
     <Hero />
-    <About />
+    <About stats={stats} />
     <Skills stats={stats} />
     <Experience />
     <Research papers={sorted} stats={stats} />
