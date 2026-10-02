@@ -273,7 +273,9 @@ export function run(S: Stage, cv: HTMLCanvasElement) {
   if (S.reduced) addEventListener('resize', () => draw(t0 + 3000));
   else {
     raf = requestAnimationFrame(loop);
-    document.addEventListener('visibilitychange', () => { cancelAnimationFrame(raf); if (!document.hidden) { last = performance.now(); raf = requestAnimationFrame(loop); } });
+    // pause while the tab is hidden or Easy read is on
+    const sync = () => { cancelAnimationFrame(raf); if (!document.hidden && root.dataset.read !== 'easy') { last = performance.now(); raf = requestAnimationFrame(loop); } };
+    document.addEventListener('visibilitychange', sync); document.addEventListener('gm:read', sync);
   }
   requestAnimationFrame(() => cv.classList.add('on'));
 }

@@ -17,6 +17,9 @@ const $$ = <T extends Element = HTMLElement>(s: string) => [...document.querySel
 (async () => {
   try {
     await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
+    // Easy read hides the stage: don't create a GL context until the mode is turned off
+    const easy = () => root.dataset.read === 'easy';
+    if (easy()) await new Promise<void>((r) => { const f = () => { if (!easy()) { document.removeEventListener('gm:read', f); r(); } }; document.addEventListener('gm:read', f); });
     if (!document.createElement('canvas').getContext('webgl2')) throw new Error('no webgl2');
     (await import('./scene')).run(S, $<HTMLCanvasElement>('#gl'));
   } catch (e) {
