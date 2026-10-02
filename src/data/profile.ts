@@ -69,7 +69,7 @@ export const skills = {
 
 /** `when`: [datetime, label] pairs joined by "-"; `since` prefixes "Since". `org` parts are joined by a dimmed "/". */
 export const work = {
-  h: ['Six roles since 2018.', 'Web3 product teams, EU research, university teaching and client sites.'],
+  h: ['Experience.', 'Web3 product teams, EU research, university teaching and client sites.'],
   roles: [
     { since: true, when: [['2026-05', '05/2026']], title: 'Web3 Full-Stack Developer', org: ['Cyberscope by TAC'],
       d: 'I build Web3 products end to end: contracts, on-chain integrations, React and Next frontends, and security tooling.' },
