@@ -129,6 +129,8 @@ footer::before{content:'';position:absolute;inset:-40px 0 0;z-index:-1;pointer-e
 .fa{margin-left:10px;padding-left:10px;border-left:1px solid var(--line-2);color:var(--fg-2)}
 .also{max-width:62ch;margin:22px 18px 0}
 .pm b.hi{background:var(--acc);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* the light gradient's teal end is ~3.7:1 on the light background; a solid accent passes AA */
+[data-theme=light] .pm b.hi{background:none;color:var(--a2)}
 
 /* certificates */
 .certs{padding-left:0;padding-right:0}
