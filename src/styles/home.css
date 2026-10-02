@@ -277,3 +277,14 @@ body{font-size:17px;line-height:1.7;word-spacing:.04em}
 body{font-family:var(--font-atkinson,var(--ui))}
 .body.one{color:var(--fg);max-width:52ch}
 .body b,.sk p b{color:var(--fg);font-weight:700}
+/* Experience: one column, no side-by-side. The job chain, then Education and Awards as separate full-width boxes. */
+.work-g{grid-template-columns:minmax(0,1fr);gap:28px;max-width:920px}
+.box{padding:28px 32px;border-radius:18px;background:var(--panel);border:1px solid var(--line)}
+.box .big{margin:0 0 20px;font:600 24px/1.2 var(--display);letter-spacing:-.02em;color:var(--fg)}
+.box .plain{gap:18px;font-size:16px;line-height:1.6}
+.box .plain b{font-weight:600;color:var(--fg)}
+.box .plain span{display:block;font-size:15px;color:var(--fg-2)}
+@media (max-width:560px){.box{padding:22px 20px}}
+.chain>li.chain-fill::after{content:none}
+.chain>li:nth-last-child(2)::after{content:'genesis'}
+.chain{margin-bottom:8px}
