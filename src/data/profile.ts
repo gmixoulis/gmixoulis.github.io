@@ -149,24 +149,24 @@ export const hiddenPubs = [
 ];
 
 /**
- * Labels for the files in public/img/renamed, in display order. `featured` ones are on the rail.
+ * Labels for the files in public/img/renamed. Which ones show is decided by src/lib/certRank.ts, not here.
  * Files the rename workflow adds later get a label derived from their filename.
  */
 export const certificates = {
-  h: (s: Stats) => [`${s.certs} certificates.`, `${Word(s.featured)} are here, from both degrees to Cisco and Rust.`],
+  h: (s: Stats) => [`${s.certs} certificates.`, `The ${Word(s.featured).toLowerCase()} that matter most are here.`],
   items: [
-    { file: '1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg', title: 'MSc Data and Web Science', by: 'Aristotle University of Thessaloniki, 2022', w: 1240, h: 1755, featured: true },
-    { file: '1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg', title: 'BSc Applied Informatics', by: 'University of Macedonia', w: 1742, h: 2460, featured: true },
-    { file: 'Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png', title: 'Move/Sui Bootcamp Thessaloniki award', by: 'Move Bootcamp Thessaloniki', w: 3543, h: 3542, featured: true },
-    { file: 'Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg', title: 'Accelerated CCNA, 132 hours', by: 'University of Thessaly, 2020', w: 2175, h: 1439, featured: true },
-    { file: 'Certificate-Of-Completion_Rust-Developer.png', title: 'Certified Rust developer', by: 'W3Schools, 2025', w: 2342, h: 1656, featured: true },
-    { file: 'Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg', title: 'Machine learning and deep neural networks', by: 'Aristotle University of Thessaloniki, 2021', w: 1755, h: 1240, featured: true },
-    { file: 'Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg', title: 'How to get published with IEEE', by: 'IEEE, 2020', w: 1650, h: 1275, featured: true },
-    { file: 'Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg', title: 'Introduction to digital currencies', by: 'University of Nicosia, 2020', w: 1754, h: 1241, featured: true },
-    { file: 'Certificate-Of-Completion_Cloud-Engineering.png', title: 'Cloud engineering (Azure), 90 hours', by: 'Code.Hub, 2024', w: 2481, h: 3509, featured: true },
-    { file: 'Certificate-Of-Completion_NFT-Talents-Program.jpg', title: 'NFT talents program', by: 'Frankfurt School Blockchain Center, 2022', w: 1500, h: 844, featured: true },
-    { file: 'Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg', title: 'Launch event and RippleX workshop', by: 'University of Nicosia IFF, 2020', w: 1754, h: 1241, featured: true },
-    { file: 'Certificate-Of-Completion_Advanced-Ethical-Hacking.png', title: 'Advanced ethical hacking, 48 hours', by: 'Audax Cybersecurity, 2021', w: 800, h: 600, featured: true },
+    { file: '1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg', title: 'MSc Data and Web Science', by: 'Aristotle University of Thessaloniki, 2022', w: 1240, h: 1755 },
+    { file: '1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg', title: 'BSc Applied Informatics', by: 'University of Macedonia', w: 1742, h: 2460 },
+    { file: 'Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png', title: 'Move/Sui Bootcamp Thessaloniki award', by: 'Move Bootcamp Thessaloniki', w: 3543, h: 3542 },
+    { file: 'Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg', title: 'Accelerated CCNA, 132 hours', by: 'University of Thessaly, 2020', w: 2175, h: 1439 },
+    { file: 'Certificate-Of-Completion_Rust-Developer.png', title: 'Certified Rust developer', by: 'W3Schools, 2025', w: 2342, h: 1656 },
+    { file: 'Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg', title: 'Machine learning and deep neural networks', by: 'Aristotle University of Thessaloniki, 2021', w: 1755, h: 1240 },
+    { file: 'Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg', title: 'How to get published with IEEE', by: 'IEEE, 2020', w: 1650, h: 1275 },
+    { file: 'Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg', title: 'Introduction to digital currencies', by: 'University of Nicosia, 2020', w: 1754, h: 1241 },
+    { file: 'Certificate-Of-Completion_Cloud-Engineering.png', title: 'Cloud engineering (Azure), 90 hours', by: 'Code.Hub, 2024', w: 2481, h: 3509 },
+    { file: 'Certificate-Of-Completion_NFT-Talents-Program.jpg', title: 'NFT talents program', by: 'Frankfurt School Blockchain Center, 2022', w: 1500, h: 844 },
+    { file: 'Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg', title: 'Launch event and RippleX workshop', by: 'University of Nicosia IFF, 2020', w: 1754, h: 1241 },
+    { file: 'Certificate-Of-Completion_Advanced-Ethical-Hacking.png', title: 'Advanced ethical hacking, 48 hours', by: 'Audax Cybersecurity, 2021', w: 800, h: 600 },
     { file: 'Award_Academic-Achievement.jpg', title: 'Progress Award', by: 'Greek Ministry of Education, 2015', w: 2269, h: 1593 },
     { file: 'English-Certificate_English-Certificate-English-Proficiency.jpg', title: 'Certificate of Proficiency in English, C2', by: 'Michigan Language Assessment, 2018', w: 1532, h: 2163 },
     { file: 'Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg', title: 'TOEIC listening and reading, 860', by: 'ETS, 2018', w: 2284, h: 1620 },

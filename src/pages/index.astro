@@ -1,4 +1,5 @@
 ---
+import { rankCerts, isDegree } from '@/lib/certRank';
 import fs from 'node:fs';
 import path from 'node:path';
 import { Font } from 'astro:assets';
@@ -65,10 +66,14 @@ const certs: Cert[] = [
     return { file, title: sentence(rest.join(' ') || kind), by: sentence(kind) };
   }),
 ].map((c) => ({ ...c, src: `/img/renamed/${encodeURIComponent(c.file)}` }));
+/* Ranked by importance (src/lib/certRank.ts): the degrees, then the 6 most valuable are shown; the dialog lists all in this order. */
+const ranked = rankCerts(certs);
+let top = 0;
+ranked.forEach((c) => { c.featured = isDegree(c) || top++ < 6; });
 
 const built = new Date();
 const stats: Stats = {
-  papers: listed.length, cites, h, certs: certs.length, featured: certs.filter((c) => c.featured).length,
+  papers: listed.length, cites, h, certs: certs.length, featured: ranked.filter((c) => c.featured).length,
   asOf: built.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }),
 };
 const today = built.toISOString().slice(0, 10);
@@ -127,14 +132,14 @@ const jsonLd = {
     <Skills stats={stats} />
     <Experience />
     <Research papers={sorted} stats={stats} />
-    <Certificates certs={certs} stats={stats} />
+    <Certificates certs={ranked} stats={stats} />
     <Projects />
     <Activities />
     <LinkedIn />
     <Contact />
   </main>
   <Footer built={built} />
-  <CertDialog certs={certs} />
+  <CertDialog certs={ranked} />
 </BaseLayout>
 
 <script>
