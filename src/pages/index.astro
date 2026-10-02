@@ -4,7 +4,6 @@ import path from 'node:path';
 import { Font } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/home/Hero.astro';
-import Summary from '@/components/home/Summary.astro';
 import About from '@/components/home/About.astro';
 import Skills from '@/components/home/Skills.astro';
 import Experience from '@/components/home/Experience.astro';
@@ -123,7 +122,6 @@ const jsonLd = {
 
   <main id="main">
     <Hero />
-    <Summary stats={stats} />
     <About />
     <Skills stats={stats} />
     <Experience />

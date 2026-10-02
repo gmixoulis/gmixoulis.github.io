@@ -104,9 +104,6 @@ export default defineConfig({
       weights: [400, 500, 600], styles: ['normal'], subsets: ['latin', 'latin-ext'] },
     { provider: fontProviders.google(), name: 'Geist Mono', cssVariable: '--font-geist-mono',
       weights: [400, 500], styles: ['normal'], subsets: ['latin', 'latin-ext'] },
-    // Easy read mode (opt-in, not preloaded): downloaded only when html[data-read="easy"] turns it on.
-    { provider: fontProviders.google(), name: 'Atkinson Hyperlegible Next', cssVariable: '--font-atkinson',
-      weights: [400, 700], styles: ['normal'], subsets: ['latin', 'latin-ext'] },
   ],
   integrations: [
     sitemap({

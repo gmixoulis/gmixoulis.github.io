@@ -31,23 +31,6 @@ tb?.addEventListener('click', () => {
 });
 matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { if (!saved()) setTheme(os()); });
 setTheme(saved() ?? os());
-
-/* Easy read: one localStorage key, 'gm-read' ('easy' | absent; anything else ignored).
-   BaseLayout's inline bootstrap applies html[data-read="easy"] before first paint; this toggles it,
-   keeps the button in sync, and fires 'gm:read' so the stage and Lenis react. */
-const rb = document.getElementById('read');
-const setRead = (on: boolean) => {
-  if (on) root.setAttribute('data-read', 'easy'); else root.removeAttribute('data-read');
-  rb?.setAttribute('aria-pressed', String(on));
-  document.dispatchEvent(new CustomEvent('gm:read'));
-};
-rb?.addEventListener('click', () => {
-  const on = root.getAttribute('data-read') !== 'easy';
-  try { on ? localStorage.setItem('gm-read', 'easy') : localStorage.removeItem('gm-read'); } catch {}
-  setRead(on);
-});
-setRead(root.getAttribute('data-read') === 'easy');
-
 /* Menu (below 1180px): toggles the section list; Escape closes it and returns focus. */
 const nav = document.getElementById('nav');
 const menu = nav?.querySelector<HTMLButtonElement>('.menu');
