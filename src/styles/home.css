@@ -262,3 +262,14 @@ dialog::backdrop{background:rgba(5,5,6,.72);-webkit-backdrop-filter:blur(6px);ba
   .read-progress{display:block;animation:read-grow linear both;animation-timeline:scroll(root)}
   @keyframes read-grow{to{transform:scaleX(1)}}
 }
+/* Readability for everyone (dyslexia/ADHD-friendly sizing on the one page): larger running text, looser lines,
+   a touch of word spacing. Headings and layout unchanged; dates stay small so they keep to one line. */
+body{font-size:17px;line-height:1.7;word-spacing:.04em}
+.body{font-size:18px;line-height:1.7}
+.hero .note{font-size:16px;line-height:1.65}
+.lede{line-height:1.6}
+.sk p,.blk .d,.pd,.card p,.act p,.plain{font-size:16px;line-height:1.65}
+.co{font-size:16px}
+.paper h3{font-size:17.5px;line-height:1.5}
+.venue,.plain span,.fine,.q figcaption,.socials{font-size:15px}
+.host,.tag,.card small{font-size:14px}
