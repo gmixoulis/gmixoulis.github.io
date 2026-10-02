@@ -2,13 +2,20 @@
 import { projects } from '@/data/profile';
 ---
 
-<section class="sec projects" id="projects" tabindex="-1" aria-labelledby="h-proj">
-  <div class="wrap">
+<section class="sec projects slide" id="projects" tabindex="-1" aria-labelledby="h-proj">
+  <div class="wrap head">
     <h2 class="h2" id="h-proj" data-rv>{projects.h[0]} <span class="dim">{projects.h[1]}</span></h2>
-    <ul class="pgrid" data-rv>
+    <div class="ctrl" data-rv>
+      <button class="ibtn mag" id="prev" type="button" aria-label="Previous projects"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg></button>
+      <button class="ibtn mag" id="next" type="button" aria-label="Next projects"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 3 5 5-5 5" /></svg></button>
+    </div>
+  </div>
+  <div class="rail" id="rail" tabindex="0" role="region" aria-label="Projects. Scroll sideways, drag, or use the arrow buttons.">
+    <ul class="track">
       {projects.items.map((p) => (
-        <li class:list={[p.wide && 'pj-f']}><figure class="pj"><div class="th"><img src={p.img} width={p.w} height={p.h} alt={p.alt} loading="lazy" decoding="async" data-freeze={p.freeze} /></div><figcaption><p class="pt"><b>{p.name}</b><span class="host">{p.host}</span></p><p class="pd">{p.d}</p>{p.tag && <p class="tag">{p.tag}</p>}</figcaption></figure></li>
+        <li class="card pcard"><figure class="pj"><div class="th"><img src={p.img} width={p.w} height={p.h} alt={p.alt} loading="lazy" decoding="async" draggable="false" data-freeze={p.freeze} /></div><figcaption><p class="pt"><b>{p.name}</b><span class="host">{p.host}</span></p><p class="pd">{p.d}</p></figcaption></figure></li>
       ))}
     </ul>
   </div>
+  <div class="rbar" aria-hidden="true"><i id="rbar"></i></div>
 </section>

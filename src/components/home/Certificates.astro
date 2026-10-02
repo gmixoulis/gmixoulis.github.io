@@ -3,25 +3,27 @@ import { certificates, type Cert, type Stats } from '@/data/profile';
 interface Props { certs: Cert[]; stats: Stats }
 const { certs, stats } = Astro.props;
 const [h, dim] = certificates.h(stats);
+/* Gallery: the two degrees always first and biggest, then the other featured certificates. */
+const degree = (c: Cert) => /^1(Master|Bachelor)-Degree/.test(c.file);
+const featured = certs.filter((c) => c.featured);
+const big = featured.filter(degree), rest = featured.filter((c) => !degree(c));
 ---
 
 <section class="sec certs" id="certificates" tabindex="-1" aria-labelledby="h-cert">
-  <div class="wrap head">
-    <div>
+  <div class="wrap">
+    <div class="chead">
       <h2 class="h2" id="h-cert" data-rv>{h} <span class="dim">{dim}</span></h2>
+      <button class="tbtn mag" id="seeall" type="button" aria-haspopup="dialog" data-rv>See all {stats.certs}</button>
     </div>
-    <div class="ctrl" data-rv>
-      <button class="ibtn mag" id="prev" type="button" aria-label="Previous certificates"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg></button>
-      <button class="ibtn mag" id="next" type="button" aria-label="Next certificates"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 3 5 5-5 5" /></svg></button>
-      <button class="tbtn mag" id="seeall" type="button" aria-haspopup="dialog">See all {stats.certs}</button>
-    </div>
-  </div>
-  <div class="rail" id="rail" tabindex="0" role="region" aria-label="Certificates. Scroll sideways, drag, or use the arrow buttons.">
-    <ul class="track">
-      {certs.filter((c) => c.featured).map((c) => (
-        <li class="card"><a href={c.src} target="_blank" rel="noopener noreferrer" draggable="false"><img src={c.src} width={c.w} height={c.h} alt={`Scan of the certificate: ${c.title}`} loading="lazy" decoding="async" draggable="false" /></a><p><small>{c.by}</small>{c.title}</p></li>
+    <ul class="cbig" data-rv>
+      {big.map((c) => (
+        <li class="cg"><a href={c.src} target="_blank" rel="noopener noreferrer"><img src={c.src} width={c.w} height={c.h} alt={`Scan of the certificate: ${c.title}`} loading="lazy" decoding="async" /></a><p><small>{c.by}</small>{c.title}</p></li>
+      ))}
+    </ul>
+    <ul class="cgrid" data-rv>
+      {rest.map((c) => (
+        <li class="cg"><a href={c.src} target="_blank" rel="noopener noreferrer"><img src={c.src} width={c.w} height={c.h} alt={`Scan of the certificate: ${c.title}`} loading="lazy" decoding="async" /></a><p><small>{c.by}</small>{c.title}</p></li>
       ))}
     </ul>
   </div>
-  <div class="rbar" aria-hidden="true"><i id="rbar"></i></div>
 </section>

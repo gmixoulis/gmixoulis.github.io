@@ -170,17 +170,6 @@ header,main,footer{position:relative;z-index:1}
 /* activities: small isometric glyphs standing on one floor line */
 .shelf{list-style:none;margin:38px 0 0;padding:0;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:34px 0}
 .act{padding:0 10px}
-.gw{height:132px;display:flex;align-items:flex-end;justify-content:center;border-bottom:1px solid var(--line-2)}
-.gl{display:block;height:120px;width:auto;overflow:visible;-webkit-box-reflect:below 1px linear-gradient(transparent 58%,rgba(0,0,0,.2))}
-.gl polygon,.gl ellipse{stroke:url(#edge);stroke-width:1;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.gl .ft{fill:var(--ft)}.gl .fl{fill:var(--fl)}.gl .fr{fill:var(--fr)}
-.gl .slip{fill:var(--panel)}
-.gl .hi{stroke-width:1.6}
-.gl .mk{fill:var(--fg-2);stroke:none}
-.gl .ln path{fill:none;stroke:var(--fg-3);stroke-width:1.2;stroke-linecap:round;vector-effect:non-scaling-stroke}
-.gl .tx{font:600 .62px var(--display);fill:var(--fg);text-anchor:middle}
-.gl .tx.hi{fill:var(--a2)}
-.gl .beam{fill:url(#beam);stroke:none}.gl .pool{fill:var(--beam);stroke:none}
 .act h3{margin:40px 0 4px;font:600 16px/1.25 var(--display);letter-spacing:-.015em}
 .act p{margin:0;font-size:13.5px;line-height:1.45;color:var(--fg-2)}
 
@@ -247,7 +236,7 @@ dialog::backdrop{background:rgba(5,5,6,.72);-webkit-backdrop-filter:blur(6px);ba
 @media (max-width:560px){
   .bento{grid-template-columns:minmax(0,1fr);grid-template-areas:"cube" "teach" "res" "cur" "learn" "cli" "team" "lang"}
   .shelf{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 0}
-  .gw{height:104px}.gl{height:92px}.act h3{margin-top:30px}
+  .act h3{margin-top:30px}
   .paper{grid-template-columns:minmax(0,1fr)}.pm{grid-column:1;grid-row:auto;text-align:left;display:flex;gap:12px}
 }
 @media (prefers-reduced-motion:reduce){
@@ -288,3 +277,29 @@ body{font-family:var(--font-atkinson,var(--ui))}
 .chain>li.chain-fill::after{content:none}
 .chain>li:nth-last-child(2)::after{content:'genesis'}
 .chain{margin-bottom:8px}
+/* Certificates: a wide gallery. The two degrees are always first and biggest. */
+.chead{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.chead .h2{max-width:720px}
+.cbig,.cgrid{list-style:none;margin:32px 0 0;padding:0;display:grid;gap:18px}
+.cbig{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cgrid{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:18px}
+.cg a{display:block;padding:14px;border-radius:16px;background:var(--panel);border:1px solid var(--line);aspect-ratio:4/3;transition:border-color .35s,transform .6s var(--ease)}
+.cbig .cg a{aspect-ratio:5/4;padding:22px}
+.cg img{display:block;width:100%;height:100%;object-fit:contain}
+.cg:hover a{border-color:var(--line-2);transform:translateY(-3px)}
+.cg p{margin:12px 2px 0;font-size:16px;line-height:1.45}
+.cg small{display:block;color:var(--fg-3);font-size:14px;margin-bottom:2px}
+.cbig .cg p{font-size:18px}
+@media (max-width:860px){.cgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.cbig{grid-template-columns:minmax(0,1fr)}}
+/* Projects: a compact slider (the rail the certificates used before). */
+.projects.slide{padding-left:0;padding-right:0}
+.projects .head{padding:0;display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap}
+.pcard{width:clamp(240px,22vw,300px)}
+.pcard .th{height:150px}
+/* Activities: clean line icons instead of the isometric glyphs. */
+.shelf{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.act{padding:20px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
+.act .ic{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:linear-gradient(var(--panel),var(--panel)) padding-box,var(--acc) border-box;color:var(--a2)}
+.act h3{margin:14px 0 4px}
+@media (max-width:860px){.shelf{grid-template-columns:repeat(2,minmax(0,1fr))}}
