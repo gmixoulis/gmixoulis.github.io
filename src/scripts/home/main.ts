@@ -13,17 +13,28 @@ const $ = <T extends Element = HTMLElement>(s: string) => document.querySelector
 const $$ = <T extends Element = HTMLElement>(s: string) => [...document.querySelectorAll<T>(s)];
 
 /* the stage: after first paint, so the h1 stays the LCP (even the WebGL 2 probe waits: a first GL context can
-   take seconds on slow devices); no WebGL 2 shows the CSS fallback */
-(async () => {
+   take seconds on slow devices); no WebGL 2 shows the CSS fallback. Easy read mode (html[data-read=easy]) never
+   starts it; toggling the mode (the gm:read event) pauses it or starts/resumes it. */
+const easy = () => root.dataset.read === 'easy';
+let pause: ((on: boolean) => void) | null = null, booting = false;
+const boot = async () => {
+  if (pause || booting || easy() || root.classList.contains('no-gl')) return;
+  booting = true;
   try {
     await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
+    if (easy()) return;
     if (!document.createElement('canvas').getContext('webgl2')) throw new Error('no webgl2');
-    (await import('./scene')).run(S, $<HTMLCanvasElement>('#gl'));
+    pause = (await import('./scene')).run(S, $<HTMLCanvasElement>('#gl'));
+    pause(easy());
   } catch (e) {
     root.classList.add('no-gl');
     console.warn('Stage fallback:', (e as Error).message);
+  } finally {
+    booting = false;
   }
-})();
+};
+boot();
+document.addEventListener('gm:read', () => (pause ? pause(easy()) : boot()));
 
 /* Lenis smooth scroll: off in easy read (and for reduced motion). Toggled by the 'gm:read' event from nav.ts;
    the easy-read CSS also forces scroll-behavior:auto and hides the WebGL stage. */
