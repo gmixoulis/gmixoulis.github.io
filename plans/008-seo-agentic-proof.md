@@ -153,3 +153,28 @@ After `bun run build`:
   Steps 5 and the llms.txt part of 7 → orchestrator.
 - After deploy, the owner should: request indexing for `/` and `/garden/built-by-agents/` in Search Console;
   add the site to Bing Webmaster Tools; update the GitHub profile README to the current role.
+
+## Outcome (2026-10-03)
+**DONE. Deployed and checked live:** `/garden/built-by-agents/` returns 200, `/index.xml` returns 404, the `/play/` canonical is on
+george-michoulis.com, and the homepage Person `jobTitle` includes "Agentic Software Engineer".
+
+**Where it landed.** Another session committing in the same working tree picked up parts of this plan:
+- `714a076` (the Step 1 deletions)
+- `f3bf9fb` (the post, the profile.ts changes, the tag-page noindex)
+- `1fcfa7a` (the rest)
+
+Nothing is missing; only the history is split. For multi-file work here, use a separate worktree and stage files by name.
+
+**Deviations from the plan:**
+- **Step 2.** Moving /play/ to the canonical domain made its old Person node (with the "Blockchain Developer" titles
+  and the selfie) share the homepage `#person` @id. That would have merged the selfie into the main entity, against
+  the owner's headshot decision. The orchestrator replaced that node with `{"@id": "https://george-michoulis.com/#person"}`.
+- **Step 6.** Pi can't view images, so the orchestrator rewrote the card `alt` from the actual screenshot.
+- **Verification.** `axe.cjs` and `contrast.cjs` weren't run. Their URL lists don't include the new post, and they
+  still reference the removed Easy read mode. `page-check.cjs` passed on all five pages.
+
+**Follow-ups (not started):**
+- The `/play/` `<title>`, description and ProfilePage text still say "Blockchain developer and researcher".
+- Off-site work for the owner: request indexing in Search Console, add the site to Bing Webmaster Tools, update the GitHub profile README.
+- `axe.cjs` and `contrast.cjs` need the Easy read references removed, and `/garden/built-by-agents/` added to their lists.
+- The `plans/README.md` table has no rows for 005–007.
