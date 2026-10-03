@@ -13,7 +13,6 @@ const big = featured.filter(degree), rest = featured.filter((c) => !degree(c));
   <div class="wrap">
     <div class="chead">
       <h2 class="h2" id="h-cert" data-rv>{h} <span class="dim">{dim}</span></h2>
-      <button class="tbtn mag" id="seeall" type="button" aria-haspopup="dialog" data-rv>See all {stats.certs}</button>
     </div>
     <ul class="cbig" data-rv>
       {big.map((c) => (
@@ -24,6 +23,7 @@ const big = featured.filter(degree), rest = featured.filter((c) => !degree(c));
       {rest.map((c) => (
         <li class="cg"><a href={c.src} target="_blank" rel="noopener noreferrer"><img src={c.src} width={c.w} height={c.h} alt={`Scan of the certificate: ${c.title}`} loading="lazy" decoding="async" /></a><p><small>{c.by}</small>{c.title}</p></li>
       ))}
+      <li class="call"><button id="seeall" type="button" aria-haspopup="dialog">See all {stats.certs} certificates<span class="ar" aria-hidden="true">→</span></button></li>
     </ul>
   </div>
 </section>

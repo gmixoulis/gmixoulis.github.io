@@ -218,7 +218,7 @@ export const projects = {
 
 /** `glyph` picks the isometric drawing in Activities.astro. */
 export const activities = {
-  /** In order of importance: the first 4 are cards, the rest behind 'See all'. */
+  /** In order of importance: all eight are cards, two rows of four. */
   h: ['Outside work.', 'The ones that matter most first.'],
   items: [
     { glyph: 'agentic', h: 'Agentic AI', p: 'I build with **AI agents that write, test and ship code**.' },
