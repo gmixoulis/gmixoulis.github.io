@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a0a0b">
+<title>Inline · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki. An essay on his work since 2015, with small live 3D objects set into the text.">
+<!-- Dark only, like pro.html: the glyphs are lit glass and points of light, and they only read against a black page. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0b;--fg:#ecebef;--fg-2:#adadb7;--fg-3:#8d8d97;--line:rgba(255,255,255,.1);
+  --a1:#7ee8f2;--a2:#8ea2ff;--a3:#c49bff;--a4:#ffb9a3;--gold:#ffd2a1;
+  --acc:linear-gradient(90deg,var(--a1),var(--a2) 38%,var(--a3) 68%,var(--a4));
+  --serif:'Newsreader',Georgia,serif;--ui:'Geist',sans-serif;
+  --ease:cubic-bezier(.2,.8,.2,1);--lh:1.6;--gut:clamp(16px,5vw,40px);
+}
+*{box-sizing:border-box}
+html{background:var(--bg);-webkit-text-size-adjust:100%;overflow-x:clip}
+body{margin:0;position:relative;min-height:100vh;background:var(--bg);color:var(--fg);font:400 clamp(19px,.6vw + 14.5px,25px)/var(--lh) var(--serif);font-optical-sizing:auto;font-kerning:normal;-webkit-font-smoothing:antialiased;overflow-x:clip}
+::selection{background:rgba(142,162,255,.35)}
+:focus-visible{outline:2px solid var(--a2);outline-offset:3px;border-radius:3px}
+a{color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-decoration-color:rgba(236,235,239,.3);text-underline-offset:.2em;transition:text-decoration-color .25s,color .25s}
+a:hover{text-decoration-color:var(--a2)}
+
+/* the one canvas: sits behind the text, follows the scroll, and is only drawn where a glyph slot is */
+.stage{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+#gl{position:absolute;left:0;top:0;width:100%;height:100vh;height:100lvh;display:block;opacity:0;transition:opacity .8s}
+.gl #gl{opacity:1}
+.no-gl .stage{display:none}
+main,footer,.back{position:relative;z-index:1}
+
+.back{position:absolute;left:var(--gut);top:20px;font:400 13.5px/1 var(--ui);color:var(--fg-3);text-decoration:none;padding:6px 0}
+.back:hover{color:var(--fg)}
+.col{width:min(100% - 2 * var(--gut),30.5em);margin-inline:auto}
+
+/* title */
+.title{padding-top:clamp(112px,19vh,200px);text-align:center}
+h1{margin:0 auto;font:400 clamp(66px,20vw,206px)/.88 var(--serif);font-variation-settings:'opsz' 72;letter-spacing:-.042em;color:var(--fg);width:max-content;max-width:calc(100vw - 2 * var(--gut))}
+h1 .l{display:block}
+.stand{max-width:23em;margin:1.1em auto 0;font:italic 400 1.3em/1.4 var(--serif);color:var(--fg-2);text-wrap:balance}
+.how{max-width:30em;margin:1.7em auto 0;font:400 14px/1.55 var(--ui);color:var(--fg-3);text-wrap:balance}
+
+/* chapters */
+.ch{padding-top:clamp(104px,17vh,184px)}
+.ch-h{position:relative;margin:0 0 1.45em}
+.num{position:absolute;right:calc(100% + 1.4em);top:.55em;font:italic 400 1.05em/1 var(--serif);color:var(--fg-3);white-space:nowrap}
+h2{margin:0;font:400 2.15em/1.05 var(--serif);font-variation-settings:'opsz' 72;letter-spacing:-.028em;text-wrap:balance}
+.dek{margin:.5em 0 0;font-style:italic;font-size:1.1em;line-height:1.4;color:var(--fg-2);text-wrap:balance}
+p{margin:0 0 1em;position:relative;text-wrap:pretty}
+.run a{text-decoration-color:rgba(236,235,239,.16);text-underline-offset:.24em}
+.run a:hover{text-decoration-color:var(--a2)}
+
+/* drop cap: a live block with the letter on its front face */
+.dc{float:left;position:relative;width:calc(var(--lh) * 2em + 1cap);height:calc(var(--lh) * 2em + 1cap);margin:.31em .5em 0 0}
+.dc .dg{position:absolute;inset:0}
+.dc .dl{position:absolute;inset:0;display:grid;place-items:center;padding-top:.06em;font:400 2.65em/1 var(--serif);font-variation-settings:'opsz' 72;color:var(--fg);transition:opacity .28s}
+.dc.turn .dl{opacity:0}
+
+/* inline glyph slots: one cap-height tall, sitting on the baseline, so they scale with the type */
+.gw{white-space:nowrap}
+.gap{display:inline-block;width:0;height:0;vertical-align:top;transition:height .55s var(--ease)}
+.g{--w:1.05;display:inline-block;position:relative;vertical-align:baseline;width:calc(var(--w) * 1cap);height:1cap;margin:0 .1em;padding:0;border:0;border-radius:.14em;background:none;color:inherit;font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.g:focus-visible{outline-offset:.2em}
+.g.tight{margin-right:0}
+.g[data-g=slab]{--w:1.4}
+.g[data-g=enso]{--w:1.12}
+h1 .g{--w:1.18;margin:0 .02em 0 .03em;color:transparent;overflow:hidden;cursor:default}
+
+/* CSS stand-ins, shown until WebGL is up (and for good if it never is) */
+.g::before,.dg::before{content:'';position:absolute;inset:12%;transition:opacity .6s}
+.gl .g::before,.gl .dg::before{opacity:0}
+.g[data-g=cube]::before,.g[data-g=mail]::before,h1 .g::before,.dg::before{border-radius:20%;border:1.5px solid transparent;background:linear-gradient(#111114,#111114) padding-box,conic-gradient(var(--c,var(--a1)),var(--a2),var(--a3),var(--a4),var(--c,var(--a1))) border-box;box-shadow:0 0 .5em color-mix(in srgb,var(--c,var(--a2)) 40%,transparent)}
+.dg::before{inset:4%;border-radius:12%}
+.g[data-g=gem]::before{inset:22%;transform:rotate(45deg);border-radius:12%;background:linear-gradient(135deg,#fff3e2,var(--gold) 45%,var(--a3));box-shadow:0 0 .5em rgba(255,210,161,.45)}
+.g[data-g=cluster]::before{inset:-10%;background:radial-gradient(circle,#fff 0 6%,rgba(160,180,255,calc(.25 + var(--k,0) * .6)) 18%,transparent calc(40% + var(--k,0) * 22%))}
+.g[data-g=enso]::before{inset:8%;border-radius:50%;border:2px solid #f2e9d8;border-right-color:transparent;transform:rotate(-40deg)}
+.g[data-g=slab]::before{inset:14% 6%;border-radius:10%;border:1.5px solid var(--c);background:color-mix(in srgb,var(--c) 18%,#0e0e11)}
+
+/* the note that opens beneath a line */
+.note{position:absolute;left:0;right:0;z-index:2;display:block;white-space:normal;padding:.15em 0 .2em 1.1em;border-left:1px solid var(--nc,var(--a2));font:400 15px/1.5 var(--ui);color:var(--fg-2);text-align:left;opacity:0;transform:translateY(-8px);transition:opacity .3s,transform .5s var(--ease);pointer-events:none}
+.note.on{opacity:1;transform:none;pointer-events:auto}
+.note .k{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--fg-3)}
+.note .k::before{content:'';flex:none;width:6px;height:6px;border-radius:2px;background:var(--nc,var(--a2))}
+.note .k b{font-weight:500;background:var(--acc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.note .t{display:block;margin:.3em 0 .25em;font:400 19px/1.3 var(--serif);color:var(--fg);text-wrap:balance}
+.note .m{display:block;max-width:40em}
+.note img,.note canvas{display:block;width:min(100%,360px);height:auto;aspect-ratio:16/10;object-fit:cover;object-position:50% 0;border-radius:6px;border:1px solid var(--line);margin:.35em 0 .75em;background:#141417}
+.note img.sq{aspect-ratio:1;width:min(100%,150px);object-fit:contain;background:#fff}
+.note .copy{margin-top:.7em;height:34px;padding:0 14px;border:1px solid rgba(255,255,255,.18);border-radius:9px;background:rgba(255,255,255,.04);color:var(--fg);font:500 13.5px var(--ui);cursor:pointer}
+.note .copy:hover{border-color:rgba(255,255,255,.35)}
+
+.mail{color:var(--fg);text-decoration-color:rgba(142,162,255,.6)}
+footer{padding:clamp(96px,16vh,160px) 0 40px;font:400 13.5px/1.6 var(--ui);color:var(--fg-3)}
+footer p{margin:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+@media (max-width:1000px){
+  .num{position:static;display:block;margin:0 0 .7em}
+}
+@media (max-width:560px){
+  .stand{font-size:1.18em}
+  h2{font-size:1.9em}
+  .note .t{font-size:17px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before{transition:none!important}}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+<div class="stage" aria-hidden="true"><canvas id="gl"></canvas></div>
+<a class="back" href="index.html">← All ideas</a>
+
+<main>
+<header class="title col">
+  <h1><span class="l">Ge<span class="g" data-g="hero">o</span>rge</span> <span class="l">Michoulis</span></h1>
+  <p class="stand">I’m a blockchain developer and researcher in Thessaloniki, and this is an account of my work since 2015.</p>
+  <p class="how">The small objects set into the text are drawn live. Hover over one, or tap it, and a note opens under its line.</p>
+</header>
+
+<article class="col">
+<section class="ch" aria-labelledby="c1">
+  <header class="ch-h"><span class="num" aria-hidden="true">I</span><h2 id="c1">Proof of a degree</h2><p class="dek">Two degrees in Thessaloniki, and a thesis on proving you hold one.</p></header>
+  <p><span class="dc"><span class="dg" data-g="die" aria-hidden="true"></span><span class="dl">I</span></span> studied Applied Informatics at the University of Macedonia from 2015 to 2020. My BSc thesis was about verifying academic credentials on Ethereum. In 2020 I introduced VerDe, a system for verifying qualifications on Ethereum, at the Balkan Conference on Operational Research, and in 2020–2021 the university gave me a Basic Research grant <button class="g" type="button" data-g="gem" data-c="var(--gold)" data-k="Grant · 2020–2021" data-t="Basic Research grant" data-m="University of Macedonia." aria-label="Award details: Basic Research grant">
+</button>.</p>
+  <p>The MSc in Data and Web Science at Aristotle University of Thessaloniki <button class="g" type="button" data-g="enso" data-c="#f2e9d8" data-k="MSc · 2020–2022" data-t="MSc Data and Web Science" data-m="Aristotle University of Thessaloniki. Graph-embedding methods for blockchain fraud detection, funded by a DeepMind scholarship." aria-label="Degree details: MSc Data and Web Science"></button> came next, from 2020 to 2022, funded by a DeepMind scholarship <button class="g" type="button" data-g="gem" data-c="var(--gold)" data-k="Scholarship · 2020–2022" data-t="DeepMind Scholarship" data-m="Aristotle University of Thessaloniki, for the MSc in Data and Web Science." aria-label="Award details: DeepMind Scholarship"></button>. I worked on graph-embedding methods for detecting fraud on blockchains, and during the degree I also wrote a paper that applies graph embeddings to predicting drug–target interactions.</p>
+</section>
+
+<section class="ch" aria-labelledby="c2">
+  <header class="ch-h"><span class="num" aria-hidden="true">II</span><h2 id="c2">Thirty-two, eleven, seven</h2><p class="dek">Eight papers, and how often each one is cited.</p></header>
+  <p><span class="dc"><span class="dg" data-g="die" aria-hidden="true"></span><span class="dl">M</span></span>ost of my citations go to one paper <button class="g" type="button" data-g="cluster" data-cites="32" data-k="2022 · &lt;b&gt;32 citations&lt;/b&gt;" data-t="A process-aware approach for blockchain-based verification of academic qualifications" data-m="Simulation Modelling Practice and Theory 121, 102642." aria-label="Paper details, 32 citations"></button>, a process-aware approach to verifying academic qualifications on a blockchain, published in Simulation Modelling Practice and Theory in 2022. It follows my 2020 introduction to VerDe <button class="g" type="button" data-g="cluster" data-cites="11" data-k="2020 · &lt;b&gt;11 citations&lt;/b&gt;" data-t="Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe" data-m="XIV Balkan Conference on Operational Research." aria-label="Paper details, 11 citations"></button> at the Balkan Conference on Operational Research. In 2023 I turned to governance, with a framework for decentralized governance applied to Compound Finance <button class="g" type="button" data-g="cluster" data-cites="7" data-k="2023 · &lt;b&gt;7 citations&lt;/b&gt;" data-t="Exploring decentralized governance: a framework applied to Compound Finance" data-m="International Conference on Mathematical Research for Blockchain Economy." aria-label="Paper details, 7 citations"></button>. The 5G work came next. FraMark <button class="g" type="button" data-g="cluster" data-cites="1" data-k="2024 · 1 citation" data-t="FraMark: a blockchain marketplace for 5G network management using fractional NFTs" data-m="7th World Symposium on Communication Engineering (WSCE)." aria-label="Paper details, 1 citation"></button>, presented at the 7th World Symposium on Communication Engineering in 2024, is a marketplace for 5G network management built on fractional NFTs, and a survey of blockchain marketplaces for network slicing <button class="g" type="button" data-g="cluster" data-cites="0" data-k="2025 · 0 citations" data-t="Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management" data-m="IEEE ICCE 2025." aria-label="Paper details, 0 citations"></button> followed at IEEE ICCE 2025.</p>
+  <p>There are three more papers. One covers data security for smart cities <button class="g" type="button" data-g="cluster" data-cites="1" data-k="2025 · 1 citation" data-t="Data security for smart cities" aria-label="Paper details, 1 citation"></button> (2025), one compares permissioned and permissionless blockchains in higher education <button class="g" type="button" data-g="cluster" data-cites="0" data-k="2022 · 0 citations" data-t="Blockchain in higher education: permissioned and permissionless approaches" data-m="4th Summit on Gender Equality in Computing." aria-label="Paper details, 0 citations"></button> (2022), and the third is the drug–target interaction work from my MSc <button class="g" type="button" data-g="cluster" data-cites="0" data-k="2022 · 0 citations" data-t="Graph embedding and node features for drug-target interaction prediction" data-m="Aristotle University of Thessaloniki, MSc work." aria-label="Paper details, 0 citations"></button>. Two Greek-language theses on verifying academic titles with Ethereum, from 2020 and 2021, and startup work on how effective ledgers are in practice fill in the rest. The full list is on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ" target="_blank" rel="noopener">Google Scholar</a>.</p>
+</section>
+
+<section class="ch" aria-labelledby="c3">
+  <header class="ch-h"><span class="num" aria-hidden="true">III</span><h2 id="c3">Four jobs since 2022</h2><p class="dek">Product teams, EU research and a lecture hall, with the dates overlapping.</p></header>
+  <p><span class="dc"><span class="dg" data-g="die" aria-hidden="true"></span><span class="dl">T</span></span>he University of Nicosia and IFF <button class="g" type="button" data-g="cube" style="--c:var(--a4)" data-c="var(--a4)" data-k="2022 – 2024" data-t="Blockchain &amp; Full-Stack Developer" data-m="University of Nicosia / IFF. Next.js, NestJS and Docker applications, and a Web3 NFT marketplace." aria-label="Role details: Blockchain and Full-Stack Developer, University of Nicosia and IFF"></button> hired me in 2022 as a blockchain and full-stack developer. Until 2024 I built Next.js, NestJS and Docker applications there, along with a Web3 NFT marketplace. In June 2022 I also took third place at Crowdpolicy’s Infinitech Hackathon <button class="g" type="button" data-g="gem" data-c="var(--gold)" data-k="Award · June 2022" data-t="3rd place, Infinitech Hackathon" data-m="Run by Crowdpolicy." aria-label="Award details: third place, Infinitech Hackathon"></button>.</p>
+  <p>From 2023 to 2025 I was a lecturer and academic partner with the University of Derby and Mediterranean College <button class="g" type="button" data-g="cube" style="--c:var(--a3)" data-c="var(--a3)" data-k="2023 – 2025" data-t="Lecturer &amp; Academic Partner" data-m="University of Derby / Mediterranean College. Networks &amp; Security, Web Scripting, Application Development." aria-label="Role details: Lecturer and Academic Partner, University of Derby and Mediterranean College"></button>, teaching Networks &amp; Security, Web Scripting and Application Development. I also give public talks on Web3 and edge tech.</p>
+  <p>At Sidroco Holdings <button class="g" type="button" data-g="cube" style="--c:var(--a2)" data-c="var(--a2)" data-k="2024 – 2026" data-t="Blockchain Developer &amp; Researcher" data-m="Sidroco Holdings Ltd. An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ LMS and EU projects." aria-label="Role details: Blockchain Developer and Researcher, Sidroco Holdings"></button>, from 2024 to 2026, I worked as a blockchain developer and researcher on an NFT marketplace for 5G, prototypes on Hyperledger Fabric, an Erasmus+ learning management system and EU projects. In 2025 I received an award at the Move/Sui Bootcamp in Thessaloniki <button class="g" type="button" data-g="gem" data-c="var(--gold)" data-k="Award · 2025" data-t="Move/Sui Bootcamp award" data-m="Thessaloniki." data-img="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png" data-sq="1" data-alt="The Move Bootcamp Thessaloniki badge" aria-label="Award details: Move/Sui Bootcamp award"></button>.</p>
+  <p>Since May 2026 I’ve been a Web3 full-stack developer at Cyberscope by TAC <button class="g" type="button" data-g="cube" style="--c:var(--a1)" data-c="var(--a1)" data-k="05/2026 – present" data-t="Web3 Full-Stack Developer" data-m="Cyberscope by TAC. Web3 products end to end: contracts, on-chain integrations, React and Next frontends, security tooling." aria-label="Role details: Web3 Full-Stack Developer, Cyberscope by TAC"></button>. I build Web3 products end to end, from the contracts and on-chain integrations to the React and Next frontends and the security tooling.</p>
+</section>
+
+<section class="ch" aria-labelledby="c4">
+  <header class="ch-h"><span class="num" aria-hidden="true">IV</span><h2 id="c4">Things with a hostname</h2><p class="dek">Most of what I’ve built for other people lives on a university domain.</p></header>
+  <p><span class="dc"><span class="dg" data-g="die" aria-hidden="true"></span><span class="dl">W</span></span>hat I build runs on Solidity, TypeScript and the cloud, with NFT and DeFi products on one side and data science with graph embeddings on the other. Some of it has a public address. VerDe <button class="g" type="button" data-g="slab" style="--c:#7ea6ff" data-c="#7ea6ff" data-k="verde.uom.gr" data-t="VerDe" data-m="The contact page, with a map of the University of Macedonia. The menu has About, Demo, Publications, Team and Contact." data-img="../../img/portfolio/verde.uom.gr.PNG" data-alt="Screenshot of verde.uom.gr, the contact page with a map" aria-label="Site details: VerDe, verde.uom.gr"></button> has its own site at verde.uom.gr. For the University of Nicosia I built the metaverse course site <button class="g" type="button" data-g="slab" style="--c:#ff6a6a" data-c="#ff6a6a" data-k="metau.unic.ac.cy" data-t="University of Nicosia metaverse course" data-m="“The future of education is now. Decentralised, on-chain and in the metaverse”, beside a Connect Wallet button." data-img="../../img/portfolio/metau.unic.ac.cy.png" data-alt="Screenshot of metau.unic.ac.cy" aria-label="Site details: metau.unic.ac.cy"></button> and the sign-in page of its Accelerate platform <button class="g" type="button" data-g="slab" style="--c:#ff5050" data-c="#ff5050" data-k="stg.accelerate.unic.ac.cy" data-t="UNIC Accelerate" data-m="The sign-in page, next to an abstract composition of red and black circles." data-img="../../img/portfolio/accelerate.png" data-alt="Screenshot of the Accelerate sign-in page" aria-label="Site details: UNIC Accelerate"></button>. The Blockchain Benchmarking Framework <button class="g" type="button" data-g="slab" style="--c:#8a6bff" data-c="#8a6bff" data-k="bbf-gui.ddns.net" data-t="Blockchain Benchmarking Framework" data-m="A landing page for a framework that deploys and evaluates blockchain protocols. Sponsors: University of Nicosia, Ripple, XRP Ledger." data-img="../../img/portfolio/bbf-gui.ddns.net.gif" data-alt="Screenshot of bbf-gui.ddns.net" aria-label="Site details: Blockchain Benchmarking Framework"></button> has a landing page that names the University of Nicosia, Ripple and XRP Ledger as sponsors.</p>
+  <p>Closer to home I built two sites at Aristotle University, a Greek-language one for the Centre for European Legal Culture <button class="g" type="button" data-g="slab" style="--c:#e8705a" data-c="#e8705a" data-k="celc.web.auth.gr" data-t="Centre for European Legal Culture (ΚΕΝοΠ)" data-m="The Greek-language home page, with a stone arch bridge across the header." data-img="../../img/portfolio/celc.web.auth.gr.PNG" data-alt="Screenshot of celc.web.auth.gr" aria-label="Site details: celc.web.auth.gr"></button> and one for the EUDEM Jean Monnet Chair <button class="g" type="button" data-g="slab" style="--c:#7092e6" data-c="#7092e6" data-k="eudem.polsci.auth.gr" data-t="EUDEM Jean Monnet Chair" data-m="A slider titled Institutions over a row of EU flags. The menu has Staff Members, Activities and News." data-img="../../img/portfolio/eudem.polsci.auth.gr.PNG" data-alt="Screenshot of eudem.polsci.auth.gr" aria-label="Site details: eudem.polsci.auth.gr"></button>. At the University of Macedonia I built the site of MarLab <button class="g" type="button" data-g="slab" style="--c:#dc4c4c" data-c="#dc4c4c" data-k="marlab.ode.uom.gr" data-t="MarLab, the Marketing Laboratory" data-m="University of Macedonia. The menu has membership, research, education and publications." data-img="../../img/portfolio/marlab.ode.uom.gr.PNG" data-alt="Screenshot of marlab.ode.uom.gr" aria-label="Site details: marlab.ode.uom.gr"></button>, its Marketing Laboratory.</p>
+</section>
+
+<section class="ch" aria-labelledby="c5">
+  <header class="ch-h"><span class="num" aria-hidden="true">V</span><h2 id="c5">A folder of thirty-four</h2><p class="dek">Degrees, courses, workshops and a few prizes. Each title opens its scan.</p></header>
+  <p class="run"><span class="dc"><span class="dg" data-g="die" aria-hidden="true"></span><span class="dl">B</span></span>esides the two degrees, a <a href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" target="_blank" rel="noopener">BSc in Applied Informatics</a> and an <a href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" target="_blank" rel="noopener">MSc in Data and Web Science</a>, the folder holds the <a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png" target="_blank" rel="noopener">Move bootcamp award</a> and a school <a href="../../img/renamed/Award_Academic-Achievement.jpg" target="_blank" rel="noopener">progress award</a> from the Greek Ministry of Education. Most of the rest are courses: <a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" target="_blank" rel="noopener">a CCNA course</a>, <a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" target="_blank" rel="noopener">Rust development</a>, <a href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" target="_blank" rel="noopener">machine learning and deep neural networks</a>, <a href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png" target="_blank" rel="noopener">cloud engineering</a>, <a href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png" target="_blank" rel="noopener">advanced ethical hacking</a>, <a href="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png" target="_blank" rel="noopener">networking essentials</a>, <a href="../../img/renamed/Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg" target="_blank" rel="noopener">software development for telecommunication networks</a>, <a href="../../img/renamed/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg" target="_blank" rel="noopener">a cybersecurity e-learning academy</a>, <a href="../../img/renamed/Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg" target="_blank" rel="noopener">how to design and build a website</a>, <a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" target="_blank" rel="noopener">how to get published with IEEE</a>, <a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" target="_blank" rel="noopener">an introduction to digital currencies</a>, the <a href="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg" target="_blank" rel="noopener">NFT Talents program</a>, <a href="../../img/renamed/Certificate-Of-Completion_The-Hour-Of-Code.jpg" target="_blank" rel="noopener">the Hour of Code</a>, <a href="../../img/renamed/Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png" target="_blank" rel="noopener">entrepreneurship and the funding of new enterprises</a>, <a href="../../img/renamed/Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg" target="_blank" rel="noopener">digital skills for tourism</a>, PepsiCo School’s <a href="../../img/renamed/Certificate-Of-Completion_Discover-Customer.jpg" target="_blank" rel="noopener">Discover Customer</a>, the <a href="../../img/renamed/Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg" target="_blank" rel="noopener">European Legal Culture program</a> at Aristotle University and <a href="../../img/renamed/Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png" target="_blank" rel="noopener">a Greek e-learning course on marketing and branding</a>. The workshops and talks cover <a href="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg" target="_blank" rel="noopener">a RippleX workshop and launch event</a>, <a href="../../img/renamed/Certificate-Of-Participation_EY-Cyber-Day.jpg" target="_blank" rel="noopener">EY Cyber Day</a>, <a href="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg" target="_blank" rel="noopener">the GNU/Linux command line</a>, <a href="../../img/renamed/Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg" target="_blank" rel="noopener">VeChain ToolChain in healthcare</a>, <a href="../../img/renamed/Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg" target="_blank" rel="noopener">data analytics for healthcare cybersecurity</a>, <a href="../../img/renamed/Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg" target="_blank" rel="noopener">blockchain for the legal industry…</a>, <a href="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg" target="_blank" rel="noopener">blockchain in education, remote learning and social distancing…</a>, <a href="../../img/renamed/Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg" target="_blank" rel="noopener">processing data in the fog on the RAINBOW platform</a>, <a href="../../img/renamed/Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg" target="_blank" rel="noopener">a real-estate chatbot project at SKGCode</a> and <a href="../../img/renamed/Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg" target="_blank" rel="noopener">the Hydrobot program in marine educational robotics</a>. Two are about English: <a href="../../img/renamed/Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg" target="_blank" rel="noopener">a TOEIC listening and reading test</a> and the <a href="../../img/renamed/English-Certificate_English-Certificate-English-Proficiency.jpg" target="_blank" rel="noopener">Michigan certificate of proficiency in English</a>.</p>
+</section>
+
+<section class="ch" aria-labelledby="c6">
+  <header class="ch-h"><span class="num" aria-hidden="true">VI</span><h2 id="c6">Where to find me</h2><p class="dek">Code, papers and a way to write.</p></header>
+  <p><span class="dc"><span class="dg" data-g="die" aria-hidden="true"></span><span class="dl">G</span></span>itHub has <a href="https://github.com/gmixoulis" target="_blank" rel="noopener">my code</a> and Google Scholar has <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ" target="_blank" rel="noopener">my papers</a>. <a href="https://www.linkedin.com/in/george-michoulis/" target="_blank" rel="noopener">LinkedIn</a> and <a href="https://twitter.com/GeorgeMicou" target="_blank" rel="noopener">X</a> have the rest. This site also keeps a <a href="../../garden/">Zen Garden</a> of notes, and <a href="../../play/">Ledger Run</a>, a platformer version of this CV. I live in Thessaloniki and work remotely. If you have a project, a role or a research idea, write to me at <a class="mail" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a> <button class="g" type="button" data-g="mail" data-c="var(--a2)" data-k="Email" data-t="gmixoulis@gmail.com" data-m="Thessaloniki, Greece, working remotely." aria-label="Email details and copy button"></button>.</p>
+</section>
+</article>
+</main>
+
+<footer class="col">
+  <p>Set in Newsreader and Geist. © 2026 George Michoulis</p>
+</footer>
+<p class="sr" id="live" aria-live="polite"></p>
+
+<script>
+/* Slots, wake-on-view and the notes. Works without WebGL; the module below only draws. */
+(() => {
+const S = window.S = { slots: [], reduced: matchMedia('(prefers-reduced-motion: reduce)').matches, vis: 0, kick() {} };
+const now = () => performance.now(), $$ = s => [...document.querySelectorAll(s)];
+$$('[data-g]').forEach(el => {
+  const s = { el, kind: el.dataset.g, vis: false, wake: -1, base: 0, hov: 0, h: 0, ang: Math.random() * 6.283 };
+  el._s = s; S.slots.push(s);
+  if (s.kind === 'cluster') { const c = +el.dataset.cites; el.style.setProperty('--w', (1.05 + .5 * Math.sqrt(c / 32)).toFixed(3)); el.style.setProperty('--k', Math.min(1, c / 16).toFixed(2)) }
+});
+/* visible slots (with a margin so they are ready before they scroll in) */
+const io = new IntersectionObserver(es => { for (const e of es) { const s = e.target._s; if (s.vis !== e.isIntersecting) { s.vis = e.isIntersecting; S.vis += s.vis ? 1 : -1 } } S.kick() }, { rootMargin: '30% 0px' });
+S.slots.forEach(s => io.observe(s.el));
+/* wake: the first time a glyph is fully in view it spins once and sparkles; a drop cap turns a quarter */
+const turn = s => { if (s.wake >= 0) s.base += Math.PI / 2; s.wake = now(); const dc = s.el.parentElement; dc.classList.add('turn'); clearTimeout(s.tt); s.tt = setTimeout(() => dc.classList.remove('turn'), 700); S.kick() };
+if (!S.reduced) {
+  const wio = new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting) { const s = e.target._s; wio.unobserve(e.target); s.kind === 'die' ? turn(s) : (s.wake = now(), S.kick()) } }, { rootMargin: '0px 0px -12% 0px', threshold: 1 });
+  S.slots.forEach(s => s.kind !== 'hero' && wio.observe(s.el));
+  $$('.dc').forEach(dc => dc.addEventListener('pointerenter', () => { const s = dc.querySelector('.dg')._s; if (s.wake >= 0 && now() - s.wake > 1200) turn(s) }));
+}
+const hero = document.querySelector('h1 .g');
+hero.addEventListener('pointerenter', () => { hero._s.hov = 1; S.kick() });
+hero.addEventListener('pointerleave', () => { hero._s.hov = 0 });
+
+/* notes: a spacer at the top of the glyph's line grows, the lines below part, and the note sits in the gap */
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+const btns = $$('button.g');
+btns.forEach(b => {
+  const w = document.createElement('span'), g = document.createElement('span'); w.className = 'gw'; g.className = 'gap'; g.setAttribute('aria-hidden', 'true');
+  b.before(w); w.append(g, b);
+  const pv = w.previousSibling, nx = w.nextSibling, m = pv && pv.nodeType === 3 && pv.data.match(/(\S+\s+)$/), n = nx && nx.nodeType === 3 && nx.data.match(/^[.,;:)]+/);
+  if (m) { pv.data = pv.data.slice(0, -m[1].length); w.prepend(m[1].replace(/\s+$/, '\u00a0')) }
+  if (n) { nx.data = nx.data.slice(n[0].length); w.append(n[0]); b.classList.add('tight') }
+});
+let cur = null, curN = null, pinned = false, hideT = 0, nid = 0, fu = 0, fr = 0;
+const live = new Set();
+function place(n) {
+  const { gap, p } = n._o, cs = getComputedStyle(p), fs = parseFloat(cs.fontSize), lh = parseFloat(cs.lineHeight) || fs * 1.6;
+  const pr = p.getBoundingClientRect(), top = gap.getBoundingClientRect().top - pr.top + lh - fs * .05;
+  let left = 0; const dc = p.querySelector('.dc');
+  if (dc) { const r = dc.getBoundingClientRect(); if (pr.top + top < r.bottom + 6) left = r.right - pr.left + fs * .5 }
+  n.style.top = top + 'px'; n.style.left = left + 'px';
+  return { fs, lh };
+}
+function tick() { fr = 0; live.forEach(place); if (now() < fu) fr = requestAnimationFrame(tick) }
+function follow() { fu = now() + 700; if (!fr) fr = requestAnimationFrame(tick) }
+function size(n) { const { fs, lh } = place(n); n._o.gap.style.height = (lh + n.offsetHeight + fs * .95) + 'px' }
+function open(b, pin) {
+  clearTimeout(hideT);
+  if (cur === b) { pinned = pinned || pin; return }
+  close();
+  const d = b.dataset, n = document.createElement('span');
+  n.className = 'note'; n.id = 'note' + ++nid; n.style.setProperty('--nc', d.c || 'var(--a2)');
+  let h = '';
+  if (d.img) h += /\.gif$/i.test(d.img) ? `<canvas width="720" height="450" role="img" aria-label="${esc(d.alt)}"></canvas>` : `<img src="${esc(d.img)}" alt="${esc(d.alt)}"${d.sq ? ' class="sq"' : ''}>`;
+  h += `<span class="k">${d.k}</span><span class="t">${esc(d.t)}</span>${d.m ? `<span class="m">${esc(d.m)}</span>` : ''}`;
+  if (d.g === 'mail') h += '<button class="copy" type="button">Copy address</button>';
+  n.innerHTML = h;
+  n._o = { b, gap: b.previousElementSibling, p: b.closest('p') };
+  b.after(n);
+  const cv = n.querySelector('canvas');
+  if (cv) { const im = new Image(); im.onload = () => { const x = cv.getContext('2d'), s = cv.width / im.naturalWidth; x.drawImage(im, 0, 0, cv.width, im.naturalHeight * s) }; im.src = d.img }   // first frame only: the GIF stays still
+  n.querySelectorAll('img').forEach(i => i.addEventListener('load', () => size(n)));
+  const cp = n.querySelector('.copy');
+  if (cp) cp.onclick = async () => {
+    try { await navigator.clipboard.writeText(d.t); cp.textContent = 'Copied'; document.getElementById('live').textContent = 'Email address copied' }
+    catch { const r = document.createRange(); r.selectNodeContents(n.querySelector('.t')); getSelection().removeAllRanges(); getSelection().addRange(r); cp.textContent = 'Selected' }
+  };
+  n.addEventListener('pointerenter', () => clearTimeout(hideT));
+  n.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !pinned) later() });
+  cur = b; curN = n; pinned = pin; b._s.hov = 1;
+  b.setAttribute('aria-expanded', 'true'); b.setAttribute('aria-controls', n.id);
+  size(n); live.add(n); follow();
+  requestAnimationFrame(() => requestAnimationFrame(() => n.classList.add('on')));
+  S.kick();
+}
+function close() {
+  if (!cur) return;
+  const b = cur, n = curN; cur = curN = null; pinned = false;
+  b._s.hov = 0; b.setAttribute('aria-expanded', 'false'); b.removeAttribute('aria-controls');
+  n._o.gap.style.height = '0px'; n.classList.remove('on'); follow(); S.kick();
+  setTimeout(() => { n.remove(); live.delete(n) }, S.reduced ? 0 : 560);
+}
+function later() { clearTimeout(hideT); hideT = setTimeout(close, 260) }
+btns.forEach(b => {
+  b.setAttribute('aria-expanded', 'false');
+  b.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') open(b, false) });
+  b.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && cur === b && !pinned) later() });
+  b.addEventListener('click', () => { if (cur === b && pinned) close(); else open(b, true) });
+  b.addEventListener('focus', () => { if (b.matches(':focus-visible')) open(b, false) });
+  b.addEventListener('blur', e => { if (cur === b && !pinned && !(curN && curN.contains(e.relatedTarget))) later() });
+});
+document.addEventListener('click', e => { if (cur && !cur.contains(e.target) && !curN.contains(e.target)) close() });
+addEventListener('keydown', e => { if (e.key === 'Escape' && cur) { const b = cur; close(); b.focus() } });
+addEventListener('resize', () => { if (curN) size(curN); S.kick() });
+addEventListener('scroll', () => S.kick(), { passive: true });
+})();
+</script>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<script type="module">
+/* Many views, one canvas. A single WebGL context sits behind the text; every frame it clears, then for
+   each glyph slot on screen it sets viewport + scissor to that slot's rect (plus a little bleed for glow)
+   and draws that glyph's tiny scene into it. Bloom runs once over the whole frame. The canvas is
+   translated by scrollY each frame so between frames it scrolls with the text instead of lagging it.
+   Glass: pro.html's thin-film shader (optical path difference -> per-channel cosine) and procedural
+   softbox environment. Points: particles.html's soft additive sprites with area-conserving size. */
+const S = window.S, root = document.documentElement, cv = document.getElementById('gl');
+try {
+  if (!document.createElement('canvas').getContext('webgl2')) throw new Error('no webgl2');
+  const [THREE, { RoundedBoxGeometry }, { EffectComposer }, { Pass }, { UnrealBloomPass }, { OutputPass }] = await Promise.all([
+    import('three'), import('three/addons/geometries/RoundedBoxGeometry.js'), import('three/addons/postprocessing/EffectComposer.js'),
+    import('three/addons/postprocessing/Pass.js'), import('three/addons/postprocessing/UnrealBloomPass.js'), import('three/addons/postprocessing/OutputPass.js')]);
+  await document.fonts.ready;
+  run(THREE, RoundedBoxGeometry, EffectComposer, Pass, UnrealBloomPass, OutputPass);
+} catch (e) { root.classList.add('no-gl'); console.warn('Glyph fallback:', e.message) }
+
+function run(THREE, RoundedBoxGeometry, EffectComposer, Pass, UnrealBloomPass, OutputPass) {
+  const RM = S.reduced, V3 = THREE.Vector3;
+  const mob = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+  let dpr = Math.min(devicePixelRatio || 1, mob ? 1.5 : 2), W = 0, H = 0;
+  const renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: false, powerPreference: 'high-performance' });
+  renderer.autoClear = false;
+  const BG = new THREE.Color(0x0a0a0b);
+  const FOV = 22, TAN = Math.tan(FOV * Math.PI / 360), cam = new THREE.PerspectiveCamera(FOV, 1, .05, 200);
+
+  /* ---------- glass ---------- */
+  const U = { uTime: { value: 0 }, uHue: { value: 0 }, uCore: { value: .8 }, uFlash: { value: 0 }, uTintA: { value: 0 }, uGlow: { value: .3 }, uPlane: { value: -1.02 },
+    uL: { value: new V3(-.3, .85, .9).normalize() }, uB: { value: new V3() }, uTint: { value: new THREE.Color(1, 1, 1) }, uHalf: { value: new V3(.5, .5, .5) } };
+  const ENV = `vec3 env(vec3 R){float a=atan(R.x,R.z);
+    float top=smoothstep(.5,1.,R.y)*2.1;
+    float s1=exp(-pow((a+1.95)*3.,2.))*smoothstep(-.15,.5,R.y)*1.25;
+    float s2=exp(-pow((a-1.25)*4.2,2.))*smoothstep(-.25,.6,R.y)*.8;
+    float s3=exp(-pow((a-2.9)*2.6,2.))*smoothstep(.0,.7,R.y)*.35;
+    float hz=exp(-pow(R.y*7.,2.))*.1,sky=smoothstep(-.05,.9,R.y)*.12;
+    return vec3(top+s1+s2+s3+hz+sky);}`;
+  const COMMON = `uniform float uTime,uHue,uCore,uFlash,uTintA,uGlow,uPlane;uniform vec3 uL,uB,uTint,uHalf;`;
+  const glassVS = `attribute vec3 aSgn;varying vec3 vW,vN,vO,vS;
+  void main(){
+  #ifdef USE_INSTANCING
+    mat4 m=modelMatrix*instanceMatrix;vS=aSgn;
+  #else
+    mat4 m=modelMatrix;vS=vec3(0.);
+  #endif
+    vec4 w=m*vec4(position,1.);vW=w.xyz;vN=normalize(mat3(m)*normal);vO=position;gl_Position=projectionMatrix*viewMatrix*w;}`;
+  const glassFS = COMMON + `varying vec3 vW,vN,vO,vS;` + ENV + `
+  vec3 film(float c,float d){float ct=sqrt(max(0.,1.-(1.-c*c)/2.1));float o=2.9*d*ct;return .5+.5*cos(6.2831*o/vec3(.65,.53,.45));}
+  void main(){
+    vec3 N=normalize(vN),V=normalize(cameraPosition-vW);float c=clamp(dot(N,V),0.,1.);vec3 R=reflect(-V,N);
+    float th=.42+.09*sin(dot(vO+vS*.5,vec3(2.1,1.7,2.6))+uTime*.12)+.05*sin(vW.y*2.6+uTime*.2)+uHue*.22;
+    vec3 fc=film(c,th);fc=mix(vec3(dot(fc,vec3(.333))),fc,.85);
+    fc=mix(fc,uTint*(.4+.9*dot(fc,vec3(.333))),uTintA);
+    vec3 Hh=normalize(uL+V);float nh=max(dot(N,Hh),0.);
+  #ifdef GEM
+    float F=.12+.88*pow(1.-c,3.);
+    vec3 col=env(R)*fc*(.3+.7*F)*1.5+env(refract(-V,N,.62)).x*fc.gbr*.4;
+    col+=(pow(nh,160.)*4.+pow(nh,20.)*.14)*mix(vec3(1.),fc,.35)+uTint*uGlow*.12;
+  #else
+    vec3 a=abs(vO)/uHalf;float mid=max(min(a.x,a.y),min(max(a.x,a.y),a.z));float edge=smoothstep(.8,.97,mid);
+    float F=.04+.96*pow(1.-c,5.);
+    vec3 col=vec3(.007,.007,.009)+env(R)*fc*(.1+.9*F)*1.25;
+    col+=(pow(nh,300.)*2.4+pow(nh,26.)*.07)*mix(vec3(1.),fc,.45);
+    col+=edge*(.04+.3*F)*fc;
+   #ifdef BLOCK
+    vec3 g3=exp(-(.5+vO*vS)*17.);vec3 dc=vW-uB;float g=min(g3.x+g3.y+g3.z,1.3)*(.25+exp(-dot(dc,dc)*1.1));
+    vec3 gc=mix(vec3(.06,.58,1.),vec3(.62,.24,1.),.5+.5*sin(dot(vW,vec3(.9,.6,.4))+uHue*4.));
+    col+=gc*g*uCore*.5;
+   #else
+    col+=edge*uTint*uGlow+uTint*uGlow*.22*pow(1.-c,2.);   // tinted rim, so a 15px cube still shows its colour
+   #endif
+   #ifdef SCREEN
+    col+=uTint*.07*step(.97,a.z)*(1.-edge)*(.4+.6*smoothstep(-1.,1.,vO.y/uHalf.y));
+   #endif
+  #endif
+    col*=1.+uFlash;
+  #ifdef REFL
+    col=max(col*exp(-max(uPlane-vW.y,0.)*3.2)*.22,vec3(.00264));   // .00264 maps to the page colour after the tone curve
+  #endif
+    gl_FragColor=vec4(1.-exp(-col*1.15),1.);
+  }`;
+  const mk = (defines = {}) => new THREE.ShaderMaterial({ uniforms: U, vertexShader: glassVS, fragmentShader: glassFS, defines });
+  const coreVS = `varying vec3 vW,vN;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;vN=normalize(mat3(modelMatrix)*normal);gl_Position=projectionMatrix*viewMatrix*w;}`;
+  const coreFS = COMMON + `uniform float uF;varying vec3 vW,vN;void main(){float c=abs(dot(normalize(vN),normalize(cameraPosition-vW)));
+    vec3 col=mix(vec3(.55,.85,1.)*1.4,vec3(.7,.35,1.),pow(1.-c,1.5))*uCore*.8*uF;gl_FragColor=vec4(1.-exp(-col),1.);}`;
+  const coreMat = f => new THREE.ShaderMaterial({ uniforms: { ...U, uF: { value: f } }, vertexShader: coreVS, fragmentShader: coreFS });
+
+  const segs = mob ? 3 : 4;
+  const gBox = new RoundedBoxGeometry(1, 1, 1, segs, .1), sg = new Float32Array(24);
+  for (let i = 0; i < 8; i++) { sg[i * 3] = i & 1 ? 1 : -1; sg[i * 3 + 1] = i & 2 ? 1 : -1; sg[i * 3 + 2] = i & 4 ? 1 : -1 }
+  gBox.setAttribute('aSgn', new THREE.InstancedBufferAttribute(sg, 3));
+  const cubes = new THREE.InstancedMesh(gBox, mk({ BLOCK: 1 }), 8), cubesR = new THREE.InstancedMesh(gBox, mk({ BLOCK: 1, REFL: 1 }), 8);
+  cubesR.instanceMatrix = cubes.instanceMatrix;
+  const gCore = new RoundedBoxGeometry(.62, .62, .62, 3, .12);
+  const block = new THREE.Group(), blockR = new THREE.Group(), mirror = new THREE.Group();
+  block.add(cubes, new THREE.Mesh(gCore, coreMat(1))); blockR.add(cubesR, new THREE.Mesh(gCore, coreMat(.3)));
+  mirror.add(blockR); mirror.scale.y = -1; mirror.position.y = 2 * -1.018;          // reflect about the baseline plane y = -1.018
+  const mSolid = mk(), mScreen = mk({ SCREEN: 1 }), mGem = mk({ GEM: 1 });
+  const cube = new THREE.Mesh(new RoundedBoxGeometry(1, 1, 1, segs + 1, .15), mSolid);
+  const slab = new THREE.Mesh(new RoundedBoxGeometry(1.5, 1, .16, 2, .06), mScreen);
+  const gGem = new THREE.LatheGeometry([[0, -.6], [.64, 0], [.64, .07], [.38, .33], [0, .33]].map(([x, y]) => new THREE.Vector2(x, y)), 8).toNonIndexed();
+  gGem.computeVertexNormals();                                                          // non-indexed, so every facet is flat
+  const gem = new THREE.Mesh(gGem, mGem);
+
+  /* ---------- points ---------- */
+  const PU = { uTime: U.uTime, uScale: { value: 1 }, uSize: { value: .05 }, uWake: { value: 1 }, uEnergy: { value: 0 }, uIntro: { value: 1 }, uRad: { value: 1 }, uGain: { value: 1 } };
+  const ptsVS = mode => `#define MODE ${mode}
+  uniform float uTime,uScale,uSize,uWake,uEnergy,uIntro,uRad,uGain;attribute vec4 aR;varying vec3 vC;varying float vA;
+  vec3 pal(float x){vec3 a=vec3(.21,.81,.89),b=vec3(.27,.36,1.),c=vec3(.55,.33,1.),d=vec3(1.,.49,.37);return x<.333?mix(a,b,x*3.):x<.667?mix(b,c,x*3.-1.):mix(c,d,x*3.-2.);}
+  mat2 rot(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+  void main(){
+    vec3 p=position;float A=1.;vec3 C=vec3(1.);
+  #if MODE==0
+    float L=length(position);
+    p.xz=rot(uTime*(.05+.16*aR.x)+aR.y*6.2832)*p.xz;p.y+=sin(uTime*.7+aR.z*6.28)*.07;
+    float br=sin(uTime*1.05-L*1.6);
+    p*=(1.+.08*br)*(1.+uEnergy*.16)*mix(2.8,1.,uIntro);
+    A=(.3+.7*pow(.5+.5*sin(uTime*(1.1+aR.x*2.3)+aR.w*40.),3.))*smoothstep(3.9,1.6,L)*(.8+.2*br)*uIntro*(1.+uEnergy*.6);
+    C=mix(vec3(.85,.9,1.),pal(aR.w),.6);
+  #elif MODE==1
+    float r0=length(position),core=smoothstep(.42,0.,r0),bu=sin(3.1416*clamp(uWake,0.,1.));
+    p.xz=rot(uTime*(.12+.3*aR.x)*(1.+uEnergy*1.6)+aR.y*6.28)*p.xz;p.yz=rot(.45)*p.yz;
+    p*=uRad*(1.+bu*(.5+aR.z)*.9+uEnergy*.2);
+    A=(.35+.65*pow(.5+.5*sin(uTime*(1.3+aR.x*2.)+aR.w*30.),2.))*(.45+1.1*core)*(1.+bu*1.6+uEnergy*.5);
+    C=mix(pal(aR.w),vec3(.95,.97,1.),core*.8);
+  #elif MODE==2
+    float t=position.z,th=-2.2+t*5.3+.015*sin(uTime*.5+aR.x*6.28),w=.1*(1.-.55*t)+.025;
+    float r=.8+position.x*w*(1.+uEnergy*.6);
+    p=vec3(cos(th)*r,sin(th)*r,position.y*.08);p.xy+=(aR.zw-.5)*.02*sin(uTime*.8+aR.x*9.);
+    A=(1.-smoothstep(uWake-.06,uWake,t))*(.55+.45*aR.y)*mix(1.,.4,smoothstep(.72,1.,t))*(1.+uEnergy*.7);
+    C=mix(vec3(1.,.9,.76),vec3(1.,.3,.16),smoothstep(.78,1.,t)*aR.z*.9);
+  #else
+    vec3 d=normalize(position);float e=1.-pow(1.-uWake,3.);
+    p=d*(.6+e*(1.+aR.x*1.4));
+    A=pow(1.-uWake,2.)*(.5+.5*sin(uTime*30.+aR.y*20.))*1.6;C=mix(vec3(1.),pal(aR.w),.5);
+  #endif
+    vec4 mv=modelViewMatrix*vec4(p,1.);gl_Position=projectionMatrix*mv;
+    float s=uSize*(.55+.9*aR.w)*uScale/-mv.z;
+    vA=A*uGain*min(1.,s*s);gl_PointSize=max(s,1.);vC=C;
+  }`;
+  const ptsFS = `varying vec3 vC;varying float vA;void main(){vec2 c=gl_PointCoord*2.-1.;float d=dot(c,c);if(d>1.)discard;d=1.-d;gl_FragColor=vec4(vC*vA*d*d,1.);}`;
+  const pm = mode => new THREE.ShaderMaterial({ uniforms: PU, vertexShader: ptsVS(mode), fragmentShader: ptsFS, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+  let seed = 7;
+  const rnd = () => { seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296 };
+  const gauss = () => { let u = 0; while (!u) u = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(6.2832 * rnd()) };
+  const cloud = (n, f) => { const p = new Float32Array(n * 3), r = new Float32Array(n * 4); for (let i = 0; i < n; i++) { p.set(f(i), i * 3); r.set([rnd(), rnd(), rnd(), rnd()], i * 4) }
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(p, 3)); g.setAttribute('aR', new THREE.BufferAttribute(r, 4)); return g };
+  const pts = (g, mode) => { const o = new THREE.Points(g, pm(mode)); o.frustumCulled = false; return o };
+  const halo = pts(cloud(mob ? 520 : 1100, () => { const d = new V3(gauss(), gauss() * .8, gauss()).normalize(); return d.multiplyScalar(1.5 + 1.9 * Math.pow(rnd(), 1.6)).toArray() }), 0);
+  const cluster = pts(new THREE.BufferGeometry(), 1);
+  const enso = pts(cloud(mob ? 700 : 1400, () => { const t = Math.pow(rnd(), .9); let b = Math.max(-2.2, Math.min(2.2, gauss())); if (t > .7) b = Math.round(b * 3) / 3; return [b, gauss(), t] }), 2);
+  const gSpark = cloud(42, () => [gauss(), gauss(), gauss()]);
+  const spark = () => { const o = pts(gSpark, 3); o.visible = false; return o };
+
+  const scene = o => { const s = new THREE.Scene(); s.add(...o); return s };
+  const sparks = { block: spark(), cube: spark(), gem: spark(), slab: spark(), cl: null };
+  const SC = { block: scene([block, mirror, halo, sparks.block]), cube: scene([cube, sparks.cube]), gem: scene([gem, sparks.gem]), slab: scene([slab, sparks.slab]), cluster: scene([cluster]), enso: scene([enso]) };
+  const empty = new THREE.Scene();
+
+  /* per kind: bleed (viewport / slot height), fit (world height mapped onto the slot height), camera elevation */
+  const K = { hero: [3.3, 2.45, .2], mail: [2.3, 2.35, .3], cube: [2.4, 1.2, .42], die: [1.3, 1.16, .13], gem: [2.4, .95, .32], slab: [2.2, 1.12, .2], cluster: [2.7, 2.1, 0], enso: [1.9, 1.95, 0] };
+  const cols = {}, colOf = s => cols[s.el.dataset.c] || (cols[s.el.dataset.c] = new THREE.Color(getComputedStyle(s.el).getPropertyValue('--c').trim() || getComputedStyle(root).getPropertyValue(s.el.dataset.c.replace(/var\((.*)\)/, '$1')).trim() || s.el.dataset.c));
+  const geos = {}, clusterGeo = c => geos[c] || (geos[c] = (seed = 100 + c, cloud(Math.round(16 + 10.5 * c), () => { const k = rnd(), s = k < .3 ? .17 : k < .85 ? .42 : .7; return [gauss() * s, gauss() * s, gauss() * s] })));
+  const ez = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), ax = new V3(), p3 = new V3(), one = new V3(1, 1, 1);
+
+  function setBlock(io) {
+    const e = io * 2.2, spin = io * 2.4;
+    for (let i = 0; i < 8; i++) {
+      ax.set(sg[i * 3], sg[i * 3 + 1], sg[i * 3 + 2]); p3.copy(ax).multiplyScalar(.518 + e * .34 + io * (i % 3) * .25);
+      q.setFromAxisAngle(ax.normalize(), e * .2 + spin * (i % 2 ? 1 : -1) * .5); cubes.setMatrixAt(i, m4.compose(p3, q, one));
+    }
+    cubes.instanceMatrix.needsUpdate = true; return spin;
+  }
+
+  let t0 = performance.now(), last = t0, nowMs = t0, T = 0, DT = 0;
+  function drawSlot(s, vp) {
+    const [bleed, fit, el] = K[s.kind], d = fit * bleed / (2 * TAN), dur = s.kind === 'enso' ? 1.5 : s.kind === 'die' ? .95 : 1.25;
+    const p = RM ? 1 : s.wake < 0 ? 0 : Math.min(1, (nowMs - s.wake) / 1000 / dur);
+    s.h += (s.hov - s.h) * (1 - Math.exp(-DT * 6));
+    cam.aspect = vp.w / vp.h; cam.position.set(0, Math.sin(el) * d, Math.cos(el) * d); cam.lookAt(0, 0, 0); cam.updateProjectionMatrix();
+    PU.uScale.value = vp.h * dpr / (2 * TAN); PU.uEnergy.value = s.h; PU.uWake.value = p;
+    U.uFlash.value = (RM ? 0 : Math.exp(-Math.pow((p - .25) * 4, 2)) * .9 * (p > 0 && p < 1)) + s.h * .25;
+    U.uHue.value = 0; U.uTintA.value = 0; U.uGlow.value = .3;
+    const spinP = ez(p) * Math.PI * 2, rate = RM ? 0 : DT * (1 + 1.8 * s.h);
+    let sc;
+    if (s.kind === 'hero' || s.kind === 'mail') {
+      const hero = s.kind === 'hero', io = hero && !RM ? Math.pow(Math.max(0, 1 - T / 2.1), 3) : 0, spin = setBlock(io);
+      s.ang += rate * (hero ? .3 : .45);
+      block.rotation.set(0, s.ang + spin * .4 + (hero ? 0 : spinP) + (RM ? .62 : 0), 0); blockR.quaternion.copy(block.quaternion);
+      U.uB.value.set(0, 0, 0); U.uHue.value = .12 * Math.sin(T * .07);
+      U.uCore.value = .75 + (hero && !RM ? Math.exp(-Math.pow((T - 1.75) * 3.2, 2)) * 1.6 : 0) + s.h * .6 + (hero ? 0 : U.uFlash.value);
+      mirror.visible = halo.visible = hero; sparks.block.visible = !hero && p > 0 && p < 1;
+      PU.uIntro.value = RM ? 1 : Math.min(1, Math.max(0, (T - .2) / 2.2)); PU.uSize.value = .05; PU.uGain.value = 1;
+      sc = SC.block;
+    } else if (s.kind === 'cube' || s.kind === 'die') {
+      const die = s.kind === 'die';
+      U.uHalf.value.set(.5, .5, .5);
+      if (die) {
+        const turnA = s.wake < 0 ? 0 : ez(p) * Math.PI / 2, w = RM ? 0 : T * .45 + s.ang;
+        cube.rotation.set(-.04 + Math.sin(w * .8) * .035, s.base + turnA + Math.sin(w) * .05, 0);
+        U.uHue.value = (S.slots.indexOf(s) % 6) * .17; U.uGlow.value = .18; U.uFlash.value *= .5;
+      } else {
+        s.ang += rate * .6; cube.rotation.set(0, s.ang + spinP, 0);
+        U.uTint.value.copy(colOf(s)); U.uTintA.value = .65; U.uGlow.value = .85 + .6 * s.h;
+      }
+      sparks.cube.visible = !die && p > 0 && p < 1; sc = SC.cube;
+    } else if (s.kind === 'gem') {
+      s.ang += rate * .7; gem.rotation.set(.16, s.ang + spinP, 0);
+      U.uTint.value.copy(colOf(s)); U.uTintA.value = .5; U.uGlow.value = .7 + s.h;
+      sparks.gem.visible = p > 0 && p < 1; sc = SC.gem;
+    } else if (s.kind === 'slab') {
+      slab.rotation.set(-.42, (RM ? .5 : Math.sin(T * .45 + s.ang) * .75) + spinP, .06);            // a pane leaning back, turning to catch the light
+      U.uHalf.value.set(.75, .5, .08); U.uTint.value.copy(colOf(s)); U.uTintA.value = .45; U.uGlow.value = .7 + .5 * s.h;
+      sparks.slab.visible = p > 0 && p < 1; sc = SC.slab;
+    } else if (s.kind === 'cluster') {
+      const c = +s.el.dataset.cites; cluster.geometry = clusterGeo(c);
+      PU.uRad.value = .6 + .55 * Math.sqrt(c / 32); PU.uGain.value = c >= 7 ? 1 + c / 48 : .85 + c * .1; PU.uSize.value = .19; sc = SC.cluster;
+    } else {
+      PU.uWake.value = RM ? 1.06 : p * 1.06; PU.uSize.value = .11; PU.uGain.value = 1.1; sc = SC.enso;
+    }
+    if (s.kind !== 'cluster' && s.kind !== 'enso' && s.kind !== 'hero') PU.uSize.value = .045;
+    renderer.render(sc, cam);
+  }
+
+  class SlotsPass extends Pass {
+    constructor() { super(); this.needsSwap = false; this.list = [] }
+    render(r, _w, rt) {
+      const full = () => { rt.viewport.set(0, 0, rt.width, rt.height); rt.scissor.set(0, 0, rt.width, rt.height); rt.scissorTest = false; r.setRenderTarget(rt) };
+      full(); r.setClearColor(BG, 1); r.clear();          // set while the linear target is bound, so three converts it to linear
+      for (const [s, vp] of this.list) {
+        const x = Math.round(vp.x * dpr), y = Math.round((H - vp.y - vp.h) * dpr), w = Math.round(vp.w * dpr), h = Math.round(vp.h * dpr);
+        rt.viewport.set(x, y, w, h); rt.scissor.set(x, y, w, h); rt.scissorTest = true; r.setRenderTarget(rt);
+        r.clearDepth(); drawSlot(s, vp);
+      }
+      full(); if (rt.samples) r.render(empty, cam);        // resolve the MSAA buffer over the whole frame, not just the last scissor
+    }
+  }
+  const rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: dpr >= 2 ? 0 : 4 });
+  const composer = new EffectComposer(renderer, rt), pass = new SlotsPass();
+  composer.addPass(pass); composer.addPass(new UnrealBloomPass(new THREE.Vector2(256, 256), .5, .12, .42)); composer.addPass(new OutputPass());
+
+  function resize() {
+    const w = cv.clientWidth, h = cv.clientHeight; if (w === W && h === H) return;
+    W = w; H = h; renderer.setPixelRatio(dpr); renderer.setSize(W, H, false); composer.setPixelRatio(dpr); composer.setSize(W, H);
+  }
+  function draw(now) {
+    nowMs = now; DT = Math.min(.1, (now - last) / 1000); last = now; T = RM ? 3 : (now - t0) / 1000;
+    resize();
+    cv.style.transform = `translate3d(0,${scrollY}px,0)`;
+    U.uTime.value = T;
+    if (!RM) U.uL.value.set(-.3 + Math.sin(T * .23) * .8, .85 - (Math.cos(T * .17) * .3 - .2) * .8, .9).normalize();
+    const L = pass.list; L.length = 0;
+    for (const s of S.slots) {
+      if (!s.vis) continue;
+      const r = s.el.getBoundingClientRect(); if (r.height < 2) continue;
+      const m = r.height * (K[s.kind][0] - 1) / 2, vp = { x: r.left - m, y: r.top - m, w: r.width + 2 * m, h: r.height + 2 * m };
+      if (vp.y > H || vp.y + vp.h < 0 || vp.x > W || vp.x + vp.w < 0) continue;
+      L.push([s, vp]);
+    }
+    composer.render(DT);
+    return L.length;
+  }
+  /* loop only while a slot is on screen; scroll, resize, hover and the observers restart it */
+  let raf = 0, frames = 0, slow = 0;
+  const loop = now => {
+    raf = 0; const dt = now - last, n = draw(now);
+    if (++frames > 30 && frames < 150) { slow += dt; if (frames === 149 && slow / 119 > 26 && dpr > 1) { dpr = Math.max(1, dpr - .5); W = 0 } }
+    if (!RM && n && !document.hidden) raf = requestAnimationFrame(loop);
+  };
+  S.kick = () => { if (!raf) raf = requestAnimationFrame(loop) };
+  document.addEventListener('visibilitychange', () => { last = performance.now(); S.kick() });
+  document.fonts.ready.then(S.kick);
+  draw(performance.now()); root.classList.add('gl'); S.kick();
+}
+</script>
+</body>
+</html>

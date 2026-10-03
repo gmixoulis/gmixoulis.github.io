@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glass · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki, Greece.">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Schibsted+Grotesk:wght@400;500;600&display=swap">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<script>
+(function(){var d=document.documentElement,t=null;try{t=localStorage.getItem('glass-mode')}catch(e){}
+if(t==='light'||t==='dark')d.dataset.theme=t;
+var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;if(rm)d.classList.add('rm');
+window.__glass={hover:-1,reduced:rm,light:function(){return d.dataset.theme==='light'}};})();
+</script>
+<style>
+:root{--bg:#080d19;--bg2:#15203a;--ink:#eef1f6;--mute:#a7b1c3;--faint:#8591a7;--line:rgba(238,241,246,.15);--acc:#ff6b47;--mat:#131b2e;
+--serif:'Bodoni Moda','Bodoni 72',Didot,serif;--sans:'Schibsted Grotesk','Helvetica Neue',sans-serif;color-scheme:dark}
+:root[data-theme=light]{--bg:#e6e1d8;--bg2:#f5f2ec;--ink:#12151d;--mute:#4c5360;--faint:#5b616c;--line:rgba(18,21,29,.16);--acc:#c0391a;--mat:#f6f3ee;color-scheme:light}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);color:var(--ink);font:400 17px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip;transition:background-color .6s,color .6s}
+body{min-height:100vh;overflow-x:clip;background:radial-gradient(70vw 60vh at 70% 40%,var(--bg2),transparent 70%) fixed,var(--bg)}
+a{color:inherit}
+::selection{background:var(--acc);color:#fff}
+:focus-visible{outline:2px solid var(--acc);outline-offset:4px;border-radius:2px}
+.skip{position:absolute;left:12px;top:-60px;z-index:20;background:var(--ink);color:var(--bg);padding:8px 14px}
+.skip:focus{top:12px}
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;opacity:0;transition:opacity 1.4s ease;pointer-events:none}
+.gl-on #gl{opacity:1}
+.rm #gl{position:absolute;height:100vh;height:100svh}
+.no-gl #gl{display:none}
+header,main,footer{position:relative;z-index:1}
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;gap:26px;padding:18px 5vw;font-size:14px}
+.nav::before{content:"";position:absolute;inset:0 0 -30px;background:linear-gradient(var(--bg) 35%,transparent);opacity:0;transition:opacity .5s;z-index:-1;pointer-events:none}
+.nav.solid::before{opacity:.94}
+.back{color:var(--mute);text-decoration:none}
+.back:hover{color:var(--ink)}
+.mark{font:italic 500 19px/1 var(--serif);text-decoration:none;margin-right:auto;letter-spacing:-.01em}
+.nav nav{display:flex;gap:22px}
+.nav nav a,.nav-ct{color:var(--mute);text-decoration:none;position:relative;padding:4px 0;transition:color .3s}
+.nav nav a:hover,.nav nav a[aria-current=true]{color:var(--ink)}
+.nav nav a::before{content:"";position:absolute;left:-11px;top:50%;width:5px;height:5px;border-radius:50%;background:var(--acc);transform:translateY(-50%) scale(0);transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+.nav nav a[aria-current=true]::before{transform:translateY(-50%) scale(1)}
+.nav-ct{display:none}
+.mode{display:inline-flex;align-items:center;gap:9px;font:500 14px var(--sans);color:var(--ink);background:none;border:1px solid var(--line);border-radius:40px;padding:7px 14px 7px 11px;cursor:pointer;transition:border-color .3s,transform .4s cubic-bezier(.2,.8,.2,1)}
+.mode:hover{border-color:var(--ink)}
+.mode i{width:13px;height:13px;border-radius:50%;border:1.5px solid currentColor;background:linear-gradient(90deg,currentColor 50%,transparent 50%)}
+/* hero */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:auto 1fr auto auto;column-gap:24px;padding:19vh 5vw 7vh}
+.eyebrow{grid-column:1/8;grid-row:3;color:var(--mute);font-size:15px;margin-bottom:2.4vh}
+.hero h1{grid-column:1/9;grid-row:4;font:500 clamp(58px,12.4vw,228px)/.86 var(--serif);letter-spacing:-.035em}
+.hero h1 .l{display:block;overflow:hidden;padding:0 .08em .1em 0;margin-bottom:-.1em}
+.hero h1 .l>span{display:block}
+.hero h1 em{font-weight:400}
+.intro{grid-column:1/6;grid-row:1;max-width:25rem}
+.intro p{font-size:17px}
+.actions{display:flex;align-items:center;gap:30px;margin-top:26px}
+.go{display:inline-flex;align-items:center;gap:14px;font-weight:600;text-decoration:none;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.disc{width:54px;height:54px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-size:20px;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.go:hover .disc{transform:rotate(-45deg)}
+.ul{font-weight:500;text-decoration:none;background:linear-gradient(currentColor,currentColor) 0 100%/100% 1px no-repeat;padding-bottom:3px;transition:background-size .45s cubic-bezier(.2,.8,.2,1)}
+.ul:hover{background-size:0 1px;background-position:100% 100%}
+@keyframes rise{from{transform:translateY(106%)}}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}}
+.hero h1 .l>span{animation:rise 1.4s cubic-bezier(.16,1,.3,1) .15s both}
+.hero h1 .l+.l>span{animation-delay:.28s}
+.eyebrow,.intro{animation:fade 1.1s cubic-bezier(.2,.8,.2,1) .7s both}
+/* sections */
+.sec{position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;padding:24vh 5vw 14vh;min-height:100vh}
+.h2{font:500 clamp(48px,6.6vw,116px)/.9 var(--serif);letter-spacing:-.035em;margin-bottom:.4em}
+.h2 em{font-weight:400}
+.lead{font:400 clamp(23px,2.05vw,31px)/1.32 var(--serif);letter-spacing:-.005em}
+.kick{color:var(--mute);max-width:34rem;margin:-.6em 0 2.2em}
+.about .col{grid-column:7/13}
+.study{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:40px 0 44px}
+.study h3{font:italic 500 21px/1.25 var(--serif)}
+.study .yr{display:block;color:var(--faint);font-size:14px;margin:4px 0 6px;font-variant-numeric:tabular-nums}
+.study p,.sides dd{color:var(--mute);font-size:16px}
+.sides{border-top:1px solid var(--line)}
+.sides div{display:grid;grid-template-columns:7rem 1fr;gap:18px;padding:16px 0;border-bottom:1px solid var(--line)}
+.sides dt{font:italic 500 22px/1.3 var(--serif)}
+.work .col{grid-column:1/8}
+.roles{list-style:none;padding:0;border-top:1px solid var(--line)}
+.roles li{display:grid;grid-template-columns:8.5rem 1fr;gap:24px;padding:24px 0;border-bottom:1px solid var(--line);position:relative}
+.roles li::before{content:"";position:absolute;left:0;top:-1px;height:1px;width:100%;background:var(--acc);transform:scaleX(0);transform-origin:0 50%;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.roles li:hover::before{transform:scaleX(1)}
+.when{font-variant-numeric:tabular-nums;color:var(--mute);font-size:15px;padding-top:.4em}
+.roles h3{font:500 clamp(23px,2vw,30px)/1.15 var(--serif);letter-spacing:-.01em;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.roles li:hover h3{transform:translateX(8px)}
+.org{color:var(--acc);font-weight:500;margin:.25em 0 .45em}
+.roles .d{color:var(--mute);font-size:16px;max-width:34rem}
+.papers .col{grid-column:6/13}
+.plist{list-style:none;padding:0}
+.plist li{display:grid;grid-template-columns:8.6rem 1fr;gap:26px;align-items:start;padding:24px 0;border-top:1px solid var(--line)}
+.cites{font:400 clamp(66px,6.6vw,112px)/.78 var(--serif);letter-spacing:-.05em;font-variant-numeric:lining-nums}
+.cites small{display:block;font:500 13px/1 var(--sans);letter-spacing:0;color:var(--mute);margin-top:14px}
+.plist h3{font:500 19px/1.38 var(--sans)}
+.venue{color:var(--mute);font-size:15px;margin-top:6px}
+.also{list-style:none;padding:22px 0 0;border-top:1px solid var(--line);display:grid;gap:12px}
+.also li{color:var(--mute);font-size:16px}
+.also b{color:var(--ink);font-weight:500}
+.more-link{display:inline-block;margin-top:30px;font-weight:500}
+.wide{grid-column:1/-1;width:100%;max-width:1320px;margin:0 auto}
+.awards{list-style:none;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:48px;margin:0 0 64px;border-top:1px solid var(--line)}
+.awards li{padding:15px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:20px}
+.awards span{color:var(--mute);text-align:right;font-size:15px}
+.certs{list-style:none;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:34px 26px}
+.mat{display:block;aspect-ratio:4/3;background:var(--mat);border:1px solid var(--line);padding:14px;transition:transform .5s cubic-bezier(.2,.8,.2,1),border-color .4s}
+.mat:hover{transform:translateY(-5px);border-color:var(--acc)}
+.mat img{width:100%;height:100%;object-fit:contain;display:block}
+figcaption{margin-top:12px;font-size:15px;line-height:1.35}
+figcaption b{display:block;font-weight:500}
+figcaption span{color:var(--mute);font-size:14px}
+.more{margin-top:40px;font:500 16px var(--sans);color:var(--ink);background:none;border:1px solid var(--line);border-radius:40px;padding:12px 22px;cursor:pointer;transition:border-color .3s}
+.more:hover{border-color:var(--acc)}
+.projects{min-height:0;padding-top:10vh;padding-bottom:6vh}
+.contact{padding-top:16vh}
+.feat{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:44px;align-items:end;margin-bottom:64px}
+.shot{display:block;overflow:hidden;border:1px solid var(--line);background:var(--mat)}
+.shot img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+a.shot:hover img{transform:scale(1.035)}
+.host{font:500 16px var(--sans);margin-top:14px}
+.feat .host{font:italic 500 clamp(28px,3vw,44px)/1.1 var(--serif);margin:0 0 12px}
+.proj p{color:var(--mute);font-size:15px;margin-top:4px}
+.shots{list-style:none;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:44px 28px}
+.contact{align-items:center}
+.contact .col{grid-column:1/8}
+.mail{display:inline-block;font:italic 400 clamp(34px,5vw,84px)/1.05 var(--serif);letter-spacing:-.025em;text-decoration:none;overflow-wrap:anywhere;background:linear-gradient(var(--acc),var(--acc)) 0 100%/0 2px no-repeat;padding-bottom:6px;transition:background-size .6s cubic-bezier(.2,.8,.2,1)}
+.mail:hover{background-size:100% 2px}
+.links{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:12px 30px;margin:34px 0 30px}
+.links a{font-weight:500}
+.else{color:var(--mute);max-width:34rem;font-size:16px}
+footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding:30px 5vw 34px;color:var(--mute);font-size:14px;border-top:1px solid var(--line)}
+/* soft halo in the page colour: invisible on the backdrop, keeps text legible when the glass drifts behind it */
+main :is(p,h3,dd,dt,.when,.awards li,figcaption,.also li,.cites){text-shadow:0 0 14px var(--bg),0 0 3px var(--bg)}
+.hint{color:var(--faint)}
+@media (pointer:coarse){.hint{display:none}}
+@media (max-width:1100px){.nav nav{display:none}.nav-ct{display:inline}.about .col,.papers .col{grid-column:5/13}.work .col,.contact .col{grid-column:1/9}.certs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){
+body{font-size:16px}
+.nav{padding:14px 20px;gap:18px}.mark{display:none}.back{margin-right:auto}
+.hero{display:flex;flex-direction:column;justify-content:flex-end;padding:0 20px 5vh}
+.intro{order:3}
+.hero .eyebrow,.hero h1,.intro{margin-left:-20px;margin-right:-20px;padding-left:20px;padding-right:20px;background:var(--bg)}
+.hero .eyebrow{background:linear-gradient(transparent,var(--bg) 70%);padding-top:56px;margin-bottom:0;padding-bottom:2.4vh}
+.intro{margin-top:0;padding-top:20px;margin-bottom:-12vh;padding-bottom:12vh;background:linear-gradient(var(--bg) calc(100% - 9vh),transparent)}
+.hero h1{font-size:clamp(54px,17vw,86px)}
+.intro{max-width:none}
+.actions{margin-top:20px}
+.sec{display:block;min-height:0;padding:50vh 0 0}
+.sec>.col,.sec>.wide{padding:72px 20px 16vh;background:linear-gradient(transparent,var(--bg) 72px,var(--bg) calc(100% - 9vh),transparent)}
+.projects{padding-top:0}.projects>.wide{padding-top:84px}
+.study,.feat{grid-template-columns:minmax(0,1fr);gap:22px}
+.sides div,.roles li{grid-template-columns:minmax(0,1fr);gap:4px}
+.plist li{grid-template-columns:4.6rem 1fr;gap:16px}
+.cites{font-size:58px}.cites small{font-size:12px}
+.awards{grid-template-columns:minmax(0,1fr)}
+.certs{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 14px}
+.mat{padding:8px}
+.shots{grid-template-columns:minmax(0,1fr);gap:36px}
+}
+.rm *,.rm *::before{animation:none!important;transition:none!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="gl" aria-hidden="true"></canvas>
+<header class="nav">
+<a class="back" href="index.html">← All ideas</a>
+<a class="mark" href="#top">George Michoulis</a>
+<nav aria-label="Sections"><a href="#about">About</a><a href="#work">Experience</a><a href="#papers">Papers</a><a href="#certs">Certificates</a><a href="#projects">Projects</a><a href="#contact">Contact</a></nav>
+<a class="nav-ct" href="#contact">Contact</a>
+<button class="mode" type="button"><i aria-hidden="true"></i><span>Gallery</span></button>
+</header>
+<main id="main">
+<section class="hero" id="top" data-stage aria-label="Introduction">
+<p class="eyebrow">Blockchain developer and researcher · Thessaloniki, Greece</p>
+<h1><span class="l"><span>George</span></span> <span class="l"><span><em>Michoulis</em></span></span></h1>
+<div class="intro">
+<p>I build smart contracts and full-stack Web3 products, and I research graph-based machine learning for blockchains. Right now I’m a Web3 full-stack developer at Cyberscope by TAC.</p>
+<div class="actions"><a class="go" href="#contact"><span class="disc" aria-hidden="true">→</span>Contact</a><a class="ul" href="#work">See work</a></div>
+</div>
+</section>
+
+<section class="sec about" id="about" data-stage aria-labelledby="h-about">
+<div class="col">
+<h2 class="h2 rv" id="h-about">About</h2>
+<p class="lead rv">I’m a blockchain developer and researcher based in Thessaloniki. I write smart contracts, build the full-stack products around them, and study how well ledgers work in practice.</p>
+<div class="study">
+<div class="rv"><h3>MSc Data and Web Science</h3><span class="yr">Aristotle University of Thessaloniki · 2020–2022</span><p>Funded by a DeepMind scholarship. I worked on graph-embedding methods for blockchain fraud detection.</p></div>
+<div class="rv"><h3>BSc Applied Informatics</h3><span class="yr">University of Macedonia · 2015–2020</span><p>My thesis verified academic credentials on Ethereum.</p></div>
+</div>
+<dl class="sides rv">
+<div><dt>Research</dt><dd>Publications and startup work on ledger effectiveness and practical change across blockchain systems.</dd></div>
+<div><dt>Build</dt><dd>Web3 products (NFTs, DeFi) and data science with graph embeddings, shipped in Solidity, TypeScript and the cloud.</dd></div>
+<div><dt>Teach</dt><dd>Lecturing in networks, security and application development, and public talks on Web3 and edge tech.</dd></div>
+</dl>
+</div>
+</section>
+
+<section class="sec work" id="work" data-stage aria-labelledby="h-work">
+<div class="col">
+<h2 class="h2 rv" id="h-work">Experience</h2>
+<p class="kick rv">Four roles, newest first. <span class="hint">Point at a row and its glass block slides out.</span></p>
+<ol class="roles">
+<li class="rv"><span class="when">05/2026 – now</span><div><h3>Web3 Full-Stack Developer</h3><p class="org">Cyberscope by TAC</p><p class="d">End-to-end Web3 products: contracts, on-chain integrations, React and Next front ends, and security tooling.</p></div></li>
+<li class="rv"><span class="when">2024 – 2026</span><div><h3>Blockchain Developer &amp; Researcher</h3><p class="org">Sidroco Holdings Ltd</p><p class="d">An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ LMS and multinational EU projects.</p></div></li>
+<li class="rv"><span class="when">2023 – 2025</span><div><h3>Lecturer &amp; Academic Partner</h3><p class="org">University of Derby / Mediterranean College</p><p class="d">Networks and Security, Web Scripting and Application Development, with inclusivity-first assessment.</p></div></li>
+<li class="rv"><span class="when">2022 – 2024</span><div><h3>Blockchain &amp; Full-Stack Developer</h3><p class="org">University of Nicosia / IFF</p><p class="d">Large Next.js, NestJS and Docker applications, and a Web3 NFT marketplace.</p></div></li>
+</ol>
+</div>
+</section>
+
+<section class="sec papers" id="papers" data-stage aria-labelledby="h-papers">
+<div class="col">
+<h2 class="h2 rv" id="h-papers">Papers</h2>
+<p class="kick rv">Credential verification, DeFi governance and 5G marketplaces. The large number is each paper’s citation count.</p>
+<ol class="plist">
+<li class="rv"><span class="cites">32<small>citations</small></span><div><h3>A process-aware approach for blockchain-based verification of academic qualifications</h3><p class="venue">Simulation Modelling Practice and Theory 121, 102642 · 2022</p></div></li>
+<li class="rv"><span class="cites">11<small>citations</small></span><div><h3>Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe</h3><p class="venue">XIV Balkan Conference on Operational Research · 2020</p></div></li>
+<li class="rv"><span class="cites">7<small>citations</small></span><div><h3>Exploring decentralized governance: a framework applied to Compound Finance</h3><p class="venue">Intl. Conference on Mathematical Research for Blockchain Economy · 2023</p></div></li>
+<li class="rv"><span class="cites">1<small>citation</small></span><div><h3>FraMark: a blockchain marketplace for 5G network management using fractional NFTs</h3><p class="venue">7th World Symposium on Communication Engineering (WSCE) · 2024</p></div></li>
+<li class="rv"><span class="cites">1<small>citation</small></span><div><h3>Data security for smart cities</h3><p class="venue">2025</p></div></li>
+</ol>
+<ul class="also rv">
+<li><b>Unlocking 5G network slicing:</b> a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management. IEEE ICCE, 2025.</li>
+<li><b>Graph embedding and node features for drug-target interaction prediction.</b> MSc work, Aristotle University of Thessaloniki, 2022.</li>
+<li><b>Blockchain in higher education:</b> permissioned and permissionless approaches. 4th Summit on Gender Equality in Computing, 2022.</li>
+<li>Two Greek-language theses on verifying academic titles with Ethereum, 2020 and 2021.</li>
+</ul>
+<a class="more-link ul" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ" rel="noopener">All papers on Google Scholar ↗</a>
+</div>
+</section>
+
+<section class="sec certs-sec" id="certs" data-stage aria-labelledby="h-certs">
+<div class="wide">
+<h2 class="h2 rv" id="h-certs">Awards <em>&amp;</em> certificates</h2>
+<ul class="awards rv">
+<li>DeepMind Scholarship <span>Aristotle University of Thessaloniki, 2020–2022</span></li>
+<li>3rd place, Infinitech Hackathon <span>Crowdpolicy, 06/2022</span></li>
+<li>Basic Research grant <span>University of Macedonia, 2020–2021</span></li>
+<li>Move/Sui Bootcamp Thessaloniki award <span>2025</span></li>
+</ul>
+<ul class="certs">
+<li class="rv"><figure><a class="mat" href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" target="_blank" rel="noopener"><img src="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" alt="Scan of the MSc Data and Web Science degree" loading="lazy" decoding="async"></a><figcaption><b>MSc Data and Web Science</b><span>Aristotle University of Thessaloniki</span></figcaption></figure></li>
+<li class="rv"><figure><a class="mat" href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" target="_blank" rel="noopener"><img src="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" alt="Scan of the bachelor's degree" loading="lazy" decoding="async"></a><figcaption><b>Bachelor’s degree</b><span>University of Macedonia</span></figcaption></figure></li>
+<li class="rv"><figure><a class="mat" href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png" target="_blank" rel="noopener"><img src="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png" alt="Move Bootcamp Thessaloniki award artwork" loading="lazy" decoding="async"></a><figcaption><b>Move Bootcamp Thessaloniki</b><span>Award, 2025</span></figcaption></figure></li>
+<li class="rv"><figure><a class="mat" href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" target="_blank" rel="noopener"><img src="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" alt="Scan of the CCNA course certificate" loading="lazy" decoding="async"></a><figcaption><b>CCNA, Cisco Certified Network Associate</b><span>University of Thessaly</span></figcaption></figure></li>
+<li class="rv"><figure><a class="mat" href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" target="_blank" rel="noopener"><img src="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" alt="Certified Rust Developer certificate" loading="lazy" decoding="async"></a><figcaption><b>Certified Rust Developer</b><span>W3Schools</span></figcaption></figure></li>
+<li class="rv"><figure><a class="mat" href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" target="_blank" rel="noopener"><img src="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" alt="Scan of the machine learning and deep neural networks certificate" loading="lazy" decoding="async"></a><figcaption><b>Machine learning and deep neural networks</b><span>Aristotle University of Thessaloniki</span></figcaption></figure></li>
+<li class="rv"><figure><a class="mat" href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" target="_blank" rel="noopener"><img src="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" alt="IEEE certificate of completion" loading="lazy" decoding="async"></a><figcaption><b>How to get published with IEEE</b><span>IEEE</span></figcaption></figure></li>
+<li class="rv"><figure><a class="mat" href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" target="_blank" rel="noopener"><img src="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" alt="Introduction to digital currencies certificate" loading="lazy" decoding="async"></a><figcaption><b>Introduction to digital currencies</b><span>University of Nicosia</span></figcaption></figure></li>
+<li class="rv"><figure><a class="mat" href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png" target="_blank" rel="noopener"><img src="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png" alt="Advanced ethical hacking certificate" loading="lazy" decoding="async"></a><figcaption><b>Advanced ethical hacking</b><span>Audax Cybersecurity</span></figcaption></figure></li>
+<li class="rv"><figure><a class="mat" href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png" target="_blank" rel="noopener"><img src="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png" alt="Cloud engineering certificate annex" loading="lazy" decoding="async"></a><figcaption><b>Cloud engineering</b><span>Code.Hub</span></figcaption></figure></li>
+<li class="rv"><figure><a class="mat" href="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg" target="_blank" rel="noopener"><img src="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg" alt="NFT Talents program certificate" loading="lazy" decoding="async"></a><figcaption><b>NFT Talents program</b><span>Certificate of completion</span></figcaption></figure></li>
+<li class="rv"><figure><a class="mat" href="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg" target="_blank" rel="noopener"><img src="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg" alt="RippleX workshop certificate of participation" loading="lazy" decoding="async"></a><figcaption><b>Launch event &amp; RippleX workshop</b><span>University of Nicosia</span></figcaption></figure></li>
+</ul>
+<button class="more" type="button" hidden>See all 34 certificates</button>
+</div>
+</section>
+
+<section class="sec projects" id="projects" data-stage aria-labelledby="h-proj">
+<div class="wide">
+<h2 class="h2 rv" id="h-proj">Projects</h2>
+<div class="feat proj rv">
+<a class="shot" href="https://verde.uom.gr" rel="noopener"><img src="../../img/portfolio/verde.uom.gr.PNG" alt="Screenshot of verde.uom.gr, the VerDe contact page with a map of the University of Macedonia" loading="lazy" decoding="async"></a>
+<div><p class="host">verde.uom.gr</p><p>VerDe, the academic-credential verification system from my papers. The screenshot shows its contact page at the University of Macedonia.</p></div>
+</div>
+<ul class="shots">
+<li class="proj rv"><div class="shot"><img src="../../img/portfolio/bbf-gui.ddns.net.gif" alt="Screenshot of the Blockchain Benchmarking Framework site" loading="lazy" decoding="async"></div><p class="host">bbf-gui.ddns.net</p><p>Blockchain Benchmarking Framework: deploys and evaluates different blockchain protocols.</p></li>
+<li class="proj rv"><div class="shot"><img src="../../img/portfolio/metau.unic.ac.cy.png" alt="Screenshot of metau.unic.ac.cy with a connect-wallet button" loading="lazy" decoding="async"></div><p class="host">metau.unic.ac.cy</p><p>University of Nicosia courses taught on-chain and in the metaverse, with wallet sign-in.</p></li>
+<li class="proj rv"><div class="shot"><img src="../../img/portfolio/accelerate.png" alt="Screenshot of the Accelerate sign-in page" loading="lazy" decoding="async"></div><p class="host">stg.accelerate.unic.ac.cy</p><p>Sign-in screen for Accelerate at the University of Nicosia.</p></li>
+<li class="proj rv"><div class="shot"><img src="../../img/portfolio/celc.web.auth.gr.PNG" alt="Screenshot of celc.web.auth.gr" loading="lazy" decoding="async"></div><p class="host">celc.web.auth.gr</p><p>Site of the Centre for European Legal Culture at Aristotle University.</p></li>
+<li class="proj rv"><div class="shot"><img src="../../img/portfolio/eudem.polsci.auth.gr.PNG" alt="Screenshot of eudem.polsci.auth.gr" loading="lazy" decoding="async"></div><p class="host">eudem.polsci.auth.gr</p><p>Site of the EUDEM Jean Monnet Chair.</p></li>
+<li class="proj rv"><div class="shot"><img src="../../img/portfolio/marlab.ode.uom.gr.PNG" alt="Screenshot of marlab.ode.uom.gr" loading="lazy" decoding="async"></div><p class="host">marlab.ode.uom.gr</p><p>Site of MarLab, the marketing laboratory at the University of Macedonia.</p></li>
+</ul>
+</div>
+</section>
+
+<section class="sec contact" id="contact" data-stage aria-labelledby="h-contact">
+<div class="col">
+<h2 class="h2 rv" id="h-contact">Contact</h2>
+<p class="kick rv">Email is the quickest way to reach me. I’m in Thessaloniki and work remotely.</p>
+<a class="mail rv" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+<ul class="links rv">
+<li><a class="ul" href="https://www.linkedin.com/in/george-michoulis/" rel="noopener">LinkedIn ↗</a></li>
+<li><a class="ul" href="https://github.com/gmixoulis" rel="noopener">GitHub ↗</a></li>
+<li><a class="ul" href="https://twitter.com/GeorgeMicou" rel="noopener">X ↗</a></li>
+<li><a class="ul" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ" rel="noopener">Google Scholar ↗</a></li>
+</ul>
+<p class="else rv">Also on this site: the <a href="../../garden/">Zen Garden</a>, where I keep personal notes, and <a href="../../play/">Ledger Run</a>, my CV as a platformer game.</p>
+</div>
+</section>
+</main>
+<footer><span>© 2026 George Michoulis</span><span>The glass is rendered live in your browser with three.js.</span><a href="index.html">← All ideas</a></footer>
+
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+addEventListener('DOMContentLoaded', function () {
+  var G = window.__glass, d = document.documentElement, rm = G.reduced;
+  var $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+  // studio (dark) / gallery (light)
+  var mb = $('.mode'), ml = $('span', mb);
+  function sync() { var l = G.light(); ml.textContent = l ? 'Studio' : 'Gallery'; mb.setAttribute('aria-label', l ? 'Switch to the dark studio view' : 'Switch to the light gallery view'); }
+  function themed() { sync(); dispatchEvent(new Event('glass:theme')); }
+  mb.addEventListener('click', function () { var t = G.light() ? 'dark' : 'light'; d.dataset.theme = t; try { localStorage.setItem('glass-mode', t); } catch (e) {} themed(); });
+  sync();
+  // experience rows drive the four glass blocks
+  $$('.roles li').forEach(function (li, i) { li.addEventListener('pointerenter', function () { G.hover = i; }); li.addEventListener('pointerleave', function () { G.hover = -1; }); });
+  // the other 22 certificates, built from their file names
+  var P = '../../img/renamed/', REST = ['Award_Academic-Achievement.jpg','Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg','Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg','Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg','Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg','Certificate-Of-Completion_Discover-Customer.jpg','Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png','Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg','Certificate-Of-Completion_Networking-Essentials.png','Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg','Certificate-Of-Completion_The-Hour-Of-Code.jpg','Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg','Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg','Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg','Certificate-Of-Participation_EY-Cyber-Day.jpg','Certificate-Of-Participation_GNULinux-Command-Line.jpg','Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png','Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg','Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg','Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg','Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg','English-Certificate_English-Certificate-English-Proficiency.jpg'];
+  var more = $('.more'), grid = $('.certs'); more.hidden = false;
+  more.addEventListener('click', function () {
+    grid.insertAdjacentHTML('beforeend', REST.map(function (f) {
+      var p = f.replace(/\.\w+$/, '').split('_').map(function (x) { return x.replace(/^1/, '').replace(/-/g, ' ').replace(/ Of /g, ' of '); });
+      return '<li><figure><a class="mat" href="' + P + f + '" target="_blank" rel="noopener"><img src="' + P + f + '" alt="Scan: ' + p[1] + '" loading="lazy" decoding="async"></a><figcaption><b>' + p[1] + '</b><span>' + p[0] + '</span></figcaption></figure></li>';
+    }).join(''));
+    more.hidden = true; var first = grid.children[12]; first && $('a', first).focus({ preventScroll: true });
+    window.ScrollTrigger && ScrollTrigger.refresh();
+  });
+  // nav background once the hero is left
+  var nav = $('.nav'); function onS() { nav.classList.toggle('solid', scrollY > 40); } addEventListener('scroll', onS, { passive: true }); onS();
+  var lenis = null;
+  $$('a[href^="#"]').forEach(function (a) { a.addEventListener('click', function (e) { var t = $(a.getAttribute('href')); if (!t) return; e.preventDefault(); if (lenis) lenis.scrollTo(t, { duration: 1.6 }); else t.scrollIntoView(); history.replaceState(null, '', a.getAttribute('href')); }); });
+  // magnetic actions (fine pointers only)
+  if (!rm && matchMedia('(pointer: fine)').matches) $$('.go, .mode').forEach(function (el) {
+    el.addEventListener('pointermove', function (e) { var r = el.getBoundingClientRect(); el.style.transform = 'translate(' + (e.clientX - r.left - r.width / 2) * .22 + 'px,' + (e.clientY - r.top - r.height / 2) * .32 + 'px)'; });
+    el.addEventListener('pointerleave', function () { el.style.transform = ''; });
+  });
+  if (!window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+  if (!rm && window.Lenis) { lenis = new Lenis({ lerp: .1 }); lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(function (t) { lenis.raf(t * 1000); }); gsap.ticker.lagSmoothing(0); }
+  var links = $$('.nav nav a');
+  $$('main section[id]').forEach(function (sec) {
+    ScrollTrigger.create({ trigger: sec, start: 'top 55%', end: 'bottom 55%', onToggle: function (s) { if (!s.isActive) return; links.forEach(function (l) { l.setAttribute('aria-current', String(l.getAttribute('href') === '#' + sec.id)); }); } });
+  });
+  if (rm) return;
+  $$('.rv').forEach(function (el) { gsap.from(el, { y: 26, autoAlpha: 0, duration: .75, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 92%', once: true } }); });
+});
+</script>
+
+<script type="module" async>
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+
+const G = window.__glass, root = document.documentElement, cv = document.getElementById('gl');
+const small = Math.min(innerWidth, innerHeight) < 600 || matchMedia('(pointer: coarse)').matches;
+let R = null;
+try { if (cv.getContext('webgl2')) R = new THREE.WebGLRenderer({ canvas: cv, antialias: false, powerPreference: 'high-performance' }); } catch (e) { R = null; }
+if (!R) root.classList.add('no-gl'); else start();
+
+function start() {
+// software GL (SwiftShader, llvmpipe) cannot animate this; it gets on-demand stills instead of a loop
+const gl = R.getContext(), ext = gl.getExtension('WEBGL_debug_renderer_info');
+const soft = /swiftshader|llvmpipe|softpipe|software/i.test(String(gl.getParameter(ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER)));
+const lite = small || soft, still = G.reduced || soft;
+R.setPixelRatio(soft ? 1 : Math.min(devicePixelRatio, small ? 1.5 : 1.75));
+R.toneMapping = THREE.NeutralToneMapping;
+const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, .1, 80);
+const C = h => new THREE.Color(h);
+
+/* ---------- one mesh, four sculptures ----------
+   Every form is built on the same N x M grid (rows run along the ensō's brush path, columns around its tube),
+   so the forms share vertex count and order and can be blended per vertex on the CPU.
+   Collapsed rows/columns become zero-area triangles, which is how one grid becomes a C-ring, a pebble,
+   four separate blocks (each band of rows is its own closed lat-long shell) or a convex crystal. */
+const N = small ? 208 : 336, M = small ? 56 : 88, CAP = Math.round(N * .04), TUBE = N - 2 * CAP, V = N * M;
+const TAU = Math.PI * 2, HP = Math.PI / 2, A0 = 50 * Math.PI / 180, SPAN = 330 * Math.PI / 180, SQ = .82;
+const PHI = Float32Array.from({ length: M }, (_, j) => j / M * TAU);
+const mk = () => ({ p: new Float32Array(V * 3), n: new Float32Array(V * 3) });
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+
+// ensō: a tapering brush stroke bent round 330°, drawn up to `prog`; rows past the brush head fold into its round tip
+function ring(prog, S) {
+  for (let i = 0; i < N; i++) {
+    const q = i < CAP ? -(CAP - i) / CAP : i < N - CAP ? (i - CAP) / (TUBE - 1) : 1 + (i - (N - CAP - 1)) / CAP;
+    let a, psi, sg = 1;
+    if (q <= 0) { a = 0; psi = -q * HP; sg = -1; } else if (q <= prog) { a = q; psi = 0; } else { a = prog; psi = (q - prog) / (2 - prog) * HP; }
+    const al = A0 + a * SPAN, ca = Math.cos(al), sa = Math.sin(al), Rr = 1 + .035 * Math.sin(3 * al + .6);
+    const cx = Rr * ca, cy = Rr * sa, cz = .07 * Math.sin(2 * al + 1);
+    const r = .3 * (1.1 - .52 * Math.pow(a, 2.2) + .05 * Math.sin(9 * a)) * Math.min(1, .5 + prog * 1.6);
+    const cp = Math.cos(psi), sp = Math.sin(psi) * sg;
+    for (let j = 0; j < M; j++) {
+      const cf = Math.cos(PHI[j]), sf = Math.sin(PHI[j]), k = (i * M + j) * 3;
+      const ox = cp * cf * ca - sp * sa, oy = cp * cf * sa + sp * ca;
+      S.p[k] = cx + r * ox; S.p[k + 1] = cy + r * oy; S.p[k + 2] = cz + r * cp * sf * SQ;
+      const nz = cp * sf / SQ, l = Math.hypot(ox, oy, nz) || 1;
+      S.n[k] = ox / l; S.n[k + 1] = oy / l; S.n[k + 2] = nz / l;
+    }
+  }
+}
+// shared direction field for the star-shaped forms: azimuth follows the stroke, the tube angle becomes latitude
+function dirAt(i, j, d) {
+  const al = A0 + clamp((i - CAP) / (TUBE - 1), 0, 1) * TAU;
+  let f = PHI[j]; if (f > Math.PI) f -= TAU;
+  const e = clamp(f * .625, -HP, HP);
+  d[0] = Math.cos(al) * Math.cos(e); d[1] = Math.sin(al) * Math.cos(e); d[2] = Math.sin(e);
+}
+function star(rf, nf, S) {
+  const d = [0, 0, 0], h = 1e-3;
+  const F = (x, y, z) => { const l = Math.hypot(x, y, z); return l - rf([x / l, y / l, z / l]); };
+  for (let i = 0; i < N; i++) for (let j = 0; j < M; j++) {
+    dirAt(i, j, d); const r = rf(d), k = (i * M + j) * 3, x = d[0] * r, y = d[1] * r, z = d[2] * r;
+    S.p[k] = x; S.p[k + 1] = y; S.p[k + 2] = z;
+    let n = nf ? nf(d) : [F(x + h, y, z) - F(x - h, y, z), F(x, y + h, z) - F(x, y - h, z), F(x, y, z + h) - F(x, y, z - h)];
+    const l = Math.hypot(n[0], n[1], n[2]) || 1; S.n[k] = n[0] / l; S.n[k + 1] = n[1] / l; S.n[k + 2] = n[2] / l;
+  }
+}
+const pebR = d => (1 / Math.hypot(d[0] / 1.3, d[1] / 1.12, d[2] / .6)) * (1 + .05 * Math.sin(2.3 * d[0] + 1.1) * Math.cos(1.9 * d[1] - .4) + .035 * d[0] * d[1] - .03 * d[2] * d[0]);
+// double-terminated quartz: a slightly irregular hexagonal prism capped by two six-face pyramids
+const PL = []; { let sd = 11; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+  const nrm = v => { const l = Math.hypot(...v); return v.map(x => x / l); };
+  for (let k = 0; k < 6; k++) { const a = k * Math.PI / 3 + (rnd() - .5) * .16;
+    PL.push([Math.cos(a), 0, Math.sin(a), .55 + rnd() * .09]);
+    const t = nrm([Math.cos(a), .86 + rnd() * .2, Math.sin(a)]); PL.push([...t, t[1] * (1.42 + rnd() * .1)]);
+    const u = nrm([Math.cos(a + .06), -(1 + rnd() * .2), Math.sin(a + .06)]); PL.push([...u, -u[1] * (1.12 + rnd() * .08)]); } }
+// smooth max of the plane distances keeps facets flat but rounds every edge into a thin bevel that catches light
+const KB = .028, cryF = (x, y, z, w) => { let mx = -9; const v = PL.map(q => { const e = (q[0] * x + q[1] * y + q[2] * z - q[3]) / KB; mx = Math.max(mx, e); return e; });
+  let sum = 0; v.forEach((e, i) => { const x2 = Math.exp(e - mx); sum += x2; if (w) w[i] = x2; }); return KB * (mx + Math.log(sum)); };
+const cryR = d => { let m = 9; for (const q of PL) { const dn = d[0] * q[0] + d[1] * q[1] + d[2] * q[2]; if (dn > 1e-5) m = Math.min(m, q[3] / dn); }
+  let lo = m - .25, hi = m; for (let it = 0; it < 14; it++) { const t = (lo + hi) / 2; cryF(d[0] * t, d[1] * t, d[2] * t) < 0 ? lo = t : hi = t; } return (lo + hi) / 2; };
+const WB = new Float64Array(18), cryN = d => { const r = cryR(d); cryF(d[0] * r, d[1] * r, d[2] * r, WB); const n = [0, 0, 0];
+  PL.forEach((q, i) => { n[0] += q[0] * WB[i]; n[1] += q[1] * WB[i]; n[2] += q[2] * WB[i]; }); return n; };
+// four stacked slabs, one per role (newest on top); [x, y, z, half w, half h, half d, yaw]
+const BL = [[.07, .72, .04, .86, .19, .58, .1], [-.1, .24, -.05, .9, .19, .6, -.07], [.12, -.24, .02, .84, .19, .56, .17], [-.04, -.72, .05, .92, .19, .62, -.03]];
+const sdb = (x, y, z, b) => { const r = .07, qx = Math.abs(x) - b[3] + r, qy = Math.abs(y) - b[4] + r, qz = Math.abs(z) - b[5] + r;
+  return Math.hypot(Math.max(qx, 0), Math.max(qy, 0), Math.max(qz, 0)) + Math.min(Math.max(qx, qy, qz), 0) - r; };
+function blocks(S) {
+  const h = 1e-3;
+  for (let i = 0; i < N; i++) {
+    const k = Math.min(3, (i * 4 / N) | 0), i0 = k * N / 4, th = (i - i0) / (N / 4 - 1) * Math.PI, b = BL[k], cy = Math.cos(b[6]), sy = Math.sin(b[6]);
+    for (let j = 0; j < M; j++) {
+      let dx = Math.cos(th), dy = Math.sin(th) * Math.cos(PHI[j]); const dz = Math.sin(th) * Math.sin(PHI[j]);
+      if (k === 2) { dx = -dx; dy = -dy; }
+      let lo = 0, hi = 1.6; for (let it = 0; it < 22; it++) { const m = (lo + hi) / 2; sdb(dx * m, dy * m, dz * m, b) < 0 ? lo = m : hi = m; }
+      const t = (lo + hi) / 2, x = dx * t, y = dy * t, z = dz * t;
+      let nx = sdb(x + h, y, z, b) - sdb(x - h, y, z, b), ny = sdb(x, y + h, z, b) - sdb(x, y - h, z, b), nz = sdb(x, y, z + h, b) - sdb(x, y, z - h, b);
+      const l = Math.hypot(nx, ny, nz) || 1; nx /= l; ny /= l; nz /= l;
+      const o = (i * M + j) * 3;
+      S.p[o] = x * cy + z * sy + b[0]; S.p[o + 1] = y + b[1]; S.p[o + 2] = -x * sy + z * cy + b[2];
+      S.n[o] = nx * cy + nz * sy; S.n[o + 1] = ny; S.n[o + 2] = -nx * sy + nz * cy;
+    }
+  }
+}
+const RING = mk(), PEB = mk(), BLK = mk(), CRY = mk();
+ring(1, RING); star(pebR, null, PEB); blocks(BLK); star(cryR, cryN, CRY);
+const FORMS = [RING, PEB, BLK, CRY];
+
+const idx = new Uint16Array((N - 1) * M * 6);
+for (let i = 0, o = 0; i < N - 1; i++) for (let j = 0; j < M; j++, o += 6) {
+  const a = i * M + j, b = a + M, c = (i + 1) * M + (j + 1) % M, d = i * M + (j + 1) % M; idx.set([a, b, d, b, c, d], o); }
+const P = new Float32Array(V * 3), NN = new Float32Array(V * 3);
+const geo = new THREE.BufferGeometry();
+geo.setAttribute('position', new THREE.BufferAttribute(P, 3).setUsage(THREE.DynamicDrawUsage));
+geo.setAttribute('normal', new THREE.BufferAttribute(NN, 3).setUsage(THREE.DynamicDrawUsage));
+geo.setIndex(new THREE.BufferAttribute(idx, 1));
+geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 2.6);
+
+const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: .03, transmission: 1, thickness: 2.2, ior: 1.52,
+  dispersion: small ? 0 : .7, clearcoat: 1, clearcoatRoughness: .03, attenuationColor: C('#d6e4ff'), attenuationDistance: 3.2,
+  specularIntensity: 1, envMapIntensity: 1.2, side: lite ? THREE.FrontSide : THREE.DoubleSide });
+const glass = new THREE.Mesh(geo, glassMat), obj = new THREE.Group(), rig = new THREE.Group(); obj.add(glass); rig.add(obj); scene.add(rig);
+
+/* ---------- studio: backdrop sweep + floor that only shows shadow and caustic ---------- */
+const U = { uBase: { value: C(0) }, uTop: { value: C(0) }, uGlowCol: { value: C(0) }, uGlow: { value: new THREE.Vector2(.7, .55) },
+  uBarCol: { value: new THREE.Color() }, uGrad: { value: new THREE.Color() }, uAsp: { value: 1 }, uGlowR: { value: .42 }, uBars: { value: .5 }, uTime: { value: 0 } };
+const BACK = `uniform vec3 uBase,uTop,uGlowCol,uBarCol,uGrad;uniform vec2 uGlow;uniform float uAsp,uGlowR,uBars,uTime;
+vec3 backdrop(vec2 uv){vec3 c=mix(uBase,uTop,smoothstep(-.1,1.1,uv.y));vec2 d=(uv-uGlow)*vec2(uAsp,1.);
+float g=exp(-dot(d,d)/(uGlowR*uGlowR));float hot=exp(-dot(d,d)/(uGlowR*uGlowR*.18));float bx=d.x/uGlowR;
+float bars=exp(-pow((bx+.3)*11.,2.))+.8*exp(-pow((bx-.24)*14.,2.));
+return mix(c,uGlowCol,g)+uGrad*g*clamp(d.x/uGlowR*1.6,-1.,1.)+uBarCol*(g*bars*uBars*smoothstep(-.9,.4,-d.y/uGlowR)+hot*uBars*.35);}`;
+const bg = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({ uniforms: U, depthWrite: false,
+  vertexShader: 'varying vec2 vUv;void main(){vUv=position.xy*.5+.5;gl_Position=vec4(position.xy,.99999,1.);}',
+  fragmentShader: BACK + 'varying vec2 vUv;void main(){gl_FragColor=vec4(backdrop(vUv),1.);}' }));
+bg.frustumCulled = false; bg.renderOrder = -2; scene.add(bg);
+
+const SR = 256, rtO = new THREE.WebGLRenderTarget(SR, SR), rtA = rtO.clone(), rtB = rtO.clone(), rtC = rtO.clone();
+const FU = Object.assign({ tS1: { value: rtB.texture }, tS2: { value: rtC.texture }, uSC: { value: new THREE.Vector2() }, uSS: { value: 5 },
+  uShadow: { value: .8 }, uShadowCol: { value: new THREE.Vector3(.2, .22, .28) }, uCaus: { value: 1 }, uCausCol: { value: C('#ff4a22') }, uPool: { value: C(0) }, tR: { value: null }, uRefl: { value: .4 }, uFl: { value: 1 } }, U);
+// caustic web: iterated domain warp, after the well-known Shadertoy "water caustic" iteration (joltz0r); rewritten here
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.ShaderMaterial({ uniforms: FU,
+  vertexShader: 'varying vec4 vC;varying vec3 vW;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;vC=projectionMatrix*viewMatrix*w;gl_Position=vC;}',
+  fragmentShader: BACK + `varying vec4 vC;varying vec3 vW;uniform sampler2D tS1,tS2;uniform vec2 uSC;uniform float uSS,uShadow,uCaus;uniform vec3 uShadowCol,uCausCol,uPool;uniform sampler2D tR;uniform float uRefl,uFl;
+float caustic(vec2 p,float t){vec2 i=p;float c=1.;for(int n=0;n<4;n++){float tt=t*(1.-3.5/float(n+1));
+i=p+vec2(cos(tt-i.x)+sin(tt+i.y),sin(tt-i.y)+cos(tt+i.x));c+=1./max(length(vec2(p.x/(sin(i.x+tt)/.006),p.y/(cos(i.y+tt)/.006))),1e-3);}
+c=clamp(1.17-pow(c/4.,1.4),0.,1.);return pow(c,7.);}
+void main(){vec3 c=backdrop(vC.xy/vC.w*.5+.5);vec2 su=(vW.xz-uSC)/uSS+.5;
+float inb=step(0.,su.x)*step(su.x,1.)*step(0.,su.y)*step(su.y,1.);
+float wide=texture2D(tS2,su).a*inb;float tight=texture2D(tS1,su-vec2(.035,-.045)).a*inb;
+vec2 pd=(vW.xz-uSC)/uSS;float pool=exp(-dot(pd,pd)*9.);c=mix(c,uPool,pool*.85*uFl);
+c=mix(c,c*uShadowCol,clamp(wide*uShadow*uFl,0.,1.));
+vec2 sv=vC.xy/vC.w*.5+.5,px=vec2(1.5/512.,0.);
+vec4 rf=(texture2D(tR,sv)*2.+texture2D(tR,sv+px)+texture2D(tR,sv-px)+texture2D(tR,sv+px.yx)+texture2D(tR,sv-px.yx))/6.;
+c=mix(c,rf.rgb,rf.a*uRefl*uFl*exp(-dot(pd,pd)*4.));
+float m=smoothstep(.08,.6,wide)*smoothstep(.02,.3,tight);float k=caustic(vW.xz*2.6-250.,uTime*.5);
+c+=mix(uCausCol,vec3(1.,.78,.55),k*k)*uCaus*uFl*m*k*1.8;gl_FragColor=vec4(c,1.);}` }));
+floor.rotation.x = -HP; floor.renderOrder = -1; scene.add(floor);
+
+// contact shadow: look up at the object from the floor, write "closeness to floor", blur twice
+const sCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 4); sCam.up.set(0, 0, 1);
+const occ = new THREE.ShaderMaterial({ side: THREE.DoubleSide, uniforms: { uF: { value: 0 }, uH: { value: 2.4 } },
+  vertexShader: 'uniform float uF;varying float vH;void main(){vec4 w=modelMatrix*vec4(position,1.);vH=w.y-uF;gl_Position=projectionMatrix*viewMatrix*w;}',
+  fragmentShader: 'uniform float uH;varying float vH;void main(){float a=clamp(1.-vH/uH,0.,1.);gl_FragColor=vec4(0.,0.,0.,a*a*a);}' });
+const blurM = new THREE.ShaderMaterial({ depthTest: false, depthWrite: false, uniforms: { t: { value: null }, dir: { value: new THREE.Vector2() } },
+  vertexShader: 'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
+  fragmentShader: 'uniform sampler2D t;uniform vec2 dir;varying vec2 vUv;void main(){float w[5];w[0]=.227;w[1]=.1945;w[2]=.1216;w[3]=.054;w[4]=.0162;vec4 s=texture2D(t,vUv)*w[0];for(int i=1;i<5;i++){s+=texture2D(t,vUv+dir*float(i))*w[i];s+=texture2D(t,vUv-dir*float(i))*w[i];}gl_FragColor=s;}' });
+const qScene = new THREE.Scene(), quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), blurM); quad.frustumCulled = false; qScene.add(quad);
+const blur = (src, dst, x, y) => { blurM.uniforms.t.value = src.texture; blurM.uniforms.dir.value.set(x / SR, y / SR); R.setRenderTarget(dst); R.render(qScene, sCam); };
+
+const rtR = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType }); FU.tR.value = rtR.texture;
+const reflMat = new THREE.MeshPhysicalMaterial({ color: C('#16264a'), roughness: .05, clearcoat: 1, clearcoatRoughness: .04, envMapIntensity: 1.4, side: THREE.DoubleSide });
+/* ---------- procedural studio lighting (PMREM from emissive panels) ---------- */
+const pmrem = new THREE.PMREMGenerator(R);
+function makeEnv(light) {
+  const s = new THREE.Scene();
+  s.add(new THREE.Mesh(new THREE.SphereGeometry(20, 32, 16), new THREE.MeshBasicMaterial({ color: C(light ? '#6f6a63' : '#03050a'), side: THREE.BackSide })));
+  const panel = (w, h, x, y, z, col, k) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: C(col).multiplyScalar(k), side: THREE.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); s.add(m); };
+  panel(8, 5, -7, 6, 6, '#ffd2a1', light ? 4 : 6);      // warm key, high left
+  panel(1.3, 11, 9, 1, -1, '#e3ebff', light ? 2.6 : 4.5); // cool strip, right
+  panel(7, 7, 0, 12, -2, '#ffffff', light ? 1.6 : 1.2);   // top fill
+  panel(5, 2, -3, 1, -10, '#ffffff', light ? 1.8 : 2.4);  // back rim
+  panel(1.8, 1.8, 7, -3, 7, '#ff4420', light ? 4 : 6);    // the one vermilion card
+  if (light) { panel(5, 12, -10, 0, -2, '#000000', 0); panel(4, 12, 6, 0, -10, '#000000', 0); panel(3, 12, 2, 0, 10, '#000000', 0); panel(20, 6, 0, -9, 2, '#1a1a1a', 1); }
+  return pmrem.fromScene(s, .03).texture;
+}
+const ENV = [makeEnv(false), makeEnv(true)], REFL = [C('#16264a'), C('#b9b3aa')], BAR = [C('#8ea6dc'), new THREE.Color(-.3, -.29, -.27)], GRAD = [new THREE.Color(.012, .016, .03), new THREE.Color(.16, .15, .13)], ATT = [C('#d6e4ff'), C('#f3eee6')];
+
+/* ---------- post: bloom on speculars, then grade, grain, vignette ---------- */
+const composer = new EffectComposer(R, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: lite || devicePixelRatio > 1.5 ? 0 : 4 }));
+composer.addPass(new RenderPass(scene, cam));
+const bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), .3, .5, .85);
+if (!lite) composer.addPass(bloom);
+composer.addPass(new OutputPass());
+const fin = new ShaderPass({ uniforms: { tDiffuse: { value: null }, uT: { value: 0 }, uGrain: { value: .03 }, uVig: { value: .3 } },
+  vertexShader: 'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+  fragmentShader: 'uniform sampler2D tDiffuse;uniform float uT,uGrain,uVig;varying vec2 vUv;float h(vec2 p){vec3 q=fract(vec3(p.xyx)*.1031);q+=dot(q,q.yzx+33.33);return fract((q.x+q.y)*q.z);}void main(){vec4 c=texture2D(tDiffuse,vUv);c.rgb*=1.-uVig*smoothstep(.3,.95,length((vUv-.5)*vec2(1.15,1.)));c.rgb+=(h(gl_FragCoord.xy+fract(uT*7.3)*311.)-.5)*uGrain;gl_FragColor=c;}' });
+composer.addPass(fin);
+
+/* ---------- scroll stages ---------- */
+// per stage: x, y, z, rotX, rotY, rotZ, scale, floor offset, floor strength
+// hero ring, about pebble, experience blocks, papers crystal, certificates (crystal floats up), projects (out of frame), contact ring
+const SHAPE = [0, 1, 2, 3, 3, 3, 0];
+const WIDE = [[1.72, .3, 0, .06, -.34, .05, 1, 1.5, 1], [-1.9, -.28, .3, -1, .3, .3, .95, .9, 1], [1.95, -.02, 0, .3, -.6, 0, .9, 1.02, 1],
+  [-1.95, .12, 0, .1, .5, .22, .95, 1.42, 1], [2.9, 1.25, -1.5, .15, 1.3, .3, .62, 1.42, 0], [2.6, 3.5, -1.5, .15, 2.1, .3, .62, 1.42, 0], [1.95, .22, 0, .04, -.22, -.05, 1, 1.5, 1]];
+const NARROW = [[0, 1.12, 0, .06, -.3, .05, .6, 1.5, 1], [0, 1.02, 0, -1, .3, .3, .64, .9, 1], [0, 1, 0, .3, -.6, 0, .56, 1.02, 1],
+  [0, 1.05, 0, .1, .5, .22, .58, 1.42, 1], [0, 1.15, -2, .15, 1.3, .3, .5, 1.42, 0], [0, 4.6, -2, .15, 2.1, .3, .5, 1.42, 0], [0, 1.12, 0, .04, -.22, -.05, .6, 1.5, 1]];
+const PAL = [
+  { base: C('#060a14'), top: C('#0d1629'), glow: ['#2b4170', '#23465a', '#2e3b6e', '#2e3268', '#1b2542', '#172036', '#3d3158'].map(C), pool: C('#30497a'), sh: [.14, .15, .2], sho: .9, caus: 1, cc: C('#ff4a22'), bl: [.34, .82], vig: .32, gr: .032, bars: 1 },
+  { base: C('#d6d0c5'), top: C('#e8e3da'), glow: ['#fbf8f2', '#f5f7f3', '#f8f5f2', '#f6f3f5', '#efebe4', '#ece8e1', '#fcf5ee'].map(C), pool: C('#f7f4ee'), sh: [.62, .6, .58], sho: .8, caus: .75, cc: C('#ff3a10'), bl: [.2, 1.1], vig: .16, gr: .024, bars: .7 }];
+const secs = [...document.querySelectorAll('[data-stage]')].slice(1), papers = document.getElementById('papers');
+const state = new Float32Array(9), tmpC = new THREE.Color(), tmpV = new THREE.Vector3();
+let s = 0, pp = 0, drawP = still ? 1 : .02, time = 0, last = performance.now(), theme = G.light() ? 1 : 0, first = true;
+const hov = [0, 0, 0, 0], env = [0, 0], envT = [0, 0];
+let lastKey = '';
+
+function stageTarget() {
+  const vh = innerHeight; let st = 0;
+  for (const el of secs) st += clamp((vh * .8 - el.getBoundingClientRect().top) / (vh * .42), 0, 1);
+  const r = papers.getBoundingClientRect();
+  return [st, clamp((vh - r.top) / (r.height + vh), 0, 1)];
+}
+function blend(A, B, t) {
+  for (let i = 0; i < N; i++) {
+    let tv = clamp((t - .4 * i / N) / .6, 0, 1); tv = tv * tv * (3 - 2 * tv);
+    const wb = (A === BLK ? 1 - tv : 0) + (B === BLK ? tv : 0), band = Math.min(3, (i * 4 / N) | 0), hv = hov[band] * wb;
+    const ox = hv * Math.cos(BL[band][6]), oz = -hv * Math.sin(BL[band][6]), inf = A === B ? 0 : .16 * Math.sin(Math.PI * tv);
+    for (let j = 0, k = i * M * 3; j < M; j++, k += 3) {
+      P[k] = A.p[k] + (B.p[k] - A.p[k]) * tv + ox; P[k + 1] = A.p[k + 1] + (B.p[k + 1] - A.p[k + 1]) * tv; P[k + 2] = A.p[k + 2] + (B.p[k + 2] - A.p[k + 2]) * tv + oz;
+      let x = A.n[k] + (B.n[k] - A.n[k]) * tv, y = A.n[k + 1] + (B.n[k + 1] - A.n[k + 1]) * tv, z = A.n[k + 2] + (B.n[k + 2] - A.n[k + 2]) * tv;
+      const l = Math.hypot(x, y, z); if (l < 1e-5) { x = B.n[k]; y = B.n[k + 1]; z = B.n[k + 2]; } else { x /= l; y /= l; z /= l; }
+      NN[k] = x; NN[k + 1] = y; NN[k + 2] = z; P[k] += x * inf; P[k + 1] += y * inf; P[k + 2] += z * inf;
+    }
+  }
+  geo.attributes.position.needsUpdate = geo.attributes.normal.needsUpdate = true;
+}
+
+function update(dt, snap) {
+  const narrow = innerWidth < 760, T = narrow ? NARROW : WIDE, k = 1 - Math.exp(-dt * 3.2);
+  if (!G.reduced) { const [st, p] = stageTarget(); if (snap) { s = st; pp = p; } else { s += (st - s) * k; pp += (p - pp) * k; if (Math.abs(st - s) < 1e-4) s = st; } }
+  if (drawP < 1) { drawP = Math.min(1, drawP + dt / 1.9); ring(1 - Math.pow(1 - drawP, 3), RING); }
+  for (let b = 0; b < 4; b++) hov[b] += ((G.hover === b ? .45 : 0) - hov[b]) * (snap ? 1 : 1 - Math.exp(-dt * 7));
+  const i = Math.min(T.length - 2, Math.floor(s)), t = s - i, e = t * t * (3 - 2 * t), a = T[i], b = T[i + 1];
+  for (let c = 0; c < 9; c++) state[c] = a[c] + (b[c] - a[c]) * e;
+  FU.uFl.value = state[8]; FU.uRefl.value = .42 - .3 * theme;
+  const key = i + '|' + t.toFixed(4) + '|' + hov.map(h => h.toFixed(3)).join() + '|' + drawP;
+  if (key !== lastKey) { lastKey = key; blend(FORMS[SHAPE[i]], FORMS[SHAPE[i + 1]], t); }
+  const idle = still ? 0 : 1, sc = state[6];
+  const spin = 2.4 * pp * clamp(s - 2.5, 0, 1) * (1 - clamp(s - 5, 0, 1));
+  obj.position.set(state[0], state[1] + idle * .045 * Math.sin(time * .6), state[2]);
+  obj.rotation.set(state[3] + idle * .04 * Math.sin(time * .41), state[4] + spin + idle * .13 * Math.sin(time * .3), state[5]);
+  obj.scale.setScalar(sc * (.9 + .1 * Math.min(1, drawP * 1.6)));
+  // theme
+  theme += ((G.light() ? 1 : 0) - theme) * (snap ? 1 : 1 - Math.exp(-dt * 5));
+  const D = PAL[0], L = PAL[1], m = theme;
+  U.uBase.value.copy(D.base).lerp(L.base, m); U.uTop.value.copy(D.top).lerp(L.top, m);
+  tmpC.copy(D.glow[i]).lerp(D.glow[i + 1], e); U.uGlowCol.value.copy(L.glow[i]).lerp(L.glow[i + 1], e).lerp(tmpC, 1 - m);
+  U.uBars.value = D.bars + (L.bars - D.bars) * m; U.uBarCol.value.copy(BAR[0]).lerp(BAR[1], m); U.uGrad.value.copy(GRAD[0]).lerp(GRAD[1], m); glassMat.attenuationColor.copy(ATT[0]).lerp(ATT[1], m); glassMat.roughness = .03 + .2 * m; // gallery: frosted glass on bone; studio: clear glass on ink
+  FU.uPool.value.copy(D.pool).lerp(L.pool, m); FU.uShadowCol.value.set(...D.sh.map((v, c) => v + (L.sh[c] - v) * m)); FU.uShadow.value = D.sho + (L.sho - D.sho) * m;
+  FU.uCaus.value = (D.caus + (L.caus - D.caus) * m) * clamp(drawP * 1.5 - .3, 0, 1); FU.uCausCol.value.copy(D.cc).lerp(L.cc, m);
+  bloom.strength = D.bl[0] + (L.bl[0] - D.bl[0]) * m; bloom.threshold = D.bl[1] + (L.bl[1] - D.bl[1]) * m;
+  fin.uniforms.uVig.value = (D.vig + (L.vig - D.vig) * m) * (narrow ? .5 : 1); fin.uniforms.uGrain.value = D.gr + (L.gr - D.gr) * m;
+  scene.environment = ENV[m > .5 ? 1 : 0];
+  // pointer nudges the studio lights, never the camera
+  for (let c = 0; c < 2; c++) env[c] += (envT[c] - env[c]) * (snap ? 1 : 1 - Math.exp(-dt * 2.5));
+  scene.environmentRotation.set(env[0], -.2 + env[1] + pp * 1.1, 0);
+  // camera: calm, a slow dolly with scroll only
+  cam.position.set(0, 2.7 - .06 * s, 9.2 - .14 * s); cam.lookAt(0, .2, 0);
+  cam.updateMatrixWorld();
+  tmpV.set(state[0], state[1] + .3 * sc, state[2]).project(cam);
+  U.uGlow.value.set(tmpV.x * .5 + .5, tmpV.y * .5 + .5); U.uGlowR.value = (narrow ? .3 : .38) * sc * (9.3 / (9.3 - state[2]));
+  U.uTime.value = time;
+  // contact shadow camera sits on the floor under the object
+  const fy = state[1] - state[7] * sc, S = 5 * sc;
+  floor.position.y = fy; FU.uSC.value.set(state[0], state[2]); FU.uSS.value = S;
+  sCam.left = sCam.bottom = -S / 2; sCam.right = sCam.top = S / 2; sCam.far = 3 * sc; sCam.updateProjectionMatrix();
+  sCam.position.set(state[0], fy, state[2]); sCam.lookAt(state[0], fy + 1, state[2]);
+  occ.uniforms.uF.value = fy; occ.uniforms.uH.value = 2.6 * sc;
+}
+function draw() {
+  rig.updateMatrixWorld(true);
+  // contact shadow: closeness-to-floor seen from below, blurred twice (tight for the caustic, wide for the shadow)
+  glass.material = occ; R.setClearColor(0, 0); R.setRenderTarget(rtO); R.render(obj, sCam);
+  blur(rtO, rtA, 1.2, 0); blur(rtA, rtB, 0, 1.2); blur(rtB, rtA, 4, 0); blur(rtA, rtC, 0, 4);
+  // glossy floor: mirror the rig across the floor plane and draw it from the real camera into a half-res target
+  rig.position.y = 2 * floor.position.y; rig.scale.y = -1; rig.updateMatrixWorld(true);
+  glass.material = reflMat; reflMat.color.copy(REFL[0]).lerp(REFL[1], theme); reflMat.envMap = scene.environment;
+  R.setRenderTarget(rtR); R.clear(); R.render(rig, cam);
+  rig.position.y = 0; rig.scale.y = 1; rig.updateMatrixWorld(true); glass.material = glassMat;
+  R.setRenderTarget(null); R.setClearColor(0, 1);
+  fin.uniforms.uT.value = time;
+  composer.render();
+  if (first) { first = false; root.classList.add('gl-on'); }
+}
+let lw = 0, lh = 0;
+function size() {
+  const w = innerWidth, h = innerHeight;
+  if (w === lw && Math.abs(h - lh) < 120 && lh) return; lw = w; lh = h;
+  R.setSize(w, h, false); composer.setSize(w, h); rtR.setSize(Math.ceil(w * R.getPixelRatio() / 2), Math.ceil(h * R.getPixelRatio() / 2)); cam.aspect = w / h; cam.updateProjectionMatrix(); U.uAsp.value = w / h;
+}
+size();
+addEventListener('pointermove', e => { if (e.pointerType !== 'mouse') return; envT[0] = (e.clientY / innerHeight - .5) * .22; envT[1] = (e.clientX / innerWidth - .5) * .6; }, { passive: true });
+
+if (G.reduced) {
+  // one still frame; redrawn only when the theme or size changes
+  const frame1 = () => { update(0, true); draw(); };
+  addEventListener('resize', () => { size(); frame1(); }); addEventListener('glass:theme', frame1); frame1();
+} else if (soft) {
+  // stills on demand: jump straight to the scroll state and draw once when something changed
+  let prev = '';
+  const tick = () => { requestAnimationFrame(tick); if (document.hidden) return;
+    const [st, p] = stageTarget(), key = [st.toFixed(3), p.toFixed(3), G.light(), G.hover, innerWidth, innerHeight].join();
+    if (key === prev) return; prev = key; size(); update(0, true); draw(); };
+  requestAnimationFrame(tick);
+} else {
+  addEventListener('resize', size);
+  const loop = now => { requestAnimationFrame(loop); if (document.hidden) { last = now; return; }
+    const dt = Math.min(.25, Math.max(0, (now - last) / 1000)); last = now; time += dt; update(dt); draw(); };
+  requestAnimationFrame(loop);
+}
+}
+</script>
+</body>
+</html>

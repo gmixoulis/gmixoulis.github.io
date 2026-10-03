@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a0a0b">
+<title>Callouts · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki, drawn as an annotated technical sheet around an iridescent block.">
+<!-- Dark only, like pro.html: the block is a lit object on a black sheet. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0b;--fg:#ededef;--fg-2:#a9a9b3;--fg-3:#8c8c96;--line:rgba(255,255,255,.09);--line-2:rgba(255,255,255,.17);
+  --a1:#7ee8f2;--a2:#8ea2ff;--a3:#c49bff;--a4:#ffb9a3;
+  --display:'Funnel Display',Georgia,serif;--ui:'Geist',Helvetica,sans-serif;--mono:'Geist Mono',Menlo,monospace;
+  --ease:cubic-bezier(.2,.8,.2,1);--band:min(46svh,400px);--tbh:96px;
+}
+*{box-sizing:border-box}
+html{background:var(--bg);-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--band) + 16px)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 15px/1.5 var(--ui);-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit;text-decoration:underline;text-decoration-color:rgba(237,237,239,.32);text-underline-offset:3px;transition:text-decoration-color .25s,color .25s}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--a1);outline-offset:3px;border-radius:3px}
+::selection{background:rgba(126,232,242,.3)}
+h1,h2,h3,p{margin:0}
+
+/* ---------- stage (list mode is the default: phones, tablets, no JS) ---------- */
+#gl{position:fixed;left:0;top:0;width:100%;height:var(--band);display:block;z-index:2;pointer-events:none;background:var(--bg)}
+.wire #gl,.no-gl #gl{background:radial-gradient(circle,rgba(237,237,239,.13) 1px,transparent 1.6px) 50% 50%/40px 40px,var(--bg)}
+.fallback{display:none;position:fixed;left:50%;top:calc(var(--band) / 2);z-index:2;width:min(120px,26vw);aspect-ratio:1;border-radius:18%;pointer-events:none;
+  transform:translate(-50%,-50%) rotate(45deg);border:1.5px solid transparent;
+  background:linear-gradient(#0e0e11,#0e0e11) padding-box,conic-gradient(var(--a1),var(--a2),var(--a3),var(--a4),var(--a1)) border-box;box-shadow:0 0 60px rgba(142,162,255,.25)}
+.no-gl .fallback{display:block}
+#ink{position:fixed;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:visible}
+.bandfade{position:fixed;left:0;right:0;top:var(--band);height:34px;z-index:2;background:linear-gradient(var(--bg),rgba(10,10,11,0));pointer-events:none}
+.top{position:fixed;left:0;right:0;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;pointer-events:none}
+.back{pointer-events:auto;font-size:13px;color:var(--fg-3);text-decoration:none}
+.back:hover{color:var(--fg)}
+.sheetno{font:500 11.5px var(--mono);color:var(--fg-3)}
+.sheetno b{font-weight:500;color:var(--a1)}
+
+main{position:relative;z-index:1;padding:calc(var(--band) + 18px) 16px 44svh}
+.step{padding:14px 0 54px;min-height:58svh;outline:none}
+.view{margin:0 0 20px;font:600 23px/1.2 var(--display);letter-spacing:-.025em;color:var(--fg)}
+.vn{display:inline-block;margin-right:10px;font:500 11.5px var(--mono);letter-spacing:0;color:var(--a1);vertical-align:.3em}
+.cos{list-style:none;margin:0;padding:0;display:grid;gap:22px}
+.co{position:relative;padding-left:38px}
+.co::before{content:attr(data-mk);position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;border:1px solid rgba(126,232,242,.55);color:var(--a1);font:500 11px/22px var(--mono);text-align:center}
+.co.name{padding-left:0}.co.name::before{display:none}
+.r1{position:relative;display:block;padding-bottom:5px;font:500 11.5px/1.6 var(--mono);color:var(--fg-2);font-variant-numeric:tabular-nums}
+.r1::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:rgba(237,237,239,.42);transform-origin:left}
+.co h3{margin-top:9px;font:500 16px/1.3 var(--ui);letter-spacing:-.005em;color:var(--fg);text-wrap:pretty}
+.co .org{margin-top:2px;font-size:14px;color:var(--fg)}
+.co p:not(.r1){margin-top:4px;font-size:14px;line-height:1.5;color:var(--fg-2)}
+.co .org+p{margin-top:6px}
+.name h1{font:600 clamp(38px,10.4vw,60px)/.95 var(--display);letter-spacing:-.05em;color:var(--fg);padding-bottom:12px}
+.name h1::after{background:linear-gradient(90deg,var(--a1),var(--a2) 40%,var(--a3) 70%,var(--a4))}
+.name p{max-width:36ch;font-size:16px!important}
+.hint{display:none}
+
+/* citations as dimensions */
+.co[data-k=dim] .r1{display:inline-flex;flex-direction:column;align-items:center;gap:1px;padding:0;color:var(--a1)}
+.co[data-k=dim] .r1::after{display:none}
+.r1 svg{display:block;color:var(--a1);overflow:visible}
+/* balloons */
+.bl{display:none}
+.co[data-k=balloon] .r1{display:flex;align-items:center;gap:10px;padding:0;font-size:12.5px;color:var(--fg)}
+.co[data-k=balloon] .r1::after{display:none}
+.co[data-k=balloon] .r1 i{font-style:normal;color:var(--fg-3)}
+/* detail insets */
+.ins{display:block;width:100%;max-width:420px;aspect-ratio:16/9;height:auto;object-fit:cover;object-position:50% 0;margin:10px 0 2px;border:1px solid var(--line-2);border-radius:3px;background:#141417}
+
+/* parts list */
+.bom{margin-top:26px}
+.bom h3{font:500 15px var(--ui);color:var(--fg)}
+.bom h3 span{margin-left:8px;font:400 12.5px var(--ui);color:var(--fg-3)}
+.bom ol{list-style:none;margin:10px 0 0;padding:0;display:grid;column-gap:22px;border-bottom:1px solid var(--line)}
+.bom a{display:grid;grid-template-columns:2.6em minmax(0,1fr);align-items:baseline;gap:6px;padding:5px 2px;border-top:1px solid var(--line);font-size:13px;line-height:1.35;color:var(--fg-2);text-decoration:none;transition:color .2s,background .2s}
+.bom a:hover,.bom a:focus-visible,.bom li.hi a{color:var(--fg);background:rgba(126,232,242,.06)}
+.bom b{font:500 11px var(--mono);color:var(--a1)}
+.bom a span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+
+/* title block */
+.tb{margin-top:10px;border:1px solid var(--line-2);background:rgba(12,12,14,.9);font-size:13px;color:var(--fg-2)}
+.tb-id{display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:center;padding:12px 12px 10px}
+.tb-n{font:600 19px/1.1 var(--display);letter-spacing:-.02em;color:var(--fg);transition:font-size .6s var(--ease)}
+.tb-r{grid-column:1;font-size:12.5px;color:var(--fg-2)}
+.proj{grid-column:2;grid-row:1/3;color:var(--fg-3)}
+.tb-c{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;padding:8px 12px;border-top:1px solid var(--line)}
+.k{min-width:4.6em;font:500 10.5px var(--mono);color:var(--fg-3)}
+.tb-more>div{overflow:hidden;min-height:0}
+.mail{font:500 17px var(--ui);color:var(--fg);letter-spacing:-.01em}
+.copy{margin-left:auto;height:30px;padding:0 12px;border:1px solid var(--line-2);border-radius:6px;background:transparent;color:var(--fg);font:500 12.5px var(--ui);cursor:pointer;transition:border-color .2s,background .2s}
+.copy:hover{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.04)}
+.links{display:flex;flex-wrap:wrap;gap:4px 14px;color:var(--fg)}
+.tb-meta{display:grid;grid-template-columns:auto auto;border-top:0}
+.tb-meta .tb-c+.tb-c{border-left:1px solid var(--line)}
+.tb-meta b{font:500 13px var(--mono);color:var(--a1)}
+.tb-meta time{font:500 12.5px var(--mono);color:var(--fg)}
+.tb-nav{grid-column:1/-1;gap:2px;border-left:0!important}
+.tb-nav .k{margin-right:6px}
+.tb-nav a{display:inline-grid;place-items:center;min-width:26px;height:24px;font:500 11.5px var(--mono);color:var(--fg-3);text-decoration:none;border-radius:4px}
+.tb-nav a:hover{color:var(--fg);background:rgba(255,255,255,.05)}
+.tb-nav a[aria-current]{color:#0a0a0b;background:var(--a1)}
+
+/* SVG ink */
+#ink .fr{fill:none;stroke:rgba(255,255,255,.12);stroke-width:1}
+#ink .zl{font:500 9px 'Geist Mono',monospace;fill:rgba(237,237,239,.36);text-anchor:middle}
+#ink .cl{fill:none;stroke:rgba(142,162,255,.3);stroke-width:1;stroke-dasharray:26 5 3 5}
+#ink .lg path{fill:none;stroke:rgba(237,237,239,.58);stroke-width:1;transition:stroke .25s}
+#ink .lg.hid path{stroke-dasharray:3 3}
+#ink .dt{fill:var(--a1);transition:r .25s var(--ease)}
+#ink .lg.hid .dt{fill:var(--bg);stroke:var(--a1)}
+#ink .rg{fill:none;stroke:var(--a1)}
+#ink .dc{fill:none;stroke:rgba(237,237,239,.7);stroke-width:1;stroke-dasharray:6 3 2 3}
+#ink .nm{font:500 11px 'Geist Mono',monospace;fill:var(--a1);text-anchor:middle;dominant-baseline:central}
+#ink .lg.hot path{stroke:#fff}
+#ink .lg.hot .dt{r:4.5}
+#ink .lg.hot .dc{stroke:var(--a1)}
+
+/* ---------- drawing mode (wide screens): everything hangs off the pinned object ---------- */
+.drawing #gl,.drawing .fallback{height:100%}
+.drawing #gl{z-index:0}
+.drawing .fallback{top:50%;width:170px;z-index:0}
+.drawing #ink{z-index:1}
+.drawing .bandfade,.drawing .sheetno{display:none}
+.drawing .top{padding:0;left:46px;top:40px;right:auto}
+.drawing main{padding:0;z-index:2}
+.drawing .step{height:110svh;min-height:0;padding:0}
+.drawing .view{position:fixed;left:0;right:0;top:40px;margin:0;text-align:center;font:500 18px/1.2 var(--display);letter-spacing:-.01em;opacity:0;transition:opacity .45s;pointer-events:none}
+.drawing .view::after{content:'';display:block;width:44px;height:3px;margin:9px auto 0;border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
+.drawing .vn{vertical-align:.12em;margin-right:8px}
+.drawing .step.on .view{opacity:1}
+.drawing .hint{display:block;position:fixed;left:0;right:0;bottom:44px;text-align:center;font:500 11.5px var(--mono);color:var(--fg-3);opacity:0;transition:opacity .5s}
+.drawing .step.on .hint{opacity:1;transition-delay:.9s}
+.drawing .co{position:fixed;left:0;top:0;width:min(292px,22.5vw);padding:0;opacity:0;pointer-events:none;transition:opacity .22s}
+.drawing .co.in{opacity:1;pointer-events:auto;transition:opacity .5s var(--ease) var(--d,0ms)}
+.drawing .co::before{display:none}
+.drawing .co.L{text-align:right}
+.drawing .co .r1::after{transform:scaleX(0);transition:transform .2s}
+.drawing .co.L .r1::after{transform-origin:right}
+.drawing .co.in .r1::after{transform:scaleX(1);transition:transform .6s var(--ease) calc(var(--d,0ms) - 120ms)}
+.drawing .co.hot .r1::after{background:var(--a1)}
+.drawing .co p:not(.r1){font-size:13.5px}
+.drawing .co h3{font-size:15px}
+.drawing .co .org{font-size:13.5px}
+.drawing .co.name{width:max-content;text-align:left}
+.drawing .name h1{font-size:clamp(50px,5.3vw,86px);white-space:nowrap;padding-bottom:14px}
+.drawing .name p{max-width:30ch;margin:14px 0 0 auto;font-size:16px!important;color:var(--fg-2)}
+.drawing .co[data-k=balloon]{width:max-content}
+.drawing .co[data-k=balloon] .bl{display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--a1);border-radius:50%;font:500 12px var(--mono);color:var(--a1);background:rgba(10,10,11,.7)}
+.drawing .co.L[data-k=balloon] .r1{flex-direction:row-reverse}
+.drawing .co.hot .bl{background:var(--a1);color:#0a0a0b}
+.drawing .co[data-k=detail]{width:min(214px,16vw)}
+.drawing .co[data-k=detail] .ins{margin:9px 0 0;box-shadow:0 18px 40px -18px rgba(0,0,0,.9)}
+.drawing .co.L .ins{margin-left:auto}
+.drawing .co[data-k=dim] h3{font-size:14.5px;line-height:1.35}
+
+.drawing .bom{position:fixed;right:30px;bottom:calc(30px + var(--tbh) + 12px);width:clamp(420px,36vw,530px);margin:0;padding:11px 14px 9px;border:1px solid var(--line-2);background:rgba(10,10,11,.82);opacity:0;pointer-events:none;transition:opacity .3s}
+.drawing .step.on .bom{opacity:1;pointer-events:auto;transition:opacity .6s var(--ease) .35s}
+.drawing .bom ol{grid-template-columns:1fr 1fr;grid-auto-flow:column;grid-template-rows:repeat(17,auto)}
+.drawing .bom a{padding:2px 2px;font-size:11.5px;line-height:1.3}
+
+.drawing .tb{position:fixed;right:30px;bottom:30px;z-index:3;width:344px;margin:0;transition:width .6s var(--ease)}
+.drawing .tb.open{width:470px}
+.drawing .tb.open .tb-n{font-size:30px}
+.drawing .tb-more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s var(--ease)}
+.drawing .tb.open .tb-more{grid-template-rows:1fr}
+.drawing .tb-nav{padding:5px 8px 5px 12px;justify-content:space-between}
+.drawing .tb-nav a{min-width:24px;height:22px;font-size:10.5px}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="fallback" aria-hidden="true"></div>
+<div class="bandfade" aria-hidden="true"></div>
+<svg id="ink" aria-hidden="true"><g id="frame"></g><g id="axes"></g><g id="leads"></g></svg>
+<header class="top">
+  <a class="back" href="index.html">← All ideas</a>
+  <span class="sheetno" aria-hidden="true">Sheet <b id="shm">01</b> / 08</span>
+</header>
+
+<main id="main">
+<section class="step" id="s0" data-step="0" tabindex="-1" aria-label="Sheet 1: general arrangement">
+  <p class="view" aria-hidden="true"><span class="vn">01</span>General arrangement</p>
+  <ol class="cos">
+    <li class="co name" data-a="core" data-at="-.16 -.56">
+      <h1 class="r1">George Michoulis</h1>
+      <p>Blockchain developer and researcher. His work covers credential verification on Ethereum, graph-based fraud detection and full-stack Web3 products.</p>
+    </li>
+    <li class="co" data-a="UR top" data-at=".32 -.42"><p class="r1">Material</p><p>Solidity, TypeScript, graph embeddings and cloud infrastructure.</p></li>
+    <li class="co" data-a="LL l" data-at="-.32 .44"><p class="r1">Base</p><p>Thessaloniki, Greece. Works remotely.</p></li>
+  </ol>
+  <p class="hint" aria-hidden="true">Scroll to turn the block · 8 sheets</p>
+</section>
+
+<section class="step" id="s1" data-step="1" tabindex="-1" aria-labelledby="h-work">
+  <h2 class="view" id="h-work"><span class="vn">02</span>Work, 2022 to now</h2>
+  <ol class="cos">
+    <li class="co" data-a="UL l" data-at="-.3 -.5"><p class="r1">05/2026 – now</p><h3>Web3 Full-Stack Developer</h3><p class="org">Cyberscope by TAC</p><p>Web3 products end to end, from contracts and on-chain integrations to React and Next frontends and security tooling.</p></li>
+    <li class="co" data-a="UR r" data-at=".3 -.5"><p class="r1">2024 – 2026</p><h3>Blockchain Developer &amp; Researcher</h3><p class="org">Sidroco Holdings Ltd</p><p>An NFT marketplace for 5G networks, Hyperledger Fabric prototypes, an Erasmus+ learning management system and EU projects.</p></li>
+    <li class="co" data-a="LR r" data-at=".32 .36"><p class="r1">2023 – 2025</p><h3>Lecturer &amp; Academic Partner</h3><p class="org">University of Derby / Mediterranean College</p><p>Taught Networks &amp; Security, Web Scripting and Application Development.</p></li>
+    <li class="co" data-a="LL l" data-at="-.32 .36"><p class="r1">2022 – 2024</p><h3>Blockchain &amp; Full-Stack Developer</h3><p class="org">University of Nicosia / IFF</p><p>Next.js, NestJS and Docker applications, and a Web3 NFT marketplace.</p></li>
+  </ol>
+</section>
+
+<section class="step" id="s2" data-step="2" tabindex="-1" aria-labelledby="h-edu">
+  <h2 class="view" id="h-edu"><span class="vn">03</span>Degrees and awards</h2>
+  <ol class="cos">
+    <li class="co" data-a="UL l" data-at="-.3 -.52"><p class="r1">2020 – 2022</p><h3>MSc Data and Web Science</h3><p class="org">Aristotle University of Thessaloniki</p><p>Graph-embedding methods for detecting fraud on blockchains.</p></li>
+    <li class="co" data-a="LC l" data-at="-.3 .5"><p class="r1">2015 – 2020</p><h3>BSc Applied Informatics</h3><p class="org">University of Macedonia</p><p>Thesis on verifying academic credentials with Ethereum.</p></li>
+    <li class="co" data-a="UT top" data-at=".28 -.6"><p class="r1">2020 – 2022</p><h3>DeepMind scholarship</h3><p class="org">Aristotle University of Thessaloniki</p><p>Funded the MSc.</p></li>
+    <li class="co" data-a="LL l" data-at="-.46 .02"><p class="r1">2020 – 2021</p><h3>Basic Research grant</h3><p class="org">University of Macedonia</p></li>
+    <li class="co" data-a="LR r" data-at=".34 .42"><p class="r1">06/2022</p><h3>3rd place, Infinitech Hackathon</h3><p class="org">Crowdpolicy</p></li>
+    <li class="co" data-a="UR r" data-at=".44 -.08"><p class="r1">2025</p><h3>Move/Sui Bootcamp award</h3><p class="org">Thessaloniki</p></li>
+  </ol>
+</section>
+
+<section class="step" id="s3" data-step="3" tabindex="-1" aria-labelledby="h-pap">
+  <h2 class="view" id="h-pap"><span class="vn">04</span>Papers, most cited first</h2>
+  <ol class="cos">
+    <li class="co" data-k="dim" data-a="UL l" data-at="-.3 -.5"><p class="r1" data-c="32">32 citations</p><h3>A process-aware approach for blockchain-based verification of academic qualifications</h3><p>Simulation Modelling Practice and Theory 121, 102642 · 2022</p></li>
+    <li class="co" data-k="dim" data-a="UR r" data-at=".3 -.5"><p class="r1" data-c="11">11 citations</p><h3>Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe</h3><p>XIV Balkan Conference on Operational Research · 2020</p></li>
+    <li class="co" data-k="dim" data-a="LL l" data-at="-.32 .34"><p class="r1" data-c="7">7 citations</p><h3>Exploring decentralized governance: a framework applied to Compound Finance</h3><p>Intl. Conference on Mathematical Research for Blockchain Economy · 2023</p></li>
+    <li class="co" data-k="dim" data-a="LR r" data-at=".32 .3"><p class="r1" data-c="1">1 citation</p><h3>FraMark: a blockchain marketplace for 5G network management using fractional NFTs</h3><p>7th World Symposium on Communication Engineering · 2024</p></li>
+  </ol>
+</section>
+
+<section class="step" id="s4" data-step="4" tabindex="-1" aria-labelledby="h-pap2">
+  <h2 class="view" id="h-pap2"><span class="vn">05</span>Papers, the far side</h2>
+  <ol class="cos">
+    <li class="co" data-k="dim" data-a="UL l" data-at="-.3 -.5"><p class="r1" data-c="1">1 citation</p><h3>Data security for smart cities</h3><p>2025</p></li>
+    <li class="co" data-k="dim" data-a="UR r" data-at=".3 -.5"><p class="r1" data-c="0">0 citations</p><h3>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management</h3><p>IEEE ICCE 2025 · 2025</p></li>
+    <li class="co" data-k="dim" data-a="LL l" data-at="-.32 .4"><p class="r1" data-c="0">0 citations</p><h3>Graph embedding and node features for drug-target interaction prediction</h3><p>Aristotle University of Thessaloniki, MSc work · 2022</p></li>
+    <li class="co" data-k="dim" data-a="LR r" data-at=".32 .3"><p class="r1" data-c="0">0 citations</p><h3>Blockchain in higher education: permissioned and permissionless approaches</h3><p>4th Summit on Gender Equality in Computing · 2022</p></li>
+    <li class="co" data-a="core" data-at="-.5 -.04"><p class="r1">Also</p><p>Two Greek-language theses on verifying academic titles with Ethereum, 2020 and 2021.</p><p><a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ" target="_blank" rel="noopener">Google Scholar profile ↗</a></p></li>
+  </ol>
+</section>
+
+<section class="step" id="s5" data-step="5" tabindex="-1" aria-labelledby="h-cert">
+  <h2 class="view" id="h-cert"><span class="vn">06</span>Certificates, 34 scans</h2>
+  <ol class="cos">
+    <li class="co" data-k="balloon" data-m="A" data-a="UL l" data-at="-.3 -.46"><p class="r1"><b class="bl" aria-hidden="true">A</b><span>Degrees <i>2</i></span></p></li>
+    <li class="co" data-k="balloon" data-m="B" data-a="UT top" data-at=".12 -.66"><p class="r1"><b class="bl" aria-hidden="true">B</b><span>Awards <i>2</i></span></p></li>
+    <li class="co" data-k="balloon" data-m="C" data-a="LL l" data-at="-.42 .12"><p class="r1"><b class="bl" aria-hidden="true">C</b><span>Courses <i>17</i></span></p></li>
+    <li class="co" data-k="balloon" data-m="D" data-a="LC l" data-at="-.12 .7"><p class="r1"><b class="bl" aria-hidden="true">D</b><span>Language tests <i>2</i></span></p></li>
+    <li class="co" data-k="balloon" data-m="E" data-a="UC l" data-at="-.46 -.14"><p class="r1"><b class="bl" aria-hidden="true">E</b><span>Events and workshops <i>11</i></span></p></li>
+  </ol>
+  <div class="bom" id="bom">
+    <h3>Parts list <span>Each row opens its scan</span></h3>
+    <ol id="bom-l"></ol>
+  </div>
+</section>
+
+<section class="step" id="s6" data-step="6" tabindex="-1" aria-labelledby="h-proj">
+  <h2 class="view" id="h-proj"><span class="vn">07</span>Projects, details A to F</h2>
+  <ol class="cos">
+    <li class="co" data-k="detail" data-m="A" data-a="UT top" data-at="-.25 -.62"><p class="r1">Detail A · verde.uom.gr</p><img class="ins" src="../../img/portfolio/verde.uom.gr.PNG" width="1840" height="907" alt="VerDe contact page: website and email cards beside a map of the University of Macedonia area" loading="lazy" decoding="async"><h3>VerDe</h3><p>Ethereum verification of academic qualifications, from his thesis and papers.</p></li>
+    <li class="co" data-k="detail" data-m="B" data-a="UR r" data-at=".25 -.62"><p class="r1">Detail B · bbf-gui.ddns.net</p><canvas class="ins" data-gif="../../img/portfolio/bbf-gui.ddns.net.gif" width="440" height="248" role="img" aria-label="Blockchain Benchmarking Framework landing page: a violet isometric city of buildings and coin icons"></canvas><h3>Blockchain Benchmarking Framework</h3><p>For deploying and evaluating blockchain protocols.</p></li>
+    <li class="co" data-k="detail" data-m="C" data-a="LR r" data-at=".44 .02"><p class="r1">Detail C · metau.unic.ac.cy</p><img class="ins" src="../../img/portfolio/metau.unic.ac.cy.png" width="1698" height="943" alt="University of Nicosia course site headed The future of education is now, with a Connect Wallet button" loading="lazy" decoding="async"><h3>University of Nicosia course site</h3><p>Education "decentralised, on-chain and in the metaverse".</p></li>
+    <li class="co" data-k="detail" data-m="D" data-a="LC r" data-at=".02 .44"><p class="r1">Detail D · celc.web.auth.gr</p><img class="ins" src="../../img/portfolio/celc.web.auth.gr.PNG" width="1600" height="936" alt="Greek-language site of the Centre for European Legal Culture, with a photograph of a stone arched bridge" loading="lazy" decoding="async"><h3>Centre for European Legal Culture</h3><p>Greek-language site, Aristotle University.</p></li>
+    <li class="co" data-k="detail" data-m="E" data-a="LL l" data-at="-.25 .5"><p class="r1">Detail E · eudem.polsci.auth.gr</p><img class="ins" src="../../img/portfolio/eudem.polsci.auth.gr.PNG" width="1896" height="944" alt="EUDEM Jean Monnet Chair website with a ring-of-stars logo and a slideshow of flags outside a glass building" loading="lazy" decoding="async"><h3>EUDEM Jean Monnet Chair</h3><p>Activities, staff and news pages.</p></li>
+    <li class="co" data-k="detail" data-m="F" data-a="UL l" data-at="-.5 -.05"><p class="r1">Detail F · marlab.ode.uom.gr</p><img class="ins" src="../../img/portfolio/marlab.ode.uom.gr.PNG" width="1835" height="917" alt="MarLab, the Marketing Laboratory of the University of Macedonia, homepage with menu, banner image and news column" loading="lazy" decoding="async"><h3>MarLab</h3><p>Marketing Laboratory, University of Macedonia.</p></li>
+  </ol>
+</section>
+
+<section class="step" id="s7" data-step="7" tabindex="-1" aria-labelledby="h-contact">
+  <h2 class="view" id="h-contact"><span class="vn">08</span>Contact</h2>
+  <ol class="cos">
+    <li class="co" data-a="UL top" data-at="-.3 -.44"><p class="r1">Elsewhere on the site</p><p><a href="../../garden/">Zen Garden</a>, his notes</p><p><a href="../../play/">Ledger Run</a>, a platformer CV</p></li>
+  </ol>
+  <div class="tb" id="tb">
+    <div class="tb-id">
+      <p class="tb-n">George Michoulis</p>
+      <p class="tb-r">Blockchain developer and researcher</p>
+      <svg class="proj" width="46" height="22" viewBox="0 0 46 22" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M3 4 19 7.5v7L3 18Z M26 11h18 M35 1v20"/><circle cx="35" cy="11" r="3.5"/><circle cx="35" cy="11" r="7.5"/></svg>
+    </div>
+    <div class="tb-more"><div>
+      <div class="tb-c" id="tb-mail" data-a="core" data-step="7" data-k="tb"><span class="k">Email</span><a class="mail" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a><button class="copy" id="copy" type="button">Copy</button></div>
+      <div class="tb-c"><span class="k">Profiles</span><span class="links"><a href="https://www.linkedin.com/in/george-michoulis/" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://github.com/gmixoulis" target="_blank" rel="noopener">GitHub ↗</a><a href="https://twitter.com/GeorgeMicou" target="_blank" rel="noopener">X ↗</a><a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ" target="_blank" rel="noopener">Scholar ↗</a></span></div>
+      <div class="tb-c"><span class="k">Location</span><span>Thessaloniki, Greece · works remotely</span></div>
+    </div></div>
+    <div class="tb-meta">
+      <div class="tb-c"><span class="k">Sheet</span><span><b id="sh">01</b> / 08</span></div>
+      <div class="tb-c"><span class="k">Date</span><time id="dt">2026</time></div>
+      <nav class="tb-c tb-nav" aria-label="Sheets"><span class="k">Sheets</span><a href="#s0">1</a><a href="#s1">2</a><a href="#s2">3</a><a href="#s3">4</a><a href="#s4">5</a><a href="#s5">6</a><a href="#s6">7</a><a href="#s7">8</a></nav>
+    </div>
+    <p id="live" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)"></p>
+  </div>
+</section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<script type="module">
+/* An annotated technical sheet. The iridescent block from pro.html (instanced RoundedBox cubelets,
+   thin-film interference shader, inner core, UnrealBloom) is pinned at the centre of the viewport.
+   Every callout is anchored to a point on a cubelet (or the core); each frame the anchor is projected
+   3D -> screen and its leader redrawn, so lines stay attached while the block turns and explodes.
+   Anchors facing away from the camera switch to dashed "hidden line" leaders, as on a real drawing. */
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const root = document.documentElement, RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const steps = $$('.step'), NS = steps.length, tb = $('#tb'), cv = $('#gl');
+const SVGNS = 'http://www.w3.org/2000/svg';
+const mk = (n, a, p) => { const e = document.createElementNS(SVGNS, n); for (const k in a) e.setAttribute(k, a[k]); if (p) p.append(e); return e };
+const frameG = $('#frame'), axG = $('#axes'), leadG = $('#leads');
+const axP = mk('path', { class: 'cl' }, axG);
+
+$('#dt').textContent = new Date().toLocaleDateString('en-CA');
+
+/* ---------- parts list: all 34 real scans, grouped by kind ---------- */
+const IMG = '../../img/renamed/';
+const BOM = [   // [group, file, short title for the list, full title]
+  ['A', '1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg', 'BSc Applied Informatics', 'BSc Applied Informatics, University of Macedonia'],
+  ['A', '1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg', 'MSc Data and Web Science', 'MSc Data and Web Science, Aristotle University of Thessaloniki'],
+  ['B', 'Award_Academic-Achievement.jpg', 'School progress award, 2014–15', 'School progress award, school year 2014–15'],
+  ['B', 'Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png', 'Move/Sui Bootcamp, Thessaloniki', 'Move/Sui Bootcamp Thessaloniki award'],
+  ['C', 'Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg', 'Cisco Certified Network Associate', 'CCNA, Cisco Certified Network Associate'],
+  ['C', 'Certificate-Of-Completion_Rust-Developer.png', 'Rust developer', 'Rust developer'],
+  ['C', 'Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg', 'ML and deep neural networks', 'Machine learning and deep neural networks'],
+  ['C', 'Certificate-Of-Completion_Cloud-Engineering.png', 'Cloud engineering', 'Cloud engineering'],
+  ['C', 'Certificate-Of-Completion_Advanced-Ethical-Hacking.png', 'Advanced ethical hacking', 'Advanced ethical hacking'],
+  ['C', 'Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg', 'Cybersecurity e-learning academy', 'Cybersecurity e-learning academy'],
+  ['C', 'Certificate-Of-Completion_Networking-Essentials.png', 'Networking essentials', 'Networking essentials'],
+  ['C', 'Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg', 'Introduction to digital currencies', 'Introduction to digital currencies'],
+  ['C', 'Certificate-Of-Completion_NFT-Talents-Program.jpg', 'NFT Talents program', 'NFT Talents program'],
+  ['C', 'Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg', 'How to get published with IEEE', 'How to get published with IEEE'],
+  ['C', 'Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg', 'Software for telecom networks', 'Software development for telecommunication networks'],
+  ['C', 'Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png', 'Entrepreneurship and funding…', 'Entrepreneurship, funding and development of new enterprises'],
+  ['C', 'Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg', 'How to design and build a website', 'How to design and build a website'],
+  ['C', 'Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg', 'Digital skills for tourism', 'Digital skills for tourism'],
+  ['C', 'Certificate-Of-Completion_Discover-Customer.jpg', 'Discover Customer, PepsiCo School', 'Discover Customer, PepsiCo School'],
+  ['C', 'Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg', 'European legal culture programme', 'European legal culture programme, Aristotle University of Thessaloniki'],
+  ['C', 'Certificate-Of-Completion_The-Hour-Of-Code.jpg', 'The Hour of Code', 'The Hour of Code'],
+  ['D', 'Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg', 'TOEIC listening and reading', 'TOEIC listening and reading test'],
+  ['D', 'English-Certificate_English-Certificate-English-Proficiency.jpg', 'English proficiency', 'English proficiency'],
+  ['E', 'Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg', 'Blockchain for the legal industry…', 'Blockchain for the legal industry, Block.co webinar'],
+  ['E', 'Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg', 'Blockchain in education…', 'Blockchain in education and the certification case, Block.co webinar'],
+  ['E', 'Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg', 'Healthcare cybersecurity analytics', 'Data analytics to strengthen healthcare cybersecurity'],
+  ['E', 'Certificate-Of-Participation_EY-Cyber-Day.jpg', 'EY Cyber Day', 'EY Cyber Day'],
+  ['E', 'Certificate-Of-Participation_GNULinux-Command-Line.jpg', 'GNU/Linux command line', 'GNU/Linux command line'],
+  ['E', 'Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg', 'Launch event and RippleX workshop', 'Launch event and RippleX workshop'],
+  ['E', 'Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png', 'Marketing mix and brand', 'Marketing mix and brand, e-learning programme'],
+  ['E', 'Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg', 'Hydrobot marine robotics program', 'Marine educational robotics, Hydrobot program'],
+  ['E', 'Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg', 'Processing data in the fog…', 'Processing data in the fog: the RAINBOW fog computing platform'],
+  ['E', 'Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg', 'SKGcode real-estate chatbot', 'SKGcode project, creating a real-estate chatbot'],
+  ['E', 'Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg', 'VeChain ToolChain in healthcare', 'VeChain ToolChain, digital transformation of the healthcare industry'],
+];
+const cnt = {};
+$('#bom-l').innerHTML = BOM.map(([g, f, t, full]) => { cnt[g] = (cnt[g] || 0) + 1; return `<li data-g="${g}"><a href="${IMG + f}" target="_blank" rel="noopener" title="${full}" aria-label="${full}, scan (opens in a new tab)"><b>${g}${cnt[g]}</b><span>${t}</span></a></li>` }).join('');
+
+/* ---------- citations drawn as dimensions: length is proportional to the count ---------- */
+$$('.r1[data-c]').forEach(r => {
+  const c = +r.dataset.c, inside = c > 2, L = 12 + c * 5.4, o = inside ? .5 : 12.5, W = L + (inside ? 1 : 25), y = 5;
+  let d = `M${o} 0V10M${o + L} 0V10`;
+  d += inside ? `M${o} ${y}H${o + L}M${o + 5} ${y - 3}L${o} ${y}L${o + 5} ${y + 3}M${o + L - 5} ${y - 3}L${o + L} ${y}L${o + L - 5} ${y + 3}`
+              : `M0 ${y}H${o}M${o + L} ${y}H${W}M${o - 5} ${y - 3}L${o} ${y}L${o - 5} ${y + 3}M${o + L + 5} ${y - 3}L${o + L} ${y}L${o + L + 5} ${y + 3}`;
+  r.insertAdjacentHTML('beforeend', `<svg width="${W}" height="10" viewBox="0 0 ${W} 10" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="${d}"/></svg>`);
+});
+
+/* freeze the looping GIF on its first frame */
+$$('canvas[data-gif]').forEach(c => { const im = new Image(); im.onload = () => { c.getContext('2d').drawImage(im, 0, 0, im.width, c.height * im.width / c.width, 0, 0, c.width, c.height) }; im.src = c.dataset.gif });
+
+/* ---------- callouts ---------- */
+const CO = $$('[data-a]').map(el => {
+  const g = mk('g', { class: 'lg' }, leadG), k = el.dataset.k || '';
+  return {
+    el, k, step: +(el.dataset.step || el.closest('.step').dataset.step), a: el.dataset.a.split(' '),
+    at: el.dataset.at ? el.dataset.at.split(' ').map(Number) : null, r1: $('.r1', el), g,
+    path: mk('path', {}, g), ring: mk('circle', { class: 'rg', r: 0 }, g), dot: mk('circle', { class: 'dt', r: 2.6 }, g),
+    det: k === 'detail' ? mk('circle', { class: 'dc', r: 0 }, g) : null, num: mk('text', { class: 'nm' }, g),
+    on: false, d: 0, t0: 0, hot: false, j: 0, idx: -1, lp: null, ln: null, px: 0, py: 0,
+  };
+});
+for (let s = 0; s < NS; s++) {
+  let n = 0;
+  CO.filter(c => c.step === s).forEach((c, j) => { c.j = j; if (c.el.classList.contains('name') || c.k === 'tb') return; const m = c.el.dataset.m || String(++n); c.el.dataset.mk = m; c.num.textContent = m });
+}
+let hotC = null;
+const bomRows = $$('#bom-l li');
+const hot = (c, v) => {
+  c.hot = v; c.el.classList.toggle('hot', v); c.g.classList.toggle('hot', v);
+  hotC = v ? c : hotC === c ? null : hotC;
+  if (c.k === 'balloon') bomRows.forEach(r => r.classList.toggle('hi', v && r.dataset.g === c.el.dataset.m));
+  if (RM) req();
+};
+CO.forEach(c => {
+  const on = () => hot(c, true), off = () => hot(c, false);
+  c.el.addEventListener('pointerenter', on); c.el.addEventListener('pointerleave', off);
+  c.el.addEventListener('focusin', on); c.el.addEventListener('focusout', off);
+});
+bomRows.forEach(r => {   // a parts-list row lights its balloon and its part
+  const b = CO.find(c => c.k === 'balloon' && c.el.dataset.m === r.dataset.g);
+  const on = () => { hot(b, true); r.classList.add('hi') }, off = () => hot(b, false);
+  r.addEventListener('pointerenter', on); r.addEventListener('pointerleave', off);
+  r.addEventListener('focusin', on); r.addEventListener('focusout', off);
+});
+
+/* ---------- mode + layout ---------- */
+let mode = '', W = 0, H = 0, band = 0, active = -1, tbh = 96;
+const setMode = () => {
+  const m = innerWidth >= 1000 && innerWidth >= innerHeight * 1.2 ? 'draw' : 'list';
+  if (m === mode) return false;
+  mode = m; root.classList.toggle('drawing', m === 'draw');
+  return true;
+};
+function drawFrame() {
+  frameG.replaceChildren();
+  if (mode !== 'draw') return;
+  const o = 14, i = 30;
+  let d = `M${o} ${o}H${W - o}V${H - o}H${o}ZM${i} ${i}H${W - i}V${H - i}H${i}Z`;
+  for (let k = 1; k < 8; k++) { const x = i + (W - 2 * i) * k / 8; d += `M${x} ${o}V${i}M${x} ${H - i}V${H - o}` }
+  for (let k = 1; k < 6; k++) { const y = i + (H - 2 * i) * k / 6; d += `M${o} ${y}H${i}M${W - i} ${y}H${W - o}` }
+  d += `M${W / 2} ${i}v10M${W / 2} ${H - i}v-10M${i} ${H / 2}h10M${W - i} ${H / 2}h-10`;   // centring marks
+  mk('path', { d, class: 'fr' }, frameG);
+  const t = (x, y, s) => { mk('text', { x, y, class: 'zl' }, frameG).textContent = s };
+  for (let k = 0; k < 8; k++) { const x = i + (W - 2 * i) * (k + .5) / 8; t(x, o + 11, k + 1); t(x, H - o - 5, k + 1) }
+  for (let k = 0; k < 6; k++) { const y = i + (H - 2 * i) * (k + .5) / 6 + 3; t(o + 8, y, 'ABCDEF'[k]); t(W - o - 8, y, 'ABCDEF'[k]) }
+}
+function place() {
+  W = innerWidth; H = innerHeight; band = mode === 'list' ? cv.offsetHeight : 0;
+  drawFrame();
+  if (mode !== 'draw') { CO.forEach(c => { if (c.at) { c.el.style.left = c.el.style.top = ''; c.el.classList.remove('L') } }); return }
+  if (!tb.classList.contains('open')) { tbh = tb.offsetHeight; root.style.setProperty('--tbh', tbh + 'px') }
+  const M = 46, tbL = W - 30 - 344, tbT = H - 30 - tbh;
+  for (const c of CO) {
+    if (!c.at) continue;
+    const el = c.el, w = el.offsetWidth, h = el.offsetHeight, r = c.r1, L = c.at[0] < 0;
+    const ry = c.k === 'balloon' ? r.offsetTop + r.offsetHeight / 2 : c.k === 'dim' ? r.offsetTop + r.offsetHeight - 5 : r.offsetTop + r.offsetHeight;
+    const px = W / 2 + c.at[0] * W / 2, py = H / 2 + c.at[1] * H / 2;
+    const left = clamp(L ? px - w : px, M, W - M - w);
+    let top = clamp(py - ry, M + 22, H - M - h);
+    if (c.step !== NS - 1 && left + w > tbL - 14 && top + h > tbT - 14) top = tbT - 18 - h;   // keep the title block clear
+    el.style.left = left + 'px'; el.style.top = top + 'px'; el.classList.toggle('L', L);
+    c.px = L ? left + w : left; c.py = top + ry;
+  }
+}
+
+/* ---------- scroll -> sheet ---------- */
+const progress = () => {
+  const vh = innerHeight; let q = 0;
+  for (let i = 1; i < NS; i++) {
+    const t = steps[i].getBoundingClientRect().top;
+    q += mode === 'draw' ? clamp((.95 * vh - t) / (.5 * vh)) : clamp((band + (vh - band) * .3 - t) / 140 + .5);
+  }
+  return q;
+};
+let pulseT = -1e9;
+function setActive(k) {
+  if (k === active) return;
+  active = k; const now = performance.now();
+  for (const c of CO) {
+    const on = c.step === k;
+    if (on === c.on) continue;
+    c.on = on;
+    if (on) { c.t0 = now + c.j * 110; c.el.style.setProperty('--d', (RM ? 0 : c.j * 110 + 260) + 'ms') }
+    c.el.classList.toggle('in', on);
+  }
+  steps.forEach((s, i) => s.classList.toggle('on', i === k));
+  tb.classList.toggle('open', k === NS - 1);
+  if (k < 0) return;
+  const n = String(k + 1).padStart(2, '0'); $('#sh').textContent = n; $('#shm').textContent = n;
+  $$('.tb-nav a').forEach((a, i) => i === k ? a.setAttribute('aria-current', 'step') : a.removeAttribute('aria-current'));
+  pulseT = now;
+}
+let lenis = null;
+if (!RM && window.Lenis) lenis = new Lenis({ duration: 1.1 });
+const restY = i => { const t = steps[i].getBoundingClientRect().top + scrollY; return mode === 'draw' ? (i ? t - .15 * innerHeight : 0) : t - band - 10 };
+const go = (i, focus) => {
+  const y = restY(i);
+  if (lenis) lenis.scrollTo(y, { duration: 1.3 }); else scrollTo({ top: y, behavior: RM ? 'auto' : 'smooth' });
+  if (focus) steps[i].focus({ preventScroll: true });
+};
+$$('.tb-nav a').forEach((a, i) => a.addEventListener('click', e => { e.preventDefault(); go(i, true) }));
+document.addEventListener('focusin', e => {   // keyboard focus on a hidden sheet turns the drawing to it
+  if (mode !== 'draw') return;
+  const t = e.target.closest && e.target.closest('.co, .bom, .tb-more');
+  if (!t) return;
+  const s = +t.closest('.step').dataset.step; if (s !== active) go(s);
+});
+$('#copy').onclick = async () => {
+  const b = $('#copy');
+  try { await navigator.clipboard.writeText('gmixoulis@gmail.com'); b.textContent = 'Copied'; $('#live').textContent = 'Email address copied' }
+  catch { const r = document.createRange(); r.selectNodeContents($('.mail')); getSelection().removeAllRanges(); getSelection().addRange(r); b.textContent = 'Selected' }
+  setTimeout(() => b.textContent = 'Copy', 1800);
+};
+const ptr = { x: 0, y: 0, t: -1e9 };
+addEventListener('pointermove', e => { if (e.pointerType === 'mouse') { ptr.x = e.clientX; ptr.y = e.clientY; ptr.t = performance.now() } }, { passive: true });
+
+/* ---------- poses per sheet: quarter turns, tilt, explode x/y/z, scale, core, hue ---------- */
+const Q = Math.PI / 2, ISO = Math.atan(Math.SQRT1_2), TAN = Math.tan(11 * Math.PI / 180);
+const POSE = [
+  [0, ISO, .16, .16, .16, 1, 1, 0],        // general arrangement: nearly shut, core glowing in the seams
+  [1, ISO, .5, .1, .5, .92, .75, .14],     // work: four columns
+  [2, .36, .1, .92, .1, .88, .9, .3],      // degrees: vertical exploded view, one layer on the other
+  [3, ISO, .42, .42, .42, .9, .8, .45],    // papers 1-4
+  [5, .5, .42, .42, .42, .9, .8, .56],     // papers 5-8: a half turn to the far side
+  [6, .74, .95, .95, .95, .56, 1.1, .7],   // certificates: fully exploded, parts ballooned
+  [7, ISO, .24, .24, .24, .72, .85, .84],  // projects
+  [8, ISO, 0, 0, 0, .9, 1.2, 1],           // contact: assembled, back to the first view
+];
+const sg = new Float32Array(24);
+for (let i = 0; i < 8; i++) { sg[i * 3] = i & 1 ? 1 : -1; sg[i * 3 + 1] = i & 2 ? 1 : -1; sg[i * 3 + 2] = i & 4 ? 1 : -1 }
+
+let THREE = null, grid, cam, block, mats, renderer = null, composer, ctx2 = null, U, GU, chain, cubes, v, n, w, cen;
+let cl = 0, ct = 0, cw = 1, ch = 1, baseS = 1, dpr = 1, T0 = performance.now(), last = T0, ps = 0, hiA = 0, hiI = -9, px = 0, py = 0;
+
+/* Resolve "UL l" (upper layer, leftmost cubelet, its left-facing side) into a cubelet and a face,
+   using the sheet's rest pose, so anchors are authored by where they appear on screen. */
+function resolve() {
+  const Rm = new THREE.Matrix4(), E = new THREE.Euler(), t = new THREE.Vector3();
+  for (const c of CO) {
+    if (c.a[0] === 'core') continue;
+    const P = POSE[c.step]; E.set(P[1], Math.PI / 4 + P[0] * Q, 0, 'XYZ'); Rm.makeRotationFromEuler(E);
+    const [slot, face] = c.a, up = slot[0] === 'U', key = { L: q => q.x, R: q => -q.x, T: q => q.z, C: q => -q.z }[slot[1]];
+    const cand = [];
+    for (let i = 0; i < 8; i++) if ((sg[i * 3 + 1] > 0) === up) cand.push([i, t.set(sg[i * 3], sg[i * 3 + 1], sg[i * 3 + 2]).applyMatrix4(Rm).clone()]);
+    cand.sort((A, B) => key(A[1]) - key(B[1]));
+    const i = c.idx = cand[0][0], s = new THREE.Vector3(sg[i * 3], sg[i * 3 + 1], sg[i * 3 + 2]);
+    let nr;
+    if (face === 'top' || face === 'bot') nr = new THREE.Vector3(0, face === 'top' ? 1 : -1, 0);
+    else {
+      const f = q => face === 'l' ? q.x : face === 'r' ? -q.x : -q.z;
+      nr = [[1, 0, 0], [-1, 0, 0], [0, 0, 1], [0, 0, -1]].map(a => new THREE.Vector3(...a)).map(a => [a, a.clone().applyMatrix4(Rm)])
+        .filter(([, q]) => q.z > .01).sort((A, B) => f(A[1]) - f(B[1]))[0][0];
+    }
+    c.ln = nr;   // face centre, nudged toward the cubelet's outer edges
+    c.lp = nr.clone().multiplyScalar(.5).add(s.clone().sub(nr.clone().multiplyScalar(s.dot(nr))).multiplyScalar(.16));
+  }
+}
+
+function resize() {
+  const changed = setMode();
+  const r = cv.getBoundingClientRect(); cl = r.left; ct = r.top; cw = r.width || 1; ch = r.height || 1;
+  place();
+  if (!THREE) return;
+  cam.aspect = cw / ch; cam.updateProjectionMatrix();
+  baseS = mode === 'draw' ? .95 : Math.min(1.65, 1.55 * cw / ch);
+  if (renderer) { renderer.setSize(cw, ch, false); composer.setSize(cw, ch); buildGrid() }
+  else if (ctx2) { cv.width = cw * dpr; cv.height = ch * dpr }
+  if (changed && active >= 0) { const a = active; active = -1; setActive(a) }
+}
+
+/* ---------- 3D ---------- */
+resize();
+try {
+  const mods = await Promise.all([import('three'), import('three/addons/geometries/RoundedBoxGeometry.js'), import('three/addons/postprocessing/EffectComposer.js'),
+    import('three/addons/postprocessing/RenderPass.js'), import('three/addons/postprocessing/UnrealBloomPass.js'), import('three/addons/postprocessing/OutputPass.js')]);
+  THREE = mods[0];
+  cam = new THREE.PerspectiveCamera(22, 1, .1, 100); cam.position.set(0, 0, 24);   // fixed; never follows the pointer
+  block = new THREE.Group(); mats = Array.from({ length: 8 }, () => new THREE.Matrix4());
+  v = new THREE.Vector3(); n = new THREE.Vector3(); w = new THREE.Vector3(); cen = new THREE.Vector3();
+  resolve();
+  dpr = Math.min(devicePixelRatio || 1, matchMedia('(pointer:coarse)').matches || innerWidth < 1000 ? 1.5 : 2);
+  if (document.createElement('canvas').getContext('webgl2')) buildGL(mods);
+  else { ctx2 = cv.getContext('2d'); root.classList.add('wire') }
+} catch (e) { THREE = null; root.classList.add('no-gl'); console.warn('Stage fallback:', e.message) }
+T0 = last = performance.now();
+
+function buildGL([, { RoundedBoxGeometry }, { EffectComposer }, { RenderPass }, { UnrealBloomPass }, { OutputPass }]) {
+  renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: false, powerPreference: 'high-performance' });
+  renderer.setClearColor(0x0a0a0b, 1); renderer.setPixelRatio(dpr);
+  const scene = new THREE.Scene();
+  U = { uTime: { value: 0 }, uHue: { value: 0 }, uCore: { value: 1 }, uBeam: { value: .85 }, uDim: { value: 1 }, uHi: { value: -9 }, uHiA: { value: 0 },
+    uL: { value: new THREE.Vector3(0, 1, 1) }, uB: { value: new THREE.Vector3() } };
+  /* thin-film block, adapted from pro.html */
+  const ENV = `vec3 env(vec3 R){float a=atan(R.x,R.z);float top=smoothstep(.5,1.,R.y)*2.4*uBeam;
+    float s1=exp(-pow((a+1.95)*3.,2.))*smoothstep(-.15,.5,R.y)*1.25;float s2=exp(-pow((a-1.25)*4.2,2.))*smoothstep(-.25,.6,R.y)*.8;
+    float s3=exp(-pow((a-2.9)*2.6,2.))*smoothstep(.0,.7,R.y)*.35;float hz=exp(-pow(R.y*7.,2.))*.1;float sky=smoothstep(-.05,.9,R.y)*.12*(.4+.6*uBeam);
+    return vec3(top+s1+s2+s3+hz+sky);}`;
+  const COMMON = `uniform float uTime,uHue,uCore,uBeam,uDim,uHi,uHiA;uniform vec3 uL,uB;`;
+  const cubeVS = `attribute vec3 aSgn;attribute float aIdx;varying vec3 vW,vN,vO,vS;varying float vI;
+    void main(){vec4 w=modelMatrix*instanceMatrix*vec4(position,1.);vW=w.xyz;vN=normalize(mat3(modelMatrix)*mat3(instanceMatrix)*normal);vO=position;vS=aSgn;vI=aIdx;gl_Position=projectionMatrix*viewMatrix*w;}`;
+  const cubeFS = COMMON + `varying vec3 vW,vN,vO,vS;varying float vI;` + ENV + `
+    vec3 film(float c,float d){float ct=sqrt(max(0.,1.-(1.-c*c)/2.1));float o=2.9*d*ct;return .5+.5*cos(6.2831*o/vec3(.65,.53,.45));}
+    void main(){
+      vec3 N=normalize(vN),V=normalize(cameraPosition-vW);float c=clamp(dot(N,V),0.,1.);vec3 R=reflect(-V,N);
+      vec3 a=abs(vO)*2.;float mid=max(min(a.x,a.y),min(max(a.x,a.y),a.z));float edge=smoothstep(.8,.97,mid);
+      float th=.42+.09*sin(dot(vO+vS*.5,vec3(2.1,1.7,2.6))+uTime*.12)+.05*sin(vW.y*2.6+uTime*.2)+uHue*.22;
+      vec3 fc=film(c,th);fc=mix(vec3(dot(fc,vec3(.333))),fc,.85);
+      float F=.04+.96*pow(1.-c,5.);
+      vec3 col=vec3(.007,.007,.009)+env(R)*fc*(.1+.9*F)*1.25;
+      vec3 Hh=normalize(uL+V);float nh=max(dot(N,Hh),0.);
+      col+=(pow(nh,300.)*2.4+pow(nh,26.)*.07)*mix(vec3(1.),fc,.45);
+      col+=edge*(.04+.3*F)*fc;
+      vec3 g3=exp(-(.5+vO*vS)*17.);vec3 dc=vW-uB;float g=min(g3.x+g3.y+g3.z,1.3)*(.25+exp(-dot(dc,dc)*1.1));
+      vec3 gc=mix(vec3(.06,.58,1.),vec3(.62,.24,1.),.5+.5*sin(dot(vW,vec3(.9,.6,.4))+uHue*4.));
+      col+=gc*g*uCore*.5;
+      float hi=(1.-step(.5,abs(vI-uHi)))*uHiA;
+      col+=(fc*.5+.05)*hi*(.3+F*1.4)+edge*hi*.35*fc;
+      gl_FragColor=vec4(1.-exp(-col*1.15*uDim),1.);
+    }`;
+  const geo = new RoundedBoxGeometry(1, 1, 1, cw < 700 ? 3 : 5, .1);
+  geo.setAttribute('aSgn', new THREE.InstancedBufferAttribute(sg, 3));
+  geo.setAttribute('aIdx', new THREE.InstancedBufferAttribute(new Float32Array([0, 1, 2, 3, 4, 5, 6, 7]), 1));
+  cubes = new THREE.InstancedMesh(geo, new THREE.ShaderMaterial({ uniforms: U, vertexShader: cubeVS, fragmentShader: cubeFS }), 8);
+  cubes.frustumCulled = false;
+  const core = new THREE.Mesh(new RoundedBoxGeometry(.62, .62, .62, 3, .12), new THREE.ShaderMaterial({ uniforms: U,
+    vertexShader: `varying vec3 vW,vN;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;vN=normalize(mat3(modelMatrix)*normal);gl_Position=projectionMatrix*viewMatrix*w;}`,
+    fragmentShader: COMMON + `varying vec3 vW,vN;void main(){float c=abs(dot(normalize(vN),normalize(cameraPosition-vW)));
+      vec3 col=mix(vec3(.55,.85,1.)*1.4,vec3(.7,.35,1.),pow(1.-c,1.5))*uCore*.8*(1.+(1.-step(.5,abs(8.-uHi)))*uHiA*.9);gl_FragColor=vec4(1.-exp(-col),1.);}` }));
+  /* exploded-view chain lines: centre -> each part, dash-dot, hidden where they pass through solid */
+  const cg = new THREE.BufferGeometry();
+  cg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(48), 3)); cg.setAttribute('aD', new THREE.BufferAttribute(new Float32Array(16), 1));
+  chain = new THREE.LineSegments(cg, new THREE.ShaderMaterial({ uniforms: { uChain: { value: 0 } }, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    vertexShader: `attribute float aD;varying float vD;void main(){vD=aD;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader: `uniform float uChain;varying float vD;void main(){float m=fract(vD*1.7);if(!(m<.56||(m>.7&&m<.8)))discard;gl_FragColor=vec4(vec3(.45,.75,1.)*uChain*.5,1.);}` }));
+  chain.frustumCulled = false;
+  block.add(cubes, core, chain); scene.add(block);
+  /* the measurement grid: sparse points and registration crosses that respond to the block */
+  GU = { uTime: U.uTime, uHue: U.uHue, uCore: U.uCore, uEx: { value: 0 }, uPR: { value: dpr }, uPulse: { value: 99 }, uPulseA: { value: 0 }, uPtr: { value: new THREE.Vector2(99, 99) }, uPtrA: { value: 0 } };
+  grid = new THREE.Points(new THREE.BufferGeometry(), new THREE.ShaderMaterial({ uniforms: GU, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    vertexShader: `uniform float uTime,uHue,uCore,uEx,uPR,uPulse,uPulseA,uPtrA;uniform vec2 uPtr;attribute float aMaj;varying vec3 vC;varying float vM;
+      void main(){vec3 p=position;float r=length(p.xy);vec2 dir=p.xy/max(r,1e-3);float field=exp(-r*r*.045);
+        p.xy+=dir*uEx*.5*field;
+        float ring=exp(-pow((r-uPulse)*1.5,2.))*uPulseA;p.xy+=dir*ring*.14;
+        float pd=length(p.xy-uPtr);float pt=exp(-pd*pd*1.1)*uPtrA;
+        float halo=field*(.35+.65*uCore);
+        float a=.03+aMaj*.045+halo*.1+ring*.26+pt*.16;
+        vec3 iri=.5+.5*cos(6.2831*(vec3(0.,.33,.67)+atan(p.y,p.x)*.159+uHue*.7+uTime*.015));
+        vC=mix(vec3(.78,.83,.95),iri*vec3(.75,.9,1.),clamp(halo*.9+ring,0.,1.))*a;vM=aMaj;
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);gl_PointSize=(aMaj>.5?11.:2.3+ring*2.6+pt*1.6)*uPR;}`,
+    fragmentShader: `varying vec3 vC;varying float vM;void main(){vec2 c=abs(gl_PointCoord-.5);float s;
+      if(vM>.5)s=step(min(c.x,c.y),.05)*(1.-smoothstep(.25,.5,max(c.x,c.y))*.6);else s=smoothstep(.5,.15,length(gl_PointCoord-.5));
+      if(s<.01)discard;gl_FragColor=vec4(vC*s,1.);}` }));
+  grid.frustumCulled = false; scene.add(grid);
+  // backdrop sphere in linear #0a0a0b (the clear colour is not linearised in the composer target, as in pro.html)
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(48, 16, 8), new THREE.ShaderMaterial({ side: THREE.BackSide, depthWrite: false,
+    vertexShader: `void main(){gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`, fragmentShader: `void main(){gl_FragColor=vec4(.00303,.00303,.00334,1.);}` }));
+  sky.renderOrder = -1; scene.add(sky);
+
+  const rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: dpr >= 2 ? 0 : 4 });
+  composer = new EffectComposer(renderer, rt);
+  composer.addPass(new RenderPass(scene, cam)); composer.addPass(new UnrealBloomPass(new THREE.Vector2(256, 256), .7, .45, .32)); composer.addPass(new OutputPass());
+  composer.setPixelRatio(dpr);
+  window.__dbg = { grid, chain, composer, renderer, scene, THREE };
+}
+function buildGrid() {
+  const pitch = mode === 'draw' ? 40 : 26, u = 2 * 28 * TAN / ch * pitch;
+  const nx = Math.ceil(cw / pitch / 2) + 3, ny = Math.ceil(ch / pitch / 2) + 3, pos = [], maj = [];
+  for (let y = -ny; y <= ny; y++) for (let x = -nx; x <= nx; x++) { pos.push(x * u, y * u, -4); maj.push(x % 4 === 0 && y % 4 === 0 ? 1 : 0) }
+  grid.geometry.dispose(); grid.geometry = new THREE.BufferGeometry();
+  grid.geometry.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); grid.geometry.setAttribute('aMaj', new THREE.Float32BufferAttribute(maj, 1));
+}
+
+const q4 = () => new THREE.Quaternion();
+let qq, one, ax, p3;
+function scene(ps, time, now, dt) {
+  qq = qq || q4(); one = one || new THREE.Vector3(1, 1, 1); ax = ax || new THREE.Vector3(); p3 = p3 || new THREE.Vector3();
+  const x = clamp(ps, 0, NS - 1), i = Math.min(NS - 2, Math.floor(x)); let f = x - i; f = f * f * (3 - 2 * f);
+  const A = POSE[i], B = POSE[i + 1], o = A.map((a, j) => a + (B[j] - a) * f);
+  const bump = RM ? 0 : Math.sin(Math.PI * f) * .3;                       // the block opens a little as it turns
+  const io = RM ? 0 : Math.pow(Math.max(0, 1 - time / 2.2), 3), spin = io * 2.4;   // intro: parts fly in and lock
+  const ex = o[2] + bump + io * 2.2, ey = o[3] + bump + io * 2.2, ez = o[4] + bump + io * 2.2, eA = (ex + ey + ez) / 3;
+  const cpos = chain && chain.geometry.attributes.position, cd = chain && chain.geometry.attributes.aD;
+  for (let k = 0; k < 8; k++) {
+    const e3 = io * (k % 3) * .25;
+    ax.set(sg[k * 3], sg[k * 3 + 1], sg[k * 3 + 2]);
+    p3.set(ax.x * (.518 + ex + e3), ax.y * (.518 + ey + e3), ax.z * (.518 + ez + e3));
+    qq.setFromAxisAngle(ax.normalize(), eA * .2 + spin * (k % 2 ? 1 : -1) * .5);
+    mats[k].compose(p3, qq, one);
+    if (cpos) { const L = p3.length() + 1.15; w.copy(p3).normalize().multiplyScalar(L); cpos.setXYZ(k * 2, 0, 0, 0); cpos.setXYZ(k * 2 + 1, w.x, w.y, w.z); cd.setX(k * 2, 0); cd.setX(k * 2 + 1, L) }
+  }
+  const wob = RM ? 0 : Math.sin(time * .27) * .06;
+  block.rotation.set(o[1] + (RM ? 0 : Math.sin(time * .19) * .02), Math.PI / 4 + o[0] * Q + wob + spin * .4, 0, 'XYZ');
+  block.scale.setScalar(o[5] * baseS);
+  block.position.set(0, RM ? 0 : Math.sin(time * .8) * .035, 0);
+  block.updateMatrixWorld(); cam.updateMatrixWorld();
+  if (renderer) {
+    for (let k = 0; k < 8; k++) cubes.setMatrixAt(k, mats[k]);
+    cubes.instanceMatrix.needsUpdate = true; cpos.needsUpdate = cd.needsUpdate = true;
+    const flash = RM ? 0 : Math.exp(-Math.pow((time - 1.75) * 3.2, 2)) * 1.6;
+    U.uTime.value = RM ? 3 : time; U.uHue.value = o[7]; U.uCore.value = o[6] + flash; U.uB.value.copy(block.position);
+    // the pointer moves only the specular light (local), never the camera
+    const pOn = mode === 'draw' && now - ptr.t < 4000;
+    if (pOn) { px += ((ptr.x - cl) / cw * 2 - 1 - px) * (1 - Math.exp(-dt * 5)); py += ((ptr.y - ct) / ch * 2 - 1 - py) * (1 - Math.exp(-dt * 5)) }
+    else if (!RM) { px = Math.sin(time * .23) * .6; py = Math.cos(time * .17) * .3 - .2 }
+    U.uL.value.set(-.3 + px * 1.3, .85 - py * .8, .9).normalize();
+    const tgt = hotC && hotC.on ? (hotC.idx < 0 ? 8 : hotC.idx) : -9;
+    if (tgt >= 0) hiI = tgt; hiA += ((tgt >= 0 ? 1 : 0) - hiA) * (RM ? 1 : 1 - Math.exp(-dt * 8)); U.uHi.value = hiI; U.uHiA.value = hiA;
+    chain.material.uniforms.uChain.value = clamp((eA - .3) / .5) * (1 - io);
+    GU.uEx.value = eA; GU.uPR.value = dpr;
+    const pt = (now - pulseT) / 1000; GU.uPulse.value = pt * 7; GU.uPulseA.value = RM ? 0 : Math.exp(-pt * 1.4);
+    const pw = 28 * TAN; GU.uPtr.value.set(((ptr.x - cl) / cw * 2 - 1) * pw * cw / ch, -((ptr.y - ct) / ch * 2 - 1) * pw);
+    GU.uPtrA.value += ((mode === 'draw' && now - ptr.t < 1500 ? 1 : 0) - GU.uPtrA.value) * (1 - Math.exp(-dt * 4));
+    composer.render(dt);
+  } else if (ctx2) wire();
+}
+/* no-WebGL fallback: the same block as a line drawing, so leaders still attach */
+const EDGES = [0, 1, 1, 3, 3, 2, 2, 0, 4, 5, 5, 7, 7, 6, 6, 4, 0, 4, 1, 5, 2, 6, 3, 7];
+function wire() {
+  ctx2.setTransform(dpr, 0, 0, dpr, 0, 0); ctx2.clearRect(0, 0, cw, ch); ctx2.lineWidth = 1;
+  for (let i = 0; i < 9; i++) {
+    const pts = [];
+    for (let k = 0; k < 8; k++) {
+      const s = i < 8 ? .46 : .31; v.set(k & 1 ? s : -s, k & 2 ? s : -s, k & 4 ? s : -s);
+      if (i < 8) v.applyMatrix4(mats[i]); v.applyMatrix4(block.matrixWorld).project(cam); pts.push((v.x + 1) / 2 * cw, (1 - v.y) / 2 * ch);
+    }
+    ctx2.beginPath();
+    for (let e = 0; e < 24; e += 2) { ctx2.moveTo(pts[EDGES[e] * 2], pts[EDGES[e] * 2 + 1]); ctx2.lineTo(pts[EDGES[e + 1] * 2], pts[EDGES[e + 1] * 2 + 1]) }
+    ctx2.strokeStyle = i < 8 ? 'rgba(237,237,239,.62)' : 'rgba(126,232,242,.8)'; ctx2.stroke();
+  }
+}
+
+/* ---------- leaders ---------- */
+function toScreen(vec) { vec.project(cam); return [cl + (vec.x + 1) / 2 * cw, ct + (1 - vec.y) / 2 * ch] }
+function anchor(c) {
+  if (c.idx < 0) v.set(0, 0, 0); else v.copy(c.lp).applyMatrix4(mats[c.idx]);
+  v.applyMatrix4(block.matrixWorld);
+  let vis = true;
+  if (c.idx >= 0) { n.copy(c.ln).transformDirection(mats[c.idx]).transformDirection(block.matrixWorld); vis = n.dot(w.copy(cam.position).sub(v).normalize()) > .02 }
+  return [...toScreen(v), vis];
+}
+function leads(now, dt) {
+  if (!THREE) return;
+  const [cx, cy] = toScreen(cen.copy(block.position));
+  // dash-dot centre lines through the object, sized to its current extent
+  if (mode === 'draw') {
+    let R = 0; for (let k = 0; k < 8; k++) { const [x, y] = toScreen(v.setFromMatrixPosition(mats[k]).applyMatrix4(block.matrixWorld)); R = Math.max(R, Math.hypot(x - cx, y - cy)) }
+    R += .9 * block.scale.x * ch / (2 * 24 * TAN) + 56;
+    axP.setAttribute('d', `M${cx - R} ${cy}H${cx + R}M${cx} ${cy - R}V${cy + R}`);
+  } else axP.setAttribute('d', '');
+  const list = mode === 'list';
+  for (const c of CO) {
+    c.d = RM ? +c.on : c.on ? (now < c.t0 ? 0 : 1 - Math.pow(1 - clamp((now - c.t0) / 520), 3)) : Math.max(0, c.d - dt / .22);
+    if (c.d <= 0 || (list && (c.k === 'tb' || c.el.classList.contains('name')))) { c.g.style.display = 'none'; continue }
+    c.g.style.display = '';
+    const [x, y, vis] = anchor(c), d = c.d, rt = RM ? 1 : clamp((now - c.t0) / 700);
+    c.g.classList.toggle('hid', !vis);
+    c.dot.setAttribute('cx', x); c.dot.setAttribute('cy', y);
+    c.ring.setAttribute('cx', x); c.ring.setAttribute('cy', y); c.ring.setAttribute('r', 2.6 + rt * 13); c.ring.setAttribute('opacity', (1 - rt) * .9);
+    if (list) {   // phones: numbered dot + a short tick pointing away from the centre
+      let dx = x - cx, dy = y - cy; const l = Math.hypot(dx, dy) || 1; dx /= l; dy /= l;
+      c.path.setAttribute('d', `M${x + dx * 4} ${y + dy * 4}L${x + dx * (4 + 9 * d)} ${y + dy * (4 + 9 * d)}`);
+      c.num.setAttribute('x', x + dx * 21); c.num.setAttribute('y', y + dy * 21); c.num.setAttribute('opacity', d);
+      if (c.det) c.det.setAttribute('r', 0);
+      continue;
+    }
+    let tx = c.px, ty = c.py;
+    if (c.k === 'tb') { const r = c.el.getBoundingClientRect(); tx = r.left; ty = r.top + r.height / 2 }
+    let sx = x, sy = y;
+    if (c.det) {   // detail circle drawn round the anchor; leader leaves from its rim
+      const R = 20 * Math.min(1, d * 1.6), l = Math.hypot(tx - x, ty - y) || 1;
+      c.det.setAttribute('cx', x); c.det.setAttribute('cy', y); c.det.setAttribute('r', R);
+      sx = x + (tx - x) / l * R; sy = y + (ty - y) / l * R;
+      c.num.setAttribute('x', x - (tx > x ? 1 : -1) * 28); c.num.setAttribute('y', y - 24); c.num.setAttribute('opacity', d);
+    } else c.num.setAttribute('opacity', 0);
+    c.path.setAttribute('d', `M${sx} ${sy}L${sx + (tx - sx) * d} ${sy + (ty - sy) * d}`);
+  }
+}
+
+/* ---------- loop ---------- */
+let frames = 0, slow = 0;
+function frame(now) {
+  const dt = Math.min(.1, (now - last) / 1000); last = now;
+  const time = (now - T0) / 1000;
+  if (lenis) lenis.raf(now);
+  const p = progress();
+  ps = RM ? Math.round(p) : ps + (p - ps) * (1 - Math.exp(-dt * 4.5));
+  const k = Math.round(ps), near = Math.abs(ps - k);
+  if (RM || time > 1.25 || !THREE) {
+    if (near < (mode === 'list' ? .35 : .2)) setActive(k);
+    else if (Math.abs(ps - active) > .3) setActive(-1);
+  }
+  if (THREE) { scene(ps, time, now, dt); leads(now, dt) }
+  if (++frames > 40 && frames < 160 && renderer) { slow += dt; if (frames === 159 && slow / 119 > .03 && dpr > 1) { dpr = Math.max(1, dpr - .5); renderer.setPixelRatio(dpr); composer.setPixelRatio(dpr); resize() } }
+}
+let rt = 0, req = () => {};
+addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { resize(); if (RM) requestAnimationFrame(frame) }, 120) });
+resize();
+document.fonts && document.fonts.ready.then(() => { place(); if (RM) requestAnimationFrame(frame) });
+if (RM) {   // reduced motion: still frames, redrawn only when the sheet changes
+  let q = 0; req = () => { if (!q) q = requestAnimationFrame(t => { q = 0; frame(t) }) };
+  addEventListener('scroll', req, { passive: true }); req();
+} else { const loop = t => { requestAnimationFrame(loop); frame(t) }; requestAnimationFrame(loop) }
+</script>
+</body>
+</html>

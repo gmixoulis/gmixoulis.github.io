@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GM-101 Syllabus · George Michoulis</title>
+<meta name="description" content="GM-101, Building verifiable systems: the syllabus for George Michoulis, blockchain developer and researcher in Thessaloniki.">
+<meta name="color-scheme" content="light dark">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600&family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --paper:#fff;--ink:#1d1e22;--ink2:#56575c;--rule:#d8d7d3;--pen:#c4161c;--dim:1;--name-w:300;
+  --serif:"Spectral",Georgia,"Times New Roman",serif;
+  --sans:"Libre Franklin","Helvetica Neue",Helvetica,sans-serif;
+  --indent:clamp(0rem,8vw,8.5rem);
+}
+@media (prefers-color-scheme:dark){
+  :root{--paper:#262522;--ink:#eee6d4;--ink2:#b3ab99;--rule:#4b4842;--pen:#ff7a69;--dim:.84;--name-w:200}
+}
+html{background:var(--paper);color:var(--ink);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);font:400 1.125rem/1.62 var(--serif);font-variant-numeric:oldstyle-nums;text-rendering:optimizeLegibility}
+a{color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.2em;text-decoration-color:var(--rule)}
+a:hover{text-decoration-color:currentColor}
+a:focus-visible{outline:2px solid var(--pen);outline-offset:3px;border-radius:2px}
+.page{max-width:64rem;margin:0 auto;padding:0 clamp(1rem,5vw,4rem)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* masthead */
+.back{display:inline-block;padding:1.1rem 0;font:500 .8125rem/1 var(--sans);color:var(--ink2);text-decoration:none}
+.back:hover{color:var(--ink)}
+.masthead{padding-top:clamp(1.5rem,7vh,4.5rem)}
+.course{margin:0 0 1rem;font:500 .9375rem/1.4 var(--sans);font-variant-numeric:lining-nums}
+.course b{font-weight:600}
+h1{margin:0 0 clamp(1.25rem,3vw,2rem);font:var(--name-w) clamp(3.4rem,20.5vw,13rem)/.88 var(--serif);letter-spacing:-.028em;margin-left:-.04em}
+.facts{display:grid;grid-template-columns:1.45fr 1.2fr .8fr 1fr;gap:1rem 2rem;margin:0;padding:1rem 0 1.15rem;border-top:3px double var(--ink);border-bottom:1px solid var(--ink)}
+.facts dt{margin-bottom:.25rem;font:500 .78rem/1.3 var(--sans);color:var(--ink2)}
+.facts dd{margin:0;font-size:1rem;line-height:1.4}
+
+/* sections */
+.sec{margin-top:clamp(3.75rem,8vw,6.25rem);padding-left:var(--indent)}
+h2{position:relative;margin:0 0 1.25rem;font:500 clamp(1.6rem,3vw,2.05rem)/1.15 var(--serif);letter-spacing:-.01em}
+h2 .n{position:absolute;right:100%;margin-right:clamp(.8rem,2.2vw,2rem);font-weight:300;color:var(--ink2);font-variant-numeric:lining-nums}
+h3{margin:2.5rem 0 .8rem;font:600 .9375rem/1.3 var(--sans)}
+.prose{max-width:40rem}
+.prose p{margin:0 0 1em}
+.lede{color:var(--ink2);font-style:italic;max-width:40rem;margin:0 0 1rem}
+
+/* red pen */
+.mark{position:relative;white-space:nowrap}
+.pen{position:absolute;pointer-events:none;overflow:visible;fill:none;stroke:var(--pen);stroke-linecap:round;stroke-linejoin:round}
+.js .pen path{stroke-dasharray:1 1.2;stroke-dashoffset:1.05;transition:stroke-dashoffset .5s cubic-bezier(.55,0,.3,1)}
+.js .pen.on path{stroke-dashoffset:0}
+.under .pen{left:-3%;bottom:-.5em;width:106%;height:auto;stroke-width:2.6}
+.ring .pen{left:50%;top:50%;width:2.75em;height:1.8em;transform:translate(-52%,-50%);stroke-width:3.6}
+.pen.tick{position:relative;display:inline-block;width:1.2em;height:1.2em;margin-left:.3em;vertical-align:-.15em;stroke-width:3.6}
+
+/* outcomes */
+.outcomes{max-width:42rem;margin:0;padding:0;list-style:none;counter-reset:lo}
+.outcomes li{display:grid;grid-template-columns:2.6rem 1fr;padding:.6rem 0;border-top:1px solid var(--rule);counter-increment:lo}
+.outcomes li:last-child{border-bottom:1px solid var(--rule)}
+.outcomes li::before{content:"2." counter(lo);font:500 .85rem/2 var(--sans);color:var(--ink2);font-variant-numeric:lining-nums}
+
+/* schedule */
+.sched{width:100%;border-collapse:collapse;border-top:2px solid var(--ink);font-size:1rem}
+.sched caption{caption-side:bottom;padding-top:.8rem;text-align:left;font-style:italic;color:var(--ink2)}
+.sched th{padding:.6rem 1.25rem .6rem 0;border-bottom:1px solid var(--ink);text-align:left;font:600 .8rem/1.2 var(--sans)}
+.sched td{padding:1.15rem 1.25rem 1.25rem 0;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.55}
+.sched .u{width:3.25rem;font:300 2.1rem/1 var(--serif);color:var(--ink2);font-variant-numeric:lining-nums}
+.sched .d{width:7.25rem;white-space:nowrap;font:500 .9rem/1.6 var(--sans);font-variant-numeric:lining-nums tabular-nums}
+.sched .d small{display:block;font-weight:400;font-size:.78rem;color:var(--ink2)}
+.sched .t{width:31%}
+.sched .t b{display:block;font-weight:600;line-height:1.35}
+.sched .t span{display:block;margin-top:.15rem;font-size:.95rem;color:var(--ink2);line-height:1.4}
+.sched tr:last-child td{border-bottom:0}
+
+/* reading */
+.cols,.reading li{display:grid;grid-template-columns:2rem minmax(0,1fr) 4.25rem;gap:0 1.1rem;align-items:baseline}
+.cols{max-width:54rem;padding-bottom:.45rem;border-bottom:1px solid var(--ink);font:600 .8rem/1.2 var(--sans)}
+.cols span:last-child{text-align:right}
+.reading{max-width:54rem;margin:0;padding:0;list-style:none}
+.reading li{padding:.95rem 0;border-bottom:1px solid var(--rule)}
+.reading .r{font:500 .85rem/1 var(--sans);color:var(--ink2);font-variant-numeric:lining-nums}
+.reading .ti{display:block;line-height:1.4}
+.reading .by{display:block;margin-top:.3rem;font-size:.95rem;line-height:1.45;color:var(--ink2)}
+.reading .c{justify-self:end;font:500 1.3rem/1 var(--sans);font-variant-numeric:lining-nums tabular-nums}
+.reading .zero{color:var(--ink2)}
+.after{max-width:40rem;margin:1rem 0 0;font-size:1rem;color:var(--ink2)}
+
+/* evidence */
+.plain{max-width:42rem;margin:0;padding:0;list-style:none}
+.plain li{padding:.4rem 0;border-bottom:1px solid var(--rule)}
+.plain .y{font:500 .85rem/1 var(--sans);color:var(--ink2);font-variant-numeric:lining-nums;margin-left:.4rem}
+.plate{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.1rem;margin:0}
+.plate figure{display:flex;flex-direction:column;margin:0}
+.plate img{display:block;width:100%;height:auto;aspect-ratio:1.414;object-fit:cover;border:1px solid var(--rule);background:#fff;filter:brightness(var(--dim))}
+.plate .tall{grid-row:span 2}
+.plate .tall img{flex:1 1 0;min-height:0;aspect-ratio:auto;object-position:top}
+figcaption{margin-top:.45rem;font:400 .8rem/1.4 var(--sans);color:var(--ink2);font-variant-numeric:lining-nums}
+.certs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 2.5rem}
+.certs h4{margin:0 0 .5rem;font:500 .8rem/1.3 var(--sans);color:var(--ink2)}
+.certs ul{margin:0 0 1.5rem;padding:0;list-style:none;font-size:.95rem;line-height:1.35}
+.certs li{padding:.28rem 0;border-top:1px solid var(--rule)}
+.certs a{text-decoration:none}
+.certs a:hover{text-decoration:underline}
+
+/* lab work */
+.lead-fig{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:1.75rem;align-items:end;margin:0 0 2.5rem}
+.labs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2.25rem 2rem}
+.labs figure{margin:0}
+.lab img,.lab canvas{display:block;width:100%;height:auto;border:1px solid var(--rule);filter:brightness(var(--dim))}
+.js img.still{visibility:hidden}
+.lab figcaption{margin-top:.7rem;font:400 1rem/1.5 var(--serif);color:var(--ink)}
+.lab .host{display:block;margin-bottom:.15rem;font:600 .9rem/1.3 var(--sans);font-variant-numeric:lining-nums}
+
+/* office hours */
+.book{margin:0 0 1.5rem;font-size:clamp(1.3rem,3vw,1.75rem);line-height:1.35}
+.book a{text-decoration-color:var(--pen)}
+.links{display:flex;flex-wrap:wrap;gap:.5rem 1.75rem;margin:0 0 1.5rem;padding:0;list-style:none;font:500 .95rem/1.4 var(--sans)}
+footer{margin-top:clamp(4rem,9vw,7rem);padding:1.25rem 0 2.5rem;border-top:3px double var(--ink);font:400 .85rem/1.5 var(--sans);color:var(--ink2)}
+footer p{margin:0}
+
+@media (max-width:760px){
+  :root{--indent:0rem}
+  h2 .n{position:static;margin-right:.45rem}
+  .facts{grid-template-columns:1fr 1fr}
+  .sched thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .sched,.sched tbody,.sched caption{display:block}
+  .sched tr{display:grid;grid-template-columns:2.6rem minmax(0,1fr);padding:1rem 0;border-bottom:1px solid var(--rule)}
+  .sched td{display:block;width:auto;padding:0;border:0}
+  .sched .u{grid-row:1/span 3;font-size:1.7rem}
+  .sched .d{margin-bottom:.3rem}
+  .sched .d small{display:inline;margin-left:.4rem}
+  .sched .t{width:auto;margin-bottom:.45rem}
+  .cols,.reading li{grid-template-columns:1.3rem minmax(0,1fr) 3.4rem;gap:0 .6rem}
+  .plate{grid-template-columns:1fr 1fr;gap:.8rem}
+  .certs,.lead-fig,.labs{grid-template-columns:1fr}
+  .lead-fig{gap:.25rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .js .pen path{transition:none;stroke-dashoffset:0}
+}
+@media print{
+  @page{size:A4;margin:14mm 15mm 15mm}
+  :root{--paper:#fff;--ink:#000;--ink2:#444;--rule:#bdbdbd;--pen:#c4161c;--dim:1;--indent:0rem;--name-w:300}
+  html{font-size:8.4pt}
+  body{line-height:1.42}
+  .back,.lab img,.lab canvas,.plate,.noprint,.lab .note{display:none}
+  .masthead{padding-top:0}
+  h1{font-size:34pt;margin-bottom:8pt}
+  h1 br{display:none}
+  .facts{padding:6pt 0 7pt}
+  .sec{margin-top:16pt}
+  h2{font-size:14pt;margin-bottom:6pt;break-after:avoid}
+  h2 .n{position:static;margin-right:5pt}
+  h3{margin:10pt 0 4pt;break-after:avoid}
+  .prose,.outcomes,.reading,.cols,.after,.plain{max-width:none}
+  .outcomes li{padding:2pt 0}
+  .sched td{padding:5pt 10pt 6pt 0}
+  .sched .u{font-size:15pt}
+  .sched tr,.reading li,figure,.certs li{break-inside:avoid}
+  .reading li{padding:4pt 0}
+  .reading .c{font-size:11pt}
+  .certs{display:block}
+  .certs h4{display:inline;margin-right:4pt;color:#000}
+  .certs ul{display:inline;margin:0}
+  .certs li{display:inline;padding:0;border:0}
+  .certs li:not(:last-child)::after{content:"; "}
+  .certs div{margin-bottom:5pt}
+  .lab-set{display:flex;flex-wrap:wrap;gap:2pt 16pt}
+  .labs,.lead-fig{display:contents}
+  .lab figcaption{margin:0}
+  .lab .host{font-weight:500}
+  .lead-fig .pen{display:none}
+  .book{font-size:12pt;margin-bottom:4pt}
+  .links a::after{content:" (" attr(href) ")";font-weight:400;color:#444}
+  .pen path{stroke-dashoffset:0!important;transition:none!important}
+  a{text-decoration:none}
+  footer{margin-top:14pt;padding:6pt 0 0}
+}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="masthead">
+  <a class="back" href="index.html">← All ideas</a>
+  <p class="course"><b>GM-101</b> · Building verifiable systems</p>
+  <h1>George<br> Michoulis</h1>
+  <dl class="facts">
+    <div><dt>Instructor</dt><dd>George Michoulis, blockchain developer and researcher</dd></div>
+    <div><dt>Location</dt><dd>Thessaloniki, Greece, and remote</dd></div>
+    <div><dt>Term</dt><dd>Autumn 2026</dd></div>
+    <div><dt>Office hours</dt><dd><a href="#office-hours">By email, see section 7</a></dd></div>
+  </dl>
+</header>
+
+<main>
+<section class="sec" aria-labelledby="s1">
+  <h2 id="s1"><span class="n">1</span>Course description</h2>
+  <div class="prose">
+    <p>I’m George, a blockchain developer and researcher based in Thessaloniki. I work remotely, mostly on smart contracts, graph-based machine learning and full-stack Web3 systems. This course is the record of how I got here and what I can show for it.</p>
+    <p>I studied Applied Informatics at the University of Macedonia, where my thesis asked how to verify academic credentials on Ethereum. I then took an MSc in Data and Web Science at Aristotle University of Thessaloniki, funded by a <span class="mark under">DeepMind scholarship<svg class="pen" viewBox="0 0 300 16" aria-hidden="true"><path pathLength="1" d="M4 7c48-3 104 2 160-1s98-2 132 1M26 13c70-3 150-1 250-2"/></svg></span>, and worked on graph-embedding methods for blockchain fraud detection.</p>
+    <p>The work has three sides. I research: publications and startup work on how effective ledgers are, and what they change in practice across blockchain systems. I build: Web3 products such as NFT marketplaces and DeFi, data science with graph embeddings, shipped across Solidity, TypeScript and the cloud. I teach: I have lectured in networks, security and application development, and I speak in public on Web3 and edge tech.</p>
+  </div>
+</section>
+
+<section class="sec" aria-labelledby="s2">
+  <h2 id="s2"><span class="n">2</span>Learning outcomes</h2>
+  <p class="lede">By the end of the course you should have seen enough evidence to agree that I can:</p>
+  <ol class="outcomes">
+    <li><span>Design, write and ship Solidity smart contracts and the on-chain integrations around them, from NFT marketplaces to DeFi, with security tooling alongside.</span></li>
+    <li><span>Build full-stack Web3 products in TypeScript: React and Next.js frontends, NestJS services, Docker, and the cloud underneath.</span></li>
+    <li><span>Apply graph-embedding methods to blockchain data, as in my MSc work on fraud detection, and to other graphs, such as drug–target interaction prediction.</span></li>
+    <li><span>Prototype permissioned ledgers on Hyperledger Fabric, and design marketplaces around fractional NFTs, as with FraMark for 5G network management.</span></li>
+    <li><span>Take a research question through to a working system, as with VerDe, which verifies academic qualifications on the Ethereum blockchain.</span></li>
+    <li><span>Teach networks and security, web scripting and application development with inclusivity-first assessment, and speak in public on Web3 and edge tech.</span></li>
+  </ol>
+</section>
+
+<section class="sec" aria-labelledby="s3">
+  <h2 id="s3"><span class="n">3</span>Schedule</h2>
+  <table class="sched">
+    <caption>Units run in chronological order. Unit 6 is in progress.</caption>
+    <thead><tr><th scope="col">Unit</th><th scope="col">Dates</th><th scope="col">Topic</th><th scope="col">What was covered</th></tr></thead>
+    <tbody>
+      <tr><td class="u">1</td><td class="d">2015–2020</td><td class="t"><b>BSc Applied Informatics</b><span>University of Macedonia</span></td><td class="c">A thesis on verifying academic credentials with Ethereum. The first paper, introducing VerDe, went to the XIV Balkan Conference on Operational Research in 2020.</td></tr>
+      <tr><td class="u">2</td><td class="d">2020–2022</td><td class="t"><b>MSc Data and Web Science</b><span>Aristotle University of Thessaloniki</span></td><td class="c">Graph-embedding methods for blockchain fraud detection, on a DeepMind scholarship. Graph embeddings and node features for drug–target interaction prediction. Third place at the Infinitech Hackathon.</td></tr>
+      <tr><td class="u">3</td><td class="d">2022–2024</td><td class="t"><b>Blockchain and full-stack developer</b><span>University of Nicosia, Institute for the Future</span></td><td class="c">Large Next.js, NestJS and Docker applications, and a Web3 NFT marketplace.</td></tr>
+      <tr><td class="u">4</td><td class="d">2023–2025</td><td class="t"><b>Lecturer and academic partner</b><span>University of Derby, Mediterranean College</span></td><td class="c">Taught Networks and Security, Web Scripting and Application Development, with assessment designed inclusivity-first.</td></tr>
+      <tr><td class="u">5</td><td class="d">2024–2026</td><td class="t"><b>Blockchain developer and researcher</b><span>Sidroco Holdings Ltd</span></td><td class="c">An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ learning management system, and multinational EU projects.</td></tr>
+      <tr><td class="u">6</td><td class="d">2026–<small>since 05/2026</small></td><td class="t"><b>Web3 full-stack developer</b><span>Cyberscope by TAC</span></td><td class="c">End-to-end Web3 products: contracts, on-chain integrations, React and Next.js frontends, and security tooling.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="sec" aria-labelledby="s4">
+  <h2 id="s4"><span class="n">4</span>Required reading</h2>
+  <p class="lede">Ranked by citations on Google Scholar. Read the first three; the rest are further reading.</p>
+  <div class="cols" aria-hidden="true"><span></span><span>Paper</span><span>Cited by</span></div>
+  <ol class="reading">
+    <li><span class="r">1</span><span><a class="ti" href="https://scholar.google.com/citations?view_op=view_citation&amp;hl=en&amp;user=nk0lq8YAAAAJ&amp;citation_for_view=nk0lq8YAAAAJ:IjCSPb-OGe4C">A process-aware approach for blockchain-based verification of academic qualifications</a><span class="by">N. Nousias, G. Tsakalidis, G. Michoulis, S. Petridou, K. Vergidis. <i>Simulation Modelling Practice and Theory</i> 121, 102642, 2022.</span></span><span class="c"><span class="sr">Cited by </span><span class="mark ring">32<svg class="pen" viewBox="0 0 100 64" aria-hidden="true"><path pathLength="1" d="M66 8C40 1 10 9 6 29c-3 19 26 31 54 29 28-2 38-18 34-32C90 12 70 4 48 7"/></svg></span></span></li>
+    <li><span class="r">2</span><span><a class="ti" href="https://scholar.google.com/citations?view_op=view_citation&amp;hl=en&amp;user=nk0lq8YAAAAJ&amp;citation_for_view=nk0lq8YAAAAJ:u5HHmVD_uO8C">Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe</a><span class="by">G. Michoulis, S. Petridou, K. Vergidis. <i>XIV Balkan Conference on Operational Research</i>, 429–433, 2020.</span></span><span class="c"><span class="sr">Cited by </span>11</span></li>
+    <li><span class="r">3</span><span><a class="ti" href="https://scholar.google.com/citations?view_op=view_citation&amp;hl=en&amp;user=nk0lq8YAAAAJ&amp;citation_for_view=nk0lq8YAAAAJ:Tyk-4Ss8FVUC">Exploring decentralized governance: a framework applied to Compound Finance</a><span class="by">S. Papangelou, K. Christodoulou, G. Michoulis. <i>International Conference on Mathematical Research for Blockchain Economy</i>, 2023.</span></span><span class="c"><span class="sr">Cited by </span>7</span></li>
+  </ol>
+  <h3>Further reading</h3>
+  <ol class="reading" start="4">
+    <li><span class="r">4</span><span><a class="ti" href="https://scholar.google.com/citations?view_op=view_citation&amp;hl=en&amp;user=nk0lq8YAAAAJ&amp;citation_for_view=nk0lq8YAAAAJ:ufrVoPGSRksC">Data security for smart cities</a><span class="by">C. Eleftheriadis, G. Michoulis, E. Fountoukidis, M. Tzana, A. Lytos, T. Lagkas, et al. 2025.</span></span><span class="c"><span class="sr">Cited by </span>1</span></li>
+    <li><span class="r">5</span><span><a class="ti" href="https://scholar.google.com/citations?view_op=view_citation&amp;hl=en&amp;user=nk0lq8YAAAAJ&amp;citation_for_view=nk0lq8YAAAAJ:YsMSGLbcyi4C">FraMark: a blockchain marketplace for 5G network management using fractional NFTs</a><span class="by">G. Michoulis, K. Tsourdinis, G. Niotis, K. Kyranou, E. Fountoukidis, T. Lagkas, et al. <i>7th World Symposium on Communication Engineering (WSCE)</i>, 15–21, 2024.</span></span><span class="c"><span class="sr">Cited by </span>1</span></li>
+    <li><span class="r">6</span><span><a class="ti" href="https://scholar.google.com/citations?view_op=view_citation&amp;hl=en&amp;user=nk0lq8YAAAAJ&amp;citation_for_view=nk0lq8YAAAAJ:Y0pCki6q_DkC">Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management</a><span class="by">K. Tsourdinis, G. Michoulis, G. Niotis, V. Argyriou, T. Lagkas, et al. <i>IEEE International Conference on Consumer Electronics (ICCE)</i>, 2025.</span></span><span class="c zero"><span class="sr">Cited by </span>0</span></li>
+    <li><span class="r">7</span><span><a class="ti" href="https://scholar.google.com/citations?view_op=view_citation&amp;hl=en&amp;user=nk0lq8YAAAAJ&amp;citation_for_view=nk0lq8YAAAAJ:9yKSN-GCB0IC">Graph embedding and node features for drug–target interaction prediction</a><span class="by">G. Michoulis. MSc work, Aristotle University of Thessaloniki, 2022.</span></span><span class="c zero"><span class="sr">Cited by </span>0</span></li>
+    <li><span class="r">8</span><span><a class="ti" href="https://scholar.google.com/citations?view_op=view_citation&amp;hl=en&amp;user=nk0lq8YAAAAJ&amp;citation_for_view=nk0lq8YAAAAJ:2osOgNQ5qMEC">Blockchain in higher education: permissioned and permissionless approaches</a><span class="by">G. Michoulis, N. Nousias, S. Basagiannis. <i>4th Summit on Gender Equality in Computing</i>, 2022.</span></span><span class="c zero"><span class="sr">Cited by </span>0</span></li>
+  </ol>
+  <p class="after">Also two Greek-language theses on verifying academic titles with Ethereum, from 2020 and 2021. The full list is on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+</section>
+
+<section class="sec" aria-labelledby="s5">
+  <h2 id="s5"><span class="n">5</span>Coursework evidence</h2>
+  <h3>Distinctions</h3>
+  <ul class="plain">
+    <li>DeepMind Scholarship, Aristotle University of Thessaloniki <span class="y">2020–2022</span></li>
+    <li>Third place, Infinitech Hackathon, run by Crowdpolicy <span class="y">06/2022</span><svg class="pen tick" viewBox="0 0 40 40" aria-hidden="true"><path pathLength="1" d="M5 22c4 3 7 7 9 12 5-12 13-22 22-30"/></svg></li>
+    <li>Basic Research grant, University of Macedonia <span class="y">2020–2021</span></li>
+    <li><a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png">Move/Sui Bootcamp Thessaloniki award</a> <span class="y">2025</span></li>
+  </ul>
+  <h3 class="noprint">Plate 1: selected scans</h3>
+  <div class="plate">
+    <figure class="tall"><img width="1240" height="1755" src="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" alt="Scan of George's MSc diploma in Data and Web Science, Aristotle University of Thessaloniki, in Greek" loading="lazy"><figcaption>MSc Data and Web Science, AUTh, 2022</figcaption></figure>
+    <figure><img width="2175" height="1439" src="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" alt="Scan of a University of Thessaly certificate for an accelerated CCNA programme" loading="lazy"><figcaption>CCNA programme, University of Thessaly</figcaption></figure>
+    <figure><img width="1755" height="1240" src="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" alt="Certificate of completion for a machine learning and deep neural networks short course, Aristotle University of Thessaloniki" loading="lazy"><figcaption>Machine learning and deep neural networks, AUTh</figcaption></figure>
+    <figure class="tall"><img width="1742" height="2460" src="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" alt="Scan of George's BSc diploma in Applied Informatics, University of Macedonia, in Greek" loading="lazy"><figcaption>BSc Applied Informatics, University of Macedonia</figcaption></figure>
+    <figure><img width="1754" height="1241" src="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" alt="Certificate of accomplishment for Introduction to Digital Currencies, University of Nicosia" loading="lazy"><figcaption>Introduction to digital currencies, University of Nicosia</figcaption></figure>
+    <figure><img width="2342" height="1656" src="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" alt="W3Schools certificate of completion, Certified Rust Developer" loading="lazy"><figcaption>Certified Rust developer, W3Schools</figcaption></figure>
+  </div>
+  <h3>Further certificates</h3>
+  <div class="certs">
+    <div><h4>Courses completed</h4><ul>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png">Advanced ethical hacking</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png">Cloud engineering</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg">Cybersecurity e-learning academy</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png">Networking essentials</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg">Software development for telecommunication networks</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg">NFT Talents program</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg">How to get published with IEEE</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg">How to design and build a website</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg">European legal culture program, AUTh</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png">Entrepreneurship: funding and development of new enterprises</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Discover-Customer.jpg">Discover customer</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg">Digital skills for tourism</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Completion_The-Hour-Of-Code.jpg">The Hour of Code</a></li>
+    </ul></div>
+    <div><h4>Workshops and events</h4><ul>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg">Blockchain for the legal industry</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg">Blockchain in education: remote learning and social distancing</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg">RippleX workshop launch event</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg">VeChain ToolChain: digital transformation of healthcare</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg">Data analytics to strengthen healthcare cybersecurity</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_EY-Cyber-Day.jpg">EY Cyber Day</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg">Processing data in the fog</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg">GNU/Linux command line</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg">SKGcode: building a real-estate chatbot</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg">Marine educational robotics, Hydrobot program</a></li>
+      <li><a href="../../img/renamed/Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png">Migma: marketing and brand</a></li>
+    </ul></div>
+    <div><h4>Languages and awards</h4><ul>
+      <li><a href="../../img/renamed/Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg">TOEIC listening and reading test</a></li>
+      <li><a href="../../img/renamed/English-Certificate_English-Certificate-English-Proficiency.jpg">English proficiency</a></li>
+      <li><a href="../../img/renamed/Award_Academic-Achievement.jpg">Academic achievement award</a></li>
+    </ul></div>
+  </div>
+</section>
+
+<section class="sec" aria-labelledby="s6">
+  <h2 id="s6"><span class="n">6</span>Lab work</h2>
+  <p class="lede noprint">Sites and systems I built. Each note describes only what the screenshot shows.</p>
+  <div class="lab-set">
+  <figure class="lab lead-fig">
+    <img width="1840" height="907" src="../../img/portfolio/verde.uom.gr.PNG" alt="Screenshot of the VerDe contact page: website and email details beside a map around the University of Macedonia" loading="lazy">
+    <figcaption><span class="host">verde.uom.gr<svg class="pen tick" viewBox="0 0 40 40" aria-hidden="true"><path pathLength="1" d="M5 22c4 3 7 7 9 12 5-12 13-22 22-30"/></svg></span><span class="note">VerDe, the academic-credential verification system from my first papers. The screenshot is its contact page: website and email details beside a map around the University of Macedonia, under a menu for About, Demo, Publications and Team.</span></figcaption>
+  </figure>
+  <div class="labs">
+    <figure class="lab"><img width="1377" height="956" class="still" src="../../img/portfolio/bbf-gui.ddns.net.gif" alt="Screenshot of the Blockchain Benchmarking Framework landing page with an isometric city illustration"><figcaption><span class="host">bbf-gui.ddns.net</span><span class="note">The Blockchain Benchmarking Framework landing page. It describes a framework for deploying and evaluating different blockchain protocols, links to BBF Core and BBF UI, and lists the University of Nicosia, Ripple and XRP Ledger as sponsors.</span></figcaption></figure>
+    <figure class="lab"><img width="1698" height="943" src="../../img/portfolio/metau.unic.ac.cy.png" alt="Screenshot of a University of Nicosia course site with a Connect Wallet button" loading="lazy"><figcaption><span class="host">metau.unic.ac.cy</span><span class="note">A University of Nicosia course site, headed “Decentralised, on-chain and in the metaverse”, with a Connect Wallet button and a welcome to a virtual classroom.</span></figcaption></figure>
+    <figure class="lab"><img width="1910" height="998" src="../../img/portfolio/accelerate.png" alt="Screenshot of a University of Nicosia log-in page with an abstract red and grey illustration" loading="lazy"><figcaption><span class="host">stg.accelerate.unic.ac.cy</span><span class="note">The log-in screen of a University of Nicosia platform, on its staging host: email and password beside an abstract red-and-grey illustration.</span></figcaption></figure>
+    <figure class="lab"><img width="1835" height="917" src="../../img/portfolio/marlab.ode.uom.gr.PNG" alt="Screenshot of the MarLab marketing laboratory homepage, University of Macedonia" loading="lazy"><figcaption><span class="host">marlab.ode.uom.gr</span><span class="note">MarLab, the marketing laboratory at the University of Macedonia: menus for research, education and publications, a member log-in, and a news column.</span></figcaption></figure>
+    <figure class="lab"><img width="1896" height="944" src="../../img/portfolio/eudem.polsci.auth.gr.PNG" alt="Screenshot of the EUDEM Jean Monnet Chair homepage with a slider of flags" loading="lazy"><figcaption><span class="host">eudem.polsci.auth.gr</span><span class="note">The EUDEM Jean Monnet Chair site: logo, a menu for the chair, staff, activities and news, and an image slider.</span></figcaption></figure>
+    <figure class="lab"><img width="1600" height="936" src="../../img/portfolio/celc.web.auth.gr.PNG" alt="Screenshot of a Greek-language legal studies centre homepage with a stone bridge banner" loading="lazy"><figcaption><span class="host">celc.web.auth.gr</span><span class="note">A Greek-language site for a centre for European legal culture: a menu bar, search, and a stone-bridge banner photograph.</span></figcaption></figure>
+  </div>
+  </div>
+</section>
+
+<section class="sec" id="office-hours" aria-labelledby="s7">
+  <h2 id="s7"><span class="n">7</span>Office hours</h2>
+  <p class="book">Email to book a slot: <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a></p>
+  <ul class="links">
+    <li><a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a></li>
+    <li><a href="https://github.com/gmixoulis">GitHub</a></li>
+    <li><a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a></li>
+    <li><a href="https://twitter.com/GeorgeMicou">X</a></li>
+  </ul>
+  <p class="prose">Supplementary material: <a href="../../garden/">Zen Garden</a>, my personal notes, and <a href="../../play/">Ledger Run</a>, the same course taught as a platformer.</p>
+</section>
+</main>
+
+<footer>
+  <p>GM-101, taught by George Michoulis in Thessaloniki. This syllabus is subject to change as the course continues.</p>
+</footer>
+</div>
+<script>
+(()=>{
+  const pens=[...document.querySelectorAll('.pen')], on=p=>p.classList.add('on');
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window))pens.forEach(on);
+  else{const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){on(e.target);io.unobserve(e.target)}}),{rootMargin:'0px 0px -12% 0px',threshold:1});pens.forEach(p=>io.observe(p))}
+  // Freeze the animated GIF on its first frame: no looping motion on the page.
+  const g=document.querySelector('img.still');
+  if(g){const f=()=>{const c=document.createElement('canvas');c.width=g.naturalWidth;c.height=g.naturalHeight;c.getContext('2d').drawImage(g,0,0);c.setAttribute('role','img');c.setAttribute('aria-label',g.alt);g.replaceWith(c)};g.complete&&g.naturalWidth?f():g.addEventListener('load',f,{once:true})}
+})();
+</script>
+</body>
+</html>

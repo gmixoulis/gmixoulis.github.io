@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Orrery · George Michoulis</title>
+<meta name="description" content="George Michoulis, 2015 to 2026, built as a brass orrery you turn by hand.">
+<script>
+document.documentElement.classList.add('scene');
+setTimeout(function () { if (!window.__orrery) { var r = document.documentElement; r.classList.remove('scene'); r.classList.add('nogl'); } }, 20000);
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0b09;--ink:#f0e7d5;--muted:#c4b7a0;--brass:#d2ad66;--focus:#f3d08a;
+  --card:#efe6d1;--cardInk:#221910;--cardMuted:#56452f;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+html.scene{scroll-snap-type:y mandatory}
+body{margin:0;color:var(--ink);font:1.0625rem/1.6 "EB Garamond",Georgia,serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.back{position:fixed;top:14px;left:16px;z-index:30;font:15px/1 "IM Fell English",Georgia,serif;color:var(--muted);text-decoration:none;padding:6px 4px}
+.back:hover{color:var(--ink)}
+
+/* the museum label */
+.label{position:fixed;left:24px;bottom:24px;z-index:10;width:min(318px,calc(100vw - 48px));background:var(--card);color:var(--cardInk);
+  padding:16px 18px 15px;border-radius:1px;box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 14px 30px -12px rgba(0,0,0,.75)}
+.label h1{font:400 1.75rem/1.05 "IM Fell English",Georgia,serif;margin:0 0 5px;letter-spacing:.005em}
+.label .sub{font:italic 1rem/1.35 "IM Fell English",Georgia,serif;margin:0 0 10px;color:var(--cardMuted)}
+.label .key{font-size:.97rem;line-height:1.45;margin:0}
+
+/* the scene */
+#stage{position:fixed;inset:0;overflow:hidden;background:radial-gradient(85% 70% at 50% 40%,#33281d 0%,#1b1510 50%,#0b0907 100%)}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block}
+#hot{position:absolute;inset:0;pointer-events:none}
+.hs{position:absolute;left:0;top:0;width:40px;height:40px;margin:0;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent}
+.hs:focus-visible{outline:none;box-shadow:0 0 0 2px var(--focus),0 0 0 6px rgba(243,208,138,.22)}
+#crank{position:absolute;left:0;top:0;width:66px;height:66px;border-radius:50%;cursor:grab;touch-action:none;z-index:3;-webkit-tap-highlight-color:transparent}
+#crank.grab{cursor:grabbing}
+#crank:focus-visible{outline:none;box-shadow:0 0 0 2px var(--focus),0 0 0 6px rgba(243,208,138,.22)}
+#hint{position:absolute;left:0;top:0;margin:0;width:13.5em;font:italic 16px/1.35 "IM Fell English",Georgia,serif;color:var(--ink);
+  pointer-events:none;transition:opacity .8s;text-shadow:0 1px 8px rgba(0,0,0,.8)}
+#hint svg{display:block;width:26px;height:26px;margin:0 0 4px;color:var(--brass)}
+#hint.gone{opacity:0}
+#tip{position:absolute;left:0;top:0;margin:0;font:italic 15px/1.2 "IM Fell English",Georgia,serif;color:var(--ink);white-space:nowrap;pointer-events:none;
+  text-shadow:0 1px 6px rgba(0,0,0,.9);opacity:0;transition:opacity .2s}
+#tip.on{opacity:1}
+
+/* engraved brass plates (HTML) */
+.brass{color:#2a1c0b;font-family:"IM Fell English",Georgia,serif;text-shadow:0 1px 0 rgba(255,241,205,.55);border-radius:2px;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,250,232,.06) 0 1px,rgba(70,45,12,.05) 1px 2px,transparent 2px 5px),
+    linear-gradient(162deg,#ecd08f 0%,#d3ab62 46%,#bf9550 100%);
+  box-shadow:inset 0 1px 0 rgba(255,247,218,.8),inset 0 -2px 3px rgba(96,62,18,.35),0 0 0 1px rgba(74,48,15,.55),0 24px 40px -18px rgba(0,0,0,.85)}
+.plaque{position:absolute;left:0;top:0;width:292px;max-width:calc(100vw - 32px);padding:19px 22px 17px;z-index:5;
+  opacity:0;visibility:hidden;transform:perspective(900px) rotateY(var(--sw,-100deg));transform-origin:var(--hinge,left) 50%;
+  transition:transform .8s cubic-bezier(.2,.85,.25,1.06),opacity .3s,visibility 0s .8s}
+.plaque.open{opacity:1;visibility:visible;transform:perspective(900px) rotateY(0deg);transition:transform .8s cubic-bezier(.2,.85,.25,1.06),opacity .2s,visibility 0s}
+.plaque::before{content:"";position:absolute;inset:6px;border:1px solid rgba(74,48,15,.5);border-radius:1px;pointer-events:none}
+.plaque .k{font:14px/1.2 "IM Fell English SC",Georgia,serif;letter-spacing:.07em;margin:0 0 7px;color:#33210b}
+.plaque h2{font:400 22px/1.15 "IM Fell English",Georgia,serif;margin:0 0 6px}
+.plaque .s{font:italic 15.5px/1.35 "IM Fell English",Georgia,serif;margin:0 0 9px;color:#33210b}
+.plaque .t{font:16.5px/1.42 "IM Fell English",Georgia,serif;margin:0}
+.plaque a{color:#2a1c0b;text-decoration-color:rgba(42,28,11,.5);text-underline-offset:2px}
+.plaque .x{position:absolute;top:9px;right:10px;width:30px;height:30px;border:0;background:none;color:#33210b;font:22px/1 "IM Fell English",Georgia,serif;cursor:pointer;border-radius:50%}
+.plaque .x:focus-visible{outline:2px solid #33210b;outline-offset:0}
+#lead{position:absolute;left:0;top:0;height:2px;transform-origin:0 50%;background:linear-gradient(#f1d696,#9c7738);opacity:0;transition:opacity .3s;pointer-events:none;z-index:4;box-shadow:0 1px 2px rgba(0,0,0,.5)}
+#lead.on{opacity:1}
+#letter{position:absolute;left:0;top:0;width:250px;padding:15px 18px 16px;text-align:center;z-index:4;
+  transform:translateY(-120vh);transition:transform 1.8s cubic-bezier(.33,.9,.32,1)}
+#letter.down{transform:none}
+#letter::before,#letter::after{content:"";position:absolute;bottom:100%;width:2px;height:120vh;background:linear-gradient(90deg,#7d5d2a,#ecd08f,#7d5d2a)}
+#letter::before{left:24px}#letter::after{right:24px}
+#letter .k{font:14px/1.2 "IM Fell English SC",Georgia,serif;letter-spacing:.08em;margin:0 0 4px;color:#33210b}
+#letter a{font:19px/1.3 "IM Fell English",Georgia,serif;color:#2a1c0b;text-decoration-color:rgba(42,28,11,.45);text-underline-offset:3px}
+
+#track i{display:block;height:var(--yh,480px);scroll-snap-align:start}
+#track i:last-child{height:100vh}
+
+/* persistent corner */
+.corner{position:fixed;right:20px;bottom:20px;z-index:30;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 18px;align-items:baseline;font:16px/1.2 "IM Fell English",Georgia,serif}
+.corner a{color:var(--ink);text-decoration:underline;text-decoration-color:rgba(210,173,102,.65);text-underline-offset:4px;padding:4px 0}
+.corner button{font:inherit;color:var(--ink);background:none;border:0;border-bottom:1px solid rgba(210,173,102,.65);padding:4px 0 3px;cursor:pointer}
+.corner a:hover,.corner button:hover{text-decoration-color:var(--brass);border-color:var(--brass)}
+
+/* text view (also the no-WebGL page) */
+html:not(.scene) #stage,html:not(.scene) #track{display:none}
+html.scene #text{display:none}
+html.nogl #textBtn{display:none}
+html:not(.scene) .label{position:static;width:auto;max-width:42rem;margin:0 auto;padding:78px 20px 0;background:none;box-shadow:none;color:var(--ink)}
+html:not(.scene) .label h1{font-size:clamp(2.3rem,7vw,3.3rem)}
+html:not(.scene) .label .sub{color:var(--muted);font-size:1.15rem}
+html:not(.scene) .label .key{display:none}
+html:not(.scene) .corner{background:var(--bg);padding:8px 12px;border-radius:2px;box-shadow:0 0 0 1px rgba(210,173,102,.35)}
+#text{max-width:42rem;margin:0 auto;padding:10px 20px 140px}
+#text:focus{outline:none}
+#text h2{font:400 1.55rem/1.2 "IM Fell English",Georgia,serif;margin:2.1em 0 .45em}
+#text h3{font:italic 400 1.15rem/1.3 "IM Fell English",Georgia,serif;margin:1.5em 0 .4em;color:var(--muted)}
+#text p{margin:0 0 1em}
+#text cite{font-style:italic}
+#text ul{margin:0 0 1em;padding-left:1.1em;columns:2 15rem;column-gap:2.2rem}
+#text li{break-inside:avoid;margin:0 0 .3em}
+#text a{text-decoration-color:rgba(210,173,102,.7);text-underline-offset:3px}
+@media (prefers-color-scheme:light){
+  html:not(.scene){--bg:#f5f0e5;--ink:#1f1811;--muted:#5d4f3c;--focus:#8a5a12}
+  html:not(.scene) #text a,html:not(.scene) .corner a{text-decoration-color:rgba(138,90,18,.6)}
+  html:not(.scene) .corner button{border-color:rgba(138,90,18,.6)}
+}
+
+@media (max-width:700px){
+  .label{left:12px;right:12px;top:48px;bottom:auto;width:auto;padding:11px 14px 11px}
+  .label h1{font-size:1.45rem}
+  .label .sub{font-size:.95rem;margin-bottom:6px}
+  .label .key{font-size:.9rem;line-height:1.38}
+  .corner{left:12px;right:12px;bottom:12px;justify-content:space-between}
+  html:not(.scene) .label{padding-top:64px}
+}
+@media (prefers-reduced-motion:reduce){
+  .plaque,.plaque.open{transition:opacity .01s,visibility 0s;transform:none}
+  #letter{transition:none}
+  #hint,#tip,#lead{transition:none}
+}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}</script>
+</head>
+<body>
+<a class="back" href="index.html">← All ideas</a>
+
+<header class="label" id="label">
+  <h1>George Michoulis</h1>
+  <p class="sub">The years 2015 to 2026, as an orrery</p>
+  <p class="key">Degrees and jobs ride on arms that extend only during their real years. Moons are papers, sized by citations, and the stones set in the rings are awards. Click one to read its plaque.</p>
+</header>
+
+<main id="main">
+  <div id="stage">
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <div id="hot"></div>
+    <div id="crank" role="slider" tabindex="0" aria-label="Crank handle, sets the year" aria-valuemin="2015" aria-valuemax="2026" aria-valuenow="2015" aria-valuetext="2015"></div>
+    <p id="hint" aria-hidden="true"><svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M21.5 13a8.5 8.5 0 1 1-2.5-6"/><path d="M19.6 2.8l-.4 4.4-4.3-.6"/></svg>Drag the handle round, or scroll. Each turn is one year.</p>
+    <p id="tip" aria-hidden="true"></p>
+    <div id="lead" aria-hidden="true"></div>
+    <section class="plaque brass" id="plaque" role="dialog" aria-modal="false" aria-labelledby="pl-t" tabindex="-1">
+      <button class="x" type="button" aria-label="Close">×</button>
+      <p class="k" id="pl-k"></p>
+      <h2 id="pl-t"></h2>
+      <p class="s" id="pl-s"></p>
+      <p class="t" id="pl-x"></p>
+    </section>
+    <div id="letter" class="brass" aria-hidden="true">
+      <p class="k">Write to me</p>
+      <a href="mailto:gmixoulis@gmail.com" tabindex="-1">gmixoulis@gmail.com</a>
+    </div>
+    <p id="live" class="sr" aria-live="polite"></p>
+  </div>
+  <div id="track" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+  <article id="text" tabindex="-1">
+    <p>I live in Thessaloniki and work remotely, writing smart contracts and researching ledgers with graph-based machine learning.</p>
+
+    <h2>2015 to 2020</h2>
+    <p>I studied for a BSc in Applied Informatics at the University of Macedonia. My thesis was on verifying academic credentials with Ethereum. In 2020 I introduced VerDe, a verification system built on that idea, at the XIV Balkan Conference on Operational Research (<cite>Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe</cite>, 11 citations). Two Greek-language theses on the same topic followed, in 2020 and 2021, and the university gave me a Basic Research grant for 2020–2021.</p>
+
+    <h2>2020 to 2022</h2>
+    <p>A DeepMind scholarship paid for my MSc in Data and Web Science at Aristotle University of Thessaloniki, where I worked on graph-embedding methods for detecting fraud on blockchains. In June 2022 I took third place at the Infinitech Hackathon, run by Crowdpolicy.</p>
+    <p>Three papers came out in 2022. <cite>A process-aware approach for blockchain-based verification of academic qualifications</cite> (Simulation Modelling Practice and Theory 121, 102642) is my most cited, with 32 citations. <cite>Graph Embedding and Node Features for Drug-Target Interaction Prediction</cite> is from my MSc work at AUTH. <cite>Blockchain in Higher Education: permissioned and permissionless approaches</cite> appeared at the 4th Summit on Gender Equality in Computing.</p>
+
+    <h2>2022 to 2025</h2>
+    <p>At the University of Nicosia’s IFF I built Next.js, NestJS and Docker apps and a Web3 NFT marketplace. In 2023 I published <cite>Exploring decentralized governance: a framework applied to Compound Finance</cite> at the International Conference on Mathematical Research for Blockchain Economy (7 citations).</p>
+    <p>From 2023 to 2025 I lectured for the University of Derby at Mediterranean College, teaching Networks &amp; Security, Web Scripting and Application Development. I also give public talks on Web3 and edge tech.</p>
+
+    <h2>2024 to 2026</h2>
+    <p>At Sidroco Holdings I built an NFT marketplace for 5G, Hyperledger Fabric prototypes and an Erasmus+ LMS. Two papers from these years deal with 5G marketplaces: <cite>FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs</cite> (7th World Symposium on Communication Engineering, 2024, 1 citation) and <cite>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management</cite> (IEEE ICCE 2025). <cite>Data security for smart cities</cite> also came out in 2025 (1 citation), the same year the Move/Sui Bootcamp in Thessaloniki gave me an award.</p>
+
+    <h2>Since May 2026</h2>
+    <p>I’m a Web3 full-stack developer at Cyberscope by TAC. I build Web3 products end to end: contracts, on-chain integrations, React and Next frontends, and security tooling.</p>
+
+    <h2>Certificates</h2>
+    <h3>Degrees and awards</h3>
+    <ul>
+      <li>BSc Applied Informatics, University of Macedonia</li>
+      <li>MSc Data and Web Science, Aristotle University of Thessaloniki</li>
+      <li>Academic achievement award</li>
+      <li>Move bootcamp Thessaloniki award (Move/Sui)</li>
+      <li>Introduction to digital currencies</li>
+      <li>TOEIC Listening &amp; Reading test</li>
+      <li>English proficiency certificate</li>
+    </ul>
+    <h3>Courses completed</h3>
+    <ul>
+      <li>Advanced ethical hacking</li>
+      <li>European legal culture program, Aristotle University of Thessaloniki</li>
+      <li>CCNA, Cisco Certified Network Associate</li>
+      <li>Cloud engineering</li>
+      <li>Cybersecurity e-learning academy</li>
+      <li>Digital skills for tourism</li>
+      <li>Discover customer</li>
+      <li>Entrepreneurship, funding and development of new enterprises</li>
+      <li>How to design &amp; build a website</li>
+      <li>How to get published with IEEE</li>
+      <li>Machine learning and deep neural networks</li>
+      <li>NFT Talents program</li>
+      <li>Networking essentials</li>
+      <li>Rust developer</li>
+      <li>Software development for telecommunication networks</li>
+      <li>The Hour of Code</li>
+    </ul>
+    <h3>Events and workshops</h3>
+    <ul>
+      <li>Blockchain for the legal industry…</li>
+      <li>Blockchain in education, remote learning, social distancing…</li>
+      <li>Data analytics to strengthen healthcare cybersecurity</li>
+      <li>EY Cyber Day</li>
+      <li>GNU/Linux command line</li>
+      <li>RippleX workshop launch event</li>
+      <li>Migma marketing and brand</li>
+      <li>Marine educational robotics, Hydrobot program</li>
+      <li>Processing data in the fog…</li>
+      <li>SKGcode project: creating a real-estate chatbot</li>
+      <li>VeChain ToolChain: digital transformation of the healthcare industry</li>
+    </ul>
+
+    <h2>Elsewhere</h2>
+    <p>Email me at <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>. I’m also on <a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a>, <a href="https://github.com/gmixoulis">GitHub</a>, <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a> and <a href="https://twitter.com/GeorgeMicou">X</a>. This site has a <a href="../../garden/">Zen Garden</a> of notes and <a href="../../play/">Ledger Run</a>, a platformer version of my CV.</p>
+  </article>
+</main>
+
+<footer class="corner">
+  <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+  <button type="button" id="textBtn" aria-pressed="false">Read as text</button>
+</footer>
+
+<script type="module">
+import * as THREE from 'three';
+
+const root = document.documentElement, $ = s => document.querySelector(s);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const small = matchMedia('(max-width: 700px)').matches;
+const Y0 = 2015, Y1 = 2026, TAU = Math.PI * 2, D2R = Math.PI / 180;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const sstep = (a, b, v) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+const lin = (r, g, b) => new THREE.Color().setRGB(r, g, b);
+const cnv = (w, h) => Object.assign(document.createElement('canvas'), { width: w, height: h });
+function rng(s) { return () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+/* ---------------- facts ---------------- */
+// s/e: first and last real year. b: teeth on the arbor wheel (lay wheel has 36 - b), which sets the orbit speed.
+const BODIES = [
+  { s: 2015, e: 2020, R: .95, r: .15, mat: 'ivory', short: 'BSc Applied Informatics', kind: 'Degree', title: 'BSc Applied Informatics', sub: 'University of Macedonia · 2015–2020', text: 'Thesis on verifying academic credentials with Ethereum.' },
+  { s: 2020, e: 2022, R: 1.35, r: .15, mat: 'lapis', short: 'MSc Data and Web Science', kind: 'Degree', title: 'MSc Data and Web Science', sub: 'Aristotle University of Thessaloniki · 2020–2022', text: 'Graph-embedding methods for detecting fraud on blockchains, paid for by a DeepMind scholarship.' },
+  { s: 2022, e: 2024, R: 1.75, r: .16, mat: 'copper', short: 'University of Nicosia · IFF', kind: 'Work', title: 'Blockchain & full-stack developer', sub: 'University of Nicosia · IFF · 2022–2024', text: 'Next.js, NestJS and Docker apps, and a Web3 NFT marketplace.' },
+  { s: 2023, e: 2025, R: 2.15, r: .15, mat: 'jet', short: 'University of Derby · Mediterranean College', kind: 'Teaching', title: 'Lecturer & academic partner', sub: 'University of Derby · Mediterranean College · 2023–2025', text: 'Taught Networks & Security, Web Scripting and Application Development.' },
+  { s: 2024, e: 2026, R: 2.55, r: .17, mat: 'verdigris', short: 'Sidroco Holdings', kind: 'Work', title: 'Blockchain developer & researcher', sub: 'Sidroco Holdings Ltd · 2024–2026', text: 'An NFT marketplace for 5G, Hyperledger Fabric prototypes and an Erasmus+ LMS.' },
+  { s: 2026, e: 1e9, R: 2.95, r: .18, mat: 'silver', short: 'Cyberscope by TAC', kind: 'Work, now', title: 'Web3 full-stack developer', sub: 'Cyberscope by TAC · since May 2026', text: 'Builds Web3 products end to end, from contracts and on-chain integrations to React and Next frontends and security tooling.' },
+];
+BODIES.forEach((b, i) => { b.b = 14 + 2 * i; b.a = 36 - b.b; b.speed = .5 * b.a / b.b; });
+const PAPERS = [
+  { p: 0, y: 2020, c: 11, title: 'Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe', venue: 'XIV Balkan Conference on Operational Research', rm: .34, ph: .3 },
+  { p: 1, y: 2022, c: 32, title: 'A process-aware approach for blockchain-based verification of academic qualifications', venue: 'Simulation Modelling Practice and Theory 121, 102642', rm: .43, ph: 2.2 },
+  { p: 1, y: 2022, c: 0, title: 'Graph Embedding and Node Features for Drug-Target Interaction Prediction', venue: 'Aristotle University of Thessaloniki, MSc work', rm: .29, ph: 4.6 },
+  { p: 2, y: 2022, c: 0, title: 'Blockchain in Higher Education: permissioned and permissionless approaches', venue: '4th Summit on Gender Equality in Computing', rm: .29, ph: 1 },
+  { p: 2, y: 2023, c: 7, title: 'Exploring decentralized governance: a framework applied to Compound Finance', venue: 'Intl. Conference on Mathematical Research for Blockchain Economy', rm: .39, ph: 3.7 },
+  { p: 3, y: 2025, c: 1, title: 'Data security for smart cities', venue: '', rm: .31, ph: 5 },
+  { p: 4, y: 2024, c: 1, title: 'FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs', venue: '7th World Symposium on Communication Engineering (WSCE)', rm: .31, ph: .8 },
+  { p: 4, y: 2025, c: 0, title: 'Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management', venue: 'IEEE ICCE 2025', rm: .42, ph: 3.9 },
+];
+const AWARDS = [
+  { ring: 0, t: 2019.9, gem: 'ruby', title: 'Basic Research grant', sub: 'University of Macedonia · 2020–2021' },
+  { ring: 1, t: 2019.95, gem: 'sapphire', title: 'DeepMind Scholarship', sub: 'Aristotle University of Thessaloniki · 2020–2022', text: 'It paid for the MSc.' },
+  { ring: 1, t: 2021.9, gem: 'garnet', title: 'Infinitech Hackathon, third place', sub: 'Crowdpolicy · June 2022' },
+  { ring: 4, t: 2024.9, gem: 'aqua', title: 'Move/Sui Bootcamp award', sub: 'Thessaloniki · 2025' },
+];
+
+/* ---------------- geometry constants ---------------- */
+const M = .04, GT = .05;                 // gear module and thickness
+const PLATE_Y = .75, GEAR_Y = .84, PR = 3.45;
+const SUN_Y = 2.86, BODY_Y = 2.72;
+const PHI_ALIGN = 12 * D2R;              // where every current arm points in 2026
+const yG = i => .98 + .115 * i, yA = i => 2.42 - .09 * i, rT = i => .075 + .022 * i;
+const phi = (i, T) => PHI_ALIGN + TAU * BODIES[i].speed * (T - 2026);
+const ext = (b, T) => sstep(b.s - .5, b.s - .1, T) * (1 - sstep(b.e + .1, b.e + .5, T));
+const LAY = { x: Math.cos(-60 * D2R) * .72, z: Math.sin(-60 * D2R) * .72 };
+const CRANK_REST = 40 * D2R, CRANK_L = .5, CRANK_Y = 1.15;
+const CX = -1.5, CZ = 2.02, DRUM_R = .28, DRUM_L = .95, DRUM_Y = PLATE_Y + .42, DRUM_FACE = 27 * D2R;
+
+async function main() {
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas: $('#gl'), antialias: true, alpha: true, powerPreference: 'high-performance' });
+  } catch (e) { root.classList.remove('scene'); root.classList.add('nogl'); window.__orrery = 'nogl'; return; }
+  window.__orrery = true;
+  if (root.classList.contains('nogl')) { root.classList.remove('nogl'); root.classList.add('scene'); }
+  renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.5 : 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.NeutralToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const maxAniso = renderer.capabilities.getMaxAnisotropy();
+  const ctex = (c, color = true) => { const t = new THREE.CanvasTexture(c); t.colorSpace = color ? THREE.SRGBColorSpace : THREE.NoColorSpace; t.anisotropy = maxAniso; return t; };
+
+  // engraved textures need the engraving face loaded first
+  await Promise.race([Promise.all(['64px "IM Fell English SC"', '64px "IM Fell English"'].map(f => document.fonts.load(f))), new Promise(r => setTimeout(r, 2500))]);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(30, 1, .1, 100);
+
+  /* ---- studio environment: a dark room lit by a few emissive panels ---- */
+  {
+    const env = new THREE.Scene();
+    const room = new THREE.Mesh(new THREE.BoxGeometry(30, 18, 30), new THREE.MeshBasicMaterial({ color: 0x0b0907, side: THREE.BackSide }));
+    room.position.y = 6; env.add(room);
+    const panel = (w, h, hex, k, p, l = [0, 1, 0]) => {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(hex).multiplyScalar(k), side: THREE.DoubleSide }));
+      m.position.set(...p); m.lookAt(...l); env.add(m);
+    };
+    panel(9, 4.5, 0xffe3c4, 5.5, [-4, 9, 6]);    // big warm softbox, above left
+    panel(1.6, 11, 0xe3e8f2, 2.2, [10, 3, -1]);  // tall strip, right
+    panel(14, 1.4, 0xffd4a0, 1.6, [0, 4.5, -11]); // low rim strip behind
+    panel(5, 5, 0xfff0dc, 1.1, [0, 13, 0], [0, 0, 0]);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshBasicMaterial({ color: 0x1c140d }));
+    floor.rotation.x = -Math.PI / 2; floor.position.y = -1; env.add(floor);
+    const pm = new THREE.PMREMGenerator(renderer);
+    scene.environment = pm.fromScene(env, .035).texture;
+    scene.environmentIntensity = .95;
+    pm.dispose();
+  }
+
+  /* ---- light ---- */
+  const key = new THREE.SpotLight(0xffe2bd, 430, 0, .5, .9, 2);
+  key.position.set(-3.6, 9.6, 5.8); key.target.position.set(0, 1.3, 0);
+  key.castShadow = true; key.shadow.mapSize.set(small ? 1024 : 2048, small ? 1024 : 2048);
+  key.shadow.bias = -.0004; key.shadow.normalBias = .02; key.shadow.camera.near = 5; key.shadow.camera.far = 20;
+  scene.add(key, key.target);
+  const lamp = new THREE.PointLight(0xffb46a, 2.4, 0, 2); lamp.position.set(0, SUN_Y, 0); scene.add(lamp);
+
+  /* ---- procedural textures ---- */
+  const anisoTex = (() => { // radial direction: concentric turning marks on every flat face
+    const N = 256, c = cnv(N, N), x = c.getContext('2d'), im = x.createImageData(N, N), r = rng(7);
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      const u = (i + .5) / N - .5, v = .5 - (j + .5) / N, l = Math.hypot(u, v) || 1, k = (j * N + i) * 4;
+      im.data[k] = (u / l * .5 + .5) * 255; im.data[k + 1] = (v / l * .5 + .5) * 255; im.data[k + 2] = 235; im.data[k + 3] = 255;
+    }
+    x.putImageData(im, 0, 0); return ctex(c, false);
+  })();
+  const INK = '#1a120a';
+  const toPlate = (x, z, N) => [(z / PR * .5 + .5) * N, (1 - (x / PR * .5 + .5)) * N]; // CylinderGeometry cap UVs are (z, x)
+
+  const plateMaps = (() => {
+    const N = small ? 1024 : 2048, k = N / 2 / PR, C = N / 2;
+    const c = cnv(N, N), x = c.getContext('2d');
+    x.fillStyle = '#fff'; x.fillRect(0, 0, N, N); x.strokeStyle = INK; x.fillStyle = INK;
+    const ring = (r, w) => { x.lineWidth = w * k; x.beginPath(); x.arc(C, C, r * k, 0, TAU); x.stroke(); };
+    ring(3.395, .014); ring(3.365, .005); ring(3.13, .005); ring(3.1, .014);
+    for (let d = 0; d < 360; d += 2) {
+      const a = d * D2R, big = d % 30 === 0, mid = d % 10 === 0, r1 = big ? 3.365 : mid ? 3.29 : 3.22;
+      x.lineWidth = (big ? .012 : .005) * k; x.beginPath();
+      x.moveTo(C + Math.cos(a) * 3.13 * k, C + Math.sin(a) * 3.13 * k); x.lineTo(C + Math.cos(a) * r1 * k, C + Math.sin(a) * r1 * k); x.stroke();
+    }
+    const [ax, ay] = toPlate(CX, CZ + .5, N);
+    x.save(); x.translate(ax, ay); x.rotate(-Math.PI / 2); x.font = `${.13 * k}px "IM Fell English SC"`; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.fillText('anno', 0, 0); x.restore();
+    // soft occlusion under the movement
+    const a = cnv(512, 512), y = a.getContext('2d'); y.fillStyle = '#fff'; y.fillRect(0, 0, 512, 512);
+    const blob = (wx, wz, r, s = .45) => {
+      const [px, py] = toPlate(wx, wz, 512), kk = 256 / PR, g = y.createRadialGradient(px, py, r * kk * .5, px, py, r * kk * 1.35);
+      g.addColorStop(0, `rgba(0,0,0,${s})`); g.addColorStop(1, 'rgba(0,0,0,0)'); y.fillStyle = g; y.fillRect(0, 0, 512, 512);
+    };
+    return { map: c, blob, ao: a };
+  })();
+
+  const bandTex = (() => {
+    const N = small ? 4096 : 8192, pu = N / (TAU * 3.648), H = Math.round(.32 * pu), c = cnv(N, H), x = c.getContext('2d');
+    x.fillStyle = '#fff'; x.fillRect(0, 0, N, H); x.fillStyle = INK;
+    x.fillRect(0, .028 * pu, N, .007 * pu); x.fillRect(0, .046 * pu, N, .003 * pu);
+    x.fillRect(0, H - .035 * pu, N, .007 * pu); x.fillRect(0, H - .049 * pu, N, .003 * pu);
+    const line = (txt, cx, fs, track) => {
+      x.font = `${fs}px "IM Fell English SC"`; x.textBaseline = 'alphabetic';
+      const ws = [...txt].map(ch => x.measureText(ch).width + track), tot = ws.reduce((s, w) => s + w, 0) - track;
+      let px = cx - tot / 2; [...txt].forEach((ch, i) => { x.fillText(ch, px, H / 2 + fs * .3); px += ws[i]; });
+      return tot;
+    };
+    const fs = .25 * pu, w = line('George Michoulis · Thessaloniki', N / 2, fs, fs * .07);
+    for (const cx of [0, N]) line('mmxv · mmxxvi', cx, fs * .8, fs * .09);
+    for (let u = .21 * pu; u < N; u += .42 * pu) { // engraved lozenges round the rest of the band
+      if (Math.abs(u - N / 2) < w / 2 + .35 * pu || u < 1.3 * pu || u > N - 1.3 * pu) continue;
+      x.beginPath(); const s = .035 * pu, cy = H / 2;
+      x.moveTo(u, cy - s); x.lineTo(u + s * .6, cy); x.lineTo(u, cy + s); x.lineTo(u - s * .6, cy); x.closePath(); x.fill();
+    }
+    return ctex(c);
+  })();
+
+  const drumTex = (() => {
+    const W = 1024, H = Math.round(1024 * DRUM_L / (TAU * DRUM_R)), c = cnv(W, H), x = c.getContext('2d');
+    x.fillStyle = '#fff'; x.fillRect(0, 0, W, H); x.fillStyle = INK;
+    x.font = `${W / 12 * .8}px "IM Fell English"`; x.textAlign = 'center'; x.textBaseline = 'middle';
+    for (let k = 0; k < 12; k++) {
+      x.save(); x.translate((k + .5) / 12 * W, H / 2); x.rotate(Math.PI / 2); x.fillText(String(Y0 + k), 0, 0); x.restore();
+      x.fillRect((k / 12) * W - 1.5, H * .1, 3, H * .8);
+    }
+    return ctex(c);
+  })();
+
+  const walnutTex = (() => {
+    const W = 2048, H = 256, c = cnv(W, H), x = c.getContext('2d'), r = rng(3);
+    const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#3d2616'); g.addColorStop(1, '#2f1c10'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    for (let i = 0; i < 300; i++) {
+      const y0 = r() * H, amp = 1 + r() * 5, f = Math.ceil(1 + r() * 3) * TAU / W, ph = r() * 6, dark = r() < .62;
+      x.strokeStyle = dark ? `rgba(18,9,3,${.12 + r() * .3})` : `rgba(122,80,46,${.06 + r() * .14})`; x.lineWidth = .5 + r() * 2.4;
+      x.beginPath(); for (let X = 0; X <= W; X += 16) x.lineTo(X, y0 + Math.sin(X * f + ph) * amp + Math.sin(X * f * 3 + ph * 2) * amp * .3); x.stroke();
+    }
+    const t = ctex(c); t.wrapS = THREE.RepeatWrapping; t.repeat.set(3, 1); return t;
+  })();
+
+  const gmTex = (() => {
+    const c = cnv(1024, 512), x = c.getContext('2d'); x.fillStyle = '#000'; x.fillRect(0, 0, 1024, 512);
+    x.fillStyle = '#fff'; x.font = 'italic 104px "IM Fell English"'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.fillText('G.M.', 256, 196); return ctex(c, false);
+  })();
+
+  const shadowTex = (() => {
+    const c = cnv(256, 256), x = c.getContext('2d'), g = x.createRadialGradient(128, 128, 60, 128, 128, 128);
+    g.addColorStop(0, 'rgba(0,0,0,.8)'); g.addColorStop(.62, 'rgba(0,0,0,.45)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = g; x.fillRect(0, 0, 256, 256); return ctex(c);
+  })();
+
+  /* ---- materials ---- */
+  const BRASS = lin(.8, .58, .26);
+  const brass = (o = {}) => new THREE.MeshPhysicalMaterial(Object.assign({ color: BRASS, metalness: 1, roughness: .26, clearcoat: .4, clearcoatRoughness: .14, anisotropy: .55, anisotropyRotation: Math.PI / 2 }, o));
+  const mBrass = brass(), mCap = brass({ anisotropy: .85, anisotropyRotation: 0, anisotropyMap: anisoTex }), mPlain = brass({ anisotropy: 0, roughness: .3 });
+  const mWalnut = new THREE.MeshPhysicalMaterial({ map: walnutTex, roughness: .5, clearcoat: .85, clearcoatRoughness: .2 });
+  const mBand = brass({ map: bandTex, bumpMap: bandTex, bumpScale: 2.5, anisotropy: .5 });
+  const plateMap = ctex(plateMaps.map);
+  const mPlate = brass({ color: lin(.6, .43, .19), map: plateMap, bumpMap: plateMap, bumpScale: 1.5, anisotropy: .5, anisotropyRotation: 0, anisotropyMap: anisoTex, roughness: .34, clearcoat: .25, envMapIntensity: .75 });
+  const mSilver = new THREE.MeshPhysicalMaterial({ color: lin(.85, .84, .8), metalness: 1, roughness: .36, map: drumTex, bumpMap: drumTex, bumpScale: 1.2 });
+  const jewelMat = new THREE.MeshPhysicalMaterial({ color: 0x8e0b18, roughness: .05, clearcoat: 1, clearcoatRoughness: .02, specularIntensity: 1, ior: 1.77 });
+  const skins = {
+    ivory: new THREE.MeshPhysicalMaterial({ color: 0xe8dcc3, roughness: .42, clearcoat: .6, clearcoatRoughness: .25, sheen: .3, sheenColor: new THREE.Color(0xfff2dc) }),
+    lapis: new THREE.MeshPhysicalMaterial({ color: 0x23407f, roughness: .35, clearcoat: 1, clearcoatRoughness: .06 }),
+    copper: new THREE.MeshPhysicalMaterial({ color: lin(.76, .36, .2), metalness: 1, roughness: .27, clearcoat: .4 }),
+    jet: new THREE.MeshPhysicalMaterial({ color: 0x14110f, roughness: .3, clearcoat: 1, clearcoatRoughness: .04 }),
+    verdigris: new THREE.MeshPhysicalMaterial({ color: 0x3e7866, roughness: .5, clearcoat: .5, clearcoatRoughness: .3 }),
+    silver: new THREE.MeshPhysicalMaterial({ color: lin(.93, .93, .92), metalness: 1, roughness: .3, envMapIntensity: 1.9 }),
+  };
+  const mMoon = new THREE.MeshPhysicalMaterial({ color: lin(.86, .87, .88), metalness: 1, roughness: .32, envMapIntensity: 1.9 });
+  const gemMat = hex => new THREE.MeshPhysicalMaterial({ color: hex, roughness: .02, clearcoat: 1, clearcoatRoughness: 0, specularIntensity: 1, ior: 1.77, flatShading: true, envMapIntensity: 1.6 });
+  const GEMS = { ruby: gemMat(0xa3101f), sapphire: gemMat(0x1c3aa6), garnet: gemMat(0x6e1020), aqua: gemMat(0x2f8f8a) };
+
+  const add = (geo, mat, p = [0, 0, 0], parent = scene, shadow = true) => {
+    const m = new THREE.Mesh(geo, mat); m.position.set(...p); m.castShadow = m.receiveShadow = shadow; parent.add(m); return m;
+  };
+  const lathe = (pts, seg = 64) => new THREE.LatheGeometry(pts.map(p => new THREE.Vector2(p[0], p[1])), seg);
+  const rodX = r => new THREE.CylinderGeometry(r, r, 1, 12).rotateZ(-Math.PI / 2).translate(.5, 0, 0); // unit rod along +x
+  const cyl = (r, h, seg = 32) => new THREE.CylinderGeometry(r, r, h, seg);
+  const CYL3 = [mBrass, mCap, mCap];
+
+  /* ---- walnut base, engraved band, plate ---- */
+  add(lathe([[0, 0], [3.74, 0], [3.8, .025], [3.8, .1], [3.72, .13], [3.66, .18], [3.64, .24], [3.64, .6], [3.7, .63], [3.72, .67], [3.69, .71], [3.5, .73], [0, .73]], 180), mWalnut);
+  add(new THREE.CylinderGeometry(3.648, 3.648, .32, 256, 1, true, Math.PI, TAU), mBand, [0, .42, 0]);
+  const plate = add(new THREE.CylinderGeometry(PR, PR + .02, .05, 200), [mBrass, mPlate, mPlain], [0, PLATE_Y - .025, 0]);
+  plate.castShadow = false;
+  const shadow = add(new THREE.PlaneGeometry(11, 11).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false }), [0, .002, 0], scene, false);
+  shadow.renderOrder = -1;
+
+  /* ---- gear train ---- */
+  const wheelCache = new Map();
+  function wheelGeo(n) {
+    if (wheelCache.has(n)) return wheelCache.get(n);
+    const rr = n * M / 2 - 1.25 * M + .014, s = new THREE.Shape();
+    s.absarc(0, 0, rr, 0, TAU, false);
+    if (n >= 16) { // clock-wheel crossings
+      const sp = n >= 22 ? 6 : 5, ro = rr - .045, rh = .07, w = .026;
+      for (let k = 0; k < sp; k++) {
+        const a0 = k * TAU / sp, a1 = (k + 1) * TAU / sp, h = new THREE.Path();
+        h.absarc(0, 0, ro, a0 + w / 2 / ro, a1 - w / 2 / ro, false);
+        h.absarc(0, 0, rh, a1 - w / 2 / rh, a0 + w / 2 / rh, true);
+        s.holes.push(h);
+      }
+    }
+    const g = new THREE.ExtrudeGeometry(s, { depth: GT, bevelEnabled: true, bevelThickness: .005, bevelSize: .005, bevelSegments: 2, curveSegments: 40 });
+    const p = g.attributes.position, uv = g.attributes.uv;
+    for (let i = 0; i < p.count; i++) uv.setXY(i, p.getX(i) / (2 * rr) + .5, p.getY(i) / (2 * rr) + .5);
+    g.rotateX(-Math.PI / 2).translate(0, -GT / 2, 0);
+    wheelCache.set(n, g); return g;
+  }
+  const gears = [];
+  const gear = (n, x, z, y) => { const g = { n, x, z, y, a: 0 }; g.mesh = add(wheelGeo(n), [mCap, mPlain], [x, y, z]); gears.push(g); return g; };
+  const next = (prev, n, deg) => { const d = M * (prev.n + n) / 2; return gear(n, prev.x + Math.cos(deg * D2R) * d, prev.z + Math.sin(deg * D2R) * d, GEAR_Y); };
+  const meshAngle = (g1, g2, a1) => { const b = Math.atan2(g2.z - g1.z, g2.x - g1.x); return b + Math.PI + Math.PI / g2.n - (a1 - b) * g1.n / g2.n; };
+
+  const gD = gear(20, LAY.x, LAY.z, GEAR_Y);
+  const gB = next(gD, 18, 20), gA = next(gB, 24, 60), gP = next(gA, 10, 75);
+  const lay = BODIES.map((b, i) => gear(b.a, LAY.x, LAY.z, yG(i)));
+  const tube = BODIES.map((b, i) => gear(b.b, 0, 0, yG(i)));
+
+  const toothGeo = (() => {
+    const s = new THREE.Shape(), h0 = -.35 * M, h1 = 2.2 * M, wr = .066, wt = .034;
+    s.moveTo(h0, -wr / 2); s.lineTo(h1, -wt / 2); s.lineTo(h1, wt / 2); s.lineTo(h0, wr / 2); s.closePath();
+    return new THREE.ExtrudeGeometry(s, { depth: GT - .004, bevelEnabled: true, bevelThickness: .004, bevelSize: .004, bevelSegments: 1 }).rotateX(-Math.PI / 2).translate(0, -(GT - .004) / 2, 0);
+  })();
+  const teeth = new THREE.InstancedMesh(toothGeo, mPlain, gears.reduce((s, g) => s + g.n, 0));
+  teeth.castShadow = teeth.receiveShadow = true; teeth.frustumCulled = false; scene.add(teeth);
+
+  // arbors, lay shaft, crank shaft
+  add(cyl(.028, GEAR_Y - PLATE_Y + .06, 16), mBrass, [gA.x, (PLATE_Y + GEAR_Y + .06) / 2, gA.z]);
+  add(cyl(.028, GEAR_Y - PLATE_Y + .06, 16), mBrass, [gB.x, (PLATE_Y + GEAR_Y + .06) / 2, gB.z]);
+  const layTop = yG(5) + .08;
+  add(cyl(.032, layTop - PLATE_Y, 20), CYL3, [LAY.x, (layTop + PLATE_Y) / 2, LAY.z]);
+  add(cyl(.036, CRANK_Y - PLATE_Y, 20), CYL3, [gP.x, (CRANK_Y + PLATE_Y) / 2, gP.z]);
+  // a bridge over the chain wheels, as in a clock movement
+  const bridgeLen = Math.hypot(gA.x - gB.x, gA.z - gB.z);
+  const bridge = add(new THREE.BoxGeometry(bridgeLen + .16, .025, .09), mPlain, [(gA.x + gB.x) / 2, GEAR_Y + .085, (gA.z + gB.z) / 2]);
+  bridge.rotation.y = -Math.atan2(gA.z - gB.z, gA.x - gB.x);
+  add(cyl(.025, .1, 12), mBrass, [(gA.x + gB.x) / 2 + .0, PLATE_Y + .05, (gA.z + gB.z) / 2]).scale.set(1, 1.9, 1);
+
+  /* ---- central column, arbors (tubes), sun ---- */
+  add(lathe([[0, 0], [.36, 0], [.36, .03], [.28, .06], [.2, .12], [.12, .16], [.08, .2], [0, .2]]), mBrass, [0, PLATE_Y, 0]);
+  add(cyl(.055, 2.58 - PLATE_Y, 24), mBrass, [0, (2.58 + PLATE_Y) / 2, 0]);
+  BODIES.forEach((b, i) => add(cyl(rT(i), yA(i) - yG(i) + .05, 40), CYL3, [0, (yA(i) + yG(i)) / 2, 0]));
+  add(lathe([[0, 0], [.05, 0], [.07, .05], [.12, .1], [.165, .17], [.155, .18], [0, .18]]), mBrass, [0, 2.54, 0]);
+  const sun = new THREE.Group(); sun.position.set(0, SUN_Y, 0); scene.add(sun);
+  const glass = new THREE.MeshPhysicalMaterial({ color: 0xfff6ea, roughness: .02, transmission: 1, thickness: .03, ior: 1.5, attenuationColor: new THREE.Color(0xf3c48a), attenuationDistance: 1.2, specularIntensity: 1 });
+  add(new THREE.SphereGeometry(.26, 64, 48), glass, [0, 0, 0], sun, false);
+  add(new THREE.SphereGeometry(.06, 32, 24), new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffb25e, emissiveIntensity: 1.7 }), [0, 0, 0], sun, false);
+  const etch = add(new THREE.SphereGeometry(.2615, 64, 48), new THREE.MeshPhysicalMaterial({ color: 0xf8ecd8, roughness: .75, transparent: true, alphaMap: gmTex, opacity: .92, depthWrite: false }), [0, 0, 0], sun, false);
+  etch.renderOrder = 2;
+
+  /* ---- arms, bodies, moons, rings ---- */
+  const arms = BODIES.map((b, i) => {
+    const g = new THREE.Group(); g.position.y = yA(i); scene.add(g);
+    const mat = mBrass.clone(); mat.emissive = new THREE.Color(.9, .58, .2); mat.emissiveIntensity = 0;
+    add(cyl(rT(i) + .02, .05, 40), [mat, mCap, mCap], [0, 0, 0], g);
+    const rod = add(rodX(.019), mat, [rT(i), 0, 0], g);
+    const tip = new THREE.Group(); g.add(tip);
+    const h = BODY_Y - yA(i);
+    add(cyl(.014, h - b.r * .7, 12), mat, [0, (h - b.r * .7) / 2, 0], tip);
+    add(lathe([[0, 0], [.02, 0], [.05, .03], [.075, .06], [0, .06]], 32), mat, [0, h - b.r - .035, 0], tip);
+    const body = add(new THREE.SphereGeometry(b.r, 48, 32), skins[b.mat], [0, h, 0], tip);
+    const ringMat = brass({ anisotropy: 0, roughness: .25 });
+    const s0 = b.s - .15;
+    const curve = new (class extends THREE.Curve { getPoint(t, o = new THREE.Vector3()) { const a = phi(i, s0) + t * TAU; return o.set(b.R * Math.cos(a), BODY_Y, b.R * Math.sin(a)); } })();
+    const ring = add(new THREE.TubeGeometry(curve, 360, .0085, 6, false), ringMat, [0, 0, 0], scene, false);
+    return { b, i, g, mat, rod, tip, body, ring, ringMat, s0, hl: 0, hlT: 0, moons: [], gems: [] };
+  });
+  PAPERS.forEach(p => {
+    const a = arms[p.p], piv = new THREE.Group(); piv.position.y = BODY_Y - yA(p.p); a.tip.add(piv);
+    const mr = .03 + .011 * Math.sqrt(p.c);
+    add(rodX(.0045), a.mat, [0, 0, 0], piv).scale.x = p.rm;
+    const moon = add(new THREE.SphereGeometry(mr, 32, 20), mMoon, [p.rm, 0, 0], piv);
+    a.moons.push({ p, piv, moon, mr });
+  });
+  const DULL = lin(.36, .26, .12);
+  AWARDS.forEach(w => {
+    const a = arms[w.ring], ang = phi(w.ring, w.t), g = new THREE.Group();
+    g.position.set(a.b.R * Math.cos(ang), BODY_Y + .012, a.b.R * Math.sin(ang)); scene.add(g);
+    add(new THREE.TorusGeometry(.036, .009, 8, 24).rotateX(Math.PI / 2), mPlain, [0, 0, 0], g);
+    const stone = add(new THREE.OctahedronGeometry(.036, 0), GEMS[w.gem], [0, .012, 0], g);
+    stone.scale.set(1, .75, 1); stone.rotation.y = .4;
+    a.gems.push({ w, g, stone });
+  });
+
+  /* ---- crank ---- */
+  const crank = new THREE.Group(); crank.position.set(gP.x, CRANK_Y, gP.z); scene.add(crank);
+  add(cyl(.065, .06, 32), CYL3, [0, 0, 0], crank);
+  add(new THREE.CapsuleGeometry(.035, CRANK_L, 6, 12).rotateZ(Math.PI / 2).scale(1, .55, 1), mBrass, [CRANK_L / 2, 0, 0], crank);
+  add(cyl(.05, .035, 24), CYL3, [CRANK_L, .03, 0], crank);
+  add(lathe([[0, 0], [.042, 0], [.048, .03], [.036, .07], [.047, .15], [.057, .23], [.05, .3], [.03, .35], [0, .36]], 40), mWalnut, [CRANK_L, .045, 0], crank);
+  const knob = new THREE.Object3D(); knob.position.set(CRANK_L, .2, 0); crank.add(knob);
+
+  /* ---- year counter: a silvered drum behind a window ---- */
+  const cw = DRUM_L / 2 + .06;
+  add(new THREE.BoxGeometry(2 * cw + .16, .12, .66), mPlain, [CX, PLATE_Y + .06, CZ]);
+  for (const sx of [-1, 1]) {
+    add(cyl(DRUM_R + .06, .05, 56).rotateZ(Math.PI / 2), CYL3, [CX + sx * cw, DRUM_Y, CZ]);
+    add(new THREE.BoxGeometry(.05, DRUM_Y - PLATE_Y - .12, .26), mPlain, [CX + sx * cw, (DRUM_Y + PLATE_Y + .12) / 2, CZ]);
+  }
+  const drum = add(new THREE.CylinderGeometry(DRUM_R, DRUM_R, DRUM_L, 96, 1, true).rotateZ(Math.PI / 2), mSilver, [CX, DRUM_Y, CZ]);
+  add(cyl(.022, 2 * cw + .12, 12).rotateZ(Math.PI / 2), mBrass, [CX, DRUM_Y, CZ]);
+  {
+    const fw = DRUM_L / 2 + .02, fh = .115, hw = DRUM_L / 2 - .03, hh = .078;
+    const s = new THREE.Shape(); s.moveTo(-fw, -fh); s.lineTo(fw, -fh); s.lineTo(fw, fh); s.lineTo(-fw, fh); s.closePath();
+    const h = new THREE.Path(); h.moveTo(-hw, -hh); h.lineTo(-hw, hh); h.lineTo(hw, hh); h.lineTo(hw, -hh); h.closePath(); s.holes.push(h);
+    const fr = add(new THREE.ExtrudeGeometry(s, { depth: .014, bevelEnabled: true, bevelThickness: .004, bevelSize: .004, bevelSegments: 1 }), mPlain,
+      [CX, DRUM_Y + (DRUM_R + .012) * Math.sin(DRUM_FACE), CZ + (DRUM_R + .012) * Math.cos(DRUM_FACE)]);
+    fr.rotation.x = -DRUM_FACE;
+  }
+
+  /* ---- jewelled pivots ---- */
+  const jewelAt = [[gA.x, GEAR_Y + .1, gA.z], [gB.x, GEAR_Y + .1, gB.z], [LAY.x, layTop, LAY.z], [gP.x, CRANK_Y + .035, gP.z], [CX - cw - .03, DRUM_Y, CZ], [CX + cw + .03, DRUM_Y, CZ]];
+  const jewels = new THREE.InstancedMesh(new THREE.SphereGeometry(.024, 16, 10), jewelMat, jewelAt.length);
+  const dm = new THREE.Object3D();
+  jewelAt.forEach((p, k) => { dm.position.set(...p); dm.scale.set(1, .7, 1); dm.updateMatrix(); jewels.setMatrixAt(k, dm.matrix); });
+  scene.add(jewels);
+
+  // occlusion under everything that stands on the plate
+  const { blob } = plateMaps;
+  blob(0, 0, .5, .55); blob(LAY.x, LAY.z, .5); blob(gA.x, gA.z, .55); blob(gB.x, gB.z, .45); blob(gP.x, gP.z, .3, .35); blob(CX - .3, CZ, .5, .5); blob(CX + .3, CZ, .5, .5);
+  mPlate.aoMap = ctex(plateMaps.ao, false); mPlate.aoMapIntensity = 1;
+
+  /* ---------------- state ---------------- */
+  let T = Y0, target = Y0, zoom = 1, zoomT = 1, raf = 0, last = 0, dragging = null, openItem = null, textMode = false, shownYear = -1, touched = false;
+  let W = 1, H = 1, baseDist = 10, elev = 26 * D2R, yearPx = 480, zoomMin = .92;
+  const zoomFor = t => zoomMin + (1 - zoomMin) * (t - Y0) / (Y1 - Y0); // early years have only inner orbits, so start closer
+  const TARGET = new THREE.Vector3(0, 1.55, 0);
+
+  function update() {
+    const crankA = CRANK_REST + TAU * (T - Y0);
+    gP.a = crankA; gA.a = meshAngle(gP, gA, gP.a); gB.a = meshAngle(gA, gB, gA.a); gD.a = meshAngle(gB, gD, gB.a);
+    lay.forEach((g, i) => { g.a = gD.a; tube[i].a = meshAngle(g, tube[i], g.a); });
+    let k = 0;
+    for (const g of gears) {
+      g.mesh.rotation.y = -g.a;
+      const r0 = g.n * M / 2 - 1.25 * M;
+      for (let t = 0; t < g.n; t++) {
+        const a = g.a + TAU * t / g.n;
+        dm.position.set(g.x + r0 * Math.cos(a), g.y, g.z + r0 * Math.sin(a)); dm.rotation.set(0, -a, 0); dm.scale.set(1, 1, 1); dm.updateMatrix();
+        teeth.setMatrixAt(k++, dm.matrix);
+      }
+    }
+    teeth.instanceMatrix.needsUpdate = true;
+    crank.rotation.y = -crankA;
+    drum.rotation.x = TAU * (T - Y0 + .5) / 12 - DRUM_FACE;
+
+    for (const a of arms) {
+      const { b, i } = a, e = ext(b, T), grow = sstep(.55, 1, e), L = (b.R - rT(i)) * e;
+      a.g.rotation.y = -phi(i, T);
+      a.rod.visible = e > .002; a.rod.scale.x = Math.max(L, .001);
+      a.tip.position.x = rT(i) + L; a.tip.scale.setScalar(Math.max(grow, .001)); a.tip.visible = grow > .002;
+      a.vis = grow;
+      for (const m of a.moons) {
+        const s = sstep(m.p.y - .12, m.p.y - .02, T);
+        m.piv.visible = s > .002; m.piv.scale.setScalar(Math.max(s, .001));
+        m.piv.rotation.y = -(m.p.ph + TAU * 1.15 * (T - Y0)); m.vis = s * grow;
+      }
+      const frac = clamp((Math.min(T, b.e + .1) - a.s0) * b.speed, 0, 1);
+      a.ring.visible = frac > .001; a.ring.geometry.setDrawRange(0, Math.floor(frac * 360) * 36);
+      const past = sstep(b.e + .1, b.e + .6, T);
+      a.ringMat.color.copy(BRASS).lerp(DULL, past * .75); a.ringMat.roughness = .25 + .3 * past;
+      for (const gm of a.gems) {
+        const s = sstep(gm.w.t - .08, gm.w.t, T) * (frac > .001 ? 1 : 0);
+        gm.g.visible = s > .002; gm.g.scale.setScalar(Math.max(s, .001)); gm.vis = s;
+      }
+      a.mat.emissiveIntensity = a.hl * .9;
+    }
+  }
+
+  /* ---------------- camera ---------------- */
+  function layout() {
+    const w = innerWidth, h = innerHeight;
+    if (w === W && Math.abs(h - H) < 2) return false;
+    W = w; H = h;
+    renderer.setSize(W, H, false);
+    const mobile = W < 700;
+    camera.fov = mobile ? 32 : 30; camera.aspect = W / H;
+    elev = (mobile ? 33 : 24) * D2R; zoomMin = mobile ? .8 : .92;
+    fitCam(mobile);
+    yearPx = Math.max(300, Math.round(H * .55));
+    root.style.setProperty('--yh', yearPx + 'px');
+    return true;
+  }
+  // Fit the whole machine: binary-search the distance, re-centre the look-at height each step.
+  const FIT = [];
+  for (let k = 0; k < 24; k++) {
+    const a = k / 24 * TAU, c = Math.cos(a), s = Math.sin(a);
+    FIT.push([new THREE.Vector3(3.8 * c, 0, 3.8 * s), 'b'], [new THREE.Vector3(3.72 * c, .72, 3.72 * s), 'b'], [new THREE.Vector3(3.15 * c, BODY_Y, 3.15 * s), 'o']);
+  }
+  FIT.push([new THREE.Vector3(0, SUN_Y + .3, 0), 'o']);
+  function fitCam(mobile) {
+    const lim = mobile ? { b: 1.3, o: .97, y0: -.8, y1: .5 } : { b: .84, o: .84, y0: -.8, y1: .8 };
+    camera.clearViewOffset(); camera.updateProjectionMatrix();
+    const tv = Math.tan(camera.fov / 2 * D2R), hy = (lim.y1 - lim.y0) / 2;
+    const test = d => {
+      let ty = 1.4, ok = true, span = 0;
+      for (let it = 0; it < 4; it++) {
+        camera.position.set(0, ty + d * Math.sin(elev), d * Math.cos(elev)); camera.lookAt(0, ty, 0); camera.updateMatrixWorld();
+        let mn = 9, mx = -9; ok = true;
+        for (const [p, t] of FIT) { v.copy(p).project(camera); if (Math.abs(v.x) > lim[t]) ok = false; mn = Math.min(mn, v.y); mx = Math.max(mx, v.y); }
+        span = (mx - mn) / 2; ty += (mn + mx) / 2 * d * tv * .8;
+      }
+      return { ok: ok && span <= hy, ty };
+    };
+    let lo = 4, hi = 90;
+    for (let i = 0; i < 26; i++) { const m = (lo + hi) / 2; if (test(m).ok) hi = m; else lo = m; }
+    baseDist = hi; TARGET.y = test(hi).ty;
+    const cy = (lim.y0 + lim.y1) / 2;
+    if (Math.abs(cy) > .001) camera.setViewOffset(W, H, 0, Math.round(cy * H / 2), W, H);
+    camera.updateProjectionMatrix();
+  }
+  function placeCam() {
+    const d = baseDist * zoom;
+    camera.position.set(0, TARGET.y + d * Math.sin(elev), d * Math.cos(elev));
+    camera.lookAt(TARGET);
+  }
+
+  /* ---------------- overlay (hotspots, plaques) ---------------- */
+  const hot = $('#hot'), tip = $('#tip'), crankEl = $('#crank'), hint = $('#hint'), plaque = $('#plaque'), lead = $('#lead'), letter = $('#letter'), live = $('#live');
+  const items = [];
+  const mkItem = (o) => {
+    const el = document.createElement('button'); el.type = 'button'; el.className = 'hs ' + o.kind; el.hidden = true;
+    el.setAttribute('aria-label', o.label); el.setAttribute('aria-controls', 'plaque'); el.setAttribute('aria-expanded', 'false');
+    hot.appendChild(el); o.el = el; items.push(o);
+    const on = () => { hover = o; setHL(); }, off = () => { if (hover === o) { hover = null; setHL(); } };
+    el.addEventListener('pointerenter', on); el.addEventListener('focus', on);
+    el.addEventListener('pointerleave', off); el.addEventListener('blur', off);
+    el.addEventListener('click', () => openPlaque(o));
+  };
+  let hover = null;
+  mkItem({ kind: 'sun', obj: sun, rad: .26, min: 46, vis: () => 1, arm: null, short: 'G.M.', label: 'The sun, G.M.: about George Michoulis',
+    k: 'The sun', t: 'G.M.', s: 'George Michoulis · Thessaloniki, working remotely', x: 'Builds NFT and DeFi systems in Solidity and TypeScript, and does data science with graph embeddings. Has lectured on networks and security, and gives public talks on Web3 and edge tech. <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>' });
+  arms.forEach(a => mkItem({ kind: 'body', obj: a.body, rad: a.b.r, min: 40, vis: () => a.vis, arm: a, short: a.b.short, label: `${a.b.title}, ${a.b.sub.replaceAll(' · ', ', ')}`, k: a.b.kind, t: a.b.title, s: a.b.sub, x: a.b.text }));
+  arms.forEach(a => a.moons.forEach(m => mkItem({ kind: 'moon', obj: m.moon, rad: m.mr, min: 26, vis: () => m.vis, arm: a, short: `Paper, ${m.p.y}`,
+    label: `Paper, ${m.p.y}, ${m.p.c} citation${m.p.c === 1 ? '' : 's'}: ${m.p.title}`, k: `Paper · ${m.p.y} · ${m.p.c} citation${m.p.c === 1 ? '' : 's'}`, t: m.p.title, s: m.p.venue, x: '' })));
+  arms.forEach(a => a.gems.forEach(g => mkItem({ kind: 'gem', obj: g.stone, rad: .04, min: 26, vis: () => g.vis, arm: a, ring: true, short: g.w.title,
+    label: `Award: ${g.w.title}, ${g.w.sub.replaceAll(' · ', ', ')}`, k: 'Award', t: g.w.title, s: g.w.sub, x: g.w.text || '' })));
+
+  function setHL() {
+    arms.forEach(a => a.hlT = 0);
+    if (hover && hover.arm) hover.arm.hlT = 1;
+    tip.textContent = hover ? hover.short : '';
+    tip.classList.toggle('on', !!hover && !openItem);
+    invalidate();
+  }
+
+  const v = new THREE.Vector3(), scr = (obj) => { obj.getWorldPosition(v); const d = v.distanceTo(camera.position); v.project(camera); return { x: (v.x + 1) / 2 * W, y: (1 - v.y) / 2 * H, d, z: v.z }; };
+  const pxPerUnit = d => H / (2 * d * Math.tan(camera.fov / 2 * D2R));
+
+  function overlay() {
+    for (const it of items) {
+      const vis = it.vis();
+      const show = vis > .6 && !textMode;
+      if (it.el.hidden === show) it.el.hidden = !show;
+      if (!show) { if (hover === it) { hover = null; setHL(); } continue; }
+      const p = scr(it.obj), wsc = it.obj.getWorldScale(v).x, s = Math.max(it.min, 2 * it.rad * wsc * pxPerUnit(p.d) + 12);
+      it.el.style.width = it.el.style.height = s + 'px';
+      it.el.style.transform = `translate(${(p.x - s / 2).toFixed(1)}px,${(p.y - s / 2).toFixed(1)}px)`;
+      it.el.style.zIndex = Math.round((1 - p.z) * 4000) + (it.min < 30 ? 9000 : 0); // nearer bodies take the tap; moons and stones sit above bodies
+      it.p = p; it.sz = s;
+    }
+    const kp = scr(knob);
+    crankEl.style.transform = `translate(${(kp.x - 33).toFixed(1)}px,${(kp.y - 33).toFixed(1)}px)`;
+    const hw = hint.offsetWidth, right = kp.x + 44 + hw < W - 12;
+    if (W < 700) hint.style.transform = `translate(${Math.round((W - hw) / 2)}px,${Math.round(H - hint.offsetHeight - 70)}px)`;
+    else hint.style.transform = `translate(${Math.round(right ? kp.x + 44 : kp.x - 44 - hw)}px,${Math.round(kp.y - 20)}px)`;
+    if (hover && hover.p) { tip.style.transform = `translate(${Math.round(hover.p.x + hover.sz / 2 + 6)}px,${Math.round(hover.p.y - 9)}px)`; }
+    if (openItem) placePlaque();
+    const now = T >= Y1 - .05 && target >= Y1 - .05;
+    letter.classList.toggle('down', now);
+    if (now) {
+      const pa = scr(arms[4].body), pb = scr(arms[5].body), lw = letter.offsetWidth, lh = letter.offsetHeight;
+      const mx = (pa.x + pb.x) / 2, my = Math.min(pa.y, pb.y);
+      letter.style.left = clamp(mx - lw / 2, 16, W - lw - 16) + 'px';
+      letter.style.top = clamp(my - lh - 46, W < 700 ? 190 : 70, H - lh - 90) + 'px';
+    }
+  }
+
+  function placePlaque() {
+    const it = openItem, p = it.p || scr(it.obj), pw = plaque.offsetWidth, ph = plaque.offsetHeight;
+    if (W < 700) { // phones: the plaque swings up from the bottom edge
+      plaque.style.left = '16px'; plaque.style.top = (H - ph - 64) + 'px'; lead.classList.remove('on'); return;
+    }
+    const gap = (it.sz || 40) / 2 + 46, fitsR = p.x + gap + pw < W - 16, fitsL = p.x - gap - pw > 16;
+    const onRight = p.x >= W / 2 ? fitsR || !fitsL : !fitsL && fitsR; // swing outward, away from the machine
+    const x = onRight ? p.x + gap : p.x - gap - pw, y = clamp(p.y - ph * .42, 60, H - ph - 70);
+    plaque.style.left = x + 'px'; plaque.style.top = y + 'px';
+    plaque.style.setProperty('--hinge', onRight ? 'left' : 'right'); plaque.style.setProperty('--sw', onRight ? '-100deg' : '100deg');
+    const hx = onRight ? x : x + pw, hy = clamp(p.y, y + 16, y + ph - 16), sx = p.x + (onRight ? 1 : -1) * ((it.sz || 40) / 2 - 4);
+    const len = Math.hypot(hx - sx, hy - p.y), ang = Math.atan2(hy - p.y, hx - sx);
+    lead.style.width = len + 'px'; lead.style.transform = `translate(${sx}px,${p.y - 1}px) rotate(${ang}rad)`;
+    lead.classList.toggle('on', plaque.classList.contains('open'));
+  }
+
+  function openPlaque(it) {
+    target = T; // stop the machine where it is
+    openItem = it;
+    items.forEach(o => o.el.setAttribute('aria-expanded', String(o === it)));
+    $('#pl-k').textContent = it.k; $('#pl-t').textContent = it.t;
+    $('#pl-s').textContent = it.s; $('#pl-s').hidden = !it.s;
+    $('#pl-x').innerHTML = it.x; $('#pl-x').hidden = !it.x;
+    plaque.classList.remove('open'); placePlaque(); void plaque.offsetWidth;
+    plaque.classList.add('open'); lead.classList.toggle('on', W >= 700);
+    tip.classList.remove('on');
+    plaque.focus({ preventScroll: true });
+    invalidate();
+  }
+  function closePlaque(refocus) {
+    if (!openItem) return;
+    const it = openItem; openItem = null;
+    plaque.classList.remove('open'); lead.classList.remove('on');
+    it.el.setAttribute('aria-expanded', 'false');
+    if (refocus && !it.el.hidden) it.el.focus({ preventScroll: true });
+  }
+  plaque.querySelector('.x').addEventListener('click', () => closePlaque(true));
+  $('#gl').addEventListener('pointerdown', () => closePlaque(false));
+
+  /* ---------------- render loop (only while something moves) ---------------- */
+  function invalidate() { if (!raf && !document.hidden && !textMode) raf = requestAnimationFrame(frame); }
+  function frame(now) {
+    raf = 0;
+    const dt = last ? Math.min(.2, (now - last) / 1000) : .016; last = now;
+    let moving = false;
+    if (!dragging && T !== target) {
+      T += (target - T) * (1 - Math.exp(-dt * (reduce ? 1e3 : 4.2)));
+      if (Math.abs(target - T) < 1e-4) T = target; else moving = true;
+    }
+    zoomT = zoomFor(target);
+    if (zoom !== zoomT) { zoom += (zoomT - zoom) * (1 - Math.exp(-dt * (reduce ? 1e3 : 1.8))); if (Math.abs(zoomT - zoom) < 1e-4) zoom = zoomT; else moving = true; }
+    for (const a of arms) if (a.hl !== a.hlT) { a.hl += (a.hlT - a.hl) * (1 - Math.exp(-dt * 12)); if (Math.abs(a.hl - a.hlT) < .01) a.hl = a.hlT; else moving = true; }
+    update(); placeCam(); renderer.render(scene, camera); overlay();
+    const yr = Math.round(T);
+    if (yr !== shownYear) { shownYear = yr; crankEl.setAttribute('aria-valuenow', yr); crankEl.setAttribute('aria-valuetext', String(yr)); if (touched) live.textContent = String(yr); }
+    if (moving) { raf = requestAnimationFrame(frame); } else last = 0;
+  }
+  document.addEventListener('visibilitychange', () => { if (document.hidden) { cancelAnimationFrame(raf); raf = 0; last = 0; } else invalidate(); });
+
+  /* ---------------- input: scroll, crank, keys ---------------- */
+  const scrollYear = () => clamp(Y0 + scrollY / yearPx, Y0, Y1);
+  let synced = -1; // scroll position we set ourselves; its scroll event must not overwrite a newer target
+  const syncScroll = t => { synced = Math.round((t - Y0) * yearPx); scrollTo({ top: synced, behavior: 'instant' }); };
+  const firstTouch = () => { if (!touched) { touched = true; hint.classList.add('gone'); } };
+  addEventListener('scroll', () => {
+    if (dragging || textMode) return;
+    if (synced >= 0 && Math.abs(scrollY - synced) < 2) { synced = -1; return; }
+    synced = -1;
+    const t = scrollYear();
+    target = reduce ? Math.round(t) : t; if (reduce) T = target;
+    if (Math.abs(target - T) > .02) { closePlaque(false); firstTouch(); }
+    invalidate();
+  }, { passive: true });
+
+  const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -(CRANK_Y + .2)), hitP = new THREE.Vector3(), ndc = new THREE.Vector2();
+  const pointerAngle = e => {
+    ndc.set(e.clientX / W * 2 - 1, -(e.clientY / H) * 2 + 1); ray.setFromCamera(ndc, camera);
+    return ray.ray.intersectPlane(plane, hitP) ? Math.atan2(hitP.z - gP.z, hitP.x - gP.x) : null;
+  };
+  crankEl.addEventListener('pointerdown', e => {
+    e.preventDefault(); crankEl.setPointerCapture(e.pointerId);
+    dragging = { id: e.pointerId, a: pointerAngle(e), T0: T, acc: 0 }; target = T;
+    crankEl.classList.add('grab'); closePlaque(false); firstTouch();
+  });
+  crankEl.addEventListener('pointermove', e => {
+    if (!dragging || e.pointerId !== dragging.id) return;
+    const a = pointerAngle(e); if (a === null || dragging.a === null) { dragging.a = a; return; }
+    const d = Math.atan2(Math.sin(a - dragging.a), Math.cos(a - dragging.a)); dragging.a = a;
+    dragging.acc += d;
+    let t = clamp(dragging.T0 + dragging.acc / TAU, Y0, Y1);
+    dragging.acc = (t - dragging.T0) * TAU; // the crank stops hard at 2015 and 2026
+    if (reduce) t = Math.round(t);
+    T = target = t; invalidate();
+  });
+  const endDrag = e => {
+    if (!dragging || e.pointerId !== dragging.id) return;
+    dragging = null; crankEl.classList.remove('grab');
+    target = Math.round(T); syncScroll(target); invalidate();
+  };
+  crankEl.addEventListener('pointerup', endDrag); crankEl.addEventListener('pointercancel', endDrag);
+
+  const step = (dy, abs) => {
+    const t = clamp(abs ?? Math.round(target) + dy, Y0, Y1);
+    target = t; if (reduce) T = t; closePlaque(false); firstTouch(); syncScroll(t); invalidate();
+  };
+  crankEl.addEventListener('keydown', e => {
+    const m = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 3, PageDown: -3 }[e.key];
+    if (m) { e.preventDefault(); step(m); } else if (e.key === 'Home') { e.preventDefault(); step(0, Y0); } else if (e.key === 'End') { e.preventDefault(); step(0, Y1); }
+  });
+  addEventListener('keydown', e => {
+    if (textMode || e.defaultPrevented) return;
+    if (e.key === 'Escape') return closePlaque(true);
+    if (e.target === crankEl || e.altKey || e.metaKey || e.ctrlKey) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); step(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+  });
+
+  /* ---------------- read as text ---------------- */
+  const btn = $('#textBtn'); let savedYear = Y0;
+  btn.addEventListener('click', () => {
+    textMode = !textMode;
+    root.classList.toggle('scene', !textMode);
+    btn.textContent = textMode ? 'Back to the orrery' : 'Read as text'; btn.setAttribute('aria-pressed', String(textMode));
+    if (textMode) { savedYear = Math.round(target); closePlaque(false); cancelAnimationFrame(raf); raf = 0; scrollTo(0, 0); $('#text').focus({ preventScroll: true }); }
+    else { W = 0; layout(); syncScroll(savedYear); target = savedYear; invalidate(); }
+  });
+
+  addEventListener('resize', () => { if (textMode) return; const t = Math.round(target); if (layout()) { syncScroll(t); invalidate(); } });
+
+  layout();
+  T = target = clamp(Math.round(scrollYear()), Y0, Y1); zoom = zoomT = zoomFor(T);
+  invalidate();
+}
+main();
+</script>
+</body>
+</html>

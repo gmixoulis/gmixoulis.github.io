@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Preprint · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki, presented as a research preprint.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Spectral+SC:wght@500;600&family=Source+Code+Pro:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6F6F3; --plate:#EAEAE5; --ink:#171715; --pencil:#57564F; --hair:rgba(23,23,21,.26);
+  --red:#AD1A2D; --red-soft:rgba(173,26,45,.12);
+  --text:640px; --gap:48px; --margin:260px;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --paper:#1E1C18; --plate:#2A2721; --ink:#E9E2D0; --pencil:#ADA590; --hair:rgba(233,226,208,.24);
+         --red:#EF7E85; --red-soft:rgba(239,126,133,.14); }
+  .shot img,.plate img{filter:brightness(.86) contrast(1.04)}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1.1875rem/1.62 Spectral,Georgia,serif;font-kerning:normal;text-rendering:optimizeLegibility}
+::selection{background:var(--red-soft)}
+a{color:inherit;text-decoration-line:underline;text-decoration-thickness:1px;text-underline-offset:.16em;text-decoration-color:var(--hair)}
+a:hover{text-decoration-color:var(--red)}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:1px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.back{position:absolute;top:14px;left:16px;font-size:.8rem;color:var(--pencil);text-decoration:none}
+.back:hover{text-decoration:underline}
+
+/* title block */
+.titleblock{position:relative;text-align:center;padding:clamp(76px,13vh,136px) 16px 0}
+.sidebar{position:absolute;left:30px;top:96px;writing-mode:vertical-rl;transform:rotate(180deg);font:500 .95rem/1 'Spectral SC',serif;letter-spacing:.04em;color:var(--pencil)}
+h1{margin:0 auto;font-weight:500;font-size:clamp(3.6rem,15vw,7.4rem);line-height:.98;letter-spacing:-.018em}
+.subtitle{margin:.55em auto 0;max-width:24em;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);line-height:1.3;text-wrap:balance}
+.authors{margin:2.4rem 0 0;font:500 1.1rem/1.3 'Spectral SC',serif;letter-spacing:.02em}
+.authors sup,.affil sup{color:var(--red);font:500 .75em Spectral,serif;margin-left:.1em}
+.affil{margin:.35rem 0 0;font-style:italic;font-size:.95rem;line-height:1.5;color:var(--pencil)}
+.affil a{color:var(--ink)}
+.date{margin:.9rem 0 0;font-size:.95rem}
+.abstract{max-width:34em;margin:3rem auto 0;text-align:justify;hyphens:auto;font-size:1.02rem;line-height:1.58}
+.abstract h2{margin:0 0 .5rem;text-align:center;font:600 1.02rem 'Spectral SC',serif;letter-spacing:.03em}
+.titleblock p{text-align:center;text-indent:0}
+.abstract p{margin:0;text-align:justify}
+.abstract .kw{margin-top:.8rem;text-align:left;font-size:.95rem}
+.kw i{margin-right:.35em}
+
+/* body */
+main{width:min(100% - 32px,calc(var(--text) + var(--gap) + var(--margin)));margin:0 auto;padding-bottom:2rem;counter-reset:sn}
+main section>*:not(.wide){max-width:var(--text)}
+h2.sec{margin:4.2rem 0 1rem;font:500 1.42rem/1.25 'Spectral SC',serif;letter-spacing:.02em}
+h2.sec .n{display:inline-block;min-width:1.6em}
+h3{margin:2.2rem 0 .6rem;font-weight:400;font-style:italic;font-size:1.12rem}
+h3 .n{font-style:normal;display:inline-block;min-width:2.3em}
+p{margin:0;text-align:justify;hyphens:auto}
+p+p{text-indent:1.4em}
+.cite{white-space:nowrap}
+.cite a,a.cite{text-decoration:none;color:var(--ink)}
+.cite a:hover,a.cite:hover{text-decoration:underline}
+
+/* red-ink sidenotes */
+.snm{counter-increment:sn}
+.snm::after{content:counter(sn);color:var(--red);font-size:.66em;vertical-align:.55em;line-height:0;margin-left:.08em;font-weight:500}
+.sn{display:block;margin:.55rem 0 .75rem 1.4em;text-indent:0;text-align:left;font-style:italic;font-size:.86rem;line-height:1.45;color:var(--red);hyphens:manual}
+.sn::before{content:counter(sn) "\2002";font-style:normal;font-weight:500}
+.sn a{color:inherit;text-decoration-color:currentColor}
+
+/* figures */
+figure{margin:2.6rem 0}
+figcaption{font-size:.9rem;line-height:1.5;text-align:left;hyphens:auto}
+.fl{font:600 1em 'Spectral SC',serif;letter-spacing:.02em;margin-right:.35em}
+.wide{max-width:none}
+.fig1{margin:3rem 0 3.2rem}
+.fig1 svg{display:block;width:100%;height:auto;overflow:visible}
+.fig1 .tall{display:none}
+.fig1 figcaption{max-width:var(--text);margin-top:1.6rem}
+.fg text{font-family:Spectral,Georgia,serif;fill:var(--ink)}
+.fg .r{font-size:18px}
+.fg .p{font-style:italic}
+.fg .s{font-size:13.5px;font-style:italic;fill:var(--pencil)}
+.fg .l{font-family:'Spectral SC',serif;font-size:15.5px;font-weight:500;letter-spacing:.03em;fill:var(--pencil)}
+.fg .m{font-size:16px}
+.fg .e{fill:none;stroke:var(--ink);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:0}
+.fg .ring{fill:none;stroke:var(--red);stroke-width:1.7;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:0}
+.fg .note{fill:var(--red);font-style:italic;font-size:15px}
+.js .fig1:not(.on) .e,.js .fig1:not(.on) .ring{stroke-dashoffset:1}
+.fig1.on .e{transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1) calc(var(--d,0s) * .6)}
+.fig1.on .ring{transition:stroke-dashoffset 1s cubic-bezier(.5,0,.3,1) .9s}
+
+.mcap{display:grid;grid-template-columns:minmax(0,var(--text)) var(--margin);column-gap:var(--gap);align-items:end}
+.mcap figcaption{padding-bottom:.2rem}
+.shot{margin:0}
+.shot img{display:block;width:100%;height:auto;border:1px solid var(--hair)}
+.panels .shot img{aspect-ratio:16/9;object-fit:cover;object-position:top}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem 1.6rem;margin:0 0 1rem}
+.panels figure{margin:0}
+.panels figure span,.plate span{display:block;margin-top:.35rem;text-align:center;font-size:.85rem}
+.plate{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem .9rem}
+.plate a{display:block;text-decoration:none;color:inherit}
+.plate img{display:block;width:100%;aspect-ratio:3/2.12;object-fit:contain;background:var(--plate);padding:6px}
+.plate .pt img{aspect-ratio:5/7}
+
+/* booktabs */
+table{width:100%;border-collapse:collapse;font-size:.93rem;line-height:1.42;font-variant-numeric:tabular-nums lining-nums;margin:0 0 .6rem}
+caption{caption-side:top;text-align:left;font-size:.9rem;line-height:1.5;padding-bottom:.7rem}
+th,td{text-align:left;vertical-align:top;padding:.5rem 1rem .5rem 0}
+th:last-child,td:last-child{padding-right:0}
+thead th{font-weight:600;border-top:1.6px solid var(--ink);border-bottom:.8px solid var(--ink);padding-top:.45rem;padding-bottom:.45rem}
+tbody tr:last-child td{border-bottom:1.6px solid var(--ink)}
+tbody tr:first-child td{padding-top:.7rem}
+td.yr{white-space:nowrap;width:7.2em}
+td em{color:var(--pencil)}
+
+/* bibtex + references */
+.bib{position:relative;margin:1rem 0 0;border-top:.8px solid var(--ink);border-bottom:.8px solid var(--ink);padding:.9rem 0 .8rem}
+.bib pre{margin:0;overflow-x:auto;font:400 .8rem/1.55 'Source Code Pro',ui-monospace,monospace;tab-size:2}
+.bibbar{display:flex;align-items:baseline;gap:1rem;margin-top:.7rem;font-size:.9rem}
+button{font:500 .95rem 'Spectral SC',serif;letter-spacing:.02em;color:var(--ink);background:none;border:0;border-bottom:1px solid var(--ink);padding:.1rem 0;cursor:pointer}
+button:hover{color:var(--red);border-color:var(--red)}
+#copymsg{font-style:italic;color:var(--red)}
+ol.refs{list-style:none;padding:0;margin:0;counter-reset:ref;font-size:.95rem;line-height:1.5}
+ol.refs li{counter-increment:ref;position:relative;padding-left:2.6em;margin:0 0 .7rem;hyphens:auto}
+ol.refs li::before{content:"[" counter(ref) "]";position:absolute;left:0;width:2.1em;text-align:right;font-variant-numeric:tabular-nums}
+ol.refs .c{color:var(--pencil)}
+ol.refs li:target{background:var(--red-soft);outline:6px solid var(--red-soft)}
+footer{width:min(100% - 32px,calc(var(--text) + var(--gap) + var(--margin)));margin:3rem auto 0;padding:1.2rem 0 3rem;border-top:.8px solid var(--hair);font-size:.88rem;color:var(--pencil)}
+footer p{max-width:var(--text);text-align:left}
+footer a{color:var(--ink)}
+
+@media (min-width:1080px){
+  .sn{float:right;clear:right;width:var(--margin);margin:.2rem calc(-1 * (var(--margin) + var(--gap))) .9rem 0}
+  figure.fig1,.mcap,.panels,h2.sec{clear:right}
+}
+@media (max-width:1079px){
+  .mcap{display:block}
+  .mcap figcaption{margin-top:.9rem;max-width:var(--text)}
+}
+@media (max-width:760px){
+  body{font-size:1.08rem;line-height:1.6}
+  .sidebar{display:none}
+  .fig1 .long{display:none}
+  .fig1 .tall{display:block;max-width:420px}
+  p{text-align:left;hyphens:auto}
+  .abstract p{text-align:left}
+  h2.sec{margin-top:3.4rem;font-size:1.3rem}
+  .panels{gap:1rem .8rem}
+  .plate{gap:.8rem .5rem}
+  .plate img{padding:3px}
+  table.t1 thead{display:none}
+  table.t1 caption{display:block}
+  .bib pre{font-size:.68rem;white-space:pre-wrap;overflow-wrap:anywhere}
+  table.t1,table.t1 tbody{display:block}
+  table.t1 tr{display:grid;grid-template-columns:5.2em 1fr;column-gap:.8rem;padding:.7rem 0;border-bottom:.8px solid var(--hair)}
+  table.t1 tbody tr:first-child{border-top:1.6px solid var(--ink)}
+  table.t1 tbody tr:last-child{border-bottom:1.6px solid var(--ink)}
+  table.t1 td{display:block;padding:0;border:0!important}
+  table.t1 td.work{grid-column:2;margin-top:.3rem;color:var(--pencil)}
+  table.t1 td.yr{width:auto;white-space:normal}
+}
+@media (prefers-reduced-motion:reduce){
+  .js .fig1:not(.on) .e,.js .fig1:not(.on) .ring{stroke-dashoffset:0}
+  .fig1.on .e,.fig1.on .ring{transition:none}
+}
+</style>
+</head>
+<body>
+<header class="titleblock">
+  <a class="back" href="index.html">← All ideas</a>
+  <p class="sidebar" aria-hidden="true">Preprint, September 2026, not peer reviewed</p>
+  <h1>George Michoulis</h1>
+  <p class="subtitle">Blockchain systems, graph ML and teaching: a working profile</p>
+  <p class="authors">George Michoulis<sup>*</sup></p>
+  <p class="affil">Thessaloniki, Greece, working remotely<br><sup>*</sup>Correspondence: <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a></p>
+  <p class="date">September 2026</p>
+  <div class="abstract">
+    <h2>Abstract</h2>
+    <p>I am a blockchain developer and researcher based in Thessaloniki. I write smart contracts and full-stack Web3 systems, I use graph-based machine learning, and I have taught networks, security and application development. The work began with a BSc thesis on verifying academic credentials on Ethereum, which became the VerDe system and a 2022 paper that is now my most cited, with 32 citations. An MSc at Aristotle University of Thessaloniki, funded by a DeepMind scholarship, moved me to graph-embedding methods for blockchain fraud detection. Since May 2026 I build end-to-end Web3 products at Cyberscope by TAC.</p>
+    <p class="kw"><i>Keywords:</i> smart contracts; academic credentials; graph embeddings; 5G marketplaces; DeFi governance; teaching</p>
+  </div>
+</header>
+
+<main>
+<section id="introduction" aria-labelledby="h-intro">
+  <h2 class="sec" id="h-intro"><span class="n">1</span>Introduction</h2>
+  <p>I build and study blockchain systems. Most days that means smart contracts and the full-stack software around them. On the research side it means asking how effective a ledger really is, and what it changes in practice once it is running.<span class="snm"></span><span class="sn">The page is set as a preprint: numbered sections, figures, a reference list. Every claim in it can be checked against the references or the tables.</span></p>
+  <p>It started with my BSc in Applied Informatics at the University of Macedonia, where my thesis verified academic credentials on Ethereum.<span class="snm"></span><span class="sn">That thesis became the VerDe paper <a href="#r2">[2]</a> and, two years later, the process-aware approach <a href="#r1">[1]</a>. The top row of Figure&nbsp;1.</span> I then took the MSc in Data and Web Science at Aristotle University of Thessaloniki on a DeepMind scholarship, working on graph-embedding methods for blockchain fraud detection.<span class="snm"></span><span class="sn">Graph embeddings also went into a drug–target interaction study <a href="#r7">[7]</a>.</span></p>
+  <p>The work has three sides. (i)&nbsp;<em>Research:</em> publications and startup work on how effective ledgers are and what they change in practice, from academic credentials to 5G marketplaces and DeFi governance. (ii)&nbsp;<em>Building:</em> Web3 products with NFTs and DeFi, data science with graph embeddings, shipped across Solidity, TypeScript and the cloud. (iii)&nbsp;<em>Teaching:</em> I have lectured on networks and security, web scripting and application development, and I speak in public about Web3 and edge technology. Figure&nbsp;1 shows how the pieces connect.</p>
+
+  <figure class="fig1 wide" id="fig1" aria-labelledby="f1cap">
+    <svg class="fg long" viewBox="0 0 1000 640" role="img" aria-labelledby="f1t" aria-describedby="f1d">
+      <title id="f1t">Figure 1: how the work connects, drawn as a graph of words</title>
+      <!-- row: credentials -->
+      <text class="l" x="0" y="22">credentials on a ledger</text>
+      <text class="r" x="0" y="74">BSc thesis</text><text class="s" x="0" y="96">Univ. of Macedonia, 2020</text>
+      <text class="p" x="240" y="74" style="font-size:25px">VerDe</text><text class="s" x="240" y="96">[2] 2020, 11 citations</text>
+      <text class="p" x="468" y="74" style="font-size:30.6px">Process-aware</text><text class="p" x="468" y="106" style="font-size:30.6px">verification</text><text class="s" x="468" y="130">[1] 2022, 32 citations</text>
+      <text class="r" x="770" y="74">verde.uom.gr</text><text class="s" x="770" y="96">the running system, Fig. S1</text>
+      <path class="ring" pathLength="1" d="M 668 56 C 644 22, 516 16, 462 34 C 414 52, 420 132, 488 150 C 560 168, 672 152, 690 106 C 700 76, 676 48, 620 40"/>
+      <text class="note" x="702" y="134">my most cited paper</text>
+      <path class="e" style="--d:.0s" pathLength="1" d="M 98 67 L 226 67 M 226 67 l -8 -4 M 226 67 l -8 4"/>
+      <path class="e" style="--d:.15s" pathLength="1" d="M 312 67 L 452 67 M 452 67 l -8 -4 M 452 67 l -8 4"/>
+      <path class="e" style="--d:.3s" pathLength="1" d="M 694 67 L 756 67 M 756 67 l -8 -4 M 756 67 l -8 4"/>
+      <!-- row: graphs -->
+      <text class="l" x="0" y="206">graph learning</text>
+      <text class="r" x="0" y="258">DeepMind scholarship</text><text class="s" x="0" y="280">2020–2022</text>
+      <text class="r" x="274" y="258">MSc Data and Web Science</text><text class="s" x="274" y="280">Aristotle Univ. of Thessaloniki</text>
+      <text class="r" x="600" y="236">Blockchain fraud detection</text><text class="s" x="600" y="257">graph embeddings, MSc thesis</text>
+      <text class="p" x="600" y="306" style="font-size:17px">Drug–target interaction prediction</text><text class="s" x="600" y="326">[7] 2022, 0 citations</text>
+      <path class="e" style="--d:.45s" pathLength="1" d="M 196 251 L 260 251 M 260 251 l -8 -4 M 260 251 l -8 4"/>
+      <path class="e" style="--d:.6s" pathLength="1" d="M 510 246 C 548 246, 548 230, 586 230 M 586 230 l -8 -4 M 586 230 l -8 4"/>
+      <path class="e" style="--d:.7s" pathLength="1" d="M 510 254 C 552 254, 546 300, 586 300 M 586 300 l -8 -4 M 586 300 l -8 4"/>
+      <!-- row: 5G + teaching -->
+      <text class="l" x="0" y="380">5G marketplaces</text>
+      <text class="r" x="0" y="434">Sidroco Holdings</text><text class="s" x="0" y="456">2024–2026</text>
+      <text class="p" x="274" y="412" style="font-size:19.4px">FraMark</text><text class="s" x="274" y="432">[4] 2024, 1 citation</text>
+      <text class="p" x="274" y="476" style="font-size:17px">5G network slicing survey</text><text class="s" x="274" y="496">[6] 2025, 0 citations</text>
+      <path class="e" style="--d:.85s" pathLength="1" d="M 152 425 C 214 425, 212 406, 260 406 M 260 406 l -8 -4 M 260 406 l -8 4"/>
+      <path class="e" style="--d:.95s" pathLength="1" d="M 152 431 C 214 431, 212 470, 260 470 M 260 470 l -8 -4 M 260 470 l -8 4"/>
+      <text class="l" x="560" y="380">teaching</text>
+      <text class="r" x="560" y="434">Lecturer</text><text class="s" x="560" y="456">Derby / Mediterranean</text><text class="s" x="560" y="474">College, 2023–2025</text>
+      <text class="m" x="792" y="398">Networks &amp; Security</text>
+      <text class="m" x="792" y="434">Web Scripting</text>
+      <text class="m" x="792" y="470">Application Development</text>
+      <path class="e" style="--d:1.1s" pathLength="1" d="M 642 424 C 714 424, 712 392, 778 392 M 778 392 l -8 -4 M 778 392 l -8 4"/>
+      <path class="e" style="--d:1.2s" pathLength="1" d="M 640 428 L 778 428 M 778 428 l -8 -4 M 778 428 l -8 4"/>
+      <path class="e" style="--d:1.3s" pathLength="1" d="M 642 432 C 718 432, 712 464, 778 464 M 778 464 l -8 -4 M 778 464 l -8 4"/>
+      <!-- row: stand-alone -->
+      <text class="l" x="0" y="560">papers that stand alone</text>
+      <text class="p" x="0" y="606" style="font-size:23.3px">Decentralized governance</text><text class="s" x="0" y="628">[3] Compound Finance, 2023, 7 citations</text>
+      <text class="p" x="360" y="606" style="font-size:19.4px">Data security for smart cities</text><text class="s" x="360" y="628">[5] 2025, 1 citation</text>
+      <text class="p" x="690" y="606" style="font-size:17px">Blockchain in higher education</text><text class="s" x="690" y="628">[8] 2022, 0 citations</text>
+    </svg>
+
+    <svg class="fg tall" viewBox="0 0 360 1286" role="img" aria-labelledby="f1t2" aria-describedby="f1d">
+      <title id="f1t2">Figure 1: how the work connects, drawn as a graph of words</title>
+      <text class="l" x="0" y="16">credentials on a ledger</text>
+      <text class="r" x="24" y="52">BSc thesis</text><text class="s" x="24" y="71">Univ. of Macedonia, 2020</text>
+      <text class="p" x="24" y="116" style="font-size:25px">VerDe</text><text class="s" x="24" y="136">[2] 2020, 11 citations</text>
+      <text class="p" x="24" y="186" style="font-size:30.6px">Process-aware</text><text class="p" x="24" y="218" style="font-size:30.6px">verification</text><text class="s" x="24" y="264">[1] 2022, 32 citations</text>
+      <path class="ring" pathLength="1" d="M 216 168 C 196 140, 90 138, 44 150 C 8 162, 10 230, 50 240 C 110 254, 224 248, 240 220 C 252 198, 242 176, 198 162"/>
+      <text class="note" x="252" y="196">my most</text><text class="note" x="252" y="214">cited paper</text>
+      <text class="r" x="24" y="314">verde.uom.gr</text><text class="s" x="24" y="333">the running system, Fig. S1</text>
+      <path class="e" style="--d:0s" pathLength="1" d="M 8 48 L 8 96 M 8 96 l -4 -8 M 8 96 l 4 -8"/>
+      <path class="e" style="--d:.15s" pathLength="1" d="M 8 112 L 8 160 M 8 160 l -4 -8 M 8 160 l 4 -8"/>
+      <path class="e" style="--d:.3s" pathLength="1" d="M 8 258 L 8 296 M 8 296 l -4 -8 M 8 296 l 4 -8"/>
+
+      <text class="l" x="0" y="370">graph learning</text>
+      <text class="r" x="24" y="404">DeepMind scholarship</text><text class="s" x="24" y="423">2020–2022</text>
+      <text class="r" x="24" y="468">MSc Data and Web Science</text><text class="s" x="24" y="487">Aristotle Univ. of Thessaloniki</text>
+      <text class="r" x="44" y="532">Blockchain fraud detection</text><text class="s" x="44" y="551">graph embeddings, MSc thesis</text>
+      <text class="p" x="44" y="592" style="font-size:17px">Drug–target interaction prediction</text><text class="s" x="44" y="611">[7] 2022, 0 citations</text>
+      <path class="e" style="--d:.45s" pathLength="1" d="M 8 400 L 8 448 M 8 448 l -4 -8 M 8 448 l 4 -8"/>
+      <path class="e" style="--d:.6s" pathLength="1" d="M 8 476 L 8 586 M 8 526 L 32 526 M 32 526 l -8 -4 M 32 526 l -8 4 M 8 586 L 32 586 M 32 586 l -8 -4 M 32 586 l -8 4"/>
+
+      <text class="l" x="0" y="660">5G marketplaces</text>
+      <text class="r" x="24" y="694">Sidroco Holdings</text><text class="s" x="24" y="713">2024–2026</text>
+      <text class="p" x="44" y="758" style="font-size:19.4px">FraMark</text><text class="s" x="44" y="777">[4] 2024, 1 citation</text>
+      <text class="p" x="44" y="818" style="font-size:17px">5G network slicing survey</text><text class="s" x="44" y="837">[6] 2025, 0 citations</text>
+      <path class="e" style="--d:.8s" pathLength="1" d="M 8 702 L 8 812 M 8 752 L 32 752 M 32 752 l -8 -4 M 32 752 l -8 4 M 8 812 L 32 812 M 32 812 l -8 -4 M 32 812 l -8 4"/>
+
+      <text class="l" x="0" y="904">teaching</text>
+      <text class="r" x="24" y="938">Lecturer</text><text class="s" x="24" y="957">Derby / Mediterranean College, 2023–2025</text>
+      <text class="m" x="44" y="996">Networks &amp; Security</text>
+      <text class="m" x="44" y="1022">Web Scripting</text>
+      <text class="m" x="44" y="1048">Application Development</text>
+      <path class="e" style="--d:1s" pathLength="1" d="M 8 946 L 8 1043 M 8 991 L 32 991 M 32 991 l -8 -4 M 32 991 l -8 4 M 8 1017 L 32 1017 M 32 1017 l -8 -4 M 32 1017 l -8 4 M 8 1043 L 32 1043 M 32 1043 l -8 -4 M 32 1043 l -8 4"/>
+
+      <text class="l" x="0" y="1108">papers that stand alone</text>
+      <text class="p" x="24" y="1144" style="font-size:23.3px">Decentralized governance</text><text class="s" x="24" y="1164">[3] Compound Finance, 2023, 7 citations</text>
+      <text class="p" x="24" y="1202" style="font-size:19.4px">Data security for smart cities</text><text class="s" x="24" y="1222">[5] 2025, 1 citation</text>
+      <text class="p" x="24" y="1258" style="font-size:17px">Blockchain in higher education</text><text class="s" x="24" y="1277">[8] 2022, 0 citations</text>
+    </svg>
+    <p class="sr" id="f1d">Credentials: BSc thesis at the University of Macedonia leads to the VerDe paper (2020, 11 citations), which leads to the process-aware verification paper (2022, 32 citations, my most cited), which leads to the running system at verde.uom.gr. Graph learning: the DeepMind scholarship funds the MSc in Data and Web Science at Aristotle University, which leads to the MSc thesis on blockchain fraud detection with graph embeddings and to the drug–target interaction paper (2022). 5G marketplaces: Sidroco Holdings leads to FraMark (2024, 1 citation) and the 5G network slicing survey (2025). Teaching: lecturing at Derby / Mediterranean College covers Networks and Security, Web Scripting and Application Development. Papers that stand alone: decentralized governance of Compound Finance (2023, 7 citations), data security for smart cities (2025, 1 citation) and blockchain in higher education (2022).</p>
+    <figcaption id="f1cap"><span class="fl">Figure 1.</span>How the work connects, 2015–2026. Each word is a degree, role, paper or system. An arrow means the later item grew out of the earlier one. Paper titles are set in italic at a size proportional to the square root of their citation count, so the largest word is the most-cited paper. Papers that did not come out of a thread sit on the bottom row. Bracketed numbers point to the <a href="#references">References</a>.</figcaption>
+  </figure>
+</section>
+
+<section id="work" aria-labelledby="h-work">
+  <h2 class="sec" id="h-work"><span class="n">2</span>Where the work happens</h2>
+  <p>Table&nbsp;1 lists the positions I have held, most recent first. I work remotely from Thessaloniki. Table&nbsp;2 lists the degrees and awards behind them.<span class="snm"></span><span class="sn">FraMark <a href="#r4">[4]</a> and the 5G slicing survey <a href="#r6">[6]</a> come from the same line of work as the 5G marketplace at Sidroco.</span></p>
+  <h3><span class="n">2.1</span>Positions</h3>
+  <table class="t1">
+    <caption><span class="fl">Table 1.</span>Positions held.</caption>
+    <thead><tr><th scope="col">Period</th><th scope="col">Position</th><th scope="col">What I did</th></tr></thead>
+    <tbody>
+      <tr><td class="yr">May 2026–</td><td>Web3 Full-Stack Developer<br><em>Cyberscope by TAC</em></td><td class="work">End-to-end Web3 products: contracts, on-chain integrations, React and Next frontends, security tooling.</td></tr>
+      <tr><td class="yr">2024–2026</td><td>Blockchain Developer &amp; Researcher<br><em>Sidroco Holdings Ltd</em></td><td class="work">An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ LMS, multinational EU projects.</td></tr>
+      <tr><td class="yr">2023–2025</td><td>Lecturer &amp; Academic Partner<br><em>University of Derby / Mediterranean College</em></td><td class="work">Networks &amp; Security, Web Scripting, Application Development, with inclusivity-first assessment.</td></tr>
+      <tr><td class="yr">2022–2024</td><td>Blockchain &amp; Full-Stack Developer<br><em>University of Nicosia / IFF</em></td><td class="work">Large Next.js, NestJS and Docker applications, and a Web3 NFT marketplace.</td></tr>
+    </tbody>
+  </table>
+  <h3><span class="n">2.2</span>Degrees and awards</h3>
+  <table class="t2">
+    <caption><span class="fl">Table 2.</span>Degrees, scholarships and awards.</caption>
+    <thead><tr><th scope="col">Year</th><th scope="col">Item</th></tr></thead>
+    <tbody>
+      <tr><td class="yr">2025</td><td>Award, Move/Sui Bootcamp Thessaloniki<br><em>certificate in Figure A1(i)</em></td></tr>
+      <tr><td class="yr">June 2022</td><td>3rd place, Infinitech Hackathon<br><em>Crowdpolicy</em></td></tr>
+      <tr><td class="yr">2020–2022</td><td>MSc Data and Web Science, graph-embedding methods for blockchain fraud detection<br><em>Aristotle University of Thessaloniki</em></td></tr>
+      <tr><td class="yr">2020–2022</td><td>DeepMind Scholarship<br><em>Aristotle University of Thessaloniki</em></td></tr>
+      <tr><td class="yr">2020–2021</td><td>Basic Research grant<br><em>University of Macedonia</em></td></tr>
+      <tr><td class="yr">2015–2020</td><td>BSc Applied Informatics, Web3 thesis on academic credentials<br><em>University of Macedonia</em></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="results" aria-labelledby="h-results">
+  <h2 class="sec" id="h-results"><span class="n">3</span>Results</h2>
+  <h3><span class="n">3.1</span>Papers</h3>
+  <p>Eight papers so far, with 52 citations between them, plus two Greek-language theses on verifying academic titles with Ethereum <span class="cite"><a href="#r9">[9]</a>, <a href="#r10">[10]</a></span>. Most of the citations come from the credential work: the process-aware approach <a class="cite" href="#r1">[1]</a> has 32 and the VerDe introduction <a class="cite" href="#r2">[2]</a> has 11.<span class="snm"></span><span class="sn">Counts are the ones on my <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar profile</a>.</span> The governance framework applied to Compound Finance <a class="cite" href="#r3">[3]</a> has 7. The 5G papers <span class="cite"><a href="#r4">[4]</a>, <a href="#r6">[6]</a></span> and the smart-city security paper <a class="cite" href="#r5">[5]</a> are from 2024 and 2025.</p>
+
+  <h3><span class="n">3.2</span>Supplementary material: systems</h3>
+  <p>Figures S1 and S2 show sites I built, as captured, cookie banners included. I describe only what each screenshot shows.<span class="snm"></span><span class="sn">verde.uom.gr is the system the credential papers describe.</span></p>
+  <figure class="mcap wide" style="margin-top:1.8rem">
+    <a class="shot" href="../../img/portfolio/verde.uom.gr.PNG"><img src="../../img/portfolio/verde.uom.gr.PNG" width="1840" height="907" loading="lazy" alt="The VerDe website's contact page: a navigation bar with About, Demo, Publications, Team and Contact, a card linking verde.uom.gr, and a Google map centred on the University of Macedonia."></a>
+    <figcaption><span class="fl">Figure S1.</span>verde.uom.gr, the VerDe site. The contact page, with the project's About, Demo, Publications and Team sections in the navigation and a map of the University of Macedonia.</figcaption>
+  </figure>
+  <figure class="wide" aria-labelledby="s2cap">
+    <div class="panels">
+      <figure><a class="shot" href="../../img/portfolio/metau.unic.ac.cy.png"><img src="../../img/portfolio/metau.unic.ac.cy.png" width="1698" height="943" loading="lazy" alt="University of Nicosia course page headed 'Decentralised, on-chain and in the metaverse', with a Connect Wallet button."></a><span>(a)</span></figure>
+      <figure><a class="shot" href="../../img/portfolio/accelerate.png"><img src="../../img/portfolio/accelerate.png" width="1910" height="998" loading="lazy" alt="Sign-in screen of the University of Nicosia Accelerate staging site, with email and password fields."></a><span>(b)</span></figure>
+      <figure><a class="shot" href="../../img/portfolio/marlab.ode.uom.gr.PNG"><img src="../../img/portfolio/marlab.ode.uom.gr.PNG" width="1835" height="917" loading="lazy" alt="Home page of MarLab, the Marketing Laboratory at the University of Macedonia, with menus and a Log In button."></a><span>(c)</span></figure>
+      <figure><a class="shot" href="../../img/portfolio/eudem.polsci.auth.gr.PNG"><img src="../../img/portfolio/eudem.polsci.auth.gr.PNG" width="1896" height="944" loading="lazy" alt="Home page of the EUDEM Jean Monnet Chair site, with a photo slider captioned Institutions."></a><span>(d)</span></figure>
+    </div>
+    <figcaption id="s2cap" style="max-width:var(--text)"><span class="fl">Figure S2.</span>(a)&nbsp;metau.unic.ac.cy, a University of Nicosia course site that runs “decentralised, on-chain and in the metaverse”, with a Connect Wallet button. (b)&nbsp;stg.accelerate.unic.ac.cy, the sign-in screen of a University of Nicosia staging site. (c)&nbsp;marlab.ode.uom.gr, the Marketing Laboratory at the University of Macedonia, with member log-in. (d)&nbsp;eudem.polsci.auth.gr, the EUDEM Jean Monnet Chair at Aristotle University of Thessaloniki.</figcaption>
+  </figure>
+
+  <h3><span class="n">3.3</span>Appendix plate: certificates</h3>
+  <p>Figure A1 reproduces nine of the 34 certificate scans I keep, from the two degrees to short courses.<span class="snm"></span><span class="sn">Each panel opens the full scan.</span></p>
+  <figure class="mcap wide" aria-labelledby="a1cap" style="margin-top:1.8rem">
+    <div class="plate">
+      <a class="pt" href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg"><img src="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" loading="lazy" alt="Scan of the bachelor's degree certificate, University of Macedonia"><span>(a)</span></a>
+      <a class="pt" href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg"><img src="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" loading="lazy" alt="Scan of the master's degree certificate in Data and Web Science, Aristotle University of Thessaloniki"><span>(b)</span></a>
+      <a class="pt" href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png"><img src="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png" loading="lazy" alt="Certificate of completion, Cloud Engineering, Code.Hub"><span>(c)</span></a>
+      <a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg"><img src="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" loading="lazy" alt="Certificate of completion, CCNA (Cisco Certified Network Associate) course"><span>(d)</span></a>
+      <a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg"><img src="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" loading="lazy" alt="Certificate of accomplishment, Introduction to Digital Currencies, University of Nicosia"><span>(e)</span></a>
+      <a href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg"><img src="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" loading="lazy" alt="Certificate of completion, Machine Learning and Deep Neural Networks, Aristotle University of Thessaloniki"><span>(f)</span></a>
+      <a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png"><img src="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" loading="lazy" alt="Certificate of completion, Certified Rust Developer"><span>(g)</span></a>
+      <a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg"><img src="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" loading="lazy" alt="Certificate of completion, How to Get Published with IEEE"><span>(h)</span></a>
+      <a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png"><img src="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png" loading="lazy" alt="Award artwork, Move Bootcamp Thessaloniki"><span>(i)</span></a>
+    </div>
+    <figcaption id="a1cap"><span class="fl">Figure A1.</span>Certificates. (a)&nbsp;Bachelor's degree, University of Macedonia. (b)&nbsp;Master's degree, Data and Web Science, Aristotle University of Thessaloniki. (c)&nbsp;Cloud Engineering, Code.Hub. (d)&nbsp;CCNA, Cisco Certified Network Associate. (e)&nbsp;Introduction to Digital Currencies, University of Nicosia. (f)&nbsp;Machine Learning and Deep Neural Networks, Aristotle University of Thessaloniki. (g)&nbsp;Certified Rust Developer. (h)&nbsp;How to Get Published with IEEE. (i)&nbsp;Move/Sui Bootcamp Thessaloniki award, 2025.</figcaption>
+  </figure>
+</section>
+
+<section id="correspondence" aria-labelledby="h-corr">
+  <h2 class="sec" id="h-corr"><span class="n">4</span>Correspondence</h2>
+  <p>Write to me at <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>; email is the quickest way to reach me. I live in Thessaloniki and work remotely.</p>
+  <p><em>Data and code availability.</em> Code is on <a href="https://github.com/gmixoulis">GitHub</a>. Publication records and current citation counts are on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>. I am also on <a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a> and <a href="https://twitter.com/GeorgeMicou">X</a>.</p>
+  <h3><span class="n">4.1</span>Citing this page</h3>
+  <div class="bib">
+<pre id="bib">@misc{michoulis2026profile,
+  author = {Michoulis, George},
+  title = {George Michoulis: Blockchain systems,
+    graph {ML} and teaching, a working profile},
+  year = {2026},
+  month = sep,
+  howpublished = {\url{https://george-michoulis.com/}}
+}</pre>
+    <div class="bibbar"><button type="button" id="copy">Copy BibTeX</button><span id="copymsg" role="status" aria-live="polite"></span></div>
+  </div>
+</section>
+
+<section id="references" aria-labelledby="h-refs">
+  <h2 class="sec" id="h-refs">References</h2>
+  <ol class="refs">
+    <li id="r1"><i>A process-aware approach for blockchain-based verification of academic qualifications.</i> Simulation Modelling Practice and Theory 121, 102642, 2022. <span class="c">Cited by 32.</span></li>
+    <li id="r2"><i>Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe.</i> XIV Balkan Conference on Operational Research, 2020. <span class="c">Cited by 11.</span></li>
+    <li id="r3"><i>Exploring decentralized governance: a framework applied to Compound Finance.</i> International Conference on Mathematical Research for Blockchain Economy, 2023. <span class="c">Cited by 7.</span></li>
+    <li id="r4"><i>FraMark: a blockchain marketplace for 5G network management using fractional NFTs.</i> 7th World Symposium on Communication Engineering (WSCE), 2024. <span class="c">Cited by 1.</span></li>
+    <li id="r5"><i>Data security for smart cities.</i> 2025. <span class="c">Cited by 1.</span></li>
+    <li id="r6"><i>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management.</i> IEEE ICCE, 2025. <span class="c">Not yet cited.</span></li>
+    <li id="r7"><i>Graph embedding and node features for drug-target interaction prediction.</i> Aristotle University of Thessaloniki (MSc work), 2022. <span class="c">Not yet cited.</span></li>
+    <li id="r8"><i>Blockchain in higher education: permissioned and permissionless approaches.</i> 4th Summit on Gender Equality in Computing, 2022. <span class="c">Not yet cited.</span></li>
+    <li id="r9">Thesis on academic-title verification with Ethereum, in Greek, 2020.</li>
+    <li id="r10">Thesis on academic-title verification with Ethereum, in Greek, 2021.</li>
+  </ol>
+</section>
+</main>
+
+<footer>
+  <p>Typeset in Spectral and Spectral SC. Also on this site: <a href="../../garden/">Zen Garden</a>, my notes, and <a href="../../play/">Ledger Run</a>, this CV as a platformer.</p>
+</footer>
+
+<script>
+(function(){
+  var d=document.documentElement, fig=document.getElementById('fig1');
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window){
+    d.classList.add('js');
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){fig.classList.add('on');io.disconnect();}});},{threshold:.35});
+    io.observe(fig);
+  }
+  var btn=document.getElementById('copy'), pre=document.getElementById('bib'), msg=document.getElementById('copymsg'), t;
+  btn.addEventListener('click',function(){
+    function done(s){msg.textContent=s;clearTimeout(t);t=setTimeout(function(){msg.textContent='';},4000);}
+    function fallback(){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);done('Selected. Press Ctrl+C or ⌘C to copy.');}
+    if(navigator.clipboard){navigator.clipboard.writeText(pre.textContent).then(function(){done('Copied the BibTeX entry.');},fallback);}else fallback();
+  });
+})();
+</script>
+</body>
+</html>

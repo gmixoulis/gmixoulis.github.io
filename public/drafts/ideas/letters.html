@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Letters · George Michoulis</title>
+<meta name="description" content="Three letters from George Michoulis: to someone hiring, to a researcher, and to a student.">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+<style>
+:root{
+  --desk:#ebe4d6;--sheet:#fbf8f1;--back:#efe8da;--ink:#26211b;--muted:#5f574b;--pen:#1f2e52;
+  --rule:#d2c7b3;--seal:#b0402b;--edge:rgba(70,52,28,.16);--crease:rgba(70,52,28,.07);
+  --shadow:0 1px 1px rgba(70,52,28,.07),0 12px 30px -16px rgba(70,52,28,.45);
+  --serif:"Libre Caslon Text",Georgia,serif;--display:"Libre Caslon Display",Georgia,serif;--hand:"Mrs Saint Delafield",cursive;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --desk:#131210;--sheet:#24211d;--back:#1c1a17;--ink:#ece1cc;--muted:#b3a791;--pen:#dcb57e;
+  --rule:#4b4339;--seal:#b5523a;--edge:rgba(0,0,0,.55);--crease:rgba(0,0,0,.28);
+  --shadow:0 1px 1px rgba(0,0,0,.5),0 16px 36px -14px rgba(0,0,0,.9);
+  color-scheme:dark;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--desk);color:var(--ink);font:400 1.0625rem/1.6 var(--serif);text-rendering:optimizeLegibility}
+a{color:inherit;text-decoration-line:underline;text-decoration-thickness:1px;text-underline-offset:.2em;text-decoration-color:var(--rule)}
+a:hover{text-decoration-color:var(--pen);color:var(--pen)}
+:focus-visible{outline:2px solid var(--pen);outline-offset:4px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.back-link{position:absolute;top:1rem;left:1rem;font-size:.85rem;color:var(--muted);text-decoration:none}
+
+/* letterhead */
+.masthead{text-align:center;padding:clamp(4rem,11vh,7rem) 1rem 0}
+h1{font:400 clamp(2.8rem,8.4vw,5.6rem)/1 var(--display);letter-spacing:-.012em;margin:0}
+.rule2{width:min(19rem,64%);height:4px;margin:1.15rem auto 1.05rem;border-block:1px solid var(--ink);opacity:.55}
+.role{font-style:italic;margin:0;font-size:clamp(1.02rem,2.2vw,1.2rem)}
+.addr{font-size:.9rem;color:var(--muted);margin:.4rem 0 0}
+.intro{max-width:30rem;margin:clamp(2.5rem,6vh,3.75rem) auto 2.25rem;padding:0 1rem;text-align:center;color:var(--muted);font-style:italic}
+
+/* the three folded letters, loose on the desk */
+.pile{list-style:none;margin:0 auto;padding:0 1rem 1.5rem;display:flex;justify-content:center;max-width:66rem}
+.pile li{flex:0 1 19.5rem;min-width:0;position:relative}
+.pile li + li{margin-left:-1.6rem}
+.pile li:nth-child(1){--r:-3deg;--y:8px}
+.pile li:nth-child(2){--r:2.2deg;--y:34px}
+.pile li:nth-child(3){--r:-1.3deg;--y:0px}
+.pile li:hover,.pile li:focus-within{z-index:3}
+.pk{appearance:none;font:inherit;color:inherit;cursor:pointer;display:block;width:100%;aspect-ratio:2.1/1;position:relative;text-align:left;
+  padding:clamp(1.1rem,2.4vw,1.6rem) 1.4rem 0 clamp(1.3rem,2.6vw,1.9rem);background:var(--sheet);border:1px solid var(--edge);border-radius:1px;box-shadow:var(--shadow);
+  transform:translateY(var(--y)) rotate(var(--r));transition:transform .25s ease,box-shadow .25s ease,background-color .25s ease}
+.pk::before{content:"";position:absolute;left:0;right:0;bottom:10px;border-top:1px solid var(--edge)}
+.pk::after,.bk .tab{content:"";position:absolute;right:2.6rem;bottom:10px;width:.55rem;height:1.5rem;transform:translateY(50%);background:var(--seal);opacity:.9}
+.pk:hover{transform:translateY(calc(var(--y) - 6px)) rotate(calc(var(--r) * .6))}
+.pk .to{display:block;font:400 clamp(2rem,3.1vw,2.55rem)/1.05 var(--hand);color:var(--pen);white-space:nowrap;margin-top:.35rem}
+.pk .what{display:block;margin:.15rem 0 0 .15rem;font-size:.8rem;font-style:italic;color:var(--muted)}
+.pk .now{display:none}
+.pk[aria-expanded="true"]{background:transparent;box-shadow:none;border:1px dashed var(--muted)}
+.pk[aria-expanded="true"]::before,.pk[aria-expanded="true"]::after,.pk[aria-expanded="true"] .what{display:none}
+.pk[aria-expanded="true"] .now{display:block;margin:.15rem 0 0 .15rem;font-size:.8rem;font-style:italic;color:var(--ink)}
+
+/* reading area */
+.reader{position:relative;overflow-x:clip;padding:0 1rem;margin-top:clamp(3.5rem,8vh,5rem)}
+.js .sheet:not(.open),.js #cv:not(.open){display:none}
+.sheet{position:relative;isolation:isolate;max-width:44rem;margin:0 auto 2.5rem;background:var(--sheet);border:1px solid var(--edge);box-shadow:var(--shadow);
+  padding:clamp(2rem,6vw,4.25rem) clamp(1.3rem,6.4vw,5rem) clamp(1.8rem,4.5vw,3.25rem);font-size:clamp(1.0625rem,1.6vw,1.1875rem);line-height:1.62;scroll-margin-top:1rem}
+.sheet::before,.sheet::after{content:"";position:absolute;left:0;right:0;top:33.333%;border-top:1px solid var(--crease);z-index:-1}
+.sheet::after{top:66.666%}
+.lh{text-align:center;margin:0 0 2.4rem}
+.lh b{display:block;font:400 1.45rem/1.1 var(--display)}
+.lh span{display:block;width:fit-content;margin:.55rem auto 0;padding-top:.5rem;border-top:1px solid var(--rule);font-size:.78rem;font-style:italic;color:var(--muted)}
+.salute{font:400 clamp(2.5rem,5vw,3rem)/1.15 var(--hand);color:var(--pen);margin:0 0 1.1rem -.1rem;outline-offset:6px}
+.sheet p{margin:0 0 .95em}
+.sign{margin-top:1.9rem}
+.sign p{margin:0}
+.sign .name{font:400 clamp(3rem,6vw,3.6rem)/1.1 var(--hand);color:var(--pen);margin:.15rem 0 .1rem .6rem}
+.sign .date{font-size:.88em;font-style:italic;color:var(--muted)}
+.sheet .ps{margin:2.2rem 0 0;padding-top:1.1rem;border-top:1px solid var(--rule);font-size:.94em}
+.ps i{font-style:normal;font-weight:700;margin-right:.35em}
+.fold-up{display:block;margin:2.2rem auto 0;appearance:none;background:none;border:0;padding:.35rem .5rem;font:italic .88rem var(--serif);color:var(--muted);cursor:pointer;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:.25em}
+.fold-up:hover{color:var(--pen)}
+
+/* the unfolding copy, built by script */
+.fold{position:absolute;z-index:2;pointer-events:none}
+.pn{position:absolute;left:0;right:0;transform-style:preserve-3d}
+.face,.bk{position:absolute;inset:0;overflow:hidden;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.bk{background:var(--back);border:1px solid var(--edge);transform:rotateX(180deg)}
+.bk.out{background:var(--sheet);display:flex;flex-direction:column;justify-content:center;padding:0 12% 2rem}
+.bk.out::before{content:"";position:absolute;left:0;right:0;bottom:10px;border-top:1px solid var(--edge)}
+.bk .to{font:400 clamp(2.6rem,6vw,3.4rem)/1.1 var(--hand);color:var(--pen);white-space:nowrap}
+
+/* plain CV */
+.cvline{text-align:center;margin:0 0 0;padding:0 1rem}
+.cvbtn{appearance:none;background:none;border:0;padding:.4rem .25rem;font:italic 1.02rem var(--serif);color:var(--ink);cursor:pointer;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:.3em}
+.cvbtn:hover{text-decoration-color:var(--pen)}
+.cvbtn span{display:inline-block;margin-left:.3em;transition:transform .2s ease}
+.cvbtn[aria-expanded="true"] span{transform:rotate(90deg)}
+#cv{max-width:62rem;margin:1.75rem auto 0;background:var(--sheet);border:1px solid var(--edge);box-shadow:var(--shadow);padding:clamp(1.5rem,4vw,3rem) clamp(1.2rem,4vw,3.25rem);font-size:.95rem;line-height:1.5}
+.cvwrap{padding:0 1rem}
+#cv h2{font:400 1.6rem/1.1 var(--display);margin:0 0 .25rem}
+#cv .sub{margin:0 0 2rem;color:var(--muted);font-size:.9rem}
+.cvgrid{display:grid;grid-template-columns:1fr 1fr;gap:2.25rem 3.5rem}
+#cv h3{font:italic 400 1.1rem/1.2 var(--serif);margin:0 0 .75rem;padding-bottom:.35rem;border-bottom:1px solid var(--rule)}
+#cv h3 + ul,#cv h3 + ol{margin-bottom:2rem}
+#cv ul,#cv ol{list-style:none;margin:0;padding:0}
+#cv li{margin:0 0 .75rem}
+#cv li b{font-weight:700}
+.yr{color:var(--muted);font-variant-numeric:tabular-nums}
+.cites{color:var(--muted);white-space:nowrap}
+.certs{columns:3 15rem;column-gap:2.5rem;font-size:.86rem}
+#cv .certs li{break-inside:avoid;margin:0 0 .4rem}
+.certs a{text-decoration-color:transparent}
+.certs a:hover{text-decoration-color:var(--pen)}
+#cv .note{font-size:.85rem;color:var(--muted);margin:0 0 .9rem}
+
+footer{max-width:46rem;margin:4.5rem auto 0;padding:1.75rem 1rem 3.5rem;text-align:center;font-size:.92rem;color:var(--muted)}
+footer p{margin:0 0 .55rem}
+footer .mail{font-size:1.05rem;color:var(--ink)}
+
+@media (max-width:720px){
+  .pile{flex-direction:column;align-items:center}
+  .pile li{flex:none;width:min(100%,21rem)}
+  .pile li + li{margin:-.6rem 0 0}
+  .pile li:nth-child(1){--r:-2deg;--y:0px;left:-.4rem}
+  .pile li:nth-child(2){--r:1.6deg;--y:0px;left:.5rem}
+  .pile li:nth-child(3){--r:-.9deg;--y:0px;left:-.2rem}
+  .pk{aspect-ratio:2.2/1}
+  .pk .to{font-size:2.35rem}
+  .cvgrid{grid-template-columns:1fr;gap:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .pk,.cvbtn span{transition:none}
+  .pk:hover{transform:translateY(var(--y)) rotate(var(--r))}
+}
+</style>
+</head>
+<body>
+<a class="back-link" href="index.html">← All ideas</a>
+
+<header class="masthead">
+  <h1>George Michoulis</h1>
+  <div class="rule2" aria-hidden="true"></div>
+  <p class="role">Blockchain developer and researcher, now at Cyberscope by TAC</p>
+  <p class="addr">Thessaloniki, Greece · <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a> · <a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a> · <a href="https://github.com/gmixoulis">GitHub</a></p>
+</header>
+
+<main>
+  <p class="intro">People come here for different reasons, so I wrote three letters. Open the one addressed to you.</p>
+
+  <ul class="pile" aria-label="Three letters">
+    <li><button class="pk" type="button" aria-expanded="false" aria-controls="hiring" data-key="hiring">
+      <span class="to"><span class="vh">Letter </span>To someone hiring</span>
+      <span class="what">On my work now, and how to reach me</span>
+      <span class="now" aria-hidden="true">Opened, reading below</span>
+    </button></li>
+    <li><button class="pk" type="button" aria-expanded="false" aria-controls="researcher" data-key="researcher">
+      <span class="to"><span class="vh">Letter </span>To a researcher</span>
+      <span class="what">On my papers, and working together</span>
+      <span class="now" aria-hidden="true">Opened, reading below</span>
+    </button></li>
+    <li><button class="pk" type="button" aria-expanded="false" aria-controls="student" data-key="student">
+      <span class="to"><span class="vh">Letter </span>To a student</span>
+      <span class="what">On teaching, and asking me questions</span>
+      <span class="now" aria-hidden="true">Opened, reading below</span>
+    </button></li>
+  </ul>
+
+  <div class="reader">
+    <article class="sheet" id="hiring" aria-labelledby="h-hiring">
+      <div class="lh" aria-hidden="true"><b>George Michoulis</b><span>Thessaloniki, Greece · gmixoulis@gmail.com</span></div>
+      <h2 class="salute" id="h-hiring" tabindex="-1">To someone hiring,</h2>
+      <p>Since May 2026 I’ve been a Web3 full-stack developer at Cyberscope by TAC, where I build products from end to end: smart contracts, on-chain integrations, React and Next.js frontends, and security tooling.</p>
+      <p>From 2024 to 2026 I was a blockchain developer and researcher at Sidroco Holdings. There I built prototypes on Hyperledger Fabric and an NFT marketplace for 5G networks. I also worked on an Erasmus+ learning management system and on EU projects with partners in several countries. Before that, from 2022 to 2024, I worked with the University of Nicosia and IFF on large Next.js, NestJS and Docker applications, and on a Web3 NFT marketplace.</p>
+      <p>I work mainly in Solidity and TypeScript, and deploy to the cloud. Sites I’ve built include verde.uom.gr, the credential verification system from my research, as well as metau.unic.ac.cy, celc.web.auth.gr, eudem.polsci.auth.gr and marlab.ode.uom.gr.</p>
+      <p>If you’re building something on-chain and need one person who can write both the contract and the frontend that talks to it, email me at <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>. I live in Thessaloniki and work remotely.</p>
+      <div class="sign"><p>Kind regards,</p><p class="name">George</p><p class="date">Thessaloniki, September 2026</p></div>
+      <p class="ps"><i>P.S.</i>You can read my code on <a href="https://github.com/gmixoulis">GitHub</a> before we talk.</p>
+      <button class="fold-up" type="button">Fold it back up</button>
+    </article>
+
+    <article class="sheet" id="researcher" aria-labelledby="h-researcher">
+      <div class="lh" aria-hidden="true"><b>George Michoulis</b><span>Thessaloniki, Greece · gmixoulis@gmail.com</span></div>
+      <h2 class="salute" id="h-researcher" tabindex="-1">To a researcher,</h2>
+      <p>The longest thread in my research is verifying academic qualifications with a blockchain. It began as my BSc thesis at the University of Macedonia.</p>
+      <p>In 2020 I introduced VerDe, a verification system built on Ethereum, at the XIV Balkan Conference on Operational Research. That paper has 11 citations. Two years later a process-aware approach to the same problem appeared in <em>Simulation Modelling Practice and Theory</em>. With 32 citations, it is my most cited paper.</p>
+      <p>I’ve also written about decentralized governance, with a framework applied to Compound Finance (7 citations), and about blockchain marketplaces for 5G network slicing, including FraMark, which uses fractional NFTs.</p>
+      <p>My MSc in Data and Web Science at Aristotle University of Thessaloniki was on graph-embedding methods for detecting fraud on blockchains. A DeepMind scholarship funded the degree.</p>
+      <p>If your work overlaps with any of this and you need a co-author, or someone who can build the prototype, email me at <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>.</p>
+      <div class="sign"><p>Best wishes,</p><p class="name">George</p><p class="date">Thessaloniki, September 2026</p></div>
+      <p class="ps"><i>P.S.</i>Every paper, with its citation count, is on my <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar profile</a>.</p>
+      <button class="fold-up" type="button">Fold it back up</button>
+    </article>
+
+    <article class="sheet" id="student" aria-labelledby="h-student">
+      <div class="lh" aria-hidden="true"><b>George Michoulis</b><span>Thessaloniki, Greece · gmixoulis@gmail.com</span></div>
+      <h2 class="salute" id="h-student" tabindex="-1">To a student,</h2>
+      <p>From 2023 to 2025 I was a lecturer and academic partner with the University of Derby and Mediterranean College. I taught networks and security, web scripting, and application development. I designed my assessments with inclusivity as the first requirement, so that every student had a fair way to show what they had learned.</p>
+      <p>I studied Applied Informatics at the University of Macedonia from 2015 to 2020 and wrote my thesis on verifying academic credentials with Ethereum. I kept working on that topic after graduating, and it’s where most of my citations come from. From 2020 to 2022 I did an MSc in Data and Web Science at Aristotle University of Thessaloniki, funded by a DeepMind scholarship. If you’re thinking about a master’s and want to talk through topics or funding, ask me.</p>
+      <p>Think of this letter as office hours by email. If you’re stuck on a networking lab or a web project, write to me at <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>, tell me what you’ve tried so far, and I’ll reply when I can.</p>
+      <div class="sign"><p>Good luck,</p><p class="name">George</p><p class="date">Thessaloniki, September 2026</p></div>
+      <p class="ps"><i>P.S.</i>There’s also a version of my CV you can play: <a href="../../play/">Ledger Run</a>, a small platformer on this site.</p>
+      <button class="fold-up" type="button">Fold it back up</button>
+    </article>
+  </div>
+
+  <section class="cvsec" aria-label="Plain CV">
+    <p class="cvline"><button class="cvbtn" type="button" aria-expanded="false" aria-controls="cv">Prefer the plain CV?<span aria-hidden="true">→</span></button></p>
+    <div class="cvwrap"><div id="cv">
+      <h2>George Michoulis</h2>
+      <p class="sub">Blockchain developer and researcher · Thessaloniki, Greece, working remotely · <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a></p>
+      <div class="cvgrid">
+        <div>
+          <h3>Work</h3>
+          <ul>
+            <li><span class="yr">05/2026 – now</span><br><b>Web3 full-stack developer</b>, Cyberscope by TAC. End-to-end Web3 products, contracts, on-chain integrations, React/Next frontends, security tooling.</li>
+            <li><span class="yr">2024 – 2026</span><br><b>Blockchain developer and researcher</b>, Sidroco Holdings Ltd. NFT marketplace for 5G, Hyperledger Fabric prototypes, Erasmus+ LMS, multinational EU projects.</li>
+            <li><span class="yr">2023 – 2025</span><br><b>Lecturer and academic partner</b>, University of Derby / Mediterranean College. Networks and security, web scripting, application development; inclusivity-first assessment.</li>
+            <li><span class="yr">2022 – 2024</span><br><b>Blockchain and full-stack developer</b>, University of Nicosia / IFF. Large Next.js, NestJS and Docker apps, and a Web3 NFT marketplace.</li>
+          </ul>
+          <h3>Degrees</h3>
+          <ul>
+            <li><span class="yr">2020 – 2022</span><br><b>MSc Data and Web Science</b>, Aristotle University of Thessaloniki. DeepMind scholarship. Graph-embedding methods for blockchain fraud detection.</li>
+            <li><span class="yr">2015 – 2020</span><br><b>BSc Applied Informatics</b>, University of Macedonia. Thesis on verifying academic credentials with Ethereum.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Top papers</h3>
+          <ol>
+            <li><b>A process-aware approach for blockchain-based verification of academic qualifications.</b> Simulation Modelling Practice and Theory 121, 2022. <span class="cites">32 citations</span></li>
+            <li><b>Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe.</b> XIV Balkan Conference on Operational Research, 2020. <span class="cites">11 citations</span></li>
+            <li><b>Exploring decentralized governance: a framework applied to Compound Finance.</b> Intl. Conf. on Mathematical Research for Blockchain Economy, 2023. <span class="cites">7 citations</span></li>
+            <li><b>FraMark: a blockchain marketplace for 5G network management using fractional NFTs.</b> 7th World Symposium on Communication Engineering, 2024. <span class="cites">1 citation</span></li>
+          </ol>
+          <p class="note">Ten papers and theses in all, on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+          <h3>Awards</h3>
+          <ul>
+            <li>DeepMind Scholarship, Aristotle University of Thessaloniki, 2020–2022</li>
+            <li>3rd place, Infinitech Hackathon (Crowdpolicy), June 2022</li>
+            <li>Basic Research grant, University of Macedonia, 2020–2021</li>
+            <li>Move/Sui Bootcamp Thessaloniki award, 2025</li>
+          </ul>
+        </div>
+      </div>
+      <h3>34 certificates</h3>
+      <p class="note">Each title opens the scan.</p>
+      <ul class="certs">
+<li><a href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg">Bachelor degree, Computer Science</a></li>
+<li><a href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg">Master degree, Data and Web Science</a></li>
+<li><a href="../../img/renamed/Award_Academic-Achievement.jpg">Academic Achievement award</a></li>
+<li><a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png">Move Bootcamp Thessaloniki award</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg">Introduction to Digital Currencies</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg">TOEIC Listening and Reading Test</a></li>
+<li><a href="../../img/renamed/English-Certificate_English-Certificate-English-Proficiency.jpg">English Proficiency</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png">Advanced Ethical Hacking</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg">European Legal Culture Program, Aristotle University of Thessaloniki</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg">CCNA: Cisco Certified Network Associate</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png">Cloud Engineering</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg">Cybersecurity eLearning Academy</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg">Digital Skills for Tourism</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_Discover-Customer.jpg">Discover Customer</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png">Entrepreneurship, Funding and Development of New Enterprises</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg">How to Design and Build a Website</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg">How to Get Published with IEEE</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg">Machine Learning and Deep Neural Networks</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg">NFT Talents Program</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png">Networking Essentials</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png">Rust Developer</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg">Software Development for Telecommunication Networks</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Completion_The-Hour-Of-Code.jpg">The Hour of Code</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg">Blockchain for the Legal Industry: How Is the…</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg">Blockchain in Education: Remote Learning, Social Distancing and…</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg">Data Analytics to Strengthen Healthcare Cybersecurity</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Participation_EY-Cyber-Day.jpg">EY Cyber Day</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg">GNU/Linux Command Line</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg">RippleX Workshop launch event</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png">Migma Marketing kai Brand</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg">Marine Educational Robotics: Hydrobot Program</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg">Processing Data in the Fog: The Example of…</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg">SKGcode project: creating a real estate chatbot</a></li>
+<li><a href="../../img/renamed/Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg">VeChain ToolChain: Digital Transformation of the Healthcare Industry</a></li>
+      </ul>
+    </div></div>
+  </section>
+</main>
+
+<footer>
+  <p class="mail"><a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a></p>
+  <p>I live in Thessaloniki and work remotely.</p>
+  <p><a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a> · <a href="https://github.com/gmixoulis">GitHub</a> · <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a> · <a href="https://twitter.com/GeorgeMicou">X</a></p>
+  <p>Also on this site: <a href="../../garden/">the Zen Garden</a>, where I keep notes, and <a href="../../play/">Ledger Run</a>, my CV as a platformer.</p>
+</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const reader = document.querySelector('.reader');
+  const btns = [...document.querySelectorAll('.pk')];
+  const sheetOf = b => document.getElementById(b.getAttribute('aria-controls'));
+  let stop = null; // cancels an unfold that is still running
+
+  function close(b) {
+    b.setAttribute('aria-expanded', 'false');
+    sheetOf(b).classList.remove('open');
+  }
+
+  function open(b) {
+    if (stop) stop();
+    btns.forEach(o => o !== b && close(o));
+    const s = sheetOf(b);
+    b.setAttribute('aria-expanded', 'true');
+    s.classList.add('open');
+    history.replaceState(null, '', '#' + b.dataset.key);
+    const done = () => s.querySelector('.salute').focus({ preventScroll: true });
+    if (reduce.matches) { s.scrollIntoView({ block: 'start' }); done(); return; }
+    unfold(s, b, done);
+  }
+
+  // Tri-fold: the sheet is copied into three panels. The top panel opens first, then the bottom one.
+  function unfold(s, b, done) {
+    const r = reader.getBoundingClientRect(), q = s.getBoundingClientRect();
+    const W = q.width, H = q.height, t = H / 3;
+    const stage = document.createElement('div');
+    stage.className = 'fold'; stage.inert = true; stage.setAttribute('aria-hidden', 'true');
+    stage.style.cssText = `left:${q.left - r.left}px;top:${q.top - r.top}px;width:${W}px;height:${H}px;perspective:${Math.round(t * 4.5)}px`;
+    const panel = i => {
+      const p = document.createElement('div'); p.className = 'pn';
+      p.style.cssText = `top:${i * t}px;height:${t}px;transform-origin:50% ${i ? 0 : 100}%`;
+      const f = document.createElement('div'); f.className = 'face';
+      const c = s.cloneNode(true);
+      c.removeAttribute('id'); c.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
+      c.style.cssText = `position:absolute;left:0;top:${-i * t}px;width:${W}px;margin:0`;
+      f.append(c); p.append(f);
+      if (i !== 1) {
+        const k = document.createElement('div'); k.className = 'bk'; p.append(k);
+        if (i === 0) { k.className = 'bk out'; k.innerHTML = '<span class="to"></span><span class="tab"></span>'; k.firstChild.textContent = b.querySelector('.to').lastChild.textContent; }
+      }
+      stage.append(p); return p;
+    };
+    panel(1); const bottom = panel(2), top = panel(0); // paint order: middle, bottom flap, top flap
+    reader.append(stage);
+    s.style.opacity = '0';
+    const ease = 'cubic-bezier(.5,0,.2,1)';
+    const a1 = top.animate([{ transform: 'rotateX(-180deg)' }, { transform: 'rotateX(0deg)' }], { duration: 300, easing: ease, fill: 'both' });
+    const a2 = bottom.animate([{ transform: 'rotateX(180deg)' }, { transform: 'rotateX(0deg)' }], { duration: 310, delay: 190, easing: ease, fill: 'both' });
+    a1.pause(); a2.pause();
+    const finish = () => { stage.remove(); s.style.opacity = ''; stop = null; };
+    stop = () => { a1.cancel(); a2.cancel(); finish(); };
+    // bring the folded letter into view first, then open it
+    const y = s.getBoundingClientRect().top - 16;
+    const go = () => { if (!stage.isConnected) return; a1.play(); a2.play(); a2.finished.then(() => { if (stage.isConnected) { finish(); done(); } }, () => {}); };
+    if (Math.abs(y) < 4) go();
+    else {
+      let fired = false; const once = () => { if (!fired) { fired = true; removeEventListener('scrollend', once); go(); } };
+      addEventListener('scrollend', once); setTimeout(once, 700);
+      scrollBy({ top: y, behavior: 'smooth' });
+    }
+  }
+
+  btns.forEach(b => b.addEventListener('click', () => {
+    if (b.getAttribute('aria-expanded') === 'true') { if (stop) stop(); close(b); history.replaceState(null, '', location.pathname); }
+    else open(b);
+  }));
+  document.querySelectorAll('.fold-up').forEach(x => x.addEventListener('click', () => {
+    const b = btns.find(b => b.getAttribute('aria-controls') === x.closest('.sheet').id);
+    close(b); history.replaceState(null, '', location.pathname);
+    b.focus({ preventScroll: true });
+    document.querySelector('.intro').scrollIntoView({ block: 'start', behavior: reduce.matches ? 'auto' : 'smooth' });
+  }));
+
+  const cvb = document.querySelector('.cvbtn'), cv = document.getElementById('cv');
+  const setCV = on => { cvb.setAttribute('aria-expanded', on); cv.classList.toggle('open', on); };
+  cvb.addEventListener('click', () => setCV(cvb.getAttribute('aria-expanded') !== 'true'));
+
+  // deep links: #hiring, #researcher, #student, #cv
+  const key = location.hash.slice(1);
+  const first = btns.find(b => b.dataset.key === key);
+  if (first) open(first); else if (key === 'cv') setCV(true);
+})();
+</script>
+</body>
+</html>

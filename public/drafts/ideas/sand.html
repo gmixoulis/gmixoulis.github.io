@@ -1,0 +1,1026 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sand table · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki. A steel ball draws his study, work, papers and awards into a table of sand.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --room:#140f0a; --bone:#efe5d2; --bone-2:#c9b99d; --inlay:#f1e4c9;
+  --sand-ink:#35261a; --sand-ink-2:#4f3b27; --halo:rgba(228,211,180,.92);
+  --verm:#c43b22;
+  --paper:#f3ece0; --ink:#1f1811; --ink-2:#5d4e3d; --rule:#d9ccb6;
+  --serif:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",Georgia,serif;
+  --sans:"Zen Kaku Gothic New","Hiragino Sans","Helvetica Neue",sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--paper:#16110c;--ink:#ece3d3;--ink-2:#b3a48d;--rule:#3a2f24}
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--room);color:var(--bone);font:400 15px/1.5 var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+body.reading{overflow:auto;background:var(--paper);color:var(--ink)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--inlay);outline-offset:3px;border-radius:2px}
+body.reading :focus-visible{outline-color:var(--verm)}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* corners */
+.back{position:fixed;z-index:30;top:14px;left:16px;font:500 12.5px/1 var(--sans);color:var(--bone-2);text-decoration:none;padding:4px 0}
+.back:hover{color:var(--bone)}
+.mark{position:fixed;z-index:30;top:40px;left:16px;pointer-events:none}
+h1{margin:0;font:500 20px/1.15 var(--serif);letter-spacing:.01em;color:var(--bone)}
+.read{position:fixed;z-index:30;top:10px;right:14px;background:none;border:1px solid rgba(239,229,210,.28);color:var(--bone);font:500 12.5px/1 var(--sans);padding:8px 12px;border-radius:999px;cursor:pointer}
+.read:hover{border-color:rgba(239,229,210,.6)}
+.mail{position:fixed;z-index:30;left:16px;bottom:14px;font:500 12.5px/1 var(--sans);color:var(--bone-2);text-decoration:none;padding:4px 0;border-bottom:1px solid rgba(201,185,157,.35)}
+.mail:hover{color:var(--bone)}
+body.reading .back,body.reading .mail{color:var(--ink-2)}
+body.reading h1{color:var(--ink)}
+body.reading .read{color:var(--ink);border-color:var(--rule);background:var(--paper)}
+body.reading .mail{background:var(--paper);padding:6px 8px;left:8px;bottom:8px;border:1px solid var(--rule)}
+body.nogl .read{display:none}
+
+/* the table */
+#stage{position:fixed;inset:0}
+body.reading #stage{visibility:hidden}
+#scene{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='14' cy='14' r='9' fill='none' stroke='%23fff6e6' stroke-opacity='.85' stroke-width='1.3'/%3E%3Ccircle cx='14' cy='14' r='1.4' fill='%23fff6e6'/%3E%3C/svg%3E") 14 14,crosshair}
+.shade{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 95% at 42% 50%,transparent 52%,rgba(8,5,3,.55) 100%)}
+#marks{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+#rim{position:absolute;inset:0;pointer-events:none}
+
+/* words inlaid in the walnut rim */
+.word{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:auto;background:none;border:0;margin:0;
+  padding:5px 7px;font:500 15px/1 var(--serif);letter-spacing:.04em;color:#d9c7a5;cursor:pointer;white-space:nowrap;
+  text-shadow:0 -1px 0 rgba(0,0,0,.8),0 1px 0 rgba(255,232,196,.16);transition:color .35s}
+.word:hover{color:#fbf1dc}
+.word[aria-current="true"]{color:#fff7e8}
+.word[aria-current="true"]::after{content:"";position:absolute;left:50%;bottom:-1px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:#fff7e8;box-shadow:0 1px 0 rgba(0,0,0,.6)}
+.seal{position:absolute;left:0;top:0;transform-origin:0 0;width:26px;height:26px;display:grid;place-items:center;
+  background:var(--verm);color:#fbeee0;font:600 11px/1 var(--serif);letter-spacing:.02em;border-radius:3px;
+  box-shadow:inset 0 0 0 2px rgba(251,238,224,.85),inset 0 0 0 3px var(--verm),0 1px 1px rgba(0,0,0,.4)}
+
+/* words pressed into the sand */
+.lbl{position:absolute;left:0;top:0;transform-origin:0 0;white-space:nowrap;color:var(--sand-ink);
+  font:500 13.5px/1.2 var(--serif);text-decoration:none;visibility:hidden;opacity:0;filter:blur(2px);
+  transition:opacity .9s ease,filter .9s ease,visibility 0s linear .9s;
+  text-shadow:0 1px 0 rgba(255,247,230,.7),0 0 3px var(--halo),0 0 9px var(--halo)}
+.lbl.on{visibility:visible;opacity:1;filter:none;transition:opacity .9s ease,filter .9s ease}
+.lbl small{display:block;margin-top:2px;font:500 11px/1.25 var(--sans);color:var(--sand-ink-2);letter-spacing:.01em}
+.lbl.l{text-align:left}.lbl.r{text-align:right}.lbl.c{text-align:center}
+.lbl.minor{font:500 11px/1 var(--sans);color:var(--sand-ink-2)}
+.lbl.num{font:600 12px/1 var(--serif)}
+a.lbl.on{pointer-events:auto;cursor:pointer}
+a.lbl span{border-bottom:1px solid rgba(53,38,26,.45)}
+.lbl .short{display:none}
+
+/* the key beside the table */
+#key{position:absolute;right:clamp(16px,3vw,44px);bottom:clamp(48px,7vh,72px);width:min(330px,27vw);color:var(--bone)}
+#key h2{margin:0 0 4px;font:500 26px/1.1 var(--serif);letter-spacing:.01em}
+#key .how{margin:0 0 14px;font:400 13px/1.45 var(--sans);color:var(--bone-2)}
+#key ul{list-style:none;margin:0;padding:0;max-height:48vh;overflow:auto}
+#key li{position:relative;padding:7px 0 7px 14px;border-top:1px solid rgba(239,229,210,.12);font:400 13px/1.45 var(--sans);color:#ddd0b8}
+#key li::before{content:"";position:absolute;left:0;top:14px;width:5px;height:5px;border-radius:50%;background:rgba(239,229,210,.25)}
+#key li.now::before{background:radial-gradient(circle at 35% 30%,#fff,#9a9aa0 60%,#4a4a50);box-shadow:0 0 0 1px rgba(255,255,255,.25)}
+#key li b{font-weight:500;color:var(--bone)}
+#key li a{color:var(--bone);text-underline-offset:3px;text-decoration-color:rgba(239,229,210,.4)}
+#key .foot{margin:16px 0 0;font:400 12px/1.5 var(--sans);color:var(--bone-2)}
+
+/* read as text */
+#text{position:relative;z-index:10;min-height:100%;background:var(--paper);color:var(--ink)}
+#text[hidden]{display:none}
+.tv{max-width:40rem;margin:0 auto;padding:120px 20px 110px}
+.tv p,.tv li{font:400 16px/1.6 var(--sans)}
+.tv .lede{font:400 21px/1.5 var(--serif);margin:0 0 8px}
+.tv h2{font:500 22px/1.2 var(--serif);margin:48px 0 12px;padding-top:14px;border-top:1px solid var(--rule)}
+.tv h3{font:500 14px/1.3 var(--sans);color:var(--ink-2);margin:20px 0 6px}
+.tv ul,.tv ol{margin:0;padding-left:1.1em}
+.tv li{margin:0 0 10px}
+.tv li span{color:var(--ink-2)}
+.tv .certs li{margin:0 0 4px;font-size:15px}
+.tv a{text-underline-offset:3px;text-decoration-color:color-mix(in srgb,currentColor 45%,transparent)}
+.tv .note{color:var(--ink-2)}
+
+@media (max-width:759px){
+  h1{font-size:17px}
+  .mark{top:36px}
+  #key{left:16px;right:16px;width:auto;bottom:44px;max-height:none}
+  #key h2{font-size:21px}
+  #key .how{margin-bottom:8px;font-size:12.5px}
+  #key ul{max-height:22vh}
+  #key li{padding:5px 0 5px 13px;font-size:12.5px}
+  #key li::before{top:11px}
+  #key .foot{margin-top:8px;font-size:11.5px}
+  .lbl{font-size:11.5px}
+  .lbl small,.lbl.minor,.lbl.wide,.lbl .full{display:none}
+  .lbl .short{display:inline}
+  .word{font-size:12px;padding:6px 3px;letter-spacing:.02em}
+  .seal{width:20px;height:20px;font-size:9px}
+  .tv{padding-top:96px}
+  .tv .lede{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){
+  .lbl,.lbl.on,.word{transition:none;filter:none}
+}
+</style>
+</head>
+<body>
+<a class="back" href="index.html">← All ideas</a>
+<header class="mark"><h1>George Michoulis</h1></header>
+<button class="read" id="read" type="button" aria-pressed="false" aria-controls="text">Read as text</button>
+
+<main>
+  <div id="stage">
+    <canvas id="scene" aria-hidden="true"></canvas>
+    <div class="shade" aria-hidden="true"></div>
+    <div id="marks"></div>
+    <nav id="rim" aria-label="Chapters">
+      <button class="word" type="button" data-ch="name" aria-current="true">Name</button>
+      <button class="word" type="button" data-ch="study">Study</button>
+      <button class="word" type="button" data-ch="work">Work</button>
+      <button class="word" type="button" data-ch="papers">Papers</button>
+      <button class="word" type="button" data-ch="awards">Awards</button>
+      <button class="word" type="button" data-ch="mail">Write to me</button>
+      <div class="seal" aria-hidden="true">GM</div>
+    </nav>
+    <aside id="key" aria-labelledby="key-title">
+      <h2 id="key-title">Name</h2>
+      <p class="how" id="key-how"></p>
+      <ul id="key-items"></ul>
+      <p class="foot">A steel ball, pulled by a magnet under the table, draws each chapter in one unbroken line. Pick a word on the rim, or drag through the sand to make your own groove.</p>
+    </aside>
+    <p class="sr" id="status" aria-live="polite"></p>
+  </div>
+
+  <article id="text" hidden tabindex="-1" aria-label="Everything on the table, as text">
+    <div class="tv">
+      <p class="lede">I live in Thessaloniki, Greece, and work remotely as a Web3 full-stack developer at Cyberscope by TAC.</p>
+      <p>My BSc thesis verified academic credentials on Ethereum. My MSc used graph embeddings to detect fraud on blockchains. Since then I have built Web3 products, taught networks and security, and given public talks on Web3 and edge tech.</p>
+
+      <h2>Study</h2>
+      <ul>
+        <li><b>BSc Applied Informatics</b>, University of Macedonia, 2015–2020. Thesis on verifying academic credentials with Ethereum.</li>
+        <li><b>MSc Data and Web Science</b>, Aristotle University of Thessaloniki, 2020–2022. Graph-embedding methods for blockchain fraud detection, funded by a DeepMind scholarship.</li>
+      </ul>
+
+      <h2>Work</h2>
+      <ul>
+        <li><b>Cyberscope by TAC</b>, Web3 full-stack developer, since May 2026. <span>Web3 products end to end, with contracts, on-chain integrations, React and Next frontends, and security tooling.</span></li>
+        <li><b>Sidroco Holdings Ltd</b>, blockchain developer and researcher, 2024–2026. <span>An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ LMS and EU projects.</span></li>
+        <li><b>University of Derby and Mediterranean College</b>, lecturer and academic partner, 2023–2025. <span>Taught Networks &amp; Security, Web Scripting and Application Development.</span></li>
+        <li><b>University of Nicosia and IFF</b>, blockchain and full-stack developer, 2022–2024. <span>Next.js, NestJS and Docker apps, and a Web3 NFT marketplace.</span></li>
+      </ul>
+
+      <h2>Papers</h2>
+      <ol>
+        <li><cite>A process-aware approach for blockchain-based verification of academic qualifications.</cite> <span>Simulation Modelling Practice and Theory 121, 102642. 2022. Cited 32 times.</span></li>
+        <li><cite>Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe.</cite> <span>XIV Balkan Conference on Operational Research. 2020. Cited 11 times.</span></li>
+        <li><cite>Exploring decentralized governance: a framework applied to Compound Finance.</cite> <span>International Conference on Mathematical Research for Blockchain Economy. 2023. Cited 7 times.</span></li>
+        <li><cite>FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs.</cite> <span>7th World Symposium on Communication Engineering (WSCE). 2024. Cited once.</span></li>
+        <li><cite>Data security for smart cities.</cite> <span>2025. Cited once.</span></li>
+        <li><cite>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management.</cite> <span>IEEE ICCE 2025.</span></li>
+        <li><cite>Graph Embedding and Node Features for Drug-Target Interaction Prediction.</cite> <span>Aristotle University of Thessaloniki, MSc work. 2022.</span></li>
+        <li><cite>Blockchain in Higher Education: permissioned and permissionless approaches.</cite> <span>4th Summit on Gender Equality in Computing. 2022.</span></li>
+      </ol>
+      <p class="note">Also two Greek-language theses on verifying academic titles with Ethereum, from 2020 and 2021. Citation counts come from <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+
+      <h2>Awards</h2>
+      <ul>
+        <li><b>Basic Research grant</b>, University of Macedonia, 2020–2021.</li>
+        <li><b>DeepMind Scholarship</b>, Aristotle University of Thessaloniki, 2020–2022.</li>
+        <li><b>Third place, Infinitech Hackathon</b>, Crowdpolicy, June 2022.</li>
+        <li><b>Move/Sui Bootcamp award</b>, Thessaloniki, 2025.</li>
+      </ul>
+
+      <h2>Certificates</h2>
+      <h3>Completed</h3>
+      <ul class="certs">
+        <li>Advanced ethical hacking</li>
+        <li>CCNA, Cisco Certified Network Associate</li>
+        <li>Cloud engineering</li>
+        <li>Cybersecurity e-learning academy</li>
+        <li>Digital skills for tourism</li>
+        <li>Discover customer</li>
+        <li>Entrepreneurship, funding and development of new enterprises</li>
+        <li>European legal culture program, Aristotle University of Thessaloniki</li>
+        <li>How to design and build a website</li>
+        <li>How to get published with IEEE</li>
+        <li>Machine learning and deep neural networks</li>
+        <li>Networking essentials</li>
+        <li>NFT Talents program</li>
+        <li>Rust developer</li>
+        <li>Software development for telecommunication networks</li>
+        <li>The Hour of Code</li>
+      </ul>
+      <h3>Took part in</h3>
+      <ul class="certs">
+        <li>Blockchain for the legal industry…</li>
+        <li>Blockchain in education, remote learning, social distancing and…</li>
+        <li>Data analytics to strengthen healthcare cybersecurity</li>
+        <li>EY Cyber Day</li>
+        <li>GNU/Linux command line</li>
+        <li>Marine educational robotics, Hydrobot program</li>
+        <li>MIGMA Marketing kai Brand</li>
+        <li>Processing data in the fog…</li>
+        <li>RippleX workshop launch event</li>
+        <li>SKGCode project, creating a real-estate chatbot</li>
+        <li>VeChain ToolChain, digital transformation of the healthcare industry</li>
+      </ul>
+      <h3>Achievement and language</h3>
+      <ul class="certs">
+        <li>Academic achievement award</li>
+        <li>Introduction to digital currencies</li>
+        <li>TOEIC listening and reading test</li>
+        <li>English proficiency certificate</li>
+      </ul>
+
+      <h2>Elsewhere</h2>
+      <p>My code is on <a href="https://github.com/gmixoulis">GitHub</a>, my papers on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>, my work history on <a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a>, and short posts on <a href="https://twitter.com/GeorgeMicou">X</a>. This site also has a <a href="/garden/">Zen garden of notes</a> and <a href="/play/">Ledger Run</a>, a platformer version of my CV.</p>
+
+      <h2>Write to me</h2>
+      <p><a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>. I read everything that arrives there.</p>
+    </div>
+  </article>
+</main>
+
+<a class="mail" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+
+<noscript><style>#stage{display:none}#text{display:block!important}body{overflow:auto;background:var(--paper);color:var(--ink)}.read{display:none}</style></noscript>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
+
+const $ = s => document.querySelector(s);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const small = () => innerWidth < 760;
+const MOBILE = small() || matchMedia('(pointer: coarse)').matches;
+const QA_SPEED = Math.max(1, +new URLSearchParams(location.search).get('speed') || 1); // for frame-by-frame QA only
+
+// ---------------------------------------------------------------- read as text (works without WebGL)
+const textView = $('#text'), readBtn = $('#read'), stage = $('#stage');
+let reading = false, wake = () => {};
+function setReading(on) {
+  reading = on;
+  document.body.classList.toggle('reading', on);
+  textView.hidden = !on;
+  stage.inert = on;
+  readBtn.setAttribute('aria-pressed', String(on));
+  readBtn.textContent = on ? 'Back to the table' : 'Read as text';
+  if (on) { textView.focus({ preventScroll: true }); scrollTo(0, 0); } else wake();
+}
+readBtn.addEventListener('click', () => setReading(!reading));
+addEventListener('keydown', e => { if (e.key === 'Escape' && reading && !document.body.classList.contains('nogl')) setReading(false); });
+
+// ---------------------------------------------------------------- glyphs
+// Single-stroke paths traced offline from Snell Roundhand: the glyphs were thinned to a
+// one-pixel skeleton (Zhang-Suen), turned into a stroke graph, and walked as ONE continuous
+// line (retracing strokes where needed, short hops between letters), the way a sand table must.
+const GLYPHS = {"george":{"base":247,"pts":[54,212,53,219,57,236,62,242,71,246,84,249,103,248,118,243,129,237,145,225,157,212,174,189,188,162,198,149,188,162,180,177,175,179,171,177,167,177,151,188,136,194,120,196,108,193,99,184,97,179,94,167,94,157,98,139,103,129,116,110,131,96,152,80,172,70,203,61,225,60,234,61,241,64,245,67,250,74,252,82,250,90,241,100,229,106,213,110,190,109,178,106,169,102,162,97,149,83,145,72,146,55,154,45,162,41,152,47,147,53,145,57,145,71,146,77,149,81,148,84,130,97,114,113,103,129,98,139,96,148,94,166,96,177,101,186,108,193,115,195,125,196,138,194,151,188,169,177,173,178,177,181,175,186,153,217,141,228,129,237,118,243,101,248,82,249,75,248,64,243,57,237,58,237,53,220,54,211,55,211,53,218,54,227,57,236,62,242,77,248,94,249,110,246,129,237,142,227,157,212,174,189,187,163,193,155,230,184,224,192,219,204,217,218,220,232,229,242,236,245,245,245,265,242,280,235,307,214,312,212,321,217,325,234,330,244,337,248,348,249,366,242,383,227,397,207,406,185,407,179,406,172,401,159,398,155,399,157,393,153,382,152,373,155,364,159,352,168,337,185,329,198,323,216,324,210,329,198,338,184,353,167,364,159,374,154,386,152,395,154,401,159,405,169,407,181,418,185,430,193,445,196,451,201,455,199,457,192,475,163,494,155,477,162,460,187,461,193,468,199,491,175,511,167,516,171,518,183,522,192,528,195,544,196,552,202,549,218,549,226,552,236,557,242,564,243,576,242,606,226,609,229,601,247,588,266,577,280,558,300,541,313,528,319,502,326,486,325,476,322,467,316,461,307,458,295,461,283,466,275,476,268,494,266,476,268,468,273,464,277,460,284,458,294,462,309,469,318,478,323,493,326,503,326,524,321,541,313,561,298,578,279,599,248,599,249,603,249,609,252,618,250,638,240,671,214,682,217,688,233,696,242,704,245,716,245,729,243,747,235,760,226,783,205,770,218,754,231,742,238,728,243,715,245,703,245,698,243,690,236,686,229,683,218,686,204,691,192,701,179,719,162,731,155,741,152,751,153,755,156,757,161,758,170,754,179,743,188,728,196,710,202,697,205,689,201,697,205,712,202,728,196,743,188,748,183,736,192,710,202,697,205,689,201,686,204,684,216,673,214,669,215,652,230,638,240,616,251,610,252,603,249,601,247,602,245,609,229,627,198,634,178,641,174,647,164,640,175,632,175,628,170,624,159,617,153,608,152,602,153,594,156,583,163,566,180,552,202,567,179,584,162,596,155,604,153,612,152,622,155,622,156,619,154,612,152,604,153,596,155,583,163,566,180,552,202,543,195,530,195,524,194,518,185,517,176,518,169,522,163,529,156,536,153,527,158,517,171,509,165,490,176,473,193,459,201,455,199,452,201,433,234,430,238,420,243,432,236,449,207,451,202,455,199,461,202,467,201,467,200,466,197,459,191,457,191,455,199,452,201,444,196,430,193,423,189,421,186,413,183,408,182,397,207,384,226,369,240,354,247,342,249,331,245,325,234,322,218,316,214,312,212,307,214,287,231,268,241,259,243,248,245,238,245,231,243,223,236,218,227,217,216,220,202,232,205,245,202,261,196,276,188,287,179,292,167,290,161,286,154,280,152,270,153,262,156,251,163,232,181,252,162,264,155,280,152,284,153,288,156,292,167,289,176,281,184]},"michoulis":{"base":230,"pts":[50,200,50,208,53,219,61,225,72,229,83,230,100,227,110,223,123,215,137,205,156,186,213,115,244,82,251,76,288,52,300,48,300,51,285,63,273,75,253,102,215,175,204,194,191,212,190,215,192,218,188,216,197,216,215,202,239,178,299,104,326,77,359,55,378,48,399,44,419,46,397,44,386,47,357,73,332,107,291,181,274,203,259,217,243,227,220,226,258,228,283,225,308,217,334,202,342,207,344,218,348,226,351,228,356,229,363,227,373,221,402,196,405,195,410,196,415,199,419,213,422,219,428,225,436,228,450,228,464,225,481,216,504,201,512,205,511,211,512,206,527,186,541,160,594,75,541,160,530,181,537,184,588,139,597,137,605,138,610,150,608,160,582,199,577,210,577,217,581,228,591,229,602,225,635,196,645,200,650,219,656,229,663,231,672,232,690,225,701,216,715,200,724,184,730,169,731,160,724,140,717,136,710,135,700,137,688,142,670,157,655,177,647,199,648,193,655,177,677,150,688,142,697,138,706,135,715,135,722,138,725,142,729,152,731,164,742,168,754,176,766,179,772,184,762,212,762,219,766,227,772,228,782,227,793,221,807,209,821,202,825,204,825,216,828,224,831,228,836,229,842,229,849,225,868,211,888,199,892,201,890,217,895,227,900,229,910,228,923,221,948,200,954,200,958,203,962,200,967,191,958,206,959,218,961,224,965,228,970,229,978,227,1004,211,1011,198,1020,193,1038,172,1050,161,1055,145,1059,140,1068,136,1080,135,1087,139,1091,142,1093,147,1094,155,1091,165,1094,155,1093,147,1089,140,1080,135,1067,136,1058,141,1051,155,1050,166,1066,191,1068,201,1064,217,1055,228,1047,230,1036,232,1021,229,1014,225,1008,210,1011,219,1016,226,1029,231,1044,231,1057,227,1065,228,1077,224,1067,228,1062,222,1055,228,1048,230,1037,232,1029,231,1021,229,1016,226,1011,219,1008,210,1000,212,982,225,975,228,967,229,963,226,959,219,958,212,959,204,955,201,951,199,946,201,921,223,912,227,898,229,895,228,892,223,890,215,892,202,895,199,980,60,996,50,984,56,980,60,894,200,893,201,886,198,859,219,846,227,840,229,832,228,828,224,825,215,826,205,850,165,864,145,877,138,863,146,826,204,819,201,788,224,780,227,772,228,766,227,764,224,762,217,762,211,763,205,772,185,774,184,783,169,774,183,765,179,753,176,745,169,745,170,739,166,732,165,725,142,717,136,711,135,696,138,688,142,676,151,661,168,655,177,647,199,643,199,637,197,633,197,609,220,602,225,593,229,586,229,582,228,578,220,576,212,579,204,604,167,608,158,610,151,608,145,605,139,600,137,593,138,586,140,542,184,542,183,535,184,531,182,516,202,510,203,506,201,502,201,479,218,459,226,437,228,426,223,420,215,416,200,421,180,427,169,443,151,454,143,466,137,479,135,485,136,489,139,493,148,493,158,488,165,493,159,494,152,492,144,487,137,482,135,475,135,460,140,454,143,436,157,430,164,420,182,417,198,407,195,400,197,383,214,365,226,356,229,351,228,348,226,344,220,343,208,352,191,343,207,336,202,332,202,314,214,292,223,262,228,246,227,247,224,260,216,273,205,280,196,296,173,332,107,349,83,363,66,384,50,380,47,357,56,324,79,298,105,238,179,214,203,195,217,191,213,191,212,209,186,252,104,269,80,283,64,292,57,297,51,296,50]},"mail1":{"base":208,"pts":[84,225,73,225,62,230,59,232,53,241,51,252,54,263,56,267,68,277,83,280,101,279,122,271,132,265,148,252,161,238,183,208,190,192,202,173,212,152,213,145,208,138,203,126,198,122,191,121,182,122,171,127,158,138,150,147,142,159,139,166,136,174,135,185,138,198,142,203,146,204,163,202,174,195,181,188,188,189,190,191,185,186,190,191,184,207,187,211,192,212,216,202,235,188,241,189,244,192,242,199,228,206,240,200,243,197,244,193,246,192,267,161,270,153,285,130,275,145,273,154,279,159,317,125,324,123,333,124,338,134,336,143,330,160,302,200,291,204,289,206,303,199,330,160,336,161,380,124,392,123,396,128,399,138,398,142,368,188,368,195,370,202,374,206,379,207,389,204,420,180,428,184,427,195,431,204,439,206,448,204,467,193,476,185,520,132,529,126,544,123,547,124,553,131,557,144,547,182,549,192,554,202,560,205,566,206,587,203,600,196,627,176,631,178,635,181,639,197,643,205,649,209,656,210,672,206,686,196,698,183,704,174,711,159,714,145,709,128,706,124,702,122,698,121,687,122,675,127,661,138,646,157,638,173,636,184,641,202,645,207,656,210,672,206,692,191,704,174,714,149,718,148,726,151,735,159,746,161,752,166,742,191,744,200,749,205,755,206,765,203,797,183,801,185,801,195,805,205,808,207,815,206,820,205,858,181,862,183,861,194,864,202,868,206,875,207,881,205,898,194,912,181,920,180,924,183,923,195,927,204,930,206,939,206,950,201,961,192,969,190,973,179,982,174,994,158,1009,144,1014,129,1023,122,1037,121,1044,125,1048,133,1049,141,1046,148,1049,141,1048,134,1045,127,1039,122,1031,121,1021,123,1012,133,1008,146,1011,154,1024,174,1025,183,1022,195,1018,203,1013,206,1003,209,993,210,980,206,973,199,970,190,963,191,954,198,940,205,932,206,927,204,923,195,924,184,953,138,927,179,922,181,918,179,910,183,897,195,879,206,869,206,863,201,861,194,862,184,932,70,865,179,860,181,856,180,815,206,806,206,804,203,801,194,801,186,835,131,847,126,838,129,833,134,803,182,799,183,795,182,763,204,752,206,746,204,743,196,743,189,746,179,752,167,768,143,778,130,785,126,775,131,754,165,745,161,735,159,726,151,716,148,709,128,704,123,695,121,681,124,666,134,650,151,646,157,640,169,636,181,629,177,624,177,598,198,589,202,578,205,564,206,556,203,550,196,547,184,544,183,531,188,516,200,498,207,485,208,480,206,474,199,471,190,446,205,439,206,432,205,428,196,428,185,457,138,430,181,426,182,422,180,418,180,403,194,387,205,376,206,372,204,370,201,368,195,368,189,370,183,391,154,398,140,397,130,392,123,395,125,387,123,376,126,334,161,330,160,336,143,337,133,333,124,327,123,315,126,279,162,273,165,268,160,246,191,239,188,234,189,216,202,194,212,189,212,184,208,190,192,202,173,210,156,213,145,208,138,203,125,198,122,191,121,182,122,173,126,156,140,174,126,183,122,194,121,199,122,203,125,208,138,213,144,211,154,205,167,184,205,184,207,186,210,191,212,197,211,216,202,235,188,241,189,244,192,250,187,267,161,272,163,317,125,327,123,333,124,337,133,336,143,330,160,334,161,336,161,378,125,392,123,396,128,398,135,398,142,369,185,368,189,368,195,370,201,373,205,377,207,389,204,420,180,428,184,427,195,431,204,434,206,440,206,449,203,467,193,476,185,518,134,526,128,533,124,542,123,547,124,554,131,557,144,560,145,570,142,583,131,594,124,602,122,609,122,615,126,619,133,619,138,616,145,619,136,616,127,613,124,609,122,600,122,590,126,569,142,558,145,547,182,530,188,546,183,551,198,554,202,558,204,571,206,587,203,600,196,626,176,631,178,635,181,650,151,667,133,673,128,681,124,695,121,700,121,708,126,715,147,726,151,735,159,746,161,752,166,742,192,745,202,750,206,765,203,797,183,801,185,801,195,805,205,808,207,815,206,820,205,858,181,862,183,861,194,864,202,868,206,875,207,881,205,898,194,912,181,920,180,924,183,923,193,924,199,927,204,930,206,942,205,961,192,969,190,974,201,978,205,992,210,1005,209,1017,204,1023,206,1030,204,1077,166,1082,160,1076,167,1028,205,1025,206,1020,201]},"mail2":{"base":208,"pts":[153,166,169,137,176,131,183,121,174,132,171,134,167,130,165,123,160,117,151,116,142,119,136,122,124,133,117,143,113,152,109,164,109,171,111,176,114,179,118,180,126,179,134,174,146,164,148,164,152,166,152,176,156,182,162,184,176,181,191,173,206,161,217,149,225,137,228,129,232,111,227,91,216,78,203,71,191,68,176,67,160,68,145,71,126,78,111,86,99,95,83,111,70,129,64,143,60,157,59,171,61,186,65,198,71,208,82,219,98,227,113,230,134,230,156,226,181,216,191,211,231,183,242,184,247,198,251,203,255,204,272,202,283,195,290,188,297,189,299,191,293,207,288,212,268,240,256,253,240,266,229,272,214,277,198,280,189,280,177,277,164,265,160,253,163,239,171,230,182,225,193,225,180,226,169,231,162,241,160,249,160,255,165,267,177,277,189,280,200,280,210,279,227,273,241,265,257,252,270,238,292,208,299,212,306,211,325,202,344,188,350,189,353,192,351,199,337,206,349,200,352,197,353,193,355,192,376,161,379,153,394,130,384,145,382,154,388,159,426,125,433,123,442,124,447,134,445,143,439,160,411,200,400,204,398,206,412,199,439,160,445,161,487,125,498,123,501,123,504,125,502,124,506,131,507,140,499,155,477,187,476,193,478,199,480,204,485,206,490,207,498,204,531,178,535,180,540,184,546,201,549,205,553,206,568,204,585,193,590,191,596,194,602,206,607,208,616,207,627,201,654,180,662,184,661,195,665,204,668,206,676,206,683,203,693,197,718,176,725,179,724,197,726,203,731,206,737,207,807,196,805,200,801,203,796,203,792,200,790,196,792,191,796,188,801,188,805,191,807,196,743,205,760,194,769,186,791,162,772,183,759,195,741,206,734,207,728,205,725,200,723,194,726,180,794,70,727,178,720,176,716,176,692,198,677,206,668,206,665,204,661,195,662,185,691,138,664,181,660,182,656,180,652,180,624,203,616,207,605,208,602,207,599,202,597,195,598,192,615,157,620,144,626,140,621,143,618,141,608,123,599,121,586,123,571,133,558,146,546,166,541,184,547,164,561,142,547,164,541,184,533,179,528,179,512,194,496,205,487,207,482,205,479,202,477,195,477,189,479,183,500,154,507,140,507,133,504,126,499,123,485,126,443,161,439,160,445,143,446,133,442,124,436,123,424,126,388,162,382,165,377,160,355,191,348,188,343,189,319,205,304,212,299,212,293,208,293,205,299,192,311,173,319,156,322,145,317,138,314,129,311,124,306,122,298,121,291,122,282,126,267,138,259,147,251,159,245,173,244,183,246,171,251,159,260,146,266,140,259,147,251,159,248,166,244,181,244,187,245,194,251,203,265,204,277,199,290,188,294,186,281,197,269,203,253,204,248,200,243,185,237,182,232,182,191,211,179,217,152,227,131,230,105,229,89,223,81,218,70,207,64,196,59,174,60,155,70,129,84,110,100,94,108,88,128,77,147,71,180,67,192,68,205,72,221,82,221,83,218,81,223,85,229,96,232,114,230,124,226,135,216,150,207,159,217,149,225,137,230,125,232,110,227,91,216,78,207,73,195,69,175,67,145,71,126,78,111,86,99,95,83,111,70,129,64,143,60,157,59,171,61,186,65,198,71,208,82,219,88,223,100,228,112,230,132,230,144,229,172,220,191,211,212,197,229,183,233,182,242,184,247,198,251,203,255,204,272,202,283,195,290,188,297,189,299,191,298,194,293,207,298,212,306,211,325,202,344,188,350,189,353,192,359,187,376,161,381,163,426,125,435,123,442,124,446,133,445,143,439,160,443,161,445,161,487,125,501,123,505,128,507,135,507,142,478,185,477,189,477,195,479,201,482,205,486,207,498,204,531,178,535,180,540,184,546,201,549,205,553,206,568,204,585,193,590,191,596,194,602,206,607,208,616,207,627,201,654,180,662,184,661,195,665,204,668,206,676,206,683,203,693,197,718,176,725,179,723,194,726,202,730,206,736,207,743,205,760,194,774,181,791,162,864,161,859,176,859,187,861,194,866,201,872,205,883,207,905,203,921,194,941,178,946,176,950,178,954,181,958,198,962,205,968,209,975,210,991,206,1005,196,1013,188,1023,174,1031,157,1033,145,1029,130,1025,124,1017,121,1002,123,987,132,969,151,959,169,955,181,958,171,966,156,981,137,992,128,1000,124,1009,121,1019,121,1027,126,1034,147,1045,151,1054,159,1067,161,1073,166,1053,199,1039,206,1051,200,1055,197,1073,167,1078,161,1081,153,1096,130,1086,145,1084,154,1090,159,1085,165,1128,125,1136,123,1144,124,1148,130,1149,137,1141,160,1113,200,1102,204,1101,206,1102,204,1114,199,1141,160,1147,161,1189,125,1203,123,1206,126,1204,123,1209,133,1209,142,1180,185,1178,190,1179,196,1182,203,1186,206,1191,207,1200,204,1215,193,1239,169,1257,147,1237,171,1214,194,1198,205,1191,207,1186,206,1182,203,1179,198,1178,192,1179,187,1202,154,1209,140,1207,128,1206,126,1201,123,1187,126,1145,161,1141,160,1147,143,1149,134,1145,125,1140,123,1133,124,1126,126,1090,162,1081,162,1079,160,1075,165,1066,161,1054,159,1045,151,1035,148,1032,151,1024,172,1011,191,999,201,989,207,977,210,968,209,961,204,956,192,955,182,947,177,943,177,919,196,903,204,894,206,879,207,871,204,864,199,860,192,859,182,861,166,870,150,887,132,901,124,911,121,920,121,926,125,927,129,930,135,929,141]}};
+
+// ---------------------------------------------------------------- content
+const TAU = Math.PI * 2;
+const pol = (r, a) => [r * Math.sin(a), -r * Math.cos(a)]; // clockwise from 12 o'clock
+const now = new Date();
+const NOW_Y = Math.min(2026.97, now.getFullYear() + (now.getMonth() + now.getDate() / 31) / 12);
+const clockA = y => (y - 2022) / 5 * TAU;
+
+const CAP = {
+  name: { how: 'Written in one line. The ball never lifts.', items: [
+    'Blockchain developer and researcher, based in Thessaloniki, Greece, working remotely.',
+    'Now a Web3 full-stack developer at <b>Cyberscope by TAC</b>.',
+    'Lectured on networks, security and application development. Gives public talks on Web3 and edge tech.'] },
+  study: { how: 'One turn of the spiral for each year of study.', items: [
+    '<b>BSc Applied Informatics</b>, University of Macedonia, 2015–2020. Thesis on verifying academic credentials with Ethereum.',
+    '<b>MSc Data and Web Science</b>, Aristotle University of Thessaloniki, 2020–2022. Graph embeddings for blockchain fraud detection, on a DeepMind scholarship.'] },
+  work: { how: 'Read it as a clock that starts at 2022 at the top. Each arc is one role.', items: [
+    '<b>University of Nicosia · IFF</b>, 2022–2024. Next.js, NestJS and Docker apps, and a Web3 NFT marketplace.',
+    '<b>University of Derby · Mediterranean College</b>, 2023–2025. Lecturer in Networks &amp; Security, Web Scripting and Application Development.',
+    '<b>Sidroco Holdings</b>, 2024–2026. An NFT marketplace for 5G, Hyperledger Fabric prototypes and an Erasmus+ LMS.',
+    '<b>Cyberscope by TAC</b>, since May 2026. Contracts, on-chain integrations, React and Next frontends, security tooling.',
+    'The full history is on <a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a>.'] },
+  papers: { how: 'One loop per paper, least cited in the middle. The numbers are citations: the more a paper is cited, the wider its loop.', items: [] },
+  awards: { how: 'A stone for each award, placed in the order they came.', items: [
+    '<b>Basic Research grant</b>, University of Macedonia, 2020–2021.',
+    '<b>DeepMind Scholarship</b>, Aristotle University of Thessaloniki, 2020–2022.',
+    '<b>Third place, Infinitech Hackathon</b>, Crowdpolicy, June 2022.',
+    '<b>Move/Sui Bootcamp award</b>, Thessaloniki, 2025.'] },
+  mail: { how: 'Email reaches me fastest.', items: [
+    '<a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>',
+    'Thessaloniki, Greece. I work remotely.',
+    'Code on <a href="https://github.com/gmixoulis">GitHub</a>, papers on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.'] },
+};
+const TITLES = { name: 'Name', study: 'Study', work: 'Work', papers: 'Papers', awards: 'Awards', mail: 'Write to me' };
+
+const PAPERS = [ // least cited first; that is the order the spiral grows in
+  { t: 'Blockchain in higher education', y: 2022, c: 0, full: 'Blockchain in Higher Education: permissioned and permissionless approaches', v: '4th Summit on Gender Equality in Computing' },
+  { t: 'Drug–target interaction', y: 2022, c: 0, full: 'Graph Embedding and Node Features for Drug-Target Interaction Prediction', v: 'Aristotle University of Thessaloniki, MSc work' },
+  { t: '5G network slicing survey', y: 2025, c: 0, full: 'Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management', v: 'IEEE ICCE 2025' },
+  { t: 'Data security for smart cities', y: 2025, c: 1, full: 'Data security for smart cities', v: '' },
+  { t: 'FraMark', y: 2024, c: 1, full: 'FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs', v: '7th World Symposium on Communication Engineering' },
+  { t: 'Governance of Compound Finance', y: 2023, c: 7, full: 'Exploring decentralized governance: a framework applied to Compound Finance', v: 'Mathematical Research for Blockchain Economy' },
+  { t: 'VerDe on Ethereum', y: 2020, c: 11, full: 'Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe', v: 'XIV Balkan Conference on Operational Research' },
+  { t: 'Process-aware verification', y: 2022, c: 32, full: 'A process-aware approach for blockchain-based verification of academic qualifications', v: 'Simulation Modelling Practice and Theory 121' },
+];
+const cites = c => c === 0 ? 'not cited yet' : c === 1 ? 'cited once' : `cited ${c} times`;
+CAP.papers.items = [...PAPERS].reverse().map(p => `<b>${p.full}</b>. ${p.v ? p.v + ', ' : ''}${p.y}, ${cites(p.c)}.`)
+  .concat(['Counts from <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.']);
+
+// ---------------------------------------------------------------- paths (world units, table radius 1)
+function newPath() {
+  const P = { p: [], len: 0, marks: [], fast: [] };
+  P.to = (x, z) => {
+    const q = P.p[P.p.length - 1];
+    if (q) { const d = Math.hypot(x - q[0], z - q[1]); if (d < 1e-7) return P; P.len += d; }
+    P.p.push([x, z]); return P;
+  };
+  P.mark = o => { P.marks.push({ ...o, at: P.len }); return P; };
+  return P;
+}
+const spiral = (P, r0, r1, a0, a1) => {
+  const n = Math.max(2, Math.ceil(Math.abs(a1 - a0) * Math.max(r0, r1) / 0.005));
+  for (let i = 0; i <= n; i++) { const t = i / n; P.to(...pol(r0 + (r1 - r0) * t, a0 + (a1 - a0) * t)); }
+};
+const arc = (P, r, a0, a1) => spiral(P, r, r, a0, a1);
+const glyph = (P, G, x0, z0, s) => { const q = G.pts; for (let i = 0; i < q.length; i += 2) P.to(x0 + q[i] * s, z0 + (q[i + 1] - G.base) * s); };
+// run back over what was just drawn (invisible: the ball stays in its own groove) so the next line starts close by
+const retrace = (P, from) => { const a = P.len, back = P.p.slice(from, -1).reverse(); back.forEach(q => P.to(q[0], q[1])); P.fast.push([a, P.len]); };
+
+const CHAPTERS = {
+  name() {
+    const P = newPath(), s = 0.0015;
+    glyph(P, GLYPHS.george, -0.83, -0.18, s);
+    P.mark({ item: 0 });
+    retrace(P, 0);
+    glyph(P, GLYPHS.michoulis, -0.88, 0.3, s);
+    P.mark({ item: 1, label: { pos: [0.05, 0.6], t: 'Blockchain developer and researcher', sub: 'Thessaloniki, Greece · now at Cyberscope by TAC', a: 'c', m: false } });
+    P.mark({ item: 2 });
+    return P;
+  },
+  study() {
+    const P = newPath(), b0 = 0.05, b1 = 0.32, m0 = 0.52, m1 = 0.74;
+    P.to(...pol(b0, 0)).mark({ item: 0, label: yearLbl('2015', b0, 1) });
+    for (let k = 0; k < 5; k++) {
+      spiral(P, b0 + (b1 - b0) * k / 5, b0 + (b1 - b0) * (k + 1) / 5, k * TAU, (k + 1) * TAU);
+      P.mark({ label: yearLbl(String(2016 + k), b0 + (b1 - b0) * (k + 1) / 5, k % 2 ? 1 : -1) });
+    }
+    P.mark({ label: { pos: [0, 0.415], t: 'BSc Applied Informatics', sub: 'University of Macedonia · 2015–2020', a: 'c', m: 'BSc 2015–2020' } });
+    P.to(...pol(m0, 0)).mark({ item: 1 });
+    spiral(P, m0, (m0 + m1) / 2, 0, TAU); P.mark({ label: yearLbl('2021', (m0 + m1) / 2, -1) });
+    spiral(P, (m0 + m1) / 2, m1, TAU, 2 * TAU); P.mark({ label: yearLbl('2022', m1, 1) });
+    P.mark({ label: { pos: [0, 0.815], t: 'MSc Data and Web Science', sub: 'Aristotle University of Thessaloniki · 2020–2022', a: 'c', m: 'MSc 2020–2022' } });
+    return P;
+  },
+  work() {
+    const P = newPath();
+    const roles = [
+      { r: 0.34, y0: 2022, y1: 2024, m: 'Nicosia', t: 'University of Nicosia', sub: 'IFF · developer · 2022–2024' },
+      { r: 0.5, y0: 2023, y1: 2025, m: 'Mediterranean', t: 'Mediterranean College', sub: 'University of Derby · lecturer · 2023–2025' },
+      { r: 0.66, y0: 2024, y1: 2026, m: 'Sidroco', t: 'Sidroco Holdings', sub: 'Developer and researcher · 2024–2026' },
+      { r: 0.82, y0: 2026 + 4 / 12, y1: NOW_Y, m: 'Cyberscope', t: 'Cyberscope by TAC', sub: 'Web3 full-stack developer · since May 2026' },
+    ];
+    // the 2022 hand comes in from the rim; every role then runs out along its start year,
+    // round its arc, and back to the hub along its end year, like the hands of a clock
+    P.to(...pol(0.955, 0)).to(0, 0);
+    [2022, 2023, 2024, 2025, 2026].forEach(y => P.mark({ label: { pos: pol(0.915, clockA(y) + 0.1), t: String(y), a: 'c' } }));
+    const place = [[0.38, 1.2, 'l'], [0.47, 2.2, 'c'], [0.7, 3.62, 'c'], [0.62, 5.6, 'c']];
+    roles.forEach((ro, i) => {
+      P.to(...pol(ro.r, clockA(ro.y0))).mark({ item: i });
+      arc(P, ro.r, clockA(ro.y0), clockA(ro.y1));
+      const [pr, pa, al] = place[i];
+      P.mark({ label: { pos: pol(pr, pa), t: ro.t, sub: ro.sub, a: al, m: ro.m } });
+      if (i < roles.length - 1) P.to(0, 0);
+    });
+    P.mark({ item: 4 });
+    return P;
+  },
+  papers() {
+    const P = newPath();
+    let r = 0.05; P.to(...pol(r, 0));
+    const title = { 5: [5.2, 0.52, 'c'], 6: [2.72, 0.6, 'c'], 7: [3.5, 0.765, 'c'] }; // loop: [angle, radius, align]
+    PAPERS.forEach((p, i) => {
+      const r1 = 0.1 + 0.052 * (i + 1) + 0.3 * Math.sqrt(p.c / 32), a0 = i * TAU, rAt = a => r + (r1 - r) * a / TAU;
+      const stops = [[Math.PI / 2, { item: PAPERS.length - 1 - i, label: { pos: [rAt(Math.PI / 2), 0.03], t: String(p.c), a: 'c', num: true, ...(p.c ? {} : { m: false }) } }]];
+      if (title[i]) stops.push([title[i][0], { label: { pos: pol(title[i][1], title[i][0]), t: p.t, sub: `${p.y} · ${cites(p.c)}`, a: title[i][2], m: false } }]);
+      stops.sort((x, y) => x[0] - y[0]);
+      let a = 0;
+      stops.forEach(([b, m]) => { spiral(P, rAt(a), rAt(b), a0 + a, a0 + b); P.mark(m); a = b; });
+      spiral(P, rAt(a), r1, a0 + a, a0 + TAU);
+      r = r1;
+    });
+    return P;
+  },
+  awards() {
+    const P = newPath();
+    STONES.forEach((st, i) => {
+      const [cx, cz] = st.pos, q = P.p[P.p.length - 1] || pol(0.96, Math.atan2(cx, -cz));
+      const a0 = Math.atan2(q[0] - cx, -(q[1] - cz)); // angle round the stone facing where we come from
+      const ra = st.s + 0.05, rb = st.s + 0.1;
+      if (P.p.length) { // a soft S-curve between stones
+        const [px, pz] = q, [tx, tz] = [cx + Math.sin(a0) * rb, cz - Math.cos(a0) * rb];
+        const mx = (px + tx) / 2 + (tz - pz) * 0.18, mz = (pz + tz) / 2 - (tx - px) * 0.18;
+        for (let k = 1; k <= 40; k++) { const t = k / 40, u = 1 - t; P.to(u * u * px + 2 * u * t * mx + t * t * tx, u * u * pz + 2 * u * t * mz + t * t * tz); }
+      } else P.to(cx + Math.sin(a0) * rb, cz - Math.cos(a0) * rb);
+      P.mark({ stone: i, item: i });
+      const n = 260;
+      for (let k = 0; k <= n; k++) { const t = k / n, a = a0 + t * TAU * 2.05, rr = rb + (ra - rb) * Math.min(1, t * 1.1); P.to(cx + Math.sin(a) * rr, cz - Math.cos(a) * rr); }
+      for (let k = 0; k <= 60; k++) { const t = k / 60, a = a0 + TAU * 2.05 + t * 1.2, rr = ra + (rb - ra) * t; P.to(cx + Math.sin(a) * rr, cz - Math.cos(a) * rr); }
+      P.mark({ label: { pos: st.lpos, t: st.t, sub: st.sub, a: st.a, m: st.m } });
+    });
+    return P;
+  },
+  mail() {
+    const P = newPath(), s = 0.00125;
+    glyph(P, GLYPHS.mail1, -0.76, -0.12, s);
+    retrace(P, 0);
+    glyph(P, GLYPHS.mail2, -0.84, 0.27, s);
+    P.mark({ item: 0, label: { pos: [0.02, 0.6], t: 'gmixoulis@gmail.com', sub: 'Thessaloniki, Greece · works remotely', a: 'c', href: 'mailto:gmixoulis@gmail.com' } });
+    P.mark({ item: 1 }).mark({ item: 2 });
+    return P;
+  },
+};
+function yearLbl(t, r, side) { return { pos: [side * 0.026, -r + 0.004], t, a: side > 0 ? 'l' : 'r', minor: true }; }
+const STONES = [
+  { pos: [-0.5, -0.3], s: 0.07, m: 'Research grant', t: 'Basic Research grant', sub: 'University of Macedonia · 2020–2021', lpos: [-0.5, -0.1], a: 'c' },
+  { pos: [0.22, -0.52], s: 0.09, m: 'DeepMind', t: 'DeepMind Scholarship', sub: 'Aristotle University of Thessaloniki · 2020–2022', lpos: [0.22, -0.27], a: 'c' },
+  { pos: [0.56, 0.14], s: 0.06, m: 'Infinitech', t: 'Infinitech Hackathon, third place', sub: 'Crowdpolicy · June 2022', lpos: [0.56, 0.32], a: 'c' },
+  { pos: [-0.2, 0.42], s: 0.078, m: 'Move/Sui', t: 'Move/Sui Bootcamp award', sub: 'Thessaloniki · 2025', lpos: [-0.2, 0.63], a: 'c' },
+];
+
+// ---------------------------------------------------------------- key beside the table
+const keyTitle = $('#key-title'), keyHow = $('#key-how'), keyItems = $('#key-items'), status = $('#status');
+function showKey(id) {
+  keyTitle.textContent = TITLES[id];
+  keyHow.textContent = CAP[id].how;
+  keyItems.innerHTML = CAP[id].items.map(h => `<li>${h}</li>`).join('');
+  keyItems.scrollTop = 0;
+}
+function nowItem(i) {
+  [...keyItems.children].forEach((li, k) => li.classList.toggle('now', k === i));
+  const li = keyItems.children[i];
+  if (i < 0) return;
+  if (li && !reduce && keyItems.scrollHeight > keyItems.clientHeight) keyItems.scrollTo({ top: li.offsetTop - keyItems.offsetTop - 8, behavior: reduce ? 'auto' : 'smooth' });
+}
+
+// ---------------------------------------------------------------- WebGL
+function boot() {
+  const canvas = $('#scene');
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+  } catch (e) { return false; }
+  const gl = renderer.getContext();
+  if (!renderer.extensions.has('EXT_color_buffer_float') && !renderer.extensions.has('EXT_color_buffer_half_float')) { renderer.dispose(); return false; }
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
+
+  // ---- dimensions
+  const RIM_IN = 0.995, RIM_OUT = 1.17, RIM_H = 0.03, FLOOR = -0.36;
+  const BALL = { R: 0.017, D: 0.0062, W: 0.011, H: 0.0024 };
+  const RAKE = { R: 0.017, D: 0.0021, W: 0.011, H: 0.0009 };       // a fast raking pass presses lighter      // ball radius, press depth, ridge width/height
+  const FINGER = { R: 0.034, D: 0.0048, W: 0.016, H: 0.0024 };
+  const PITCH = 0.07;                                              // raking pitch of the erase spiral
+  const S = 1.02, HS = 100, N = MOBILE ? 512 : 1024, TEXW = 2 * S / N;
+  const LDIR = new THREE.Vector3(-0.62, 0.4, -0.58).normalize();  // toward a low late-afternoon window, back left
+
+  // ---- sand heightfield: ping-pong half-float targets
+  const rtOpt = { type: THREE.HalfFloatType, format: THREE.RGBAFormat, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, depthBuffer: false, stencilBuffer: false };
+  let rtA = new THREE.WebGLRenderTarget(N, N, rtOpt), rtB = new THREE.WebGLRenderTarget(N, N, rtOpt);
+  const simScene = new THREE.Scene(), simCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2)); quad.frustumCulled = false; simScene.add(quad);
+  const simVert = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0., 1.); }';
+  const simHead = `
+    uniform sampler2D uH; varying vec2 vUv;
+    const float S = ${S.toFixed(4)}; const float HS = ${HS.toFixed(1)};
+    vec2 worldP(){ return (vUv * 2. - 1.) * S; }
+    // groove the ball presses (a sphere section), then a soft ridge of pushed sand beside it
+    float profile(float d, float R, float D, float c, float band, float ridgeH){
+      if (d < c) return -D + (R - sqrt(max(R * R - d * d, 0.)));
+      float t = clamp((d - c) / (band - c), 0., 1.);
+      return ridgeH * pow(sin(3.14159265 * t), 1.3) * (1. - .3 * t);
+    }`;
+  const simMat = (frag, uniforms) => new THREE.ShaderMaterial({ vertexShader: simVert, fragmentShader: simHead + frag, uniforms: { uH: { value: null }, ...uniforms }, depthTest: false, depthWrite: false, blending: THREE.NoBlending });
+  const coreHalf = p => Math.sqrt(p.R * p.R - (p.R - p.D) * (p.R - p.D));
+
+  // a freshly raked table: an Archimedean spiral of grooves, pitch PITCH
+  const initMat = simMat(`
+    uniform float uP, uR, uD, uC, uRH;
+    void main(){
+      vec2 p = worldP(); float r = length(p);
+      float a = atan(p.x, -p.y); if (a < 0.) a += 6.2831853;
+      float u = r / uP - a / 6.2831853; float f = fract(u); float d = min(f, 1. - f) * uP;
+      float h = profile(d, uR, uD, uC, uP * .6, uRH * .8) * smoothstep(.015, .07, r);
+      h *= 1. - smoothstep(.975, 1., r);
+      gl_FragColor = vec4(h * HS, 0., 0., 1.);
+    }`, { uP: { value: PITCH }, uR: { value: RAKE.R }, uD: { value: RAKE.D }, uC: { value: coreHalf(RAKE) }, uRH: { value: RAKE.H } });
+
+  // stamp a polyline: 'draw' keeps the deeper groove and the higher ridge; 'rake' overwrites
+  const MAXP = 64;
+  const stampMat = simMat(`
+    uniform vec2 uPts[${MAXP}]; uniform int uCount; uniform vec4 uBox; uniform float uMode;
+    uniform float uR, uD, uW, uRH, uBand;
+    void main(){
+      float h = texture(uH, vUv).r; vec2 p = worldP();
+      if (p.x < uBox.x || p.y < uBox.y || p.x > uBox.z || p.y > uBox.w || length(p) > .992) { gl_FragColor = vec4(h, 0., 0., 1.); return; }
+      // d: distance to the whole polyline (the ball's footprint). ds: distance measured only beside a
+      // segment, so the side ridge never refills the groove behind the point where this frame starts
+      float d = length(p - uPts[0]), ds = uCount == 1 ? d : 1e3;
+      for (int i = 0; i < ${MAXP - 1}; i++) {
+        if (i >= uCount - 1) break;
+        vec2 a = uPts[i], b = uPts[i + 1], pa = p - a, ba = b - a;
+        float tr = dot(pa, ba) / max(dot(ba, ba), 1e-12), t = clamp(tr, 0., 1.), dd = length(pa - ba * t);
+        d = min(d, dd);
+        if (tr > 0. && tr < 1.) ds = min(ds, dd);
+      }
+      float c = sqrt(uR * uR - (uR - uD) * (uR - uD));
+      if (d < c) {
+        float g = HS * (-uD + uR - sqrt(uR * uR - d * d));
+        h = uMode < .5 ? min(h, g) : g;
+      } else if (uMode < .5) {
+        if (ds < c + uW) { float t = (ds - c) / uW; h = max(h, HS * uRH * pow(sin(3.14159265 * clamp(t, 0., 1.)), 1.3) * (1. - .3 * t)); }
+      } else if (ds < uBand) {
+        h = mix(h, HS * profile(ds, uR, uD, c, uBand, uRH * .8), smoothstep(uBand, uBand * .72, ds));
+      }
+      gl_FragColor = vec4(h, 0., 0., 1.);
+    }`, {
+      uPts: { value: Array.from({ length: MAXP }, () => new THREE.Vector2()) }, uCount: { value: 0 }, uBox: { value: new THREE.Vector4() },
+      uMode: { value: 0 }, uR: { value: 0 }, uD: { value: 0 }, uW: { value: 0 }, uRH: { value: 0 }, uBand: { value: 0 } });
+
+  // dry sand slumps to its angle of repose: move material only where a slope is steeper than ~32 degrees
+  const relaxMat = simMat(`
+    uniform float uTexel, uTalus;
+    void main(){
+      float h = texture(uH, vUv).r, dh = 0.;
+      vec2 o[4]; o[0] = vec2(uTexel, 0.); o[1] = vec2(-uTexel, 0.); o[2] = vec2(0., uTexel); o[3] = vec2(0., -uTexel);
+      for (int i = 0; i < 4; i++) { float df = texture(uH, vUv + o[i]).r - h; dh += .11 * sign(df) * max(abs(df) - uTalus, 0.); }
+      if (length(worldP()) > .995) dh = 0.;
+      gl_FragColor = vec4(h + dh, 0., 0., 1.);
+    }`, { uTexel: { value: 1 / N }, uTalus: { value: Math.tan(THREE.MathUtils.degToRad(32)) * TEXW * HS } });
+
+  function pass(mat) {
+    mat.uniforms.uH.value = rtA.texture;
+    quad.material = mat;
+    renderer.setRenderTarget(rtB); renderer.render(simScene, simCam);
+    [rtA, rtB] = [rtB, rtA];
+    renderer.setRenderTarget(null);
+  }
+  let relaxLeft = 0;
+  function stamp(pts, prof, mode) {
+    if (!pts.length) return;
+    const U = stampMat.uniforms, c = coreHalf(prof);
+    const band = mode === 'rake' ? PITCH * 0.62 : c + prof.W;
+    U.uMode.value = mode === 'rake' ? 1 : 0;
+    U.uR.value = prof.R; U.uD.value = prof.D; U.uW.value = prof.W; U.uRH.value = prof.H; U.uBand.value = band;
+    for (let i = 0; i < pts.length; i += MAXP - 1) {
+      const chunk = pts.slice(i, i + MAXP);
+      let x0 = 9, z0 = 9, x1 = -9, z1 = -9;
+      chunk.forEach(([x, z], k) => { U.uPts.value[k].set(x, z); x0 = Math.min(x0, x); x1 = Math.max(x1, x); z0 = Math.min(z0, z); z1 = Math.max(z1, z); });
+      U.uCount.value = chunk.length;
+      U.uBox.value.set(x0 - band, z0 - band, x1 + band, z1 + band);
+      pass(stampMat);
+      if (i + MAXP >= pts.length) break;
+    }
+    relaxLeft = 40;
+  }
+  const relax = () => pass(relaxMat);
+
+  // ---- the room
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0e0a07);
+  const camera = new THREE.PerspectiveCamera(26, 1, 0.1, 40);
+
+  // environment the chrome ball reflects: dark room, pale sand below, a shoji window toward the light
+  {
+    const env = new THREE.Scene();
+    const m = new THREE.ShaderMaterial({ side: THREE.BackSide, uniforms: { uL: { value: LDIR } },
+      vertexShader: 'varying vec3 vD; void main(){ vD = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); }',
+      fragmentShader: `uniform vec3 uL; varying vec3 vD;
+        void main(){
+          vec3 d = normalize(vD);
+          vec3 c = mix(vec3(.16, .11, .075), vec3(.05, .038, .03), smoothstep(0., .8, d.y));
+          c = mix(c, vec3(.07, .05, .035), smoothstep(.02, -.1, d.y)); c = mix(c, vec3(.62, .52, .38), smoothstep(-.45, -.85, d.y));
+          vec3 L = normalize(uL), rt = normalize(cross(L, vec3(0., 1., 0.))), up = cross(rt, L);
+          float u = dot(d, rt), v = dot(d, up), f = dot(d, L);
+          float win = step(0., f) * step(abs(u), .36) * step(abs(v), .5);
+          float bars = step(.9, fract(u * 5. + .5)) + step(.92, fract(v * 4. + .5));
+          c += win * mix(vec3(7., 5.2, 3.4), vec3(.6, .4, .25), clamp(bars, 0., 1.));
+          gl_FragColor = vec4(c, 1.);
+        }` });
+    env.add(new THREE.Mesh(new THREE.SphereGeometry(5, 64, 32), m));
+    const pm = new THREE.PMREMGenerator(renderer);
+    scene.environment = pm.fromScene(env, 0.015).texture;
+    pm.dispose();
+  }
+  const sun = new THREE.DirectionalLight(0xffcf9c, 2.3); sun.position.copy(LDIR).multiplyScalar(6); scene.add(sun);
+  scene.add(new THREE.HemisphereLight(0x3a3026, 0x120d09, 0.6));
+
+  // walnut: a procedural grain drawn once into a canvas
+  const rng = (a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; })(7);
+  function walnut() {
+    const c = document.createElement('canvas'); c.width = c.height = 1024; const g = c.getContext('2d');
+    const grd = g.createLinearGradient(0, 0, 0, 1024); grd.addColorStop(0, '#3e2617'); grd.addColorStop(.5, '#4a2e1b'); grd.addColorStop(1, '#382214');
+    g.fillStyle = grd; g.fillRect(0, 0, 1024, 1024);
+    for (let i = 0; i < 340; i++) {
+      const y = rng() * 1100 - 40, amp = 4 + rng() * 22, f = 0.003 + rng() * 0.007, ph = rng() * 6.28, dark = rng() < 0.6;
+      g.strokeStyle = dark ? `rgba(18,10,5,${0.08 + rng() * 0.3})` : `rgba(120,80,48,${0.05 + rng() * 0.16})`;
+      g.lineWidth = 0.5 + rng() * (dark ? 3.2 : 2);
+      g.beginPath();
+      for (let x = -8; x <= 1032; x += 8) { const yy = y + Math.sin(x * f + ph) * amp + Math.sin(x * f * 2.7 + ph * 1.7) * amp * 0.3; x < 0 ? g.moveTo(x, yy) : g.lineTo(x, yy); }
+      g.stroke();
+    }
+    for (let i = 0; i < 5000; i++) { g.fillStyle = `rgba(10,5,2,${0.12 + rng() * 0.25})`; g.fillRect(rng() * 1024, rng() * 1024, 1 + rng() * 3, 0.8); }
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.anisotropy = renderer.capabilities.getMaxAnisotropy(); return t;
+  }
+  const woodTex = walnut();
+  const wood = new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.42, metalness: 0, envMapIntensity: 0.55 });
+  const woodSide = wood.clone(); woodSide.map = woodTex.clone(); woodSide.map.repeat.set(3, 0.6); woodSide.map.needsUpdate = true;
+  woodSide.envMapIntensity = 0.18; woodSide.color.set(0xa08070);
+  const woodIn = wood.clone(); woodIn.side = THREE.BackSide; woodIn.map = woodSide.map;
+  const table = new THREE.Group(); scene.add(table);
+  const top = new THREE.Mesh(new THREE.RingGeometry(RIM_IN, RIM_OUT, 256, 1), wood); top.rotation.x = -Math.PI / 2; top.position.y = RIM_H; table.add(top);
+  const side = new THREE.Mesh(new THREE.CylinderGeometry(RIM_OUT, RIM_OUT - 0.02, RIM_H - FLOOR, 256, 1, true), woodSide); side.position.y = (RIM_H + FLOOR) / 2; table.add(side);
+  const inner = new THREE.Mesh(new THREE.CylinderGeometry(RIM_IN, RIM_IN, RIM_H + 0.03, 256, 1, true), woodIn); inner.position.y = (RIM_H - 0.03) / 2; table.add(inner);
+  [[RIM_OUT - 0.006, 0.007], [RIM_IN + 0.004, 0.0045]].forEach(([r, t]) => { const b = new THREE.Mesh(new THREE.TorusGeometry(r, t, 10, 256), wood); b.rotation.x = Math.PI / 2; b.position.y = RIM_H - t * 0.5; table.add(b); });
+
+  // tatami floor and the table's soft long shadow
+  const tatami = new THREE.TextureLoader().load('../../img/ui/tatami.jpg', () => wake(true));
+  tatami.colorSpace = THREE.SRGBColorSpace; tatami.wrapS = tatami.wrapT = THREE.RepeatWrapping; tatami.repeat.set(5.5, 8); tatami.anisotropy = 8;
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(18, 18), new THREE.MeshStandardMaterial({ map: tatami, color: 0x5e5139, roughness: 0.95, envMapIntensity: 0.1 }));
+  floor.rotation.x = -Math.PI / 2; floor.position.y = FLOOR; scene.add(floor);
+  {
+    const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d');
+    const grd = g.createRadialGradient(128, 128, 30, 128, 128, 128); grd.addColorStop(0, 'rgba(0,0,0,.82)'); grd.addColorStop(.55, 'rgba(0,0,0,.55)'); grd.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = grd; g.fillRect(0, 0, 256, 256);
+    const sh = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 3.0), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false, color: 0x000000 }));
+    sh.rotation.x = -Math.PI / 2; sh.rotation.z = Math.atan2(LDIR.x, LDIR.z); sh.position.set(-LDIR.x * 0.5, FLOOR + 0.002, -LDIR.z * 0.5); scene.add(sh);
+  }
+
+  // the steel ball
+  const ball = new THREE.Mesh(new THREE.SphereGeometry(BALL.R, 48, 32), new THREE.MeshStandardMaterial({ color: 0xf4f4f4, metalness: 1, roughness: 0.07, envMapIntensity: 1.25 }));
+  scene.add(ball);
+  const setBall = (x, z) => ball.position.set(x, BALL.R - BALL.D * 0.85, z);
+
+  // stones for the awards
+  const stoneMeshes = STONES.map((st, i) => {
+    let g = new THREE.IcosahedronGeometry(1, 4); g.deleteAttribute('normal'); g.deleteAttribute('uv'); g = mergeVertices(g);
+    const p = g.attributes.position, v = new THREE.Vector3(), k = [rng() * 9, rng() * 9, rng() * 9];
+    for (let j = 0; j < p.count; j++) {
+      v.fromBufferAttribute(p, j);
+      const n = 1 + 0.13 * Math.sin(v.x * 2.3 + k[0]) * Math.sin(v.z * 1.9 + k[1]) + 0.07 * Math.sin(v.y * 3.1 + k[2]) + 0.03 * Math.sin(v.x * 7 + v.z * 5);
+      v.multiplyScalar(n); p.setXYZ(j, v.x, v.y, v.z);
+    }
+    g.computeVertexNormals();
+    const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color: [0x6b665e, 0x5a5751, 0x74695a, 0x625c55][i], roughness: 0.72, envMapIntensity: 0.7, transparent: true, opacity: 0 }));
+    m.scale.set(st.s, st.s * 0.58, st.s * 0.86); m.rotation.y = rng() * 6.28;
+    m.visible = false; m.userData = { t: 0, dir: 0 };
+    m.position.set(st.pos[0], 0, st.pos[1]);
+    scene.add(m); return m;
+  });
+
+  // ---- sand surface shader
+  const SEG = MOBILE ? 220 : 380;
+  const sandGeo = new THREE.PlaneGeometry(2 * S, 2 * S, SEG, SEG); sandGeo.rotateX(-Math.PI / 2);
+  const sandMat = new THREE.ShaderMaterial({
+    uniforms: {
+      uH: { value: null }, uTexW: { value: TEXW }, uL: { value: LDIR }, uCam: { value: camera.position },
+      uLightCol: { value: new THREE.Color(1.0, 0.8, 0.58).multiplyScalar(2.35) }, uAmb: { value: new THREE.Color(0.3, 0.28, 0.27) },
+      uBall: { value: new THREE.Vector4(0, 0, 0, BALL.R) }, uStones: { value: [0, 1, 2, 3].map(() => new THREE.Vector4()) },
+      uGrain: { value: 400 },
+    },
+    vertexShader: `
+      uniform sampler2D uH; varying vec3 vW;
+      void main(){ vec3 p = position; p.y += texture(uH, p.xz / ${(2 * S).toFixed(4)} + .5).r / ${HS.toFixed(1)}; vW = p; gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.); }`,
+    fragmentShader: `
+      uniform sampler2D uH; uniform float uTexW, uGrain; uniform vec3 uL, uCam, uLightCol, uAmb; uniform vec4 uBall; uniform vec4 uStones[4];
+      varying vec3 vW;
+      float Hs(vec2 xz){ return texture(uH, xz / ${(2 * S).toFixed(4)} + .5).r / ${HS.toFixed(1)}; }
+      float hash(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); } // Dave Hoskins' hash-without-sine
+      float vnoise(vec2 p){ vec2 i = floor(p), f = fract(p), u = f * f * (3. - 2. * f);
+        return mix(mix(hash(i), hash(i + vec2(1, 0)), u.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), u.x), u.y); }
+      // analytic soft shadow of a sphere, after Inigo Quilez
+      float sphShadow(vec3 ro, vec3 rd, vec4 s, float k){
+        vec3 oc = ro - s.xyz; float b = dot(oc, rd), c = dot(oc, oc) - s.w * s.w, h = b * b - c;
+        float d = sqrt(max(0., s.w * s.w - h)) - s.w, t = -b - sqrt(max(h, 0.));
+        return t < 0. ? 1. : smoothstep(0., 1., 2.5 * k * d / t);
+      }
+      void main(){
+        vec2 xz = vW.xz; float r = length(xz);
+        if (r > ${RIM_IN.toFixed(4)}) discard;
+        float e = uTexW, h = Hs(xz);
+        float hx = Hs(xz + vec2(e, 0.)) - Hs(xz - vec2(e, 0.)), hz = Hs(xz + vec2(0., e)) - Hs(xz - vec2(0., e));
+        vec3 n = normalize(vec3(-hx, 2. * e, -hz));
+        // grain: a fine bumpy normal, and the odd grain that catches the light like a mirror
+        vec2 gp = xz * uGrain * 1.6; float g0 = vnoise(gp), g1 = vnoise(gp + vec2(.6, 0.)), g2 = vnoise(gp + vec2(0., .6));
+        vec3 ng = normalize(n + vec3(g0 - g1, 0., g0 - g2) * .55);
+        vec3 L = normalize(uL); vec2 dir = normalize(L.xz); float tanE = L.y / length(L.xz);
+        vec3 P = vec3(xz.x, h, xz.y), V = normalize(uCam - P);
+        // grooves shade themselves: march the heightfield toward the low sun
+        float sh = 1.;
+        for (int i = 1; i <= ${MOBILE ? 7 : 11}; i++) {
+          float t = float(i) * ${MOBILE ? '0.0055' : '0.0035'}; float w = .00035 + t * .035;
+          sh = min(sh, smoothstep(-w, w * .6, h + tanE * t - Hs(xz + dir * t)));
+        }
+        // the walnut rim throws a band of shade on the lamp side
+        float b = dot(xz, dir), c = dot(xz, xz) - ${(RIM_IN * RIM_IN).toFixed(5)}, tx = -b + sqrt(max(b * b - c, 0.));
+        float wr = .002 + tx * .05; sh *= smoothstep(${RIM_H.toFixed(3)} - wr, ${RIM_H.toFixed(3)} + wr, h + tanE * tx);
+        sh *= sphShadow(P, L, uBall, 9.);
+        float ao = 1.;
+        for (int i = 0; i < 4; i++) { vec4 s = uStones[i]; if (s.w > 0.) { sh *= sphShadow(P, L, vec4(s.x, s.y + s.w * .15, s.z, s.w * .78), 5.); float ds = max(length(xz - s.xz) - s.w * .75, 0.); ao *= 1. - .55 * exp(-ds * ds / (s.w * s.w * .08)); } }
+        // ambient occlusion in the grooves
+        float avg = 0.;
+        for (int i = 0; i < 8; i++) { float a = float(i) * .7853982 + .39; avg += Hs(xz + vec2(cos(a), sin(a)) * .014); }
+        ao *= clamp(1. - max(avg / 8. - h, 0.) * 75., .5, 1.);
+        float db = length(xz - uBall.xz); ao *= 1. - .6 * exp(-db * db / (uBall.w * uBall.w * 1.3));
+        ao *= mix(.5, 1., smoothstep(${RIM_IN.toFixed(3)}, ${(RIM_IN - 0.06).toFixed(3)}, r));
+        vec2 cell = floor(xz * uGrain);
+        float big = vnoise(xz * 2.6) * .6 + vnoise(xz * 9.) * .4;
+        vec3 alb = vec3(.74, .615, .44) * (.93 + .1 * big) * (.95 + .09 * hash(cell));
+        alb *= 1. - clamp(-h * 22., 0., .1);
+        float ndl = max(dot(ng, L), 0.);
+        vec3 col = alb * (uLightCol * ndl * sh + uAmb * ao * (.6 + .4 * ng.y));
+        col += uLightCol * pow(max(dot(ng, normalize(L + V)), 0.), 30.) * .035 * sh;
+        vec3 gn = normalize(n * 1.2 + vec3(hash(cell + 3.1) - .5, 0., hash(cell + 7.7) - .5) * 1.1);
+        col += uLightCol * step(.955, hash(cell + 17.)) * pow(max(dot(reflect(-L, gn), V), 0.), 90.) * sh * 2.2;
+        col *= .88 + .22 * smoothstep(-1., 1.1, dot(xz, dir));
+        gl_FragColor = vec4(col, 1.);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
+  });
+  const sand = new THREE.Mesh(sandGeo, sandMat); scene.add(sand);
+
+  // ---- layout: the camera is fixed; only the window size moves it
+  const DPR = Math.min(devicePixelRatio || 1, MOBILE ? 1.5 : 2);
+  let W = 0, H = 0, pxPerUnit = 400;
+  const v3 = new THREE.Vector3();
+  const toScreen = (x, y, z) => { v3.set(x, y, z).project(camera); return [(v3.x * 0.5 + 0.5) * W, (-v3.y * 0.5 + 0.5) * H]; };
+  function layout() {
+    W = innerWidth; H = innerHeight; const m = small();
+    renderer.setPixelRatio(DPR); renderer.setSize(W, H, false);
+    const elev = THREE.MathUtils.degToRad(m ? 58 : 49);
+    camera.fov = m ? 30 : 26; camera.aspect = W / H;
+    const halfV = Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2), halfH = halfV * camera.aspect;
+    const d = Math.max(1.25 / (halfH * (m ? 0.96 : 0.66)), (1.2 * Math.sin(elev) + 0.36 * Math.cos(elev)) / (halfV * (m ? 0.52 : 0.86)));
+    camera.position.set(0, Math.sin(elev) * d, Math.cos(elev) * d);
+    camera.lookAt(0, -0.04, 0);
+    if (m) camera.setViewOffset(W, H, 0, H * 0.19, W, H); else camera.setViewOffset(W, H, W * 0.1, H * 0.01, W, H);
+    camera.updateProjectionMatrix(); camera.updateMatrixWorld();
+    const a = toScreen(0, 0, 0), b = toScreen(0.1, 0, 0); pxPerUnit = Math.hypot(b[0] - a[0], b[1] - a[1]) / 0.1;
+    sandMat.uniforms.uGrain.value = Math.min(420, pxPerUnit * DPR * 0.42);
+    placeRim(); labels.forEach(placeLabel);
+  }
+
+  // lay a flat HTML element onto a surface: map its x axis to world ax, its y axis to world ay
+  function lay(el, pos, ax, ay, align, keep = 0.35, level = 0) {
+    const u = 0.02, k = 1 / pxPerUnit;
+    const o = toScreen(pos[0], pos[1], pos[2]);
+    const px = toScreen(pos[0] + ax[0] * u, pos[1] + ax[1] * u, pos[2] + ax[2] * u);
+    const py = toScreen(pos[0] + ay[0] * u, pos[1] + ay[1] * u, pos[2] + ay[2] * u);
+    let a = (px[0] - o[0]) * k / u, b = (px[1] - o[1]) * k / u, c = (py[0] - o[0]) * k / u, d = (py[1] - o[1]) * k / u;
+    c += (-b - c) * keep; d += (a - d) * keep; // keep some height so the words stay readable
+    if (level) { // turn part of the way back toward upright, keeping the scale
+      const ang = Math.atan2(b, a) * level, cs = Math.cos(-ang), sn = Math.sin(-ang);
+      [a, b, c, d] = [cs * a - sn * b, sn * a + cs * b, cs * c - sn * d, sn * c + cs * d];
+    }
+    const w = el.offsetWidth, h = el.offsetHeight, ox = align === 'l' ? 0 : align === 'r' ? w : w / 2, oy = h / 2;
+    el.style.transform = `matrix(${a},${b},${c},${d},${o[0] - (a * ox + c * oy)},${o[1] - (b * ox + d * oy)})`;
+  }
+
+  // ---- the rim menu
+  const words = [...document.querySelectorAll('.word')], seal = $('.seal');
+  function placeRim() {
+    const m = small(), RM = (RIM_IN + RIM_OUT) / 2, gap = m ? 3 : 22;
+    const at = a => toScreen(RM * Math.sin(a), RIM_H, -RM * Math.cos(a));
+    // walk along the projected rim so neighbouring words sit a fixed gap apart on screen
+    const ws = words.map(el => el.offsetWidth), need = ws.slice(1).map((w, i) => (ws[i] + w) / 2 + gap);
+    const walk = (a, px, dir) => { let d = 0, p = at(a); while (d < px) { const q = at(a + dir * 0.002); d += Math.hypot(q[0] - p[0], q[1] - p[1]); p = q; a += dir * 0.002; } return a; };
+    const angs = [walk(Math.PI, need.reduce((x, y) => x + y) / 2, 1)];
+    need.forEach(px => angs.push(walk(angs[angs.length - 1], px, -1)));
+    words.forEach((el, i) => {
+      const a = angs[i];
+      lay(el, [RM * Math.sin(a), RIM_H, -RM * Math.cos(a)], [-Math.cos(a), 0, -Math.sin(a)], [Math.sin(a), 0, -Math.cos(a)], 'c', 0.2, m ? 0.4 : 0.15);
+    });
+    const a = walk(angs[angs.length - 1], ws[ws.length - 1] / 2 + (m ? 26 : 60), -1);
+    lay(seal, [RM * Math.sin(a), RIM_H, -RM * Math.cos(a)], [-Math.cos(a), 0, -Math.sin(a)], [Math.sin(a), 0, -Math.cos(a)], 'c', 0.1);
+  }
+
+  // ---- labels pressed into the sand
+  const marksEl = $('#marks');
+  let labels = [];
+  function makeLabel(spec) {
+    const el = document.createElement(spec.href ? 'a' : 'div');
+    el.className = `lbl ${spec.a || 'c'}${spec.minor ? ' minor' : ''}${spec.num ? ' num' : ''}`;
+    if (spec.href) el.href = spec.href;
+    const t = document.createElement('span'); t.textContent = spec.t; el.append(t);
+    if (spec.m !== undefined) {
+      t.className = 'full';
+      if (spec.m) { const m = document.createElement('span'); m.className = 'short'; m.textContent = spec.m; el.append(m); } else el.classList.add('wide');
+    }
+    if (spec.sub) { const s = document.createElement('small'); s.textContent = spec.sub; el.append(s); }
+    marksEl.append(el);
+    const L = { el, spec, r: Math.hypot(spec.pos[0], spec.pos[1]) };
+    placeLabel(L); labels.push(L); return L;
+  }
+  function placeLabel(L) { lay(L.el, [L.spec.pos[0], 0.002, L.spec.pos[1]], [1, 0, 0], [0, 0, 1], L.spec.a || 'c', 0.3); }
+  function dropLabel(L) { L.el.classList.remove('on'); setTimeout(() => L.el.remove(), reduce ? 0 : 950); labels = labels.filter(x => x !== L); }
+
+  // ---- motion: the ball follows a path at an even pace
+  const DS = 0.004;
+  function resample(pts) {
+    const out = [pts[0]]; let start = pts[0], carry = 0;
+    for (let i = 1; i < pts.length; i++) {
+      const q = pts[i]; let seg = Math.hypot(q[0] - start[0], q[1] - start[1]);
+      while (carry + seg >= DS) {
+        const t = (DS - carry) / seg, p = [start[0] + (q[0] - start[0]) * t, start[1] + (q[1] - start[1]) * t];
+        out.push(p); start = p; seg = Math.hypot(q[0] - p[0], q[1] - p[1]); carry = 0;
+      }
+      carry += seg; start = q;
+    }
+    const last = pts[pts.length - 1];
+    if (carry > 1e-6) out.push(last);
+    return { r: out, total: (out.length - 2) * DS + (carry > 1e-6 ? carry : DS), gap: carry > 1e-6 ? carry : DS };
+  }
+  function pointAt(seg, s) {
+    const n = seg.r.length; if (n === 1) return seg.r[0];
+    let i = Math.floor(s / DS); if (i >= n - 1) return seg.r[n - 1];
+    const len = i === n - 2 ? seg.gap : DS, t = Math.min(1, (s - i * DS) / len), a = seg.r[i], b = seg.r[i + 1];
+    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+  }
+  function makeSeg(pts, mode, speed, marks = []) { const R = resample(pts); return { ...R, mode, speed, marks, mi: 0, s: 0 }; }
+  function erasePath(from, aEnd) {
+    const P = newPath(); P.to(from[0], from[1]).to(0, 0);
+    const RMAX = 0.955, turns = Math.floor(RMAX / PITCH), aE = ((aEnd % TAU) + TAU) % TAU, Th = turns * TAU + aE, pitch = RMAX * TAU / Th;
+    const n = Math.ceil(Th * RMAX / 0.01);
+    for (let i = 1; i <= n; i++) { const th = Th * i / n; P.to(...pol(pitch * th / TAU, th)); }
+    return P;
+  }
+
+  let job = null, current = 'name', boost = 0, pending = [];
+  function fire(m) {
+    if (m.label) { const L = pending.find(x => x.spec === m.label); if (L) { L.el.classList.add('on'); pending = pending.filter(x => x !== L); } }
+    if (m.item !== undefined) nowItem(m.item);
+    if (m.stone !== undefined) placeStone(m.stone);
+  }
+  function drawSeg(id, fromRim) {
+    const P = CHAPTERS[id]();
+    const first = P.p[0], a = Math.atan2(first[0], -first[1]) || 0, rim = pol(0.955, a);
+    const lead = fromRim ? Math.hypot(first[0] - rim[0], first[1] - rim[1]) : 0;
+    const pts = fromRim ? [rim, ...P.p] : P.p;
+    const marks = P.marks.map(m => ({ ...m, at: m.at + lead }));
+    const fast = P.fast.map(([x, y]) => [x + lead, y + lead]);
+    pending = marks.filter(m => m.label).map(m => makeLabel(m.label));
+    return { P, a, rim, pts, marks, fast };
+  }
+  function start(id, first) {
+    current = id;
+    words.forEach(w => w.setAttribute('aria-current', String(w.dataset.ch === id)));
+    showKey(id);
+    // clear what is there: pending labels vanish, shown ones wait for the rake
+    pending.forEach(L => { L.el.remove(); labels = labels.filter(x => x !== L); });
+    pending = [];
+    const old = labels.slice();
+    const D = drawSeg(id, true);
+    if (reduce) {
+      old.forEach(dropLabel); stoneMeshes.forEach((m, i) => { if (m.visible) hideStone(i, true); });
+      pass(initMat);
+      const seg = makeSeg(D.pts, 'draw', 1, D.marks);
+      stamp(seg.r, BALL, 'draw');
+      for (let i = 0; i < 40; i++) relax();
+      seg.marks.forEach(m => fire(m, true)); nowItem(-1);
+      setBall(...seg.r[seg.r.length - 1]); job = null; relaxLeft = 0;
+      status.textContent = `${TITLES[id]} drawn.`;
+      wake(true); return;
+    }
+    const segs = [];
+    if (!first) {
+      const E = erasePath([ball.position.x, ball.position.z], D.a);
+      const e = makeSeg(E.p, 'rake', 0); e.speed = e.total / (MOBILE ? 4.2 : 4.8); e.old = old; segs.push(e);
+    } else old.forEach(dropLabel);
+    const d = makeSeg(D.pts, 'draw', 0, D.marks); d.fast = D.fast;
+    const slow = d.total - D.fast.reduce((x, [a, b]) => x + b - a, 0) * (1 - 1 / 4);
+    d.speed = Math.min(3.2, Math.max(1.2, slow / 7.5)); segs.push(d);
+    job = { segs, k: 0 };
+    status.textContent = `Drawing ${TITLES[id]}.`;
+    wake();
+  }
+  function advance(dt) {
+    const seg = job.segs[job.k];
+    const ease = seg.mode === 'rake' ? Math.min(1, 0.3 + seg.s / 0.4) : Math.min(1, 0.35 + seg.s / 0.2) * Math.min(1, 0.3 + (seg.total - seg.s) / 0.25);
+    const hurry = seg.fast && seg.fast.some(([a, b]) => seg.s >= a && seg.s < b) ? 4 : 1;
+    const s0 = seg.s, s1 = Math.min(seg.total, s0 + seg.speed * ease * hurry * (1 + boost) * dt);
+    const pts = [pointAt(seg, s0)];
+    for (let i = Math.floor(s0 / DS) + 1; i * DS < s1 && i < seg.r.length; i++) pts.push(seg.r[i]);
+    const end = pointAt(seg, s1); pts.push(end);
+    stamp(pts, seg.mode === 'rake' ? RAKE : BALL, seg.mode);
+    setBall(end[0], end[1]);
+    seg.s = s1;
+    if (seg.mode === 'rake') { // the rake passes over old words and stones and they are gone
+      const rr = Math.hypot(end[0], end[1]);
+      if (seg.s > 0.3) seg.old.slice().forEach(L => { if (L.r < rr + 0.03) { dropLabel(L); seg.old = seg.old.filter(x => x !== L); } });
+      stoneMeshes.forEach((m, i) => { if (m.visible && m.userData.dir >= 0 && Math.hypot(STONES[i].pos[0], STONES[i].pos[1]) < rr + 0.06 && seg.s > 0.3) hideStone(i); });
+    }
+    while (seg.mi < seg.marks.length && seg.marks[seg.mi].at <= s1 + 1e-9) fire(seg.marks[seg.mi++]);
+    if (s1 >= seg.total) {
+      if (seg.mode === 'rake') seg.old.forEach(dropLabel);
+      job.k++;
+      if (job.k >= job.segs.length) { job = null; nowItem(-1); status.textContent = `${TITLES[current]} drawn.`; }
+    }
+  }
+
+  // ---- stones
+  function placeStone(i) {
+    const m = stoneMeshes[i]; m.visible = true; m.userData.dir = 1;
+    stamp([STONES[i].pos], { R: STONES[i].s * 1.05, D: 0.0045, W: 0.018, H: 0.0026 }, 'draw');
+    if (reduce) m.userData.t = 1;
+  }
+  function hideStone(i, now) { const m = stoneMeshes[i]; m.userData.dir = -1; if (now) { m.userData.t = 0; m.visible = false; } }
+  function animStones(dt) {
+    let busy = false;
+    stoneMeshes.forEach((m, i) => {
+      const u = m.userData, st = STONES[i];
+      if (u.dir) { u.t = Math.min(1, Math.max(0, u.t + u.dir * dt / 0.7)); busy = true; if (u.t === 0 && u.dir < 0) { m.visible = false; u.dir = 0; } if (u.t === 1 && u.dir > 0) u.dir = 0; }
+      const e = 1 - Math.pow(1 - u.t, 3);
+      m.material.opacity = e;
+      m.position.y = st.s * 0.1 + (1 - e) * (u.dir < 0 ? -0.06 : 0.12);
+      sandMat.uniforms.uStones.value[i].set(st.pos[0], m.position.y, st.pos[1], m.visible ? st.s * e : 0);
+    });
+    return busy;
+  }
+
+  // ---- the visitor's own finger in the sand (local only; the camera never moves)
+  const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), hit = new THREE.Vector3(), ndc = new THREE.Vector2();
+  let finger = [], dragging = false;
+  function pick(e, clamp) {
+    ndc.set(e.clientX / W * 2 - 1, -(e.clientY / H) * 2 + 1);
+    ray.setFromCamera(ndc, camera);
+    if (!ray.ray.intersectPlane(plane, hit)) return null;
+    let x = hit.x, z = hit.z; const r = Math.hypot(x, z);
+    if (r > 0.97) { if (!clamp) return null; x *= 0.97 / r; z *= 0.97 / r; }
+    return [x, z];
+  }
+  canvas.addEventListener('pointerdown', e => { const p = pick(e); if (!p) return; dragging = true; canvas.setPointerCapture(e.pointerId); finger = [p, p]; wake(); });
+  canvas.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const p = pick(e, true), q = finger[finger.length - 1];
+    if (p && (!q || Math.hypot(p[0] - q[0], p[1] - q[1]) > 0.003)) { finger.push(p); wake(); }
+  });
+  const lift = () => { dragging = false; };
+  canvas.addEventListener('pointerup', lift); canvas.addEventListener('pointercancel', lift);
+  addEventListener('wheel', e => { if (job) { boost = Math.min(3, boost + Math.abs(e.deltaY) / 260); wake(); } }, { passive: true });
+
+  words.forEach(w => w.addEventListener('click', () => {
+    if (w.dataset.ch === current && !job) return;
+    if (w.dataset.ch === current && job) { boost = 3; return; } // pressing the same word again hurries it along
+    start(w.dataset.ch);
+  }));
+
+  // ---- loop: runs only while something moves, then sleeps
+  let raf = 0, last = 0, dirty = true;
+  function render() {
+    sandMat.uniforms.uH.value = rtA.texture;
+    sandMat.uniforms.uBall.value.set(ball.position.x, ball.position.y, ball.position.z, BALL.R);
+    renderer.render(scene, camera);
+  }
+  function frame(t) {
+    raf = 0;
+    if (reading) return;
+    const dt = Math.min(0.05, Math.max(0.001, (t - last) / 1000)) * QA_SPEED; last = t;
+    let busy = false;
+    if (job) { advance(dt); busy = true; }
+    if (finger.length > 1) { stamp(finger, FINGER, 'draw'); finger = [finger[finger.length - 1]]; }
+    if (dragging) busy = true; else finger = [];
+    if (relaxLeft > 0) { relax(); if (!MOBILE && relaxLeft > 1) { relax(); relaxLeft--; } relaxLeft--; busy = true; }
+    if (animStones(dt)) busy = true;
+    boost *= 0.95;
+    render(); dirty = false;
+    if (busy) raf = requestAnimationFrame(frame);
+  }
+  wake = (force) => { if (force) dirty = true; if (!raf && !reading) { last = performance.now(); raf = requestAnimationFrame(frame); } };
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(true); });
+  addEventListener('resize', () => { layout(); wake(true); });
+  canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); document.body.classList.add('nogl'); setReading(true); });
+
+  // ---- first frame: a freshly raked table, the ball at the rim, then it writes the name
+  layout();
+  pass(initMat);
+  const a0 = (() => { const P = CHAPTERS.name(); return Math.atan2(P.p[0][0], -P.p[0][1]); })();
+  setBall(...pol(0.955, a0));
+  start('name', true);
+  return true;
+}
+
+if (!boot()) { document.body.classList.add('nogl'); setReading(true); }
+</script>
+</body>
+</html>

@@ -1,0 +1,1094 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gravity · George Michoulis</title>
+<meta name="description" content="George Michoulis, 2015 to 2026, as a pile of real objects: degrees, roles, papers, certificates and awards fall into a studio year by year as you scroll.">
+<meta name="theme-color" content="#d3bcaa">
+<!-- Light only, on purpose: the scene is a daylight studio (clay sweep, one key light). The text
+     version follows the reader's colour scheme. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --clay:#d3bcaa;--ink:#2a2420;--ink-2:#5a4d43;--ink-3:#7b6b5e;--paper:#f5f0e7;--rule:rgba(42,36,32,.16);--verm:#c8432a;
+  --serif:'Libre Caslon Text',Georgia,serif;--display:'Libre Caslon Display','Libre Caslon Text',Georgia,serif;--sans:'Hanken Grotesk',system-ui,sans-serif;
+  --pad:clamp(16px,2.6vw,34px);
+}
+*{box-sizing:border-box}
+html{background:var(--clay);scrollbar-gutter:stable;-webkit-text-size-adjust:100%}
+html.lock{overflow:hidden}
+body{margin:0;background:var(--clay);color:var(--ink);font:400 15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* the studio */
+#gl{position:fixed;inset:0;width:100%;height:100vh;height:100lvh;display:block;touch-action:pan-y;opacity:0;transition:opacity 1s ease}
+#gl.on{opacity:1}
+#gl.grab{cursor:grab}#gl.grabbing{cursor:grabbing}
+#time{height:1000vh;pointer-events:none}
+
+/* corner furniture */
+.ui{position:fixed;z-index:5;font-size:13px;color:var(--ink-2)}
+.back{top:var(--pad);left:var(--pad);text-decoration:none;padding:6px 0}
+.back:hover{color:var(--ink)}
+.corner{top:var(--pad);right:var(--pad);display:flex;align-items:center;gap:18px}
+.corner a{text-decoration:none;border-bottom:1px solid var(--rule);padding:4px 0 2px;color:var(--ink)}
+.corner a:hover{border-color:var(--ink)}
+.corner button{background:none;border:1px solid var(--rule);border-radius:999px;padding:6px 13px;cursor:pointer;color:var(--ink);transition:border-color .2s,background .2s}
+.corner button:hover{border-color:var(--ink);background:rgba(255,255,255,.25)}
+.clock{left:var(--pad);bottom:var(--pad);pointer-events:none}
+.clock b{display:block;font:400 clamp(58px,7.4vw,112px)/.86 var(--display);letter-spacing:-.01em;color:var(--ink);font-variant-numeric:lining-nums tabular-nums}
+.clock span{display:block;margin-top:12px;max-width:34ch;line-height:1.45;transition:opacity .8s}
+.clock span.dim{opacity:.55}
+.ruler{right:var(--pad);top:22vh;bottom:22vh;width:54px;pointer-events:auto}
+.ruler button{position:absolute;right:18px;transform:translateY(-50%);border:0;background:none;padding:3px 0;font:500 10.5px/1 var(--sans);letter-spacing:.04em;color:var(--ink-3);cursor:pointer;font-variant-numeric:tabular-nums}
+.ruler button::after{content:'';position:absolute;right:-18px;top:50%;width:9px;height:1px;background:currentColor;opacity:.7}
+.ruler button:hover{color:var(--ink)}
+.ruler .now{position:absolute;right:0;width:16px;height:2px;margin-top:-1px;background:var(--ink);transition:top .12s linear}
+.ruler button.on{color:var(--ink)}
+
+/* in-world tag: a paper label on a thread */
+.tag{position:fixed;left:0;top:0;z-index:4;pointer-events:none;max-width:250px;padding:7px 10px 8px;background:var(--paper);border:1px solid rgba(42,36,32,.2);border-radius:2px;
+  box-shadow:0 6px 18px -8px rgba(60,40,25,.45);transform:translate(-50%,-100%);opacity:0;transition:opacity .18s}
+.tag.on{opacity:1}
+.tag::after{content:'';position:absolute;left:50%;top:100%;width:1px;height:22px;background:rgba(42,36,32,.45)}
+.tag small{display:block;font:600 10px/1.3 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.tag strong{display:block;margin-top:2px;font:400 13.5px/1.3 var(--serif);color:var(--ink)}
+.tag a{pointer-events:auto}
+.tag.link{pointer-events:auto}
+
+/* brought to the front */
+.cap{position:fixed;z-index:6;left:50%;bottom:var(--pad);transform:translateX(-50%);width:min(620px,calc(100vw - 32px));padding:16px 20px 16px;background:var(--paper);border:1px solid rgba(42,36,32,.18);border-radius:3px;
+  box-shadow:0 18px 40px -20px rgba(60,40,25,.5);opacity:0;transition:opacity .3s,transform .4s cubic-bezier(.2,.8,.2,1)}
+.cap.on{opacity:1}
+.cap:focus{outline:none}
+.cap[hidden]{display:none}
+.cap small{display:block;font:600 10.5px/1.3 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.cap h2{margin:4px 0 4px;font:400 20px/1.3 var(--serif);text-wrap:balance}
+.cap p{margin:4px 0 0;color:var(--ink-2);font-size:14px}
+.cap ul{margin:6px 0 0;padding-left:18px;color:var(--ink-2);font-size:13.5px;columns:2 220px;column-gap:24px}
+.cap .row{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin-top:12px}
+.cap .row a{font-size:13.5px}
+.cap button{margin-left:auto;background:none;border:1px solid var(--rule);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:12.5px;color:var(--ink)}
+.cap button:hover{border-color:var(--ink)}
+
+/* everything in the pile, for keyboards and screen readers */
+.things{position:fixed;z-index:7;left:0;bottom:0;width:0;height:0;margin:0;padding:0;list-style:none}
+.things button{position:absolute;left:0;top:0;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;padding:0;background:none}
+.things button:focus-visible{position:fixed;left:50%;top:auto;bottom:var(--pad);transform:translateX(-50%);width:max-content;max-width:min(560px,calc(100vw - 32px));height:auto;clip-path:none;white-space:normal;text-align:left;
+  padding:8px 12px;background:var(--paper);border:1px solid var(--ink);border-radius:3px;font-size:13px;line-height:1.4}
+html.front .things{display:none}
+
+/* the text version */
+#text{display:none;max-width:44rem;margin:0 auto;padding:clamp(88px,12vh,130px) 20px 80px;font:400 17px/1.62 var(--serif);color:var(--ink)}
+html.reading{background:var(--paper)}
+html.reading body{background:var(--paper)}
+html.reading #text{display:block}
+html.reading #gl,html.reading #time,html.reading .clock,html.reading .ruler,html.reading .things,html.reading .tag,html.reading .cap{display:none!important}
+#text h1{margin:0;font:400 clamp(40px,6vw,64px)/1.02 var(--display);letter-spacing:-.01em}
+#text .lede{margin:18px 0 0;color:var(--ink-2)}
+#text .note{margin:22px 0 0;padding:12px 14px;border-left:2px solid var(--verm);background:rgba(200,67,42,.06);font:400 14.5px/1.5 var(--sans);color:var(--ink-2)}
+#text h2{margin:44px 0 10px;padding-top:12px;border-top:1px solid var(--rule);font:400 30px/1 var(--display);font-variant-numeric:lining-nums}
+#text ul{margin:0;padding:0;list-style:none}
+#text li{margin:0 0 12px}
+#text li>span:first-child{display:block;font:600 10.5px/1.5 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+#text li p{margin:0;color:var(--ink-2);font-size:15.5px}
+#text .quiet{color:var(--ink-3);font-style:italic}
+#text .end{margin-top:48px;padding-top:16px;border-top:1px solid var(--rule)}
+@media (prefers-color-scheme:dark){
+  html.reading,html.reading body{background:#191614}
+  html.reading #text{color:#ece4d8}
+  html.reading #text .lede,html.reading #text li p,html.reading #text .note{color:#bfb3a5}
+  html.reading #text li>span:first-child,html.reading #text .quiet{color:#9a8d80}
+  html.reading #text h2,html.reading #text .end{border-color:rgba(236,228,216,.16)}
+  html.reading .ui,html.reading .corner a,html.reading .corner button{color:#ece4d8}
+  html.reading .corner a,html.reading .corner button{border-color:rgba(236,228,216,.25)}
+  html.reading :focus-visible{outline-color:#ece4d8}
+}
+.no-gl #textBtn{display:none}
+
+@media (max-width:640px){
+  .corner{gap:12px}.corner a{font-size:12.5px}
+  .corner .mail-long{display:none}
+  .ruler{display:none}
+  .clock span{max-width:26ch;font-size:12.5px}
+  .cap{bottom:12px;padding:13px 15px}
+  .cap h2{font-size:17.5px}
+}
+@media (min-width:641px){.corner .mail-short{display:none}}
+@media (prefers-reduced-motion:reduce){
+  #gl,.tag,.cap,.clock span{transition:none}
+}
+</style>
+</head>
+<body>
+<script>
+document.documentElement.classList.add('js');
+if (location.hash === '#text') document.documentElement.classList.add('reading');
+</script>
+<h1 class="sr">George Michoulis, 2015 to 2026: a pile of degrees, roles, papers, certificates and awards</h1>
+<a class="ui back" href="index.html">← All ideas</a>
+<div class="ui corner">
+  <a href="mailto:gmixoulis@gmail.com"><span class="mail-long">gmixoulis@gmail.com</span><span class="mail-short">Email</span></a>
+  <button id="textBtn" type="button" aria-pressed="false">Read as text</button>
+</div>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="ui clock" aria-hidden="true"><b id="yr">2015</b><span id="hint">Scroll moves time forward. Drag anything to throw it, double-click to read it.</span></div>
+<div class="ui ruler" id="ruler" aria-hidden="true"><div class="now" id="now"></div></div>
+<div class="tag" id="tag" aria-hidden="true"><small></small><strong></strong></div>
+<section class="cap" id="cap" hidden tabindex="-1" aria-live="polite" aria-labelledby="cap-h"><small id="cap-k"></small><h2 id="cap-h"></h2><div id="cap-b"></div><div class="row" id="cap-r"><button type="button" id="cap-x">Drop it back <span aria-hidden="true">(Esc)</span></button></div></section>
+<nav aria-label="Everything in the pile, oldest first"><ul class="things" id="things"></ul></nav>
+<div id="time" aria-hidden="true"></div>
+
+<article id="text" aria-labelledby="t-h"></article>
+<noscript><p style="position:fixed;left:16px;right:16px;top:70px;font:16px/1.5 Georgia,serif">This page drops George Michoulis's CV into a 3D studio and needs JavaScript. Email: <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a> · <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a></p></noscript>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/","cannon-es":"https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"}}</script>
+<script type="module">
+/* ---------------------------------------------------------------------------------------------
+   Content. Every fact here comes from the CV data, publications.json (Google Scholar) or the
+   scans themselves (dates read off each certificate). One list drives the pile, the keyboard
+   list and the text version.
+--------------------------------------------------------------------------------------------- */
+const IMG = '../../img/renamed/';
+const SCHOLAR = 'https://scholar.google.com/citations?user=nk0lq8YAAAAJ';
+const SC = id => `https://scholar.google.com/citations?view_op=view_citation&hl=en&user=nk0lq8YAAAAJ&citation_for_view=nk0lq8YAAAAJ:${id}`;
+const COL = { bone: '#e7dfd1', sage: '#a9b09b', slate: '#8c98a0', sand: '#cdb27f', verm: '#c8432a', char: '#2e2a27', stone: '#ddd4c5', paper: '#f4efe6', brass: '#b28e57' };
+
+const ITEMS = [];
+const add = o => (ITEMS.push(o), o);
+
+add({ kind: 'name', y: 2015, title: 'George Michoulis', org: 'Thessaloniki, Greece', when: '2015',
+  note: 'The first thing in, in 2015, the year he started his BSc. Everything else lands on top of it.' });
+
+// roles: large blocks, the current one in vermilion
+[
+  [2022, '2022 – 2024', 'Blockchain & Full-Stack Developer', 'University of Nicosia / IFF', 'Large Next.js, NestJS and Docker applications, and a Web3 NFT marketplace.', COL.bone],
+  [2023, '2023 – 2025', 'Lecturer & Academic Partner', 'University of Derby / Mediterranean College', 'Taught Networks & Security, Web Scripting and Application Development, with inclusivity-first assessment.', COL.sage],
+  [2024, '2024 – 2026', 'Blockchain Developer & Researcher', 'Sidroco Holdings Ltd', 'An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ LMS and multinational EU projects.', COL.slate],
+  [2026, 'May 2026 – now', 'Web3 Full-Stack Developer', 'Cyberscope by TAC', 'Web3 products end to end: contracts, on-chain integrations, React and Next frontends, and security tooling.', COL.verm],
+].forEach(([y, when, title, org, note, color]) => add({ kind: 'role', y, when, title, org, note, color }));
+
+// degrees: heavy slabs faced with the real scans (year = the date printed on the degree)
+add({ kind: 'degree', y: 2021, title: 'BSc Applied Informatics', org: 'University of Macedonia', when: 'Studied 2015–2020 · degree dated 23 Feb 2021',
+  note: 'Graded “Very Good”. Thesis on verifying academic credentials on Ethereum.', file: '1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg', ar: 1742 / 2460 });
+add({ kind: 'degree', y: 2022, title: 'MSc Data and Web Science', org: 'Aristotle University of Thessaloniki', when: '2020–2022 · degree dated 27 Mar 2022',
+  note: 'Graded “Excellent”, funded by a DeepMind scholarship.', file: '1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg', ar: 1240 / 1755 });
+
+// papers: thin tiles whose area grows with the real Google Scholar citation count
+[
+  [2020, 11, 'Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe', 'XIV Balkan Conference on Operational Research', 'G Michoulis, S Petridou, K Vergidis', 'u5HHmVD_uO8C'],
+  [2022, 32, 'A process-aware approach for blockchain-based verification of academic qualifications', 'Simulation Modelling Practice and Theory, vol. 121', 'N Nousias, G Tsakalidis, G Michoulis, S Petridou, K Vergidis', 'IjCSPb-OGe4C'],
+  [2022, 0, 'Graph embedding and node features for drug-target interaction prediction', 'Aristotle University of Thessaloniki (MSc work)', 'G Michoulis', '9yKSN-GCB0IC'],
+  [2022, 0, 'Blockchain in higher education: permissioned and permissionless approaches', '4th Summit on Gender Equality in Computing', 'G Michoulis, N Nousias, S Basagiannis', '2osOgNQ5qMEC'],
+  [2023, 7, 'Exploring decentralized governance: a framework applied to Compound Finance', 'International Conference on Mathematical Research for Blockchain Economy', 'S Papangelou, K Christodoulou, G Michoulis', 'Tyk-4Ss8FVUC'],
+  [2024, 1, 'FraMark: a blockchain marketplace for 5G network management using fractional NFTs', '7th World Symposium on Communication Engineering', 'G Michoulis, K Tsourdinis, G Niotis, K Kyranou, E Fountoukidis, T Lagkas, …', 'YsMSGLbcyi4C'],
+  [2025, 1, 'Data security for smart cities', '', 'C Eleftheriadis, G Michoulis, E Fountoukidis, M Tzana, A Lytos, T Lagkas, …', 'ufrVoPGSRksC'],
+  [2025, 0, 'Unlocking 5G network slicing: a comprehensive survey on blockchain marketplace utilizing NFTs, AI, and advanced resource management', 'IEEE International Conference on Consumer Electronics (ICCE)', 'K Tsourdinis, G Michoulis, G Niotis, V Argyriou, T Lagkas, K Psanis, …', 'Y0pCki6q_DkC'],
+].forEach(([y, cites, title, org, authors, id]) => add({ kind: 'paper', y, cites, title, org, authors, when: String(y), link: SC(id) }));
+
+// awards: small dense medals
+[
+  [2015, 'Aien Aristevein progress award', 'Greek Ministry of Education', 'Oct 2015', 'First in class at the 1st General Lyceum of Kalamaria, school year 2014–15.', 'Award_Academic-Achievement.jpg'],
+  [2020, 'DeepMind scholarship', 'Aristotle University of Thessaloniki', '2020–2022', 'Funded the MSc in Data and Web Science.'],
+  [2020, 'Basic Research grant', 'University of Macedonia', '2020–2021', ''],
+  [2022, '3rd place, Infinitech Hackathon', 'Crowdpolicy', 'Jun 2022', ''],
+  [2025, 'Move/Sui Bootcamp award', 'Move Bootcamp Thessaloniki', '2025', ''],
+].forEach(([y, title, org, when, note, file]) => add({ kind: 'award', y, title, org, when, note, file }));
+
+// certificates: light cards with the scans, dates as printed on them
+[
+  ['Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg', 2015, 'Hydrobot marine educational robotics programme', 'Eugenides Foundation', 'School year 2014–15', 2157, 1509],
+  ['Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg', 2017, 'Grow Greek Tourism Online: digital skills seminar', 'Google', '13 Oct 2017', 1650, 1275],
+  ['Certificate-Of-Participation_GNULinux-Command-Line.jpg', 2017, 'GNU/Linux command line course series', 'University of Macedonia and GreekLUG', 'May 2017', 1495, 2171],
+  ['Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg', 2018, 'How to design and build a website', 'Google, Grow Greek Tourism Online', '20 Apr 2018', 1650, 1275],
+  ['English-Certificate_English-Certificate-English-Proficiency.jpg', 2018, 'Certificate of Proficiency in English (ECPE, C2)', 'Michigan Language Assessment', '20 May 2018', 1532, 2163],
+  ['Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg', 2018, 'TOEIC Listening and Reading, score 860', 'Hellenic American Union / ETS', '26 May 2018', 2284, 1620],
+  ['Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg', 2019, 'Software development for telecommunication networks', 'Intracom Telecom', '8 May 2019', 2127, 1496],
+  ['Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg', 2019, 'skg.code project: building a real-estate chatbot', 'skg.code / MKI Hellas', 'Oct–Dec 2019', 2219, 1519],
+  ['Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg', 2020, 'How to get published with IEEE', 'IEEE', '27 Feb 2020', 1650, 1275],
+  ['Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg', 2020, 'Introduction to Digital Currencies', 'University of Nicosia', '30 Apr 2020', 1754, 1241],
+  ['Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg', 2020, 'Internship at the Centre for European Legal Culture', 'Aristotle University of Thessaloniki', 'Oct 2019 – May 2020', 1755, 1241],
+  ['Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg', 2020, 'Accelerated CCNA (Cisco Certified Network Associate)', 'University of Thessaly, lifelong learning centre', 'Oct 2019 – Jun 2020', 2175, 1439],
+  ['Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg', 2020, 'Launch event and RippleX workshop', 'University of Nicosia, Institute For the Future', '11 Nov 2020', 1754, 1241],
+  ['Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg', 2021, 'Machine learning and deep neural networks (CVML short course)', 'Aristotle University of Thessaloniki', 'Apr 2021', 1755, 1240],
+  ['Certificate-Of-Completion_Advanced-Ethical-Hacking.png', 2021, 'Advanced ethical hacking, 48-hour seminar', 'Audax Cybersecurity', 'Dec 2021', 800, 600],
+  ['Certificate-Of-Completion_NFT-Talents-Program.jpg', 2022, 'NFT Talents programme', 'Frankfurt School Blockchain Center', '11 Oct 2022', 1500, 844],
+  ['Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg', 2023, 'Cybersecurity eLearning Academy, penetration testing track', 'College Link', '16 Apr 2023', 6667, 4959],
+  ['Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png', 2023, 'Establishing, funding and developing new enterprises', 'Athens University of Economics and Business', 'May 2023', 1575, 1112],
+  ['Certificate-Of-Completion_Cloud-Engineering.png', 2024, 'Cloud engineering (Azure, 90 hours)', 'Code.Hub', 'Dec 2024', 2481, 3509],
+  ['Certificate-Of-Completion_Rust-Developer.png', 2025, 'Certified Rust Developer', 'W3Schools', '29 Dec 2025', 2342, 1656],
+].forEach(([file, y, title, org, when, w, h]) => add({ kind: 'cert', y, title, org, when, file, ar: w / h }));
+
+// the rest of the scans share one card
+const REST = [
+  ['Certificate-Of-Completion_The-Hour-Of-Code.jpg', 'The Hour of Code', 'Code.org', '2013'],
+  ['Certificate-Of-Completion_Discover-Customer.jpg', 'Discover Customer', 'PepsiCo School', '2018'],
+  ['Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg', 'Blockchain for the legal industry', 'Block.co / University of Nicosia', '2020'],
+  ['Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg', 'Blockchain in education', 'Block.co / University of Nicosia', '2020'],
+  ['Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg', 'VeChain ToolChain in healthcare', 'University of Nicosia / VeChain', '2020'],
+  ['Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg', 'Data analytics for healthcare cybersecurity (CUREX)', 'Aristotle University of Thessaloniki', '2021'],
+  ['Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg', 'Processing data in the fog (RAINBOW)', 'Aristotle University of Thessaloniki', '2022'],
+  ['Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png', 'Marketing mix and brand', 'National and Kapodistrian University of Athens', '2023'],
+  ['Certificate-Of-Completion_Networking-Essentials.png', 'Networking Essentials', 'Cisco Networking Academy', 'undated'],
+  ['Certificate-Of-Participation_EY-Cyber-Day.jpg', 'EY Cyber Day', 'EY', 'undated'],
+];
+add({ kind: 'more', y: 2026, title: `+${REST.length} more certificates`, org: 'Scans without a card of their own', when: '2013–2023', rest: REST });
+add({ kind: 'email', y: 2026, title: 'gmixoulis@gmail.com', org: 'The last thing to land', when: '2026', link: 'mailto:gmixoulis@gmail.com' });
+
+/* drop order: structure first inside a year (so blocks carry the lighter things), mail last */
+const RANK = { name: 0, degree: 1, role: 2, paper: 3, award: 4, cert: 5, more: 6, email: 7 };
+ITEMS.sort((a, b) => a.y - b.y || RANK[a.kind] - RANK[b.kind]);
+const YEARS = Array.from({ length: 12 }, (_, i) => 2015 + i);
+YEARS.forEach(y => {
+  const L = ITEMS.filter(o => o.y === y);
+  L.forEach((o, k) => o.t = y + .1 + .8 * (k + .5) / L.length);
+});
+ITEMS[0].t = 2015; // the name falls the moment the page opens
+ITEMS.forEach((o, i) => { o.i = i; o.state = 'wait' });
+const LABEL = { name: 'Name', role: 'Role', degree: 'Degree', paper: 'Paper', award: 'Award', cert: 'Certificate', more: 'The rest', email: 'Email' };
+const cites = n => `${n} citation${n === 1 ? '' : 's'}`;
+const tagLine = o => o.kind === 'paper' ? `${o.y} · ${cites(o.cites)}` : o.kind === 'role' ? o.when : o.kind === 'cert' || o.kind === 'award' ? `${o.when} · ${o.org}` : o.kind === 'degree' ? o.org : o.when;
+
+/* ---------------------------------------------------------------------------------------------
+   DOM: keyboard list, text version, ruler
+--------------------------------------------------------------------------------------------- */
+const $ = s => document.querySelector(s), root = document.documentElement;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const touch = matchMedia('(pointer: coarse)').matches;
+
+$('#things').innerHTML = ITEMS.map(o => `<li><button type="button" data-i="${o.i}">${o.y}, ${LABEL[o.kind].toLowerCase()}: ${esc(o.title)}${o.kind === 'paper' ? `, ${cites(o.cites)}` : ''}${o.kind === 'role' ? `, ${esc(o.org)}` : ''}. Press Enter to bring it forward.</button></li>`).join('');
+
+function textVersion(note) {
+  const byYear = YEARS.map(y => {
+    const L = ITEMS.filter(o => o.y === y && o.kind !== 'name' && o.kind !== 'email' && o.kind !== 'more');
+    const li = L.map(o => {
+      const k = LABEL[o.kind];
+      if (o.kind === 'paper') return `<li><span>${k} · ${cites(o.cites)}</span><a href="${o.link}" rel="noopener">${esc(o.title)}</a><p>${esc(o.authors)}${o.org ? `. <i>${esc(o.org)}</i>` : ''}.</p></li>`;
+      if (o.kind === 'role') return `<li><span>${k} · ${esc(o.when)}</span>${esc(o.title)}, ${esc(o.org)}<p>${esc(o.note)}</p></li>`;
+      const scan = o.file ? ` <a href="${IMG + o.file}" rel="noopener">Scan</a>` : '';
+      return `<li><span>${k} · ${esc(o.when)}</span>${esc(o.title)}${o.org ? `, ${esc(o.org)}` : ''}.${scan}${o.note ? `<p>${esc(o.note)}</p>` : ''}</li>`;
+    }).join('');
+    return `<h2>${y}</h2>${li ? `<ul>${li}</ul>` : '<p class="quiet">Nothing landed this year.</p>'}`;
+  }).join('');
+  const rest = REST.map(([f, t, org, d]) => `<a href="${IMG + f}" rel="noopener">${esc(t)}</a> (${esc(org)}, ${d})`).join('; ');
+  return `<h1 id="t-h">George Michoulis</h1>
+  <p class="lede">Everything in the pile, oldest first. George lives in Thessaloniki. Since May 2026 he has built Web3 products at Cyberscope by TAC; before that he worked on EU blockchain projects, taught networks and web development, and published on credential verification, DAO governance and 5G marketplaces.</p>
+  ${note ? `<p class="note">${note}</p>` : ''}
+  <h2>2015</h2><ul><li><span>Start</span>Began the BSc in Applied Informatics at the University of Macedonia.</li>${ITEMS.filter(o => o.y === 2015 && o.kind !== 'name').map(o => `<li><span>${LABEL[o.kind]} · ${esc(o.when)}</span>${esc(o.title)}, ${esc(o.org)}. ${o.file ? `<a href="${IMG + o.file}" rel="noopener">Scan</a>` : ''}${o.note ? `<p>${esc(o.note)}</p>` : ''}</li>`).join('')}</ul>
+  ${byYear.slice(byYear.indexOf('<h2>2016'))}
+  <h2>Also</h2><p>${rest}.</p>
+  <p>Also on <a href="${SCHOLAR}" rel="noopener">Google Scholar</a>: a gender-equality observatory paper (2022) and two Greek-language papers on verifying academic titles with Ethereum (2020 and 2021).</p>
+  <p class="end">Email <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>. He is also on <a href="https://www.linkedin.com/in/george-michoulis/" rel="noopener">LinkedIn</a>, <a href="https://github.com/gmixoulis" rel="noopener">GitHub</a> and <a href="https://twitter.com/GeorgeMicou" rel="noopener">X</a>.</p>`;
+}
+$('#text').innerHTML = textVersion();
+
+/* scroll is time: each year gets scroll length in proportion to how much landed in it */
+const W = YEARS.map(y => .5 + .12 * ITEMS.filter(o => o.y === y).length);
+const CUM = W.reduce((a, w) => (a.push(a[a.length - 1] + w), a), [0]);
+const TOTAL = CUM[CUM.length - 1], TAIL = .55;
+let vh = innerHeight;
+const sizeTime = () => { vh = innerHeight; $('#time').style.height = reduced ? '0px' : `${(TOTAL + TAIL) * vh + vh}px` };
+const timeAt = sc => { const s = sc / vh; for (let i = 0; i < 12; i++) if (s < CUM[i + 1]) return 2015 + i + (s - CUM[i]) / W[i]; return 2027 };
+const scrollFor = t => { const i = Math.max(0, Math.min(11, Math.floor(t - 2015))); return (CUM[i] + (t - 2015 - i) * W[i]) * vh };
+sizeTime();
+$('#ruler').insertAdjacentHTML('beforeend', YEARS.map((y, i) => `<button type="button" tabindex="-1" data-y="${y}" style="top:${CUM[i] / TOTAL * 100}%">${y}</button>`).join(''));
+$('#ruler').addEventListener('click', e => { const b = e.target.closest('button'); if (b) scrollTo({ top: scrollFor(+b.dataset.y + .12), behavior: reduced ? 'auto' : 'smooth' }) });
+
+/* reading mode */
+let savedY = 0;
+const setReading = (on, fromUser = true) => {
+  if (on === root.classList.contains('reading') && fromUser) return;
+  if (on) { savedY = scrollY; root.classList.add('reading'); scrollTo(0, 0); if (fromUser) $('#t-h').setAttribute('tabindex', '-1'), $('#t-h').focus() }
+  else { root.classList.remove('reading'); scrollTo(0, savedY) }
+  $('#textBtn').textContent = on ? 'Back to the pile' : 'Read as text';
+  $('#textBtn').setAttribute('aria-pressed', on);
+  if (fromUser) history.replaceState(null, '', on ? '#text' : location.pathname);
+  window.dispatchEvent(new Event('readingchange'));
+};
+$('#textBtn').onclick = () => setReading(!root.classList.contains('reading'));
+if (root.classList.contains('reading')) setReading(true, false);
+
+const noGL = why => {
+  root.classList.add('no-gl');
+  $('#text').innerHTML = textVersion(`This page normally drops each of these into a 3D studio, but ${why}. Here is the same record as text.`);
+  root.classList.add('reading');
+};
+
+/* ---------------------------------------------------------------------------------------------
+   The studio
+--------------------------------------------------------------------------------------------- */
+history.scrollRestoration = 'manual';
+scrollTo(0, 0);
+const cv = $('#gl');
+try {
+  const probe = document.createElement('canvas');
+  if (!probe.getContext('webgl2') && !probe.getContext('webgl')) throw new Error('your browser has WebGL switched off');
+  const A = 'three/addons/';
+  const [THREE, CANNON, { RoundedBoxGeometry }, { RoomEnvironment }, { EffectComposer }, { RenderPass }, { GTAOPass }, { OutputPass }] = await Promise.all([
+    import('three'), import('cannon-es'), import(A + 'geometries/RoundedBoxGeometry.js'), import(A + 'environments/RoomEnvironment.js'),
+    import(A + 'postprocessing/EffectComposer.js'), import(A + 'postprocessing/RenderPass.js'), import(A + 'postprocessing/GTAOPass.js'), import(A + 'postprocessing/OutputPass.js')]);
+  await Promise.race([
+    Promise.all(['400 40px "Libre Caslon Text"', '700 40px "Libre Caslon Text"', 'italic 400 40px "Libre Caslon Text"', '400 40px "Libre Caslon Display"', '600 20px "Hanken Grotesk"', '500 20px "Hanken Grotesk"'].map(f => document.fonts.load(f))),
+    new Promise(r => setTimeout(r, 2500))]);
+  studio(THREE, CANNON, RoundedBoxGeometry, RoomEnvironment, { EffectComposer, RenderPass, GTAOPass, OutputPass });
+} catch (e) { console.warn('Gravity fallback:', e); noGL(e.message && e.message.startsWith('your') ? e.message : 'the 3D libraries could not load') }
+
+function studio(THREE, CANNON, RoundedBoxGeometry, RoomEnvironment, PP) {
+  const mob = innerWidth < 700 || touch;
+  const VW = () => cv.clientWidth || innerWidth, VH = () => cv.clientHeight || innerHeight;
+  /* Soft shadows that harden where things touch (percentage-closer soft shadows) for an orthographic
+     key light: search the shadow map for blockers, size the filter by the receiver–blocker gap.
+     Phones keep three's stock PCF soft shadows. */
+  if (!mob) {
+    const FR = 24, DEPTH = 38, SIZE = .07; // shadow frustum width, depth range, light's angular size (a big softbox)
+    const pcss = `
+      #define PS 16
+      vec2 pDisk[PS];
+      void pInit(vec2 seed){ float a = rand(seed) * PI2, r = 1. / float(PS);
+        for (int i = 0; i < PS; i++) { pDisk[i] = vec2(cos(a), sin(a)) * pow(r, .75); r += 1. / float(PS); a += PI2 * 7. / float(PS); } }
+      float PCSS(sampler2D sm, vec4 c){
+        vec2 uv = c.xy; float zr = c.z; pInit(uv);
+        float sum = 0., n = 0.;
+        for (int i = 0; i < PS; i++) { float d = unpackRGBAToDepth(texture2D(sm, uv + pDisk[i] * ${(0.3 / FR).toFixed(5)})); if (d < zr) { sum += d; n += 1.; } }
+        if (n < .5) return 1.;
+        float pen = clamp((zr - sum / n) * ${(DEPTH * SIZE / FR).toFixed(5)}, ${(1.2 / 2048).toFixed(6)}, ${(0.3 / FR).toFixed(5)});
+        float s = 0.;
+        for (int i = 0; i < PS; i++) { s += step(zr, unpackRGBAToDepth(texture2D(sm, uv + pDisk[i] * pen))); s += step(zr, unpackRGBAToDepth(texture2D(sm, uv - pDisk[i].yx * pen))); }
+        return s / (2. * float(PS));
+      }`;
+    let ch = THREE.ShaderChunk.shadowmap_pars_fragment;
+    ch = ch.replace('#ifdef USE_SHADOWMAP', '#ifdef USE_SHADOWMAP' + pcss).replace('#if defined( SHADOWMAP_TYPE_PCF )', 'return mix(1., PCSS(shadowMap, shadowCoord), shadowIntensity);\n#if defined( SHADOWMAP_TYPE_PCF )');
+    THREE.ShaderChunk.shadowmap_pars_fragment = ch;
+  }
+  const renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true, powerPreference: 'high-performance' });
+  let dpr = Math.min(devicePixelRatio || 1, 1.5);
+  renderer.setPixelRatio(dpr);
+  renderer.setSize(VW(), VH(), false);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.autoUpdate = false;
+  renderer.toneMapping = THREE.NeutralToneMapping;
+  renderer.toneMappingExposure = 1.02;
+  const ANISO = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color('#8f7d6f');
+  const pm = new THREE.PMREMGenerator(renderer);
+  scene.environment = pm.fromScene(new RoomEnvironment(), .04).texture;
+  scene.environmentIntensity = .3;
+
+  const cam = new THREE.PerspectiveCamera(30, VW() / VH(), .1, 140);
+  scene.add(cam);
+
+  /* ambient occlusion so the crevices of the pile go dark the way they do in a real studio (desktop only) */
+  let composer = null;
+  if (!mob) {
+    const dpr = renderer.getPixelRatio();
+    composer = new PP.EffectComposer(renderer, new THREE.WebGLRenderTarget(VW() * dpr, VH() * dpr, { type: THREE.HalfFloatType, samples: 4 }));
+    composer.addPass(new PP.RenderPass(scene, cam));
+    const ao = new PP.GTAOPass(scene, cam, VW(), VH(), undefined, { radius: .55, distanceExponent: 1.4, thickness: 1.2, scale: 1, samples: 16 }, { lumaPhi: 10, depthPhi: 2, normalPhi: 3, radius: 5, rings: 2, samples: 16 });
+    ao.blendIntensity = .8;
+    const aoSize = ao.setSize.bind(ao); ao.setSize = (w, h) => aoSize(Math.ceil(w / 2), Math.ceil(h / 2)); // AO at half resolution, upsampled
+    ao.setSize(VW() * dpr, VH() * dpr);
+    composer.addPass(ao); composer.addPass(new PP.OutputPass());
+  }
+  const draw = () => composer ? composer.render() : renderer.render(scene, cam);
+  /* if frames run long, step the resolution down, then drop the AO pass */
+  const perf = { n: 0, sum: 0, from: performance.now() + 2500 };
+  function watch(now, dtMs) {
+    if (now < perf.from) return;
+    perf.sum += dtMs; if (++perf.n < 45) return;
+    const avg = perf.sum / perf.n; perf.n = perf.sum = 0;
+    if (avg < 24) return;
+    if (dpr > 1) { dpr = Math.max(1, dpr - .25); renderer.setPixelRatio(dpr); composer && composer.setPixelRatio(dpr); resize() }
+    else if (composer) composer = null;
+    perf.from = now + 1500;
+  }
+
+  /* light: one strong key from the upper left, a soft sky fill, a faint cool kicker for edges */
+  scene.add(new THREE.HemisphereLight('#f4f2ee', '#766a60', .95));
+  const key = new THREE.DirectionalLight('#fff7ee', 3.3);
+  key.position.set(-8, 14, 9);
+  key.castShadow = true;
+  key.shadow.mapSize.set(mob ? 1024 : 2048, mob ? 1024 : 2048);
+  Object.assign(key.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: 2, far: 40 });
+  key.shadow.bias = -.0005; key.shadow.normalBias = .03;
+  scene.add(key, key.target);
+  const kick = new THREE.DirectionalLight('#e3eaf3', .5); kick.position.set(8, 5, -7); scene.add(kick);
+
+  /* the sweep: a clay floor that curves up into a back wall, like a photo studio cyc */
+  {
+    const prof = [[46, 0], [-4, 0]], R = 3.4;
+    for (let i = 1; i <= 18; i++) { const a = i / 18 * Math.PI / 2; prof.push([-4 - Math.sin(a) * R, R - Math.cos(a) * R]) }
+    prof.push([-4 - R, 34]);
+    const strip = P => { // extrude a (z, y) profile across x
+      const pos = [], uv = [], idx = []; let d = 0;
+      P.forEach((p, i) => { if (i) d += Math.hypot(p[0] - P[i - 1][0], p[1] - P[i - 1][1]); pos.push(-70, p[1], p[0], 70, p[1], p[0]); uv.push(0, d / 12, 12, d / 12) });
+      for (let i = 0; i < P.length - 1; i++) { const k = i * 2; idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2) }
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); g.setIndex(idx); g.computeVertexNormals();
+      return g;
+    };
+    // a whisper of grain so the clay doesn't read as flat CG colour
+    const nc = document.createElement('canvas'); nc.width = nc.height = 256; const nx = nc.getContext('2d'), id = nx.createImageData(256, 256);
+    for (let i = 0; i < id.data.length; i += 4) { const v = 240 + Math.random() * 15; id.data[i] = id.data[i + 1] = id.data[i + 2] = v; id.data[i + 3] = 255 }
+    nx.putImageData(id, 0, 0);
+    const nt = new THREE.CanvasTexture(nc); nt.wrapS = nt.wrapT = THREE.RepeatWrapping; nt.repeat.set(3, 3); nt.colorSpace = THREE.SRGBColorSpace;
+    const sm = new THREE.MeshStandardMaterial({ color: '#b9a898', roughness: .95, metalness: 0, map: nt, dithering: true });
+    // the pool of the key light on the clay, falling off toward the edges and up the sweep
+    sm.onBeforeCompile = s => {
+      s.vertexShader = s.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vWp;').replace('#include <project_vertex>', '#include <project_vertex>\nvWp = (modelMatrix * vec4(transformed, 1.)).xyz;');
+      s.fragmentShader = s.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vWp;').replace('#include <map_fragment>', `#include <map_fragment>
+        vec2 pc = vWp.xz - vec2(-.8, .6);
+        diffuseColor.rgb *= mix(.6, 1.05, exp(-dot(pc, pc * vec2(1., 1.6)) / 70.)) * mix(1., .72, smoothstep(0., 10., vWp.y));`);
+    };
+    // only the floor takes shadows: things high in the air shouldn't smudge the backdrop
+    const floor = new THREE.Mesh(strip(prof.slice(0, 2)), sm), cove = new THREE.Mesh(strip(prof.slice(1)), sm);
+    floor.receiveShadow = true; scene.add(floor, cove);
+  }
+
+  /* physics world */
+  const world = new CANNON.World({ gravity: new CANNON.Vec3(0, -24, 0), allowSleep: true });
+  world.broadphase = new CANNON.SAPBroadphase(world);
+  world.solver.iterations = 12; world.solver.tolerance = 1e-4;
+  const mSolid = new CANNON.Material('solid'), mPaper = new CANNON.Material('paper'), mFloor = new CANNON.Material('floor');
+  world.defaultContactMaterial.friction = .5; world.defaultContactMaterial.restitution = .08;
+  world.defaultContactMaterial.contactEquationStiffness = 1e8; world.defaultContactMaterial.contactEquationRelaxation = 3;
+  const cm = (a, b, friction, restitution) => world.addContactMaterial(new CANNON.ContactMaterial(a, b, { friction, restitution, contactEquationStiffness: 1e8, contactEquationRelaxation: 3 }));
+  cm(mSolid, mSolid, .8, .04); cm(mSolid, mFloor, .55, .12);
+  const soft = (a, b, f) => world.addContactMaterial(new CANNON.ContactMaterial(a, b, { friction: f, restitution: 0, contactEquationStiffness: 2e7, contactEquationRelaxation: 4, frictionEquationStiffness: 2e7 }));
+  soft(mPaper, mSolid, .75); soft(mPaper, mFloor, .85); soft(mPaper, mPaper, .75);
+  const wall = (pos, axis, ang, mat = mFloor) => { const b = new CANNON.Body({ mass: 0, material: mat }); b.addShape(new CANNON.Plane()); b.position.set(...pos); b.quaternion.setFromAxisAngle(new CANNON.Vec3(...axis), ang); world.addBody(b) };
+  wall([0, 0, 0], [1, 0, 0], -Math.PI / 2);            // floor
+  wall([0, 0, -4], [0, 1, 0], 0);                       // back (where the sweep starts to curve)
+  wall([0, 0, 5.6], [0, 1, 0], Math.PI);                // invisible front and sides, kept out of frame
+  wall([-8.4, 0, 0], [0, 1, 0], Math.PI / 2);
+  wall([8.4, 0, 0], [0, 1, 0], -Math.PI / 2);
+
+  /* ------------------------------------------------------------------ typesetting on objects */
+  const mkCanvas = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c };
+  const tex = c => { const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = ANISO; return t };
+  const lines = (g, text, maxW) => { const out = []; let cur = ''; for (const w of text.split(' ')) { const n = cur ? cur + ' ' + w : w; if (g.measureText(n).width > maxW && cur) { out.push(cur); cur = w } else cur = n } if (cur) out.push(cur); return out };
+  const fit = (g, text, font, size, maxW, maxL, min = 12) => { for (; size >= min; size -= 2) { g.font = font(size); const L = lines(g, text, maxW); if (L.length <= maxL) return { size, L } } g.font = font(min); return { size: min, L: lines(g, text, maxW).slice(0, maxL) } };
+  const caps = (g, text, x, y, size, color, track = .12, weight = 600) => { g.font = `${weight} ${size}px "Hanken Grotesk"`; g.fillStyle = color; if ('letterSpacing' in g) { g.letterSpacing = `${size * track}px`; g.fillText(text.toUpperCase(), x, y); g.letterSpacing = '0px' } else g.fillText(text.toUpperCase(), x, y) };
+  const serif = s => `400 ${s}px "Libre Caslon Text"`, serifB = s => `700 ${s}px "Libre Caslon Text"`, serifI = s => `italic 400 ${s}px "Libre Caslon Text"`, disp = s => `400 ${s}px "Libre Caslon Display"`;
+  const grain = (g, w, h, a = .035) => { const d = g.getImageData(0, 0, w, h); for (let i = 0; i < d.data.length; i += 4) { const n = (Math.random() - .5) * 255 * a; d.data[i] += n; d.data[i + 1] += n; d.data[i + 2] += n } g.putImageData(d, 0, 0) };
+  const light = hex => { const c = new THREE.Color(hex); return c.r * .3 + c.g * .59 + c.b * .11 > .45 };
+
+  function faceRole(o, W, H, top) {
+    const c = mkCanvas(W, H), g = c.getContext('2d'), ink = light(o.color) ? '#2a2420' : '#f4ede2', sub = light(o.color) ? 'rgba(42,36,32,.62)' : 'rgba(244,237,226,.74)';
+    g.fillStyle = o.color; g.fillRect(0, 0, W, H); grain(g, W, H, .025);
+    const m = W * .045, cs = W * .02, row = m + cs;
+    caps(g, o.org, m, row, cs, sub, .12);
+    g.textAlign = 'right'; g.font = serifI(cs * 1.35); g.fillStyle = sub; g.fillText(o.when, W - m, row); g.textAlign = 'left';
+    let foot = H - m * .9;
+    if (top) {
+      const b = fit(g, o.note, serif, W * .026, W - m * 2, 2, 14); g.font = serif(b.size); g.fillStyle = sub;
+      b.L.forEach((l, i) => g.fillText(l, m, foot - (b.L.length - 1 - i) * b.size * 1.35));
+      foot -= b.L.length * b.size * 1.35 + cs * .6;
+    }
+    const room = foot - (row + cs * .9);
+    const f = fit(g, o.title, serif, Math.min(room * (top ? .5 : .82), W * .07), W - m * 2, top ? 2 : 1, 20);
+    g.font = serif(f.size); g.fillStyle = ink;
+    const block = f.size * (1 + (f.L.length - 1) * 1.08), y0 = row + cs * .9 + (room - block) / 2 + f.size * .82;
+    f.L.forEach((l, i) => g.fillText(l, m - f.size * .03, y0 + i * f.size * 1.08));
+    return c;
+  }
+  // the name is set once per face: as large as the face allows, left aligned, on a shared baseline
+  function nameSet(g, W, H, top) {
+    const m = W * .05; let s = H * (top ? .42 : .66);
+    g.font = disp(s); const w = g.measureText('George Michoulis').width, room = W - m * 2 - (top ? 0 : W * .17);
+    if (w > room) s *= room / w;
+    return { m, s, y: top ? H * .5 : H * .5 + s * .34 };
+  }
+  function faceName(W, H, top) {
+    const c = mkCanvas(W, H), g = c.getContext('2d');
+    g.fillStyle = COL.char; g.fillRect(0, 0, W, H); grain(g, W, H, .03);
+    const { m, s, y } = nameSet(g, W, H, top);
+    g.fillStyle = '#efe6d6'; g.font = disp(s); g.fillText('George Michoulis', m, y);
+    if (top) { g.font = serifI(H * .085); g.fillStyle = 'rgba(239,230,214,.62)'; g.fillText('Since 2015, everything else has landed on this.', m + s * .04, y + H * .22) }
+    else { g.textAlign = 'right'; caps(g, 'Thessaloniki', W - m, y - s * .02, H * .1, 'rgba(239,230,214,.56)', .18); g.textAlign = 'left' }
+    return c;
+  }
+  function bumpName(W, H, top) { // letterpress: the letters sit a touch below the surface
+    const c = mkCanvas(W, H), g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
+    const { m, s, y } = nameSet(g, W, H, top);
+    g.filter = 'blur(2px)'; g.fillStyle = '#000'; g.font = disp(s); g.fillText('George Michoulis', m, y); g.filter = 'none';
+    return c;
+  }
+  function facePaper(o, W, H) {
+    const c = mkCanvas(W, H), g = c.getContext('2d');
+    g.fillStyle = COL.paper; g.fillRect(0, 0, W, H); grain(g, W, H, .03);
+    const m = W * .1;
+    caps(g, `Paper · ${o.y}`, m, m + 14, 20, '#7b6b5e');
+    g.fillStyle = '#2a2420'; g.fillRect(m, m + 34, W - m * 2, 2);
+    const f = fit(g, o.title, serif, 58, W - m * 2, 6, 30);
+    g.font = serif(f.size); g.fillStyle = '#231e1a';
+    let y = m + 50 + f.size;
+    f.L.forEach(l => { g.fillText(l, m, y); y += f.size * 1.18 });
+    y += 12;
+    const a = fit(g, o.authors, serif, 24, W - m * 2, 3, 16); g.font = serif(a.size); g.fillStyle = '#5a4d43'; a.L.forEach(l => { y += a.size * 1.35; g.fillText(l, m, y) });
+    if (o.org) { const v = fit(g, o.org, serifI, 26, W - m * 2, 3, 16); g.font = serifI(v.size); v.L.forEach(l => { y += v.size * 1.4; g.fillText(l, m, y) }) }
+    g.fillStyle = 'rgba(42,36,32,.25)'; g.fillRect(m, H - m - 44, W - m * 2, 1);
+    caps(g, cites(o.cites), m, H - m, 22, o.cites ? '#2a2420' : '#8b7a6c');
+    return c;
+  }
+  function faceMedal(o, S) {
+    const c = mkCanvas(S, S), g = c.getContext('2d');
+    const gr = g.createRadialGradient(S * .4, S * .35, S * .05, S / 2, S / 2, S * .5); gr.addColorStop(0, '#caa66d'); gr.addColorStop(1, '#a8834d');
+    g.fillStyle = gr; g.fillRect(0, 0, S, S);
+    g.strokeStyle = 'rgba(70,48,20,.5)'; g.lineWidth = 3; g.beginPath(); g.arc(S / 2, S / 2, S * .43, 0, 7); g.stroke();
+    g.textAlign = 'center'; g.fillStyle = '#4a3419';
+    caps(g, o.when, S / 2, S * .3, 20, '#4a3419', .14);
+    g.textAlign = 'center';
+    const f = fit(g, o.title, serif, 52, S * .66, 3, 26); g.font = serif(f.size); g.fillStyle = '#3d2a13';
+    const y0 = S / 2 - (f.L.length - 1) * f.size * .55 + f.size * .3;
+    f.L.forEach((l, i) => g.fillText(l, S / 2, y0 + i * f.size * 1.1));
+    const o2 = fit(g, o.org, serifI, 22, S * .6, 2, 14); g.font = serifI(o2.size); g.fillStyle = 'rgba(61,42,19,.8)';
+    o2.L.forEach((l, i) => g.fillText(l, S / 2, S * .76 + i * o2.size * 1.2));
+    return c;
+  }
+  function faceCard(o, W, H) { // printed stand-in until the scan arrives, and the design for mail / rest
+    const c = mkCanvas(W, H), g = c.getContext('2d');
+    g.fillStyle = COL.paper; g.fillRect(0, 0, W, H); grain(g, W, H, .03);
+    const m = Math.min(W, H) * .09;
+    if (o.kind === 'email') {
+      caps(g, 'Write to', m, m + 16, 22, '#7b6b5e');
+      const f = fit(g, o.title, serifI, 86, W - m * 2, 1, 30); g.font = serifI(f.size); g.fillStyle = '#231e1a'; g.fillText(o.title, m, H * .6);
+      g.fillStyle = COL.verm; g.fillRect(m, H * .6 + 26, 70, 4);
+      caps(g, 'George Michoulis · Thessaloniki', m, H - m, 18, '#7b6b5e');
+    } else if (o.kind === 'more') {
+      g.font = disp(96); g.fillStyle = '#231e1a'; g.fillText(`+${REST.length} more`, m, m + 80);
+      caps(g, 'certificates, scans in the text version', m, m + 122, 18, '#7b6b5e');
+      g.font = serif(21); g.fillStyle = '#5a4d43';
+      REST.forEach(([, t, , d], i) => { const col = i < 5 ? 0 : 1; g.fillText(`${t.length > 34 ? t.slice(0, 33) + '…' : t}`, m + col * (W - m * 2) / 2, m + 190 + (i % 5) * 34) });
+    } else {
+      caps(g, `${LABEL[o.kind]} · ${o.when}`, m, m + 14, 18, '#7b6b5e');
+      const f = fit(g, o.title, serif, 48, W - m * 2, 4, 22); g.font = serif(f.size); g.fillStyle = '#231e1a';
+      f.L.forEach((l, i) => g.fillText(l, m, m + 40 + f.size * (i + 1) * 1.15));
+      g.font = serifI(24); g.fillStyle = '#5a4d43'; g.fillText(o.org, m, H - m);
+    }
+    return c;
+  }
+  function drawScan(o, max) { // real scan, mounted with a thin paper border
+    const W = o.ar >= 1 ? max : Math.round(max * o.ar), H = o.ar >= 1 ? Math.round(max / o.ar) : max;
+    const c = mkCanvas(W, H), g = c.getContext('2d');
+    g.fillStyle = o.kind === 'degree' ? '#efe9dd' : '#fbf8f2'; g.fillRect(0, 0, W, H);
+    const p = o.kind === 'degree' ? 0 : Math.round(Math.min(W, H) * .02);
+    g.drawImage(o.img, p, p, W - p * 2, H - p * 2);
+    return c;
+  }
+
+  /* ------------------------------------------------------------------ objects */
+  const rng = (s => () => (s = (s * 16807) % 2147483647) / 2147483647)(7);
+  const R = (a, b) => a + (b - a) * rng();
+  const ceramic = (color, extra = {}) => new THREE.MeshPhysicalMaterial({ color, roughness: .58, metalness: 0, clearcoat: .22, clearcoatRoughness: .55, ...extra });
+  const paperSide = new THREE.MeshStandardMaterial({ color: '#ebe4d7', roughness: .9 });
+  const brass = new THREE.MeshStandardMaterial({ color: COL.brass, roughness: .38, metalness: .75 });
+  const decal = (parent, w, h, map, pos, rot, mat) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat.clone()); m.material.map = map; m.position.set(...pos); m.rotation.set(...rot); m.receiveShadow = true; parent.add(m); return m };
+  const shapeFor = o => o.cyl ? new CANNON.Cylinder(o.r, o.r, o.h, 16) : new CANNON.Box(new CANNON.Vec3(o.w / 2, o.h / 2, o.d / 2));
+  const TT = .03; // place-card stock
+  const tentPanels = o => [1, -1].map(side => ({ p: [0, 0, side * o.ph / 2 * Math.sin(o.tent)], rx: -side * o.tent }));
+
+  ITEMS.forEach(o => {
+    o.tilt = 0;
+    switch (o.kind) {
+      case 'name': Object.assign(o, { w: 5.6, h: 1.05, d: 1.35, mass: 40, spot: [0, .35], yaw: 0 }); break;
+      // the blocks stack on the name like a crooked pile of books; everything else lands around them
+      case 'role': Object.assign(o, { w: 3.1, h: .82, d: 1.12, mass: 14, spot: [0, .35], yaw: R(-.1, .1), tilt: .015, onTop: 1 }); break;
+      case 'degree': { const w = 2.05, L = o.y === 2021; Object.assign(o, { w, h: .24, d: w / o.ar, mass: 16, spot: [L ? -3.75 : 3.75, L ? .7 : .5], yaw: L ? .18 : -.15, tilt: .04, flat: 1 }); break }
+      case 'paper': { const A = 1.25 + .2 * o.cites, w = Math.sqrt(A / 1.414), side = rng() < .5 ? -1 : 1; Object.assign(o, { w, h: .07, d: w * 1.414, mass: .6 + A * .4, spot: [side * R(1.6, 3.4), R(-2.4, -1.2)], yaw: R(-.6, .6), tilt: .5, flat: 1 }); break }
+      case 'award': Object.assign(o, { cyl: 1, r: .4, h: .1, w: .8, d: .8, mass: 3, spot: [R(-2.2, 2.2), R(1.5, 2.4)], yaw: R(-1, 1), tilt: .5, flat: 1 }); break;
+      case 'cert': { const w = o.ar >= 1 ? 1.35 : 1.35 * o.ar, fr = rng() < .45; Object.assign(o, { w, h: .035, d: w / o.ar, mass: .08, spot: fr ? [R(-2.1, 2.1), R(1.9, 2.9)] : [R(-3.4, 3.4), R(-2.5, -1.3)], yaw: R(-1.2, 1.2), tilt: .9, flat: 1, flutter: 1 }); break }
+      case 'more': Object.assign(o, { w: 1.9, h: .04, d: 1.25, mass: .12, spot: [(rng() < .5 ? -1 : 1) * R(1.3, 2.2), R(1.9, 2.5)], yaw: R(-.4, .4), tilt: .5, flat: 1, flutter: 1 }); break;
+      case 'email': { const ph = .95, a = .42; Object.assign(o, { tent: a, ph, w: 1.9, h: ph * Math.cos(a), d: 2 * ph * Math.sin(a), mass: .35, spot: [.2, .15], yaw: -.13, tilt: 0, onTop: 1 }); break }
+    }
+  });
+
+  function build(o) {
+    let mesh;
+    const { w, h, d } = o;
+    if (o.kind === 'name' || o.kind === 'role') {
+      const col = o.kind === 'name' ? COL.char : o.color, r = o.kind === 'name' ? .09 : .075;
+      mesh = new THREE.Mesh(new RoundedBoxGeometry(w, h, d, mob ? 3 : 4, r), ceramic(col, o.kind === 'name' ? { roughness: .7, clearcoat: .1 } : {}));
+      const fw = w - r * 2.2, fh = h - r * 2.2, td = d - r * 2.2, e = .003;
+      const mat = ceramic('#fff', o.kind === 'name' ? { roughness: .7, clearcoat: .1 } : {});
+      const NW = o.kind === 'name' ? 2048 : 1024;
+      const front = o.kind === 'name' ? tex(faceName(NW, Math.round(NW * fh / fw), 0)) : tex(faceRole(o, NW, Math.round(NW * fh / fw), 0));
+      const topT = o.kind === 'name' ? tex(faceName(NW, Math.round(NW * td / fw), 1)) : tex(faceRole(o, NW, Math.round(NW * td / fw), 1));
+      const mf = mat.clone(), mt = mat.clone();
+      if (o.kind === 'name') { mf.bumpMap = tex(bumpName(NW, Math.round(NW * fh / fw), 0)); mf.bumpScale = 1.6; mt.bumpMap = tex(bumpName(NW, Math.round(NW * td / fw), 1)); mt.bumpScale = 1.6 }
+      decal(mesh, fw, fh, front, [0, 0, d / 2 + e], [0, 0, 0], mf);
+      decal(mesh, fw, fh, front, [0, 0, -d / 2 - e], [0, Math.PI, 0], mf);
+      decal(mesh, fw, td, topT, [0, h / 2 + e, 0], [-Math.PI / 2, 0, 0], mt);
+      decal(mesh, fw, td, topT, [0, -h / 2 - e, 0], [Math.PI / 2, 0, 0], mt);
+      o.face = [fw, td];
+    } else if (o.kind === 'degree') {
+      mesh = new THREE.Mesh(new RoundedBoxGeometry(w, h, d, mob ? 2 : 3, .05), ceramic(COL.stone, { roughness: .8, clearcoat: 0 }));
+      const iw = w - .2, id = d - .2;
+      o.map = tex(faceCard(o, 768, Math.round(768 / o.ar)));
+      const m = new THREE.MeshStandardMaterial({ roughness: .75 });
+      decal(mesh, iw, id, o.map, [0, h / 2 + .003, 0], [-Math.PI / 2, 0, 0], m);
+      decal(mesh, iw, id, o.map, [0, -h / 2 - .003, 0], [Math.PI / 2, 0, 0], m);
+      o.face = [w, d];
+    } else if (o.kind === 'award') {
+      mesh = new THREE.Mesh(new THREE.CylinderGeometry(o.r, o.r, h, 48), brass);
+      const t = tex(faceMedal(o, 512));
+      const m = new THREE.MeshStandardMaterial({ roughness: .4, metalness: .7, bumpScale: .8 });
+      m.bumpMap = t;
+      decal(mesh, o.r * 2 * .96, o.r * 2 * .96, t, [0, h / 2 + .002, 0], [-Math.PI / 2, 0, 0], m).geometry = new THREE.CircleGeometry(o.r * .96, 48);
+      decal(mesh, o.r * 2 * .96, o.r * 2 * .96, t, [0, -h / 2 - .002, 0], [Math.PI / 2, 0, 0], m).geometry = new THREE.CircleGeometry(o.r * .96, 48);
+      o.face = [o.r * 2, o.r * 2];
+    } else if (o.tent) {
+      mesh = new THREE.Group();
+      o.map = tex(faceCard(o, 1024, Math.round(1024 * o.ph / o.w)));
+      const face = new THREE.MeshStandardMaterial({ map: o.map, roughness: .86 });
+      tentPanels(o).forEach(({ p, rx }, i) => {
+        const m = new THREE.Mesh(new THREE.BoxGeometry(o.w, o.ph, TT), i ? [paperSide, paperSide, paperSide, paperSide, paperSide, face] : [paperSide, paperSide, paperSide, paperSide, face, paperSide]);
+        m.position.set(...p); m.rotation.x = rx; m.castShadow = m.receiveShadow = true; mesh.add(m);
+      });
+      o.face = [o.w, o.ph];
+    } else { // thin things: papers, certificates, the rest
+      const W = 1024, H = Math.round(1024 * d / w);
+      o.map = tex(o.kind === 'paper' ? facePaper(o, 768, Math.round(768 * d / w)) : faceCard(o, W, H));
+      const face = new THREE.MeshStandardMaterial({ map: o.map, roughness: .86 });
+      mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), [paperSide, paperSide, face, face, paperSide, paperSide]);
+      o.face = [w, d];
+    }
+    mesh.castShadow = true; mesh.receiveShadow = true;
+    o.casters = []; mesh.traverse(m => { m.item = o; if (m.castShadow) o.casters.push(m) }); // not userData: clone() JSON-copies that
+    mesh.visible = false;
+    scene.add(mesh);
+    o.mesh = mesh;
+    o.body = new CANNON.Body({ mass: o.mass, material: o.flutter ? mPaper : mSolid, allowSleep: true, sleepSpeedLimit: .35, sleepTimeLimit: .4,
+      linearDamping: o.flutter ? .04 : .03, angularDamping: o.flutter ? .45 : o.onTop ? .3 : .12 });
+    if (o.tent) tentPanels(o).forEach(({ p, rx }) => o.body.addShape(new CANNON.Box(new CANNON.Vec3(o.w / 2, o.ph / 2, TT / 2)), new CANNON.Vec3(...p), new CANNON.Quaternion().setFromAxisAngle(new CANNON.Vec3(1, 0, 0), rx)));
+    else o.body.addShape(shapeFor(o));
+    o.body.o = o;
+  }
+
+  /* real scans load just before their year arrives */
+  function loadScan(o, max = 1024) {
+    if (!o.file || o.kind === 'award' || o.loading) return;
+    o.loading = 1;
+    const img = new Image(); img.decoding = 'async'; img.src = IMG + o.file;
+    img.decode().then(() => { o.img = img; if (!o.mesh) build(o); swap(o.map, drawScan(o, max)); dirty = 1 }).catch(() => {});
+  }
+  const hiRes = o => { if (o.img && !o.hi) { o.hi = 1; swap(o.map, drawScan(o, 2048)) } };
+  const swap = (t, c) => { t.dispose(); t.image = c; t.needsUpdate = true }; // new size, so a fresh GPU allocation
+
+  /* paper falls like paper: pressure drag on the face, applied ahead of the centre so it pitches and flutters */
+  const UP = new CANNON.Vec3(0, 1, 0), n = new CANNON.Vec3(), vt = new CANNON.Vec3(), F = new CANNON.Vec3(), cp = new CANNON.Vec3();
+  const fliers = ITEMS.filter(o => o.flutter);
+  world.addEventListener('preStep', () => {
+    for (const o of fliers) {
+      const b = o.body; if (!b || !b.world || b.sleepState === CANNON.Body.SLEEPING) continue;
+      b.quaternion.vmult(UP, n);
+      const v = b.velocity, vn = v.dot(n), A = o.w * o.d;
+      n.scale(-.16 * o.flutter * A * vn * Math.abs(vn), F);
+      n.scale(vn, vt); v.vsub(vt, vt);
+      F.vsub(vt.scale(.14 * A, cp), F);
+      const s = vt.length();
+      if (s > 1e-3) vt.scale(.13 * Math.min(o.w, o.d) / s, cp); else cp.set(0, 0, 0);
+      b.applyForce(F, cp);
+    }
+  });
+  const touching = new Set();
+  world.addEventListener('postStep', () => {
+    touching.clear(); for (const c of world.contacts) { touching.add(c.bi); touching.add(c.bj) }
+    for (const b of world.bodies) {
+      if (b.type !== CANNON.Body.DYNAMIC) continue;
+      const s = b.velocity.length(); if (s > 22) b.velocity.scale(22 / s, b.velocity);
+      const held = drag.o && b === drag.o.body, touch = touching.has(b);
+      // paper and ceramic don't skate: once something is touching and slow, bleed its motion off quickly
+      if (!held && touch && b.o && s < (b.o.flutter ? .8 : 1.2)) { b.velocity.scale(b.o.flutter ? .9 : .96, b.velocity); b.angularVelocity.scale(b.o.flutter ? .82 : .9, b.angularVelocity) }
+      if (b.sleepState === CANNON.Body.AWAKE && b.allowSleep) {
+        b.slow = Math.max(0, (b.slow || 0) + (s < .4 && b.angularVelocity.length() < 1 ? 1 : -2) / 60);
+        b.rest = touch && s < .6 ? (b.rest || 0) + 1 / 60 : 0;
+        if (b.slow > .9 || b.rest > 2.2) { b.slow = b.rest = 0; b.sleep() }
+      }
+    }
+  });
+
+  /* ------------------------------------------------------------------ the pile */
+  const live = () => ITEMS.filter(o => o.state === 'live');
+  let pileTop = 0, pileX = 3;
+  function measurePile() {
+    let top = 0, ex = 2.9;
+    for (const o of ITEMS) {
+      if (o.state !== 'live' || o === drag.o) continue;
+      const b = o.body; if (b.velocity.lengthSquared() > 1.5) continue;
+      const rad = Math.max(o.h, o.cyl ? o.r : Math.min(o.w, o.d)) * .5;
+      top = Math.max(top, b.position.y + rad);
+      ex = Math.max(ex, Math.abs(b.position.x) + Math.max(o.w, o.d) * .5);
+    }
+    pileTop = top; pileX = Math.min(ex, 8.4);
+  }
+  const q0 = new THREE.Quaternion(), e0 = new THREE.Euler();
+  function topSpot() { // centre of the highest thing in the pile with a top wide enough to land on
+    let best = null;
+    for (const t of ITEMS) {
+      if (t.state !== 'live' || (t.kind !== 'name' && t.kind !== 'role') || t === drag.o) continue;
+      const y = t.body.position.y + t.h / 2;
+      if (!best || y > best.y) best = { y, x: t.body.position.x, z: t.body.position.z };
+    }
+    return best;
+  }
+  function spawnPose(o, lift = 0) {
+    const tall = pileTop + (o.flutter ? 4.2 : o.tent ? 1.2 : 3.4) + lift;
+    e0.set(R(-o.tilt, o.tilt), o.yaw, R(-o.tilt, o.tilt));
+    q0.setFromEuler(e0);
+    const at = o.onTop && topSpot();
+    if (at) return { p: new THREE.Vector3(at.x * .7 + R(-.25, .25), at.y + o.h / 2 + (o.tent ? .9 : .9) + lift, (at.z + .35) / 2 + R(-.08, .05)), q: q0.clone() };
+    return { p: new THREE.Vector3(o.spot[0], o.kind === 'name' ? 4.2 : tall, o.spot[1]), q: q0.clone() };
+  }
+  function place(o, p, q, v = -4) {
+    if (!o.mesh) build(o);
+    const b = o.body;
+    b.position.set(p.x, p.y, p.z); b.quaternion.set(q.x, q.y, q.z, q.w);
+    b.velocity.set(o.flutter ? R(-.6, .6) : 0, o.flutter ? -1.2 : o.tent ? 0 : v, o.flutter ? R(-.3, .3) : 0);
+    b.angularVelocity.set(o.flutter ? R(-2, 2) : 0, 0, o.flutter ? R(-2, 2) : 0);
+    b.wakeUp();
+    if (!b.world) world.addBody(b);
+    o.mesh.position.copy(p); o.mesh.quaternion.copy(q); o.mesh.visible = true; cast(o, true);
+    o.state = 'live'; moved = true;
+  }
+  const cast = (o, v) => o.casters.forEach(m => m.castShadow = v);
+  const wakeAll = () => world.bodies.forEach(b => b.type === CANNON.Body.DYNAMIC && b.wakeUp());
+  function unworld(o) { if (o.body.world) { world.removeBody(o.body); wakeAll() } if (drag.o === o) release() }
+
+  /* tweens: the only motion that isn't physics (lifting out when time reverses, bringing forward) */
+  const anims = new Map();
+  const ease = { out: x => 1 - Math.pow(1 - x, 3), in: x => x * x * x, io: x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2 };
+  function tween(o, p1, q1, dur, e, done, s1 = 1) {
+    const m = o.mesh;
+    anims.set(o, { p0: m.position.clone(), q0: m.quaternion.clone(), s0: m.scale.x, s1, p1, q1, t0: performance.now(), dur: Math.max(1, dur), e, done });
+  }
+  function stepAnims(now) {
+    for (const [o, a] of anims) {
+      const k = Math.min(1, (now - a.t0) / a.dur), f = ease[a.e](k);
+      const p1 = typeof a.p1 === 'function' ? a.p1() : a.p1, q1 = typeof a.q1 === 'function' ? a.q1() : a.q1;
+      o.mesh.position.lerpVectors(a.p0, p1, f); o.mesh.quaternion.slerpQuaternions(a.q0, q1, f); o.mesh.scale.setScalar(a.s0 + (a.s1 - a.s0) * f);
+      if (k >= 1) { anims.delete(o); a.done && a.done(); moved = true }
+    }
+  }
+  function liftOut(o, delay) {
+    unworld(o);
+    o.state = 'lift';
+    const m = o.mesh, up = m.position.clone().add(new THREE.Vector3(R(-.4, .4), 16, 0));
+    const q1 = m.quaternion.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(R(-.5, .5), R(-.6, .6), R(-.5, .5))));
+    setTimeout(() => o.state === 'lift' && tween(o, up, q1, 900, 'in', () => { if (o.state === 'lift') { m.visible = false; o.state = 'wait' } }), delay);
+  }
+
+  /* ------------------------------------------------------------------ time */
+  let T = 2015, shownYear = 0;
+  const queue = [];
+  let lastSpawn = -1;
+  function updateTime(now) {
+    T = reduced ? 2027 : timeAt(scrollY);
+    const y = Math.min(2026, Math.floor(T));
+    if (y !== shownYear) {
+      shownYear = y;
+      $('#yr').textContent = reduced ? '2015–26' : y;
+      document.querySelectorAll('#ruler button').forEach(b => b.classList.toggle('on', +b.dataset.y === y));
+    }
+    $('#now').style.top = `${Math.min(1, scrollY / vh / TOTAL) * 100}%`;
+    if (reduced || front) return;
+    // lift out anything whose moment is now in the future, newest first
+    const out = ITEMS.filter(o => o.t > T && (o.state === 'live')).sort((a, b) => b.t - a.t);
+    out.forEach((o, k) => liftOut(o, k * 70));
+    for (let k = queue.length - 1; k >= 0; k--) if (queue[k].t > T) queue.splice(k, 1);
+    for (const o of ITEMS) {
+      if (o.t <= T && (o.state === 'wait' || o.state === 'lift') && !queue.includes(o)) queue.push(o);
+      if (o.t < T + 1.3) { if (!o.mesh) build(o); loadScan(o) }
+    }
+    queue.sort((a, b) => a.t - b.t);
+    const gap = queue.length > 6 ? .06 : .14;
+    if (queue.length && world.time - lastSpawn > gap && now > bootAt) {
+      const o = queue.shift(); lastSpawn = world.time;
+      measurePile();
+      if (o.state === 'lift') { anims.delete(o); place(o, o.mesh.position.clone(), o.mesh.quaternion.clone(), 0) }
+      else { const s = spawnPose(o); place(o, s.p, s.q) }
+    }
+  }
+  const bootAt = performance.now() + 450;
+
+  /* ------------------------------------------------------------------ camera: frames the pile, moves only as time moves */
+  const camT = new THREE.Vector3(0, .6, 0), camS = { y: .55, d: 12, x: 3 };
+  const YAW = -.13, ELEV = .42;
+  function camGoal() {
+    const aspect = VW() / VH(), tanV = Math.tan(THREE.MathUtils.degToRad(cam.fov / 2));
+    const y = .5 + pileTop * .4, dH = (pileX + .9) / (tanV * aspect), dV = (pileTop + 1.8) / (tanV * 1.55);
+    return { y, d: Math.max(13, dH, dV) };
+  }
+  function placeCam(dt, snap) {
+    const g = camGoal(), k = snap || reduced ? 1 : 1 - Math.exp(-dt * 1.6);
+    camS.y += (g.y - camS.y) * k; camS.d += (g.d - camS.d) * k;
+    camT.set(0, camS.y, .2);
+    cam.position.set(camT.x + Math.sin(YAW) * Math.cos(ELEV) * camS.d, camT.y + Math.sin(ELEV) * camS.d, camT.z + Math.cos(YAW) * Math.cos(ELEV) * camS.d);
+    cam.lookAt(camT);
+    const w = VW(), h = VH(); if (w > 700) cam.setViewOffset(w, h, -w * .045, h * .03, w, h); else cam.clearViewOffset();
+    return Math.abs(g.d - camS.d) + Math.abs(g.y - camS.y) > .01;
+  }
+
+  /* ------------------------------------------------------------------ pointer: hover tags, drag to throw, double-click to read */
+  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), tagEl = $('#tag');
+  const pickAt = (x, y) => {
+    ndc.set(x / VW() * 2 - 1, -(y / VH()) * 2 + 1); ray.setFromCamera(ndc, cam);
+    const hits = ray.intersectObjects(ITEMS.filter(o => o.mesh && o.mesh.visible && (o.state === 'live' || o.state === 'front')).map(o => o.mesh), true);
+    const h = hits.find(h => h.object.item);
+    return h ? { o: h.object.item, p: h.point } : null;
+  };
+  let hover = null, kbd = null, pinned = null;
+  const drag = { o: null, joint: null, c: null, plane: new THREE.Plane(), moved: 0, x: 0, y: 0 };
+  const jointBody = new CANNON.Body({ mass: 0, type: CANNON.Body.KINEMATIC }); jointBody.collisionFilterGroup = 0; jointBody.collisionFilterMask = 0; world.addBody(jointBody);
+
+  function grab(hit, x, y) {
+    const o = hit.o, b = o.body;
+    if (o.kind === 'name') return; // the base of everything stays put
+    drag.o = o; drag.moved = 0; drag.x = x; drag.y = y;
+    drag.plane.setFromNormalAndCoplanarPoint(cam.getWorldDirection(new THREE.Vector3()).negate(), hit.p);
+    jointBody.position.set(hit.p.x, hit.p.y, hit.p.z);
+    const piv = b.pointToLocalFrame(new CANNON.Vec3(hit.p.x, hit.p.y, hit.p.z));
+    drag.c = new CANNON.PointToPointConstraint(b, piv, jointBody, new CANNON.Vec3(), o.mass * 24 * 1.25 + 90);
+    world.addConstraint(drag.c);
+    b.wakeUp(); b.angularDamping = .7; b.allowSleep = false;
+    cv.classList.add('grabbing');
+  }
+  function release() {
+    if (!drag.o) return;
+    const b = drag.o.body; b.angularDamping = drag.o.flutter ? .45 : .12; b.allowSleep = true;
+    world.removeConstraint(drag.c); drag.o = null; drag.c = null; cv.classList.remove('grabbing');
+  }
+  const hitPt = new THREE.Vector3();
+  function moveJoint(x, y) {
+    ndc.set(x / VW() * 2 - 1, -(y / VH()) * 2 + 1); ray.setFromCamera(ndc, cam);
+    if (ray.ray.intersectPlane(drag.plane, hitPt)) { hitPt.y = Math.max(hitPt.y, .15); hitPt.z = Math.max(-3.6, Math.min(4.2, hitPt.z)); jointBody.position.set(hitPt.x, hitPt.y, hitPt.z) }
+  }
+
+  // Touch: a swipe always scrolls time. Press and hold on something (without moving) to pick it up;
+  // from then on the finger drags it and the page stays put.
+  let hold = null;
+  cv.addEventListener('touchstart', e => {
+    clearTimeout(hold && hold.timer); hold = null;
+    if (front || reduced || e.touches.length !== 1) return;
+    const t = e.touches[0], hit = pickAt(t.clientX, t.clientY); if (!hit || hit.o.kind === 'name') return;
+    hold = { x: t.clientX, y: t.clientY, timer: setTimeout(() => { if (hold) { grab(pickAt(hold.x, hold.y) || hit, hold.x, hold.y); navigator.vibrate && navigator.vibrate(8) } }, 230) };
+  }, { passive: true });
+  cv.addEventListener('touchmove', e => {
+    if (drag.o) { e.preventDefault(); const t = e.touches[0]; moveJoint(t.clientX, t.clientY); dirty = 1; return }
+    if (hold) { const t = e.touches[0]; if (Math.hypot(t.clientX - hold.x, t.clientY - hold.y) > 8) { clearTimeout(hold.timer); hold = null } }
+  }, { passive: false });
+  cv.addEventListener('touchend', () => { if (hold) clearTimeout(hold.timer); hold = null; release(); dirty = 1 });
+  let lastTap = { t: 0, o: null };
+  cv.addEventListener('pointerdown', e => {
+    if (front && !e.button) { dropBack(); return }
+    if (e.button) return;
+    const hit = pickAt(e.clientX, e.clientY); if (!hit) { pinned = null; dirty = 1; return }
+    firstTouch();
+    if (e.pointerType !== 'mouse') { const now = performance.now(); if (lastTap.o === hit.o && now - lastTap.t < 320) { lastTap.o = null; clearTimeout(hold && hold.timer); hold = null; bringForward(hit.o); return } lastTap = { t: now, o: hit.o }; pinned = hit.o; dirty = 1; return }
+    if (reduced) return;
+    cv.setPointerCapture(e.pointerId);
+    grab(hit, e.clientX, e.clientY);
+  });
+  cv.addEventListener('pointermove', e => {
+    if (drag.o) { moveJoint(e.clientX, e.clientY); if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) > 4) drag.moved = 1; dirty = 1; return }
+    if (e.pointerType !== 'mouse' || front) return;
+    const hit = pickAt(e.clientX, e.clientY);
+    hover = hit ? hit.o : null;
+    cv.classList.toggle('grab', !!hover && !reduced && hover.kind !== 'name');
+    cv.style.cursor = hover && (reduced || hover.kind === 'name') ? 'pointer' : '';
+    dirty = 1;
+  });
+  const up = () => { release(); dirty = 1 };
+  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+  cv.addEventListener('pointerleave', () => { hover = null; cv.classList.remove('grab'); dirty = 1 });
+  cv.addEventListener('dblclick', e => { const hit = pickAt(e.clientX, e.clientY); if (hit) bringForward(hit.o) });
+
+  /* ------------------------------------------------------------------ bring forward, drop back */
+  let front = null;
+  const dim = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshBasicMaterial({ color: '#d9c4b3', transparent: true, opacity: 0, depthWrite: false, fog: false }));
+  dim.renderOrder = 10; cam.add(dim); dim.visible = false;
+  const capEl = $('#cap');
+  const qBase = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2);
+  function frontPose(o) {
+    const aspect = VW() / VH(), tanV = Math.tan(THREE.MathUtils.degToRad(cam.fov / 2));
+    const [fw, fh] = o.face, capH = Math.min(.42, (capEl.offsetHeight + 40) / VH());
+    const room = 1 - capH - .12;
+    const dist = Math.max(fw / (2 * tanV * aspect * (VW() < 700 ? .88 : .6)), fh / (2 * tanV * room)) + o.h / 2;
+    // held close to the lens at reduced scale (same size on screen), so the dimmer can sit in front of the whole studio
+    const near = Math.min(dist, 2.6), sc = near / dist, lift = (capH - .02) * tanV * near;
+    const p = new THREE.Vector3(0, lift, -near).applyMatrix4(cam.matrixWorld);
+    const q = cam.quaternion.clone().multiply(o.tent ? new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), o.tent) : qBase);
+    dim.position.set(0, 0, -near - Math.max(o.h, o.d || 0) * sc - .3);
+    return { p, q, s: sc };
+  }
+  function bringForward(o) {
+    if (front === o) return;
+    if (front) dropBack(true);
+    firstTouch();
+    returnTo = document.activeElement;
+    if (o.kind === 'name') {
+      // the name holds the whole pile up, so a copy comes forward and the block itself stays put
+      const px = Object.create(o); px.proxy = o; px.mesh = o.mesh.clone(); px.mesh.traverse(m => { m.castShadow = false; m.item = o });
+      scene.add(px.mesh); o.mesh.visible = false; o = px;
+    } else {
+      if (o.state === 'front-drop') anims.delete(o);
+      else if (o.state !== 'live') { measurePile(); const s = spawnPose(o); if (!o.mesh) build(o); if (o.state === 'lift') anims.delete(o); o.mesh.position.copy(s.p); o.mesh.quaternion.copy(s.q); o.mesh.visible = true; const qi = queue.indexOf(o); if (qi > -1) queue.splice(qi, 1) }
+      unworld(o); release(); cast(o, false); hiRes(o);
+    }
+    front = o; o.state = 'front';
+    root.classList.add('lock', 'front');
+    fillCaption(o);
+    capEl.hidden = false; requestAnimationFrame(() => capEl.classList.add('on'));
+    dim.visible = true;
+    const fp = frontPose(o);
+    tween(o, fp.p, fp.q, reduced ? 0 : 750, 'io', null, fp.s);
+    fadeDim(.78);
+    (returnTo && returnTo.closest && returnTo.closest('#things') ? $('#cap-x') : capEl).focus({ preventScroll: true });
+  }
+  function dropBack(quick) {
+    const o = front; if (!o) return;
+    front = null;
+    root.classList.remove('lock', 'front');
+    capEl.classList.remove('on'); setTimeout(() => { if (!front) capEl.hidden = true }, 300);
+    fadeDim(0);
+    if (o.proxy) { tween(o, () => o.proxy.mesh.position, () => o.proxy.mesh.quaternion, quick || reduced ? 1 : 480, 'io', () => { scene.remove(o.mesh); o.proxy.mesh.visible = true }); restoreFocus(); return }
+    if (reduced) { o.mesh.position.copy(o.rest.p); o.mesh.quaternion.copy(o.rest.q); o.mesh.scale.setScalar(1); o.state = 'live'; cast(o, true); restoreFocus(o); return }
+    measurePile();
+    const s = spawnPose(o, -.6);
+    tween(o, s.p, s.q, quick ? 1 : 420, 'out', () => { if (o.state === 'front-drop') { place(o, o.mesh.position.clone(), o.mesh.quaternion.clone(), -2) } });
+    o.state = 'front-drop';
+    restoreFocus(o);
+  }
+  let returnTo = null;
+  const restoreFocus = () => { const el = returnTo; returnTo = null; if (el && el.closest && el.closest('#things')) requestAnimationFrame(() => el.focus({ preventScroll: true })) };
+  let dimGoal = 0;
+  const fadeDim = v => { dimGoal = v; dim.visible = true };
+  $('#cap-x').onclick = () => dropBack();
+  addEventListener('keydown', e => { if (e.key === 'Escape' && front) { e.preventDefault(); dropBack() } });
+  function fillCaption(o) {
+    $('#cap-k').textContent = `${LABEL[o.kind]} · ${o.kind === 'paper' ? `${o.y} · ${cites(o.cites)}` : o.when}`;
+    $('#cap-h').textContent = o.title;
+    let b = '', r = '';
+    if (o.kind === 'paper') { b = `<p>${esc(o.authors)}${o.org ? `. <i>${esc(o.org)}</i>` : ''}.</p>`; r = `<a href="${o.link}" target="_blank" rel="noopener">On Google Scholar ↗</a>` }
+    else if (o.kind === 'role') b = `<p>${esc(o.org)}. ${esc(o.note)}</p>`;
+    else if (o.kind === 'more') { b = `<ul>${o.rest.map(([f, t, org, d]) => `<li><a href="${IMG + f}" target="_blank" rel="noopener">${esc(t)}</a>, ${d}</li>`).join('')}</ul>` }
+    else if (o.kind === 'email') { b = `<p>The last thing to land, in 2026. Also on <a href="https://www.linkedin.com/in/george-michoulis/" target="_blank" rel="noopener">LinkedIn</a>, <a href="https://github.com/gmixoulis" target="_blank" rel="noopener">GitHub</a> and <a href="${SCHOLAR}" target="_blank" rel="noopener">Google Scholar</a>.</p>`; r = `<a href="mailto:gmixoulis@gmail.com">Email George ↗</a>` }
+    else if (o.kind === 'name') b = `<p>${esc(o.note)} He lives in Thessaloniki.</p>`;
+    else b = `<p>${esc(o.org)}.${o.note ? ' ' + esc(o.note) : ''}</p>`;
+    if (o.file) r = `<a href="${IMG + o.file}" target="_blank" rel="noopener">Open the full scan ↗</a>`;
+    $('#cap-b').innerHTML = b;
+    $('#cap-r').querySelectorAll('a').forEach(a => a.remove());
+    if (r) $('#cap-x').insertAdjacentHTML('beforebegin', r);
+  }
+
+  /* keyboard: the offscreen list. Focus walks time to that thing and tags it; Enter brings it forward */
+  $('#things').addEventListener('focusin', e => {
+    const o = ITEMS[+e.target.dataset.i]; if (!o) return;
+    kbd = o; firstTouch();
+    if (!reduced && o.state !== 'live' && o.state !== 'front' && T < o.t) scrollTo({ top: scrollFor(o.t) + 2, behavior: 'instant' });
+    dirty = 1;
+  });
+  $('#things').addEventListener('focusout', () => { kbd = null; dirty = 1 });
+  $('#things').addEventListener('click', e => { const b = e.target.closest('button'); if (b) bringForward(ITEMS[+b.dataset.i]) });
+
+  /* the tag follows whatever is hovered, focused, or tapped */
+  const tp = new THREE.Vector3();
+  function placeTag() {
+    const o = front ? null : (kbd || hover || pinned);
+    if (!o || !o.mesh || !o.mesh.visible || o.state === 'lift') { tagEl.classList.remove('on', 'link'); return }
+    const b = o.mesh.position; tp.set(b.x, b.y + Math.max(o.h, o.cyl ? o.r : .2) * .5 + .15, b.z).project(cam);
+    if (tp.z > 1) { tagEl.classList.remove('on'); return }
+    if (tagEl.dataset.i != o.i) {
+      tagEl.dataset.i = o.i;
+      tagEl.querySelector('small').textContent = `${LABEL[o.kind]} · ${tagLine(o)}`;
+      const s = tagEl.querySelector('strong');
+      if (o.kind === 'email') s.innerHTML = `<a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>`; else s.textContent = o.kind === 'role' ? `${o.title}, ${o.org}` : o.title;
+      tagEl.classList.toggle('link', o.kind === 'email');
+    }
+    const x = (tp.x + 1) / 2 * VW(), y = (1 - tp.y) / 2 * VH() - 24;
+    tagEl.style.transform = `translate(${Math.max(130, Math.min(VW() - 130, x))}px,${Math.max(80, y)}px) translate(-50%,-100%)`;
+    tagEl.classList.add('on');
+  }
+
+  /* first interaction quietens the hint */
+  let touched = 0;
+  const firstTouch = () => { if (touched) return; touched = 1; $('#hint').classList.add('dim') };
+  addEventListener('scroll', () => { if (scrollY > vh * .3) firstTouch(); dirty = 1 }, { passive: true });
+  if (touch) $('#hint').textContent = 'Swipe up to move time forward. Hold anything to pick it up, double-tap to read it.';
+
+  /* ------------------------------------------------------------------ loop */
+  let dirty = 1, last = performance.now(), raf = 0, idle = 0, running = false;
+  const stats = { phys: 0, draw: 0, n: 0 };
+  let moved = true; // something changed pose outside physics (spawn, lift, drop-back)
+  const sync = () => { for (const o of ITEMS) if (o.state === 'live') { o.mesh.position.copy(o.body.position); o.mesh.quaternion.copy(o.body.quaternion) } };
+  function frame(now) {
+    raf = requestAnimationFrame(frame);
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    updateTime(now);
+    const t0 = performance.now();
+    if (!reduced) { world.step(1 / 60, dt, 2); sync() }
+    const t1 = performance.now();
+    stepAnims(now);
+    measurePile();
+    const camMoving = placeCam(dt);
+    if (front && anims.has(front) === false) { const fp = frontPose(front); front.mesh.position.lerp(fp.p, .25); front.mesh.quaternion.slerp(fp.q, .25); front.mesh.scale.setScalar(fp.s) }
+    dim.material.opacity += (dimGoal - dim.material.opacity) * (1 - Math.exp(-dt * 8)); if (dimGoal === 0 && dim.material.opacity < .01) dim.visible = false;
+    placeTag();
+    const busy = world.hasActiveBodies || anims.size || camMoving || queue.length || dirty || dim.visible || front;
+    renderer.shadowMap.needsUpdate = world.hasActiveBodies || anims.size > 0 || moved;
+    moved = false;
+    if (busy) { idle = 0; draw(); watch(now, dt * 1000) } else if (idle++ < 2) draw();
+    stats.phys += t1 - t0; stats.draw += performance.now() - t1; stats.n++;
+    dirty = 0;
+  }
+  const start = () => { if (running) return; running = true; last = performance.now(); raf = requestAnimationFrame(frame) };
+  const stop = () => { running = false; cancelAnimationFrame(raf) };
+  const pauseIfHidden = () => (document.hidden || root.classList.contains('reading')) ? stop() : (start(), dirty = 1);
+  document.addEventListener('visibilitychange', pauseIfHidden);
+  addEventListener('readingchange', pauseIfHidden);
+  function resize() { renderer.setSize(VW(), VH(), false); composer && composer.setSize(VW(), VH()); cam.aspect = VW() / VH(); cam.updateProjectionMatrix(); dirty = 1 }
+  addEventListener('resize', () => {
+    resize();
+    if (Math.abs(innerHeight - vh) > 120 || !touch) { const k = scrollY / vh; sizeTime(); if (!reduced) scrollTo(0, k * vh) }
+    placeCam(0, true); dirty = 1;
+  });
+
+  /* reduced motion: settle the whole pile off-screen, in small slices, then show it still */
+  if (reduced) {
+    $('#hint').textContent = 'Reduced motion is on, so here is the pile already settled. Double-click anything to read it.';
+    let k = 0, steps = 0;
+    const settle = () => {
+      const t0 = performance.now();
+      while (performance.now() - t0 < 24) {
+        if (k < ITEMS.length && steps % 20 === 0) { const o = ITEMS[k++]; measurePile(); const s = spawnPose(o); place(o, s.p, s.q) }
+        world.step(1 / 60); steps++;
+        if (k >= ITEMS.length && (!world.hasActiveBodies || steps > ITEMS.length * 20 + 900)) {
+          sync(); ITEMS.forEach(o => { o.rest = { p: o.mesh.position.clone(), q: o.mesh.quaternion.clone() }; o.body.world && world.removeBody(o.body) });
+          measurePile(); placeCam(0, true); updateTime(0); cv.classList.add('on'); pauseIfHidden(); return;
+        }
+      }
+      requestAnimationFrame(settle);
+    };
+    ITEMS.forEach(build); ITEMS.forEach(o => loadScan(o));
+    settle();
+  } else {
+    placeCam(0, true);
+    requestAnimationFrame(() => cv.classList.add('on'));
+    pauseIfHidden();
+  }
+  window.__gravity = { stats, renderer, pick: pickAt, ITEMS, world, get T() { return T }, get pileTop() { return pileTop }, bringForward, dropBack, cam, scrollFor };
+}
+</script>
+</body>
+</html>

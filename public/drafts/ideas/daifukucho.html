@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daifukuchō · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki, kept as an Edo-period account book.">
+<script>document.documentElement.className = 'js';</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Boku&display=swap&text=%E5%A4%A7%E7%A6%8F%E5%B8%B3%E5%BA%8F%E8%A8%98%E8%AB%96%E5%8F%97%E9%96%8B%E7%B7%A0">
+<style>
+:root {
+  --paper: #efe8d9;   /* washi leaf */
+  --cover: #e0d5be;   /* cover stock */
+  --slip: #f7f2e6;    /* pasted title slip, photo mounts */
+  --ink: #1c1915;     /* sumi */
+  --ink-2: #564c41;   /* faded sumi */
+  --rule: #cbbfa9;    /* ledger ruling */
+  --rule-2: #a4967e;
+  --shu: #c03a21;     /* seal paste, seals only */
+  --thread: #2b2520;
+  --bind: 72px;
+  --mincho: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --brush: "Yuji Boku", var(--mincho);
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #191612;
+    --cover: #221d17;
+    --slip: #2b251e;
+    --ink: #ebe0c9;
+    --ink-2: #b6a88f;
+    --rule: #3a3229;
+    --rule-2: #5a4e40;
+    --shu: #d24b2f;
+    --thread: #cdbb9b;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 1.125rem/1.78 var(--mincho);
+  font-kerning: normal;
+}
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: .22em; text-decoration-color: var(--rule-2); }
+a:hover { text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+img { max-width: 100%; }
+[lang="ja"] { font-feature-settings: normal; }
+.el { font-family: Georgia, "Times New Roman", serif; }
+
+/* ---------- seals ---------- */
+.seal {
+  --r: 0deg;
+  display: inline-grid; place-items: center; flex: none;
+  width: 58px; height: 58px; border-radius: 4px;
+  background: var(--shu); color: var(--paper);
+  font: 800 34px/1 var(--mincho);
+  box-shadow: inset 0 0 0 3px var(--shu), inset 0 0 0 4.5px var(--paper);
+  transform: rotate(var(--r)); opacity: .93;
+  user-select: none;
+}
+.seal--sm { width: 38px; height: 38px; font-size: 22px; box-shadow: inset 0 0 0 2px var(--shu), inset 0 0 0 3px var(--paper); }
+.seal--own {
+  width: 118px; height: 118px; border-radius: 50%;
+  background: transparent; color: var(--shu);
+  box-shadow: inset 0 0 0 5px var(--shu);
+  writing-mode: vertical-rl; display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  font-size: 42px; font-weight: 800; letter-spacing: -.1em;
+}
+.seal--own span { display: block; line-height: 1.02; }
+@media (prefers-color-scheme: light) { .seal--own { mix-blend-mode: multiply; } }
+@media (prefers-reduced-motion: no-preference) {
+  .js .seal:not(.on) { opacity: 0; }
+  .seal.on { animation: press 260ms cubic-bezier(.3,.6,.35,1) both; }
+  @keyframes press {
+    0%   { opacity: 0; transform: rotate(var(--r)) scale(1.55); }
+    55%  { opacity: 1; transform: rotate(var(--r)) scale(.93); }
+    100% { opacity: .93; transform: rotate(var(--r)) scale(1); }
+  }
+}
+
+/* ---------- cover ---------- */
+.back {
+  position: absolute; top: 20px; left: 64px; z-index: 2;
+  font-size: .875rem; color: var(--ink-2); text-decoration: none;
+}
+.back:hover { text-decoration: underline; }
+.cover {
+  position: relative; min-height: 100svh;
+  display: flex; flex-direction: column;
+  padding: 64px calc(var(--bind) + 64px) 28px 64px;
+  background: var(--cover);
+  /* leaf edges peeking under the cover */
+  box-shadow: 0 4px 0 var(--paper), 0 5px 0 var(--rule-2), 0 9px 0 var(--paper), 0 10px 0 var(--rule-2);
+  margin-bottom: 10px;
+}
+.binding { position: absolute; top: 0; bottom: 0; right: 0; width: var(--bind); border-left: 1px solid var(--rule-2); }
+.binding::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; margin-left: -1.5px; background: var(--thread); }
+.binding::after { content: ""; position: absolute; top: 0; bottom: 0; left: -9px; border-left: 1px solid var(--rule); }
+.binding i { position: absolute; left: 50%; right: 0; height: 3px; margin-top: -1.5px; background: var(--thread); }
+.binding i::before { content: ""; position: absolute; left: -5px; top: -3.5px; width: 10px; height: 10px; border-radius: 50%; background: var(--thread); }
+.binding i:nth-child(1) { top: 12%; } .binding i:nth-child(2) { top: 37%; }
+.binding i:nth-child(3) { top: 63%; } .binding i:nth-child(4) { top: 88%; }
+.binding--l { right: auto; left: 0; border-left: 0; border-right: 1px solid var(--rule-2); }
+.binding--l::after { left: auto; right: -9px; }
+.binding--l i { left: 0; right: 50%; }
+.binding--l i::before { left: auto; right: -5px; }
+
+.daisen {
+  align-self: flex-start;
+  writing-mode: vertical-rl;
+  margin: 0; padding: 26px 14px;
+  background: var(--slip);
+  box-shadow: inset 0 0 0 1px var(--ink), inset 0 0 0 5px var(--slip), inset 0 0 0 6px var(--ink);
+  font: 400 2.4rem/1 var(--brush); letter-spacing: .12em;
+}
+.inscr {
+  position: absolute; top: 64px; right: calc(var(--bind) + 28px); margin: 0;
+  writing-mode: vertical-rl; font-size: .95rem; letter-spacing: .3em; color: var(--ink-2);
+}
+.sign { margin-top: auto; padding-top: 28px; }
+.name-wrap { position: relative; display: inline-block; }
+h1 {
+  margin: 0; font-weight: 800;
+  font-size: clamp(3rem, 14vw, 11rem); line-height: .9; letter-spacing: -.028em;
+}
+h1 span { display: block; }
+.name-wrap .seal--own { position: absolute; right: -104px; bottom: -26px; }
+.lede { max-width: 44ch; margin: 30px 0 0; font-size: 1.3rem; line-height: 1.6; }
+.contents { margin-top: 40px; border-top: 1px solid var(--rule-2); padding-top: 14px; }
+.contents ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 40px; font-size: 1rem; }
+.contents a { text-decoration: none; }
+.contents a:hover span:last-child { text-decoration: underline; text-underline-offset: .22em; }
+.contents .k { color: var(--ink-2); margin-right: .45em; }
+
+/* ---------- leaves ---------- */
+.leaf {
+  display: grid; grid-template-columns: minmax(0, 1fr) 64px; column-gap: clamp(28px, 5vw, 80px);
+  padding: clamp(56px, 5.5vw, 80px) max(24px, calc((100% - 1180px) / 2)) clamp(48px, 4.5vw, 64px);
+  border-top: 3px double var(--rule-2);
+}
+.leaf:first-child { border-top: 0; }
+.leaf-body { grid-column: 1; grid-row: 1; min-width: 0; }
+.hanshin {
+  grid-column: 2; grid-row: 1; align-self: start;
+  position: sticky; top: 28px;
+  writing-mode: vertical-rl; display: flex; align-items: center; gap: 16px;
+  padding: 18px 0; border-left: 1px solid var(--rule); border-right: 1px solid var(--rule);
+  font-size: .8rem; letter-spacing: .24em; color: var(--ink-2);
+}
+.hanshin .bk { font: 400 2.7rem/1 var(--brush); letter-spacing: 0; color: var(--ink); }
+.fish { width: 26px; height: 15px; background: var(--ink); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 48%, 0 100%); }
+h2 { margin: 0 0 .45em; font-size: clamp(2.1rem, 4.4vw, 3.3rem); font-weight: 600; line-height: 1.08; letter-spacing: -.012em; }
+h3 { margin: 52px 0 14px; font-size: 1.35rem; font-weight: 700; line-height: 1.3; }
+.intro { max-width: 56ch; margin: 0 0 36px; color: var(--ink-2); }
+
+/* preface */
+.opening { max-width: 34ch; margin: 0 0 1em; font-size: clamp(1.3rem, 2.3vw, 1.6rem); line-height: 1.55; }
+.prose p { max-width: 62ch; }
+.heads { list-style: none; margin: 52px 0 0; padding: 0; border-top: 1px solid var(--ink); max-width: 900px; }
+.heads li { display: grid; grid-template-columns: 52px 150px minmax(0, 1fr); gap: 0 20px; align-items: baseline; padding: 14px 0 16px; border-bottom: 1px solid var(--rule); }
+.heads .kj { font-size: 1.7rem; font-weight: 700; line-height: 1; }
+.heads b { font-size: 1.18rem; }
+.heads p { margin: 0; }
+.legend { display: flex; gap: 18px; align-items: flex-start; max-width: 60ch; margin-top: 44px; font-size: 1rem; color: var(--ink-2); }
+.legend p { margin: 0; }
+
+/* ledger entries */
+.ledger { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.entry { display: grid; grid-template-columns: minmax(0, 1fr) 100px 52px; }
+.entry + .entry { border-top: 1px solid var(--rule); }
+.e-body { padding: 18px 28px 20px 0; }
+.e-seal { display: grid; place-items: center; border-left: 3px double var(--rule-2); }
+.e-date {
+  writing-mode: vertical-rl; border-left: 1px solid var(--rule);
+  display: flex; align-items: center; padding: 22px 0;
+  font-size: .9rem; letter-spacing: .14em; color: var(--ink-2);
+}
+.e-title { margin: 0; font-size: 1.22rem; font-weight: 700; line-height: 1.38; }
+.e-org { margin: .25em 0 0; font-size: 1rem; color: var(--ink-2); }
+.e-when { display: inline-block; margin-left: 1.1em; font-variant-numeric: tabular-nums; }
+.e-note { margin: .6em 0 0; max-width: 62ch; }
+.tally { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin: .7em 0 0; font-size: .95rem; color: var(--ink-2); }
+.tally span { display: inline-flex; gap: 3px; color: var(--ink); }
+.t { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.3; stroke-linecap: square; }
+.awards { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); max-width: 900px; }
+.awards li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 0 20px; padding: 13px 0; border-bottom: 1px solid var(--rule); font-size: 1rem; }
+.awards .when { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.also { margin: 22px 0 0; max-width: 62ch; font-size: 1rem; color: var(--ink-2); }
+
+/* receipts */
+.pockets { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin: 0 0 12px; }
+.pocket { padding-top: 26px; }
+.slips { display: flex; align-items: flex-start; padding: 0 8px; }
+.slips a {
+  display: block; flex: 0 0 28.5%; position: relative;
+  transform: translateY(var(--y, 0px)) rotate(var(--r, 0deg));
+  transition: transform .2s ease-out;
+}
+.slips a + a { margin-left: -4.6%; }
+.slips a:hover, .slips a:focus-visible { z-index: 1; transform: translateY(calc(var(--y, 0px) - 18px)) rotate(var(--r, 0deg)); }
+.slips img { display: block; width: 100%; height: auto; background: #fff; border: 1px solid var(--rule-2); }
+.face {
+  position: relative; z-index: 1; margin-top: -3.2%;
+  padding: 14px 18px 16px; background: var(--cover);
+  border: 1px solid var(--rule-2);
+  font-size: .86rem; line-height: 1.5;
+}
+.face ul { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 20px; }
+.face li { break-inside: avoid; margin-bottom: .3em; }
+.filed { columns: 3 240px; column-gap: 44px; margin-top: 4px; }
+.filed h4 { margin: 0 0 6px; padding-top: 18px; font-size: 1rem; font-weight: 700; break-after: avoid; }
+.filed h4:first-child { padding-top: 0; }
+.filed ul { list-style: none; margin: 0; padding: 0; }
+.filed li { padding: 5px 0 6px; border-bottom: 1px solid var(--rule); font-size: .95rem; line-height: 1.45; break-inside: avoid; }
+.filed li a { text-decoration: none; }
+.filed li a:hover { text-decoration: underline; }
+
+/* accounts */
+.accts { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+.accts li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 260px); gap: 44px; align-items: start; padding: 20px 0; border-bottom: 1px solid var(--rule); }
+.host { margin: 0; font-size: 1.45rem; font-weight: 700; line-height: 1.25; overflow-wrap: anywhere; }
+.accts p { margin: .5em 0 0; max-width: 52ch; }
+.shot { margin: 0; padding: 7px; background: var(--slip); border: 1px solid var(--rule-2); }
+.shot img { display: block; width: 100%; height: auto; }
+
+/* closing */
+.mail { display: inline-block; margin: 4px 0 28px; font-size: clamp(1.55rem, 4.6vw, 3rem); font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; }
+.elsewhere { margin: 0; max-width: 56ch; }
+.closing-line { display: block; width: min(560px, 100%); height: auto; margin: 40px 0 12px; mix-blend-mode: multiply; opacity: .9; }
+.signed { display: flex; align-items: center; gap: 26px; }
+.signed p { margin: 0; font-size: 1.25rem; }
+.signed .seal--own { mix-blend-mode: normal; }
+
+/* back cover */
+.back-cover {
+  position: relative; background: var(--cover);
+  border-top: 1px solid var(--rule-2);
+  padding: 56px 64px 60px calc(var(--bind) + 64px);
+  font-size: .95rem; color: var(--ink-2);
+}
+.back-cover p { margin: 0 0 .6em; max-width: 64ch; }
+.back-cover a { color: var(--ink); }
+
+@media (prefers-color-scheme: dark) {
+  .slips img, .shot img { filter: brightness(.8) sepia(.18); }
+  .closing-line { mix-blend-mode: normal; filter: invert(1) sepia(.35); opacity: .8; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .slips a { transition: none; }
+}
+
+/* ---------- phone ---------- */
+@media (max-width: 760px) {
+  :root { --bind: 30px; }
+  body { font-size: 1.0625rem; line-height: 1.74; }
+  .back { left: 18px; top: 16px; }
+  .cover { padding: 60px calc(var(--bind) + 18px) 26px 18px; }
+  .binding::after { left: -6px; }
+  .binding i::before { width: 8px; height: 8px; left: -4px; top: -2.5px; }
+  .daisen { font-size: 2.1rem; padding: 20px 11px; }
+  .sign { padding-top: 36px; }
+  h1 { font-size: 17.2vw; }
+  .name-wrap .seal--own { width: 80px; height: 80px; font-size: 28px; box-shadow: inset 0 0 0 4px var(--shu); right: 0; top: -2px; bottom: auto; }
+  .inscr { top: 60px; right: calc(var(--bind) + 12px); font-size: .8rem; }
+  .lede { margin-top: 26px; font-size: 1.12rem; }
+  .contents { margin-top: 40px; }
+  .contents ol { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; }
+  .leaf { grid-template-columns: minmax(0, 1fr); padding-inline: 18px; }
+  .hanshin {
+    grid-column: 1; grid-row: 1; position: static;
+    writing-mode: horizontal-tb; gap: 14px;
+    border: 0; border-bottom: 1px solid var(--rule); padding: 0 0 12px; margin-bottom: 30px;
+  }
+  .hanshin .bk { font-size: 2.1rem; }
+  .fish { transform: rotate(-90deg); width: 22px; height: 13px; }
+  .leaf-body { grid-row: 2; }
+  .heads li { grid-template-columns: 40px minmax(0, 1fr); padding: 16px 0; }
+  .heads p { grid-column: 2; margin-top: 4px; }
+  .entry { grid-template-columns: minmax(0, 1fr) 62px 34px; }
+  .e-body { padding: 20px 14px 22px 0; }
+  .e-seal .seal { width: 44px; height: 44px; font-size: 26px; }
+  .e-date { font-size: .8rem; padding: 18px 0; letter-spacing: .08em; }
+  .e-title { font-size: 1.1rem; }
+  .e-when { display: block; margin-left: 0; }
+  .t { width: 16px; height: 16px; }
+  .awards li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .pockets { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .face { font-size: .82rem; padding: 12px 14px 14px; margin-top: -4%; }
+  .face ul { columns: 1; }
+  .accts li { grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 26px 0; }
+  .host { font-size: 1.28rem; }
+  .signed { gap: 18px; }
+  .signed .seal--own { width: 92px; height: 92px; font-size: 32px; box-shadow: inset 0 0 0 4px var(--shu); }
+  .back-cover { padding: 40px 18px 44px calc(var(--bind) + 22px); }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="ink0" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".3" numOctaves="2" seed="7" result="m"/>
+      <feColorMatrix in="m" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2.4 0 0 0 2.05" result="k"/>
+      <feComposite in="d" in2="k" operator="in"/>
+    </filter>
+    <filter id="ink1" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="11" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="G" yChannelSelector="R" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".26" numOctaves="2" seed="19" result="m"/>
+      <feColorMatrix in="m" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2.2 0 0 0 1.95" result="k"/>
+      <feComposite in="d" in2="k" operator="in"/>
+    </filter>
+    <filter id="ink2" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="23" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.8" xChannelSelector="R" yChannelSelector="B" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".34" numOctaves="2" seed="31" result="m"/>
+      <feColorMatrix in="m" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2.5 0 0 0 2.1" result="k"/>
+      <feComposite in="d" in2="k" operator="in"/>
+    </filter>
+    <filter id="inkS" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".7" numOctaves="2" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".22" numOctaves="2" seed="2" result="m"/>
+      <feColorMatrix in="m" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2 0 0 0 2.15" result="k"/>
+      <feComposite in="d" in2="k" operator="in"/>
+    </filter>
+    <!-- 正 tally, one stroke per symbol step -->
+    <symbol id="t1" viewBox="0 0 20 20"><path d="M3 3.5H17"/></symbol>
+    <symbol id="t2" viewBox="0 0 20 20"><path d="M3 3.5H17M10 3.5V17"/></symbol>
+    <symbol id="t5" viewBox="0 0 20 20"><path d="M3 3.5H17M10 3.5V17M10 10H15.5M5 10V17M2.5 17H17.5"/></symbol>
+  </defs>
+</svg>
+
+<header class="cover">
+  <a class="back" href="index.html">← All ideas</a>
+  <p class="inscr" lang="ja" aria-hidden="true">二〇一五年より　テッサロニキ</p>
+  <p class="daisen" lang="ja">大福帳</p>
+  <div class="sign">
+    <div class="name-wrap">
+      <h1><span>George</span> <span>Michoulis</span></h1>
+      <span class="seal seal--own" lang="ja" aria-hidden="true"><span>ジョ</span><span>ージ</span></span>
+    </div>
+    <p class="lede">Blockchain developer and researcher in Thessaloniki. I write smart contracts and build graph-based ML and full-stack Web3 systems.</p>
+  </div>
+  <nav class="contents" aria-label="Contents">
+    <ol>
+      <li><a href="#preface"><span class="k" lang="ja">一</span><span>Preface</span></a></li>
+      <li><a href="#entries"><span class="k" lang="ja">二</span><span>Entries</span></a></li>
+      <li><a href="#papers"><span class="k" lang="ja">三</span><span>Papers</span></a></li>
+      <li><a href="#receipts"><span class="k" lang="ja">四</span><span>Receipts</span></a></li>
+      <li><a href="#accounts"><span class="k" lang="ja">五</span><span>Accounts opened</span></a></li>
+      <li><a href="#closing"><span class="k" lang="ja">六</span><span>Closing entry</span></a></li>
+    </ol>
+  </nav>
+  <div class="binding" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+</header>
+
+<main>
+  <!-- 一 preface -->
+  <section class="leaf" id="preface" aria-labelledby="h-preface">
+    <div class="hanshin" lang="ja" aria-hidden="true"><span>大福帳</span><span class="fish"></span><span class="bk">序</span><span>一丁</span></div>
+    <div class="leaf-body prose">
+      <h2 id="h-preface">Preface</h2>
+      <p class="opening">I’m George, a blockchain developer and researcher based in Thessaloniki, Greece. I work remotely.</p>
+      <p>I studied Applied Informatics at the University of Macedonia, where my thesis verified academic credentials on Ethereum. Then came an MSc in Data and Web Science at Aristotle University of Thessaloniki, funded by a DeepMind scholarship, where I worked on graph-embedding methods for detecting fraud on blockchains.</p>
+      <p>The work has three sides, and I keep an account for each.</p>
+      <ul class="heads">
+        <li><span class="kj" lang="ja" aria-hidden="true">研</span><b>Research</b><p>Publications and startup work on how effective ledgers are, and what they change in practice across blockchain systems.</p></li>
+        <li><span class="kj" lang="ja" aria-hidden="true">作</span><b>Build</b><p>Web3 work on NFTs and DeFi, data science with graph embeddings, and shipping across Solidity, TypeScript and the cloud.</p></li>
+        <li><span class="kj" lang="ja" aria-hidden="true">教</span><b>Teach</b><p>Lecturing in networks, security and application development, and speaking in public on Web3 and edge tech.</p></li>
+      </ul>
+      <div class="legend">
+        <span class="seal seal--sm" lang="ja" aria-hidden="true">証</span>
+        <p>Edo-period merchants kept their accounts in a daifukuchō, a thick hand-bound ledger, and confirmed entries with a red seal. I build ledgers and have written papers on verifying credentials, so this book is kept the same way. Each entry gets the seal 証, “proof”.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 二 entries -->
+  <section class="leaf" id="entries" aria-labelledby="h-entries">
+    <div class="hanshin" lang="ja" aria-hidden="true"><span>大福帳</span><span class="fish"></span><span class="bk">記</span><span>二丁</span></div>
+    <div class="leaf-body">
+      <h2 id="h-entries">Entries</h2>
+      <p class="intro">Work and study, newest first.</p>
+      <h3 style="margin-top:0">Work</h3>
+      <ol class="ledger">
+        <li class="entry">
+          <div class="e-body">
+            <p class="e-title">Web3 Full-Stack Developer</p>
+            <p class="e-org">Cyberscope by TAC <span class="e-when">05/2026 – present</span></p>
+            <p class="e-note">I build Web3 products end to end: contracts, on-chain integrations, React and Next frontends, and security tooling.</p>
+          </div>
+          <div class="e-seal"><span class="seal" lang="ja" aria-hidden="true">証</span></div>
+          <div class="e-date" lang="ja" aria-hidden="true">二〇二六年</div>
+        </li>
+        <li class="entry">
+          <div class="e-body">
+            <p class="e-title">Blockchain Developer &amp; Researcher</p>
+            <p class="e-org">Sidroco Holdings Ltd <span class="e-when">2024 – 2026</span></p>
+            <p class="e-note">An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ learning platform, and multinational EU projects.</p>
+          </div>
+          <div class="e-seal"><span class="seal" lang="ja" aria-hidden="true">証</span></div>
+          <div class="e-date" lang="ja" aria-hidden="true">二〇二四年</div>
+        </li>
+        <li class="entry">
+          <div class="e-body">
+            <p class="e-title">Lecturer &amp; Academic Partner</p>
+            <p class="e-org">University of Derby / Mediterranean College <span class="e-when">2023 – 2025</span></p>
+            <p class="e-note">I taught Networks and Security, Web Scripting and Application Development, and designed assessment with inclusivity first.</p>
+          </div>
+          <div class="e-seal"><span class="seal" lang="ja" aria-hidden="true">証</span></div>
+          <div class="e-date" lang="ja" aria-hidden="true">二〇二三年</div>
+        </li>
+        <li class="entry">
+          <div class="e-body">
+            <p class="e-title">Blockchain &amp; Full-Stack Developer</p>
+            <p class="e-org">University of Nicosia / IFF <span class="e-when">2022 – 2024</span></p>
+            <p class="e-note">Large Next.js, NestJS and Docker applications, and a Web3 NFT marketplace.</p>
+          </div>
+          <div class="e-seal"><span class="seal" lang="ja" aria-hidden="true">証</span></div>
+          <div class="e-date" lang="ja" aria-hidden="true">二〇二二年</div>
+        </li>
+      </ol>
+
+      <h3>Study</h3>
+      <ol class="ledger">
+        <li class="entry">
+          <div class="e-body">
+            <p class="e-title">MSc Data and Web Science</p>
+            <p class="e-org">Aristotle University of Thessaloniki <span class="e-when">2020 – 2022</span></p>
+            <p class="e-note">Graph-embedding methods for blockchain fraud detection, on a DeepMind scholarship.</p>
+          </div>
+          <div class="e-seal"><span class="seal" lang="ja" aria-hidden="true">証</span></div>
+          <div class="e-date" lang="ja" aria-hidden="true">二〇二〇年</div>
+        </li>
+        <li class="entry">
+          <div class="e-body">
+            <p class="e-title">BSc Applied Informatics</p>
+            <p class="e-org">University of Macedonia <span class="e-when">2015 – 2020</span></p>
+            <p class="e-note">My thesis was on verifying academic credentials with Ethereum.</p>
+          </div>
+          <div class="e-seal"><span class="seal" lang="ja" aria-hidden="true">証</span></div>
+          <div class="e-date" lang="ja" aria-hidden="true">二〇一五年</div>
+        </li>
+      </ol>
+
+      <h3>Awards</h3>
+      <ul class="awards">
+        <li><span class="when">2020 – 2022</span><span>DeepMind Scholarship, Aristotle University of Thessaloniki</span></li>
+        <li><span class="when">06/2022</span><span>3rd place, Infinitech Hackathon, run by Crowdpolicy</span></li>
+        <li><span class="when">2020 – 2021</span><span>Basic Research grant, University of Macedonia</span></li>
+        <li><span class="when">2025</span><span>Award at the first Move/Sui Bootcamp in Thessaloniki</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 三 papers -->
+  <section class="leaf" id="papers" aria-labelledby="h-papers">
+    <div class="hanshin" lang="ja" aria-hidden="true"><span>大福帳</span><span class="fish"></span><span class="bk">論</span><span>三丁</span></div>
+    <div class="leaf-body">
+      <h2 id="h-papers">Papers</h2>
+      <p class="intro">Mostly on verifying credentials, ledger governance and 5G marketplaces. The tally under each paper counts its citations; the full record is on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+      <ol class="ledger">
+        <li class="entry">
+          <div class="e-body">
+            <p class="e-title">A process-aware approach for blockchain-based verification of academic qualifications</p>
+            <p class="e-org">Simulation Modelling Practice and Theory 121, 102642 <span class="e-when">2022</span></p>
+            <p class="tally"><span aria-hidden="true"><svg class="t"><use href="#t5"/></svg><svg class="t"><use href="#t5"/></svg><svg class="t"><use href="#t5"/></svg><svg class="t"><use href="#t5"/></svg><svg class="t"><use href="#t5"/></svg><svg class="t"><use href="#t5"/></svg><svg class="t"><use href="#t2"/></svg></span>cited 32</p>
+          </div>
+          <div class="e-seal"><span class="seal" lang="ja" aria-hidden="true">証</span></div>
+          <div class="e-date" lang="ja" aria-hidden="true">二〇二二年</div>
+        </li>
+        <li class="entry">
+          <div class="e-body">
+            <p class="e-title">Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe</p>
+            <p class="e-org">XIV Balkan Conference on Operational Research <span class="e-when">2020</span></p>
+            <p class="tally"><span aria-hidden="true"><svg class="t"><use href="#t5"/></svg><svg class="t"><use href="#t5"/></svg><svg class="t"><use href="#t1"/></svg></span>cited 11</p>
+          </div>
+          <div class="e-seal"><span class="seal" lang="ja" aria-hidden="true">証</span></div>
+          <div class="e-date" lang="ja" aria-hidden="true">二〇二〇年</div>
+        </li>
+        <li class="entry">
+          <div class="e-body">
+            <p class="e-title">Exploring decentralized governance: a framework applied to Compound Finance</p>
+            <p class="e-org">International Conference on Mathematical Research for Blockchain Economy <span class="e-when">2023</span></p>
+            <p class="tally"><span aria-hidden="true"><svg class="t"><use href="#t5"/></svg><svg class="t"><use href="#t2"/></svg></span>cited 7</p>
+          </div>
+          <div class="e-seal"><span class="seal" lang="ja" aria-hidden="true">証</span></div>
+          <div class="e-date" lang="ja" aria-hidden="true">二〇二三年</div>
+        </li>
+        <li class="entry">
+          <div class="e-body">
+            <p class="e-title">FraMark: a blockchain marketplace for 5G network management using fractional NFTs</p>
+            <p class="e-org">7th World Symposium on Communication Engineering <span class="e-when">2024</span></p>
+            <p class="tally"><span aria-hidden="true"><svg class="t"><use href="#t1"/></svg></span>cited 1</p>
+          </div>
+          <div class="e-seal"><span class="seal" lang="ja" aria-hidden="true">証</span></div>
+          <div class="e-date" lang="ja" aria-hidden="true">二〇二四年</div>
+        </li>
+        <li class="entry">
+          <div class="e-body">
+            <p class="e-title">Data security for smart cities</p>
+            <p class="e-org"><span class="e-when" style="margin-left:0">2025</span></p>
+            <p class="tally"><span aria-hidden="true"><svg class="t"><use href="#t1"/></svg></span>cited 1</p>
+          </div>
+          <div class="e-seal"><span class="seal" lang="ja" aria-hidden="true">証</span></div>
+          <div class="e-date" lang="ja" aria-hidden="true">二〇二五年</div>
+        </li>
+        <li class="entry">
+          <div class="e-body">
+            <p class="e-title">Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management</p>
+            <p class="e-org">IEEE ICCE 2025 <span class="e-when">2025</span></p>
+            <p class="tally">not cited yet</p>
+          </div>
+          <div class="e-seal"><span class="seal" lang="ja" aria-hidden="true">証</span></div>
+          <div class="e-date" lang="ja" aria-hidden="true">二〇二五年</div>
+        </li>
+        <li class="entry">
+          <div class="e-body">
+            <p class="e-title">Graph embedding and node features for drug-target interaction prediction</p>
+            <p class="e-org">Aristotle University of Thessaloniki, MSc work <span class="e-when">2022</span></p>
+            <p class="tally">not cited yet</p>
+          </div>
+          <div class="e-seal"><span class="seal" lang="ja" aria-hidden="true">証</span></div>
+          <div class="e-date" lang="ja" aria-hidden="true">二〇二二年</div>
+        </li>
+        <li class="entry">
+          <div class="e-body">
+            <p class="e-title">Blockchain in higher education: permissioned and permissionless approaches</p>
+            <p class="e-org">4th Summit on Gender Equality in Computing <span class="e-when">2022</span></p>
+            <p class="tally">not cited yet</p>
+          </div>
+          <div class="e-seal"><span class="seal" lang="ja" aria-hidden="true">証</span></div>
+          <div class="e-date" lang="ja" aria-hidden="true">二〇二二年</div>
+        </li>
+      </ol>
+      <p class="also">Also on file: two Greek-language theses on verifying academic titles with Ethereum, from 2020 and 2021.</p>
+    </div>
+  </section>
+
+  <!-- 四 receipts -->
+  <section class="leaf" id="receipts" aria-labelledby="h-receipts">
+    <div class="hanshin" lang="ja" aria-hidden="true"><span>大福帳</span><span class="fish"></span><span class="bk">受</span><span>四丁</span></div>
+    <div class="leaf-body">
+      <h2 id="h-receipts">Receipts</h2>
+      <p class="intro">Certificates from courses, workshops and programmes, filed like receipts at the back of the book. Each one opens the original scan.</p>
+      <div class="pockets">
+        <div class="pocket">
+          <div class="slips">
+            <a href="../../img/renamed/Award_Academic-Achievement.jpg" style="--r:-3deg;--y:6px"><img src="../../img/renamed/Award_Academic-Achievement.jpg" width="2269" height="1593" loading="lazy" decoding="async" alt="Scan: academic achievement award"></a>
+            <a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" style="--r:2deg;--y:0px"><img src="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" width="2175" height="1439" loading="lazy" decoding="async" alt="Scan: CCNA, Cisco Certified Network Associate"></a>
+            <a href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" style="--r:-1deg;--y:10px"><img src="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" width="1755" height="1240" loading="lazy" decoding="async" alt="Scan: machine learning and deep neural networks"></a>
+            <a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" style="--r:3deg;--y:3px"><img src="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" width="1754" height="1241" loading="lazy" decoding="async" alt="Scan: introduction to digital currencies"></a>
+          </div>
+          <div class="face" aria-hidden="true">
+            <ul><li>Academic achievement award</li><li>CCNA, Cisco Certified Network Associate</li><li>Machine learning and deep neural networks</li><li>Introduction to digital currencies</li></ul>
+          </div>
+        </div>
+        <div class="pocket">
+          <div class="slips">
+            <a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" style="--r:2deg;--y:8px"><img src="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" width="1650" height="1275" loading="lazy" decoding="async" alt="Scan: how to get published with IEEE"></a>
+            <a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" style="--r:-2deg;--y:0px"><img src="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" width="2342" height="1656" loading="lazy" decoding="async" alt="Scan: Rust developer"></a>
+            <a href="../../img/renamed/Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg" style="--r:1deg;--y:5px"><img src="../../img/renamed/Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg" width="1754" height="1241" loading="lazy" decoding="async" alt="Scan: blockchain for the legal industry"></a>
+            <a href="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg" style="--r:-3deg;--y:12px"><img src="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg" width="1754" height="1241" loading="lazy" decoding="async" alt="Scan: launch event and RippleX workshop"></a>
+          </div>
+          <div class="face" aria-hidden="true">
+            <ul><li>How to get published with IEEE</li><li>Rust developer</li><li>Blockchain for the legal industry</li><li>Launch event and RippleX workshop</li></ul>
+          </div>
+        </div>
+      </div>
+
+      <h3>Also filed</h3>
+      <div class="filed">
+        <h4>Completed</h4>
+        <ul>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png">Advanced ethical hacking</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png">Cloud engineering</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg">Cybersecurity eLearning Academy</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png">Networking essentials</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg">Software development for telecommunication networks</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg">NFT Talents program</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg">European legal culture program, Aristotle University of Thessaloniki</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png">Entrepreneurship, funding and development of new enterprises</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg">How to design and build a website</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg">Digital skills for tourism</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_Discover-Customer.jpg">Discover Customer</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_The-Hour-Of-Code.jpg">The Hour of Code</a></li>
+        </ul>
+        <h4>Attended</h4>
+        <ul>
+          <li><a href="../../img/renamed/Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg">VeChain ToolChain: digital transformation of the healthcare industry</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg">Blockchain in education: remote learning, social distancing and the certification case</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg">Data analytics to strengthen healthcare cybersecurity</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg">Processing data in the fog: the RAINBOW fog computing platform</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Participation_EY-Cyber-Day.jpg">EY Cyber Day</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg">GNU/Linux command line</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg">SKGCode project: a real estate chatbot</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg">Hydrobot marine educational robotics program</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png">MIGMA marketing and brand</a></li>
+        </ul>
+        <h4>Degrees, language and awards</h4>
+        <ul>
+          <li><a href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg">Master degree, Data and Web Science</a></li>
+          <li><a href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg">Bachelor degree</a></li>
+          <li><a href="../../img/renamed/English-Certificate_English-Certificate-English-Proficiency.jpg">English proficiency certificate</a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg">TOEIC listening and reading test</a></li>
+          <li><a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png">Move Bootcamp Thessaloniki award</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 五 accounts -->
+  <section class="leaf" id="accounts" aria-labelledby="h-accounts">
+    <div class="hanshin" lang="ja" aria-hidden="true"><span>大福帳</span><span class="fish"></span><span class="bk">開</span><span>五丁</span></div>
+    <div class="leaf-body">
+      <h2 id="h-accounts">Accounts opened</h2>
+      <p class="intro">Sites and systems I’ve built, each filed under its hostname with a screenshot.</p>
+      <ul class="accts">
+        <li>
+          <div><h3 class="host">verde.uom.gr</h3><p>VerDe, the academic credential verification system behind my <a href="#papers">first papers</a>. This is its contact page, with a map to the University of Macedonia and links to the demo, publications and team.</p></div>
+          <figure class="shot"><img src="../../img/portfolio/verde.uom.gr.PNG" width="1840" height="907" loading="lazy" decoding="async" alt="Screenshot of verde.uom.gr: the VerDe contact page with a map"></figure>
+        </li>
+        <li>
+          <div><h3 class="host">bbf-gui.ddns.net</h3><p>A blockchain benchmarking framework for deploying and evaluating different blockchain protocols. The landing page lists the University of Nicosia, Ripple and the XRP Ledger as sponsors.</p></div>
+          <figure class="shot"><img src="../../img/portfolio/bbf-gui.ddns.net.gif" width="1377" height="956" loading="lazy" decoding="async" alt="Screenshot of bbf-gui.ddns.net: Blockchain Benchmarking Framework landing page"></figure>
+        </li>
+        <li>
+          <div><h3 class="host">metau.unic.ac.cy</h3><p>A University of Nicosia course site for decentralised, on-chain education in the metaverse, with a wallet connection in the header.</p></div>
+          <figure class="shot"><img src="../../img/portfolio/metau.unic.ac.cy.png" width="1698" height="943" loading="lazy" decoding="async" alt="Screenshot of metau.unic.ac.cy: course landing page"></figure>
+        </li>
+        <li>
+          <div><h3 class="host">accelerate.unic.ac.cy</h3><p>A University of Nicosia platform, shown here at its sign-in page.</p></div>
+          <figure class="shot"><img src="../../img/portfolio/accelerate.png" width="1910" height="998" loading="lazy" decoding="async" alt="Screenshot of accelerate.unic.ac.cy: sign-in page"></figure>
+        </li>
+        <li>
+          <div><h3 class="host">celc.web.auth.gr</h3><p>The Greek-language site of <span class="el" lang="el">ΚΕΝοΠ</span> at Aristotle University’s law school, with a menu of centre, members, research and news pages.</p></div>
+          <figure class="shot"><img src="../../img/portfolio/celc.web.auth.gr.PNG" width="1600" height="936" loading="lazy" decoding="async" alt="Screenshot of celc.web.auth.gr: home page with a stone bridge photo"></figure>
+        </li>
+        <li>
+          <div><h3 class="host">eudem.polsci.auth.gr</h3><p>The site of the EUDEM Jean Monnet Chair at Aristotle University, with pages for the chair, staff, activities and news.</p></div>
+          <figure class="shot"><img src="../../img/portfolio/eudem.polsci.auth.gr.PNG" width="1896" height="944" loading="lazy" decoding="async" alt="Screenshot of eudem.polsci.auth.gr: home page slider titled Institutions"></figure>
+        </li>
+        <li>
+          <div><h3 class="host">marlab.ode.uom.gr</h3><p>MarLab, the marketing laboratory at the University of Macedonia, with research, education, publications and announcements.</p></div>
+          <figure class="shot"><img src="../../img/portfolio/marlab.ode.uom.gr.PNG" width="1835" height="917" loading="lazy" decoding="async" alt="Screenshot of marlab.ode.uom.gr: MarLab home page"></figure>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 六 closing -->
+  <section class="leaf" id="closing" aria-labelledby="h-closing">
+    <div class="hanshin" lang="ja" aria-hidden="true"><span>大福帳</span><span class="fish"></span><span class="bk">締</span><span>六丁</span></div>
+    <div class="leaf-body">
+      <h2 id="h-closing">Closing entry</h2>
+      <p class="intro">I’m in Thessaloniki and work remotely. Write to me about a contract, a paper or a course.</p>
+      <a class="mail" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+      <p class="elsewhere">I’m also on <a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a>, <a href="https://github.com/gmixoulis">GitHub</a>, <a href="https://twitter.com/GeorgeMicou">X</a> and <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+      <img class="closing-line" src="../../img/ui/brush-stroke.png" width="1490" height="193" alt="">
+      <div class="signed">
+        <p>Signed, George Michoulis</p>
+        <span class="seal seal--own" lang="ja" aria-hidden="true"><span>ジョ</span><span>ージ</span></span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="back-cover">
+  <div class="binding binding--l" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <p>Two more books on the same shelf: the <a href="../../garden/">Zen Garden</a>, where I keep personal notes, and <a href="../../play/">Ledger Run</a>, my résumé as a platformer game.</p>
+  <p>George Michoulis, Thessaloniki.</p>
+</footer>
+
+<script>
+(function () {
+  var seals = document.querySelectorAll('.seal');
+  var tilt = [-4, 2, -1, 3, -3, 1, -2, 4];
+  seals.forEach(function (s, i) {
+    s.style.setProperty('--r', tilt[i % tilt.length] + 'deg');
+    s.style.filter = s.classList.contains('seal--own') ? 'url(#inkS)' : 'url(#ink' + (i % 3) + ')';
+  });
+  var press = function (s) { s.classList.add('on'); };
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    seals.forEach(press); return;
+  }
+  // each seal presses once, when most of it is on screen
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { press(e.target); io.unobserve(e.target); } });
+  }, { threshold: .6, rootMargin: '0px 0px -6% 0px' });
+  seals.forEach(function (s) { io.observe(s); });
+})();
+</script>
+</body>
+</html>

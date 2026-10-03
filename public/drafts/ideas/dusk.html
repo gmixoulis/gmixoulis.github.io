@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dusk · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki. A slow flight along the Thessaloniki waterfront, from golden hour to night.">
+<meta name="theme-color" content="#1e1119">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600&family=GFS+Didot&display=swap" rel="stylesheet">
+<style>
+/* One mode on purpose: the page runs its own clock from golden hour to night, so light/dark
+   preference is replaced by the scene's time of day. Text always sits on a dusk scrim. */
+:root{--gut:clamp(1rem,4.5vw,4rem);--cream:#fbf3e8;--muted:#e3d6c8;--amber:#ffc587;--ink:#1c1016;--scrim:34 16 27;--orb:#ffd9a0;--line:rgb(251 243 232/.17);color-scheme:dark}
+*{box-sizing:border-box}
+html{background:#23131c;-webkit-text-size-adjust:100%}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{margin:0;color:var(--cream);font:400 1.0625rem/1.62 Commissioner,"Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:4px;border-radius:2px}
+section:focus{outline:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* scene + fallback sky (also the no-WebGL and pre-load look) */
+.sky{position:fixed;inset:0;z-index:0;background:radial-gradient(55% 32% at 36% 58%,#ffd89a 0,rgb(255 176 104/.55) 32%,transparent 72%),linear-gradient(#2b416c 0,#6f6a93 34%,#e59f79 55%,#f6c287 58.5%,#43405c 59%,#232540 78%,#171a2c 100%)}
+#scene{position:fixed;top:0;left:0;width:100%;height:100vh;height:100lvh;z-index:0;display:block;opacity:0;transition:opacity 1.8s ease}
+#scene.on{opacity:1}
+.vig{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(125% 95% at 50% 42%,transparent 58%,rgb(12 5 10/.42) 100%)}
+.top,main,footer{position:relative;z-index:2}
+
+/* nav */
+.top{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;gap:1.5rem;padding:1.05rem var(--gut) 1.6rem;background:linear-gradient(rgb(var(--scrim)/.5),rgb(var(--scrim)/0));transition:background .6s}
+.top.solid{background:linear-gradient(rgb(var(--scrim)/.96),rgb(var(--scrim)/.82) 55%,rgb(var(--scrim)/0))}
+.back{font-size:.8rem;color:var(--muted);text-decoration:none;white-space:nowrap}
+.back:hover{color:var(--cream)}
+.brand{font:400 1.35rem/1 "GFS Didot",Didot,serif;text-decoration:none;white-space:nowrap;opacity:0;transform:translateY(-6px);transition:opacity .6s,transform .6s}
+.top.solid .brand{opacity:1;transform:none}
+.top nav{margin-left:auto;min-width:0}
+.top ul{display:flex;gap:clamp(1rem,2.2vw,2.2rem);list-style:none;margin:0;padding:0}
+.top nav a{position:relative;display:block;padding:.35rem 0;text-decoration:none;font-size:.9rem;font-weight:500;color:var(--muted);text-shadow:0 1px 10px rgb(0 0 0/.35);transition:color .3s}
+.top nav a:hover,.top nav a.on{color:var(--cream)}
+.top nav a::after{content:"";position:absolute;left:50%;bottom:-.35rem;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--orb);box-shadow:0 0 12px 2px var(--orb);transform:scale(0);transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.top nav a.on::after{transform:scale(1)}
+
+/* hero */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:space-between;gap:2rem;padding:clamp(5.2rem,12vh,7.5rem) var(--gut) clamp(2rem,5.5vh,4rem)}
+.hero::before,.hero::after{content:"";position:absolute;left:0;right:0;z-index:-1;pointer-events:none}
+.hero::before{top:0;height:56%;background:linear-gradient(rgb(var(--scrim)/.6),rgb(var(--scrim)/.3) 55%,rgb(var(--scrim)/0))}
+.hero::after{bottom:0;height:38%;background:linear-gradient(to top,rgb(var(--scrim)/.72),rgb(var(--scrim)/0))}
+.kick{margin:0 0 1.1rem;font-size:clamp(.92rem,1.1vw,1.05rem);color:var(--muted)}
+.name{margin:0 0 0 -.045em;font:400 clamp(4rem,11.4vw,13rem)/.83 "GFS Didot",Didot,serif;letter-spacing:-.028em;text-shadow:0 1px 24px rgb(28 8 18/.28)}
+.name .ln{display:block;padding:.02em 0 .09em}
+.intro .name .ln{overflow:hidden}
+.name .ln>span{display:inline-block}
+.name .ln+.ln{padding-left:.62em}
+.hero-foot{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1.6rem 3rem}
+.line{max-width:31rem;margin:0;font-size:clamp(1.08rem,1.35vw,1.28rem);line-height:1.5}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:1.1rem 1.8rem}
+.btn{display:inline-flex;align-items:center;gap:.75rem;padding:1rem 1.45rem;border-radius:2px;background:var(--cream);color:var(--ink);font-weight:600;font-size:.95rem;text-decoration:none;transition:background-color .35s}
+.btn:hover{background:var(--amber)}
+.btn svg,.tlink svg{width:1rem;height:1rem;flex:none;transition:transform .35s}
+.btn:hover svg,.tlink:hover svg{transform:translateX(4px)}
+.tlink{display:inline-flex;align-items:center;gap:.6rem;padding:.6rem 0;font-weight:500;text-decoration:none;background:linear-gradient(currentColor,currentColor) 0 100%/100% 1px no-repeat;transition:background-size .45s,color .3s}
+.tlink:hover{color:var(--amber);background-size:35% 1px}
+
+/* sections */
+.sec{position:relative;display:flex;align-items:center;min-height:128vh;padding:24vh var(--gut)}
+.sec::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,rgb(var(--scrim)/.86),rgb(var(--scrim)/.78) 44%,rgb(var(--scrim)/0) 72%);-webkit-mask:linear-gradient(transparent,#000 20%,#000 80%,transparent);mask:linear-gradient(transparent,#000 20%,#000 80%,transparent)}
+.sec.r{justify-content:flex-end}
+.sec.r::before{background:linear-gradient(270deg,rgb(var(--scrim)/.86),rgb(var(--scrim)/.78) 44%,rgb(var(--scrim)/0) 72%)}
+.sec.wide::before{background:linear-gradient(90deg,rgb(var(--scrim)/.9),rgb(var(--scrim)/.84) 62%,rgb(var(--scrim)/.5) 100%)}
+.panel{width:min(35rem,100%)}
+.wide .panel{width:min(64rem,100%)}
+.where{display:flex;align-items:center;gap:.7rem;margin:0 0 1.2rem;color:var(--amber);font-size:.93rem}
+.where::before{content:"";width:2rem;height:1px;background:currentColor}
+h2{margin:0 0 1.7rem;font:400 clamp(3rem,6.3vw,5.8rem)/.9 "GFS Didot",Didot,serif;letter-spacing:-.018em}
+h3{margin:0;font-size:inherit}
+.panel p{margin:0 0 1rem}
+.lede{font-size:clamp(1.14rem,1.45vw,1.34rem);line-height:1.52}
+.muted{color:var(--muted)}
+.small{font-size:.93rem}
+.tl{text-decoration:none;background:linear-gradient(var(--amber),var(--amber)) 0 100%/100% 1px no-repeat;transition:background-size .4s,color .3s}
+.tl:hover{color:var(--amber);background-size:0 1px;background-position:100% 100%}
+
+.sides{margin:2.2rem 0 1.8rem}
+.sides div{display:grid;grid-template-columns:6.2rem 1fr;gap:1.2rem;padding:1rem 0;border-top:1px solid var(--line)}
+.sides dt{font:400 1.7rem/1.05 "GFS Didot",Didot,serif;color:var(--amber)}
+.sides dd{margin:0;color:var(--muted)}
+
+.rows{list-style:none;margin:0;padding:0}
+.jobs li{display:grid;grid-template-columns:8.6rem 1fr;gap:.2rem 1.6rem;padding:1.15rem 0;border-top:1px solid var(--line)}
+.when{color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums;padding-top:.15rem}
+.jobs h3{font-weight:600;font-size:1.14rem;line-height:1.3}
+.jobs h3 span{display:block;font-weight:500;color:var(--amber)}
+.jobs .when{grid-row:span 2}
+.jobs li>p:last-child{grid-column:2;margin:.35rem 0 0;color:var(--muted);font-size:.98rem}
+
+.papers li{display:grid;grid-template-columns:5.6rem 1fr;gap:1.4rem;align-items:baseline;padding:1.05rem 0;border-top:1px solid var(--line)}
+.cites{font:400 3.7rem/.85 "GFS Didot",Didot,serif;color:var(--amber);text-align:right;font-variant-numeric:lining-nums}
+.papers h3{font-weight:500;font-size:1.05rem;line-height:1.38}
+.papers p{margin:.3rem 0 0;color:var(--muted);font-size:.92rem}
+.papers .lo .cites{font-size:2.3rem;opacity:.8}
+.colhead{display:grid;grid-template-columns:5.6rem 1fr;gap:1.4rem;margin:0 0 .4rem;color:var(--muted);font-size:.85rem}
+.colhead span:first-child{text-align:right}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:2.4rem 3.2rem;margin-top:.6rem}
+h4{margin:0 0 .9rem;font:400 1.9rem/1 "GFS Didot",Didot,serif}
+.awards li{display:grid;grid-template-columns:5.6rem 1fr;gap:1rem;padding:.7rem 0;border-top:1px solid var(--line);font-size:.97rem}
+.awards .when{padding:0}
+.shots{display:grid;grid-template-columns:repeat(2,1fr);gap:1.1rem;list-style:none;margin:0;padding:0}
+.shots li:first-child{grid-column:1/-1}
+.shots a{display:block;text-decoration:none}
+.shots figure{margin:0}
+.shots img,.certs img{display:block;width:100%;object-fit:cover;object-position:top;background:rgb(251 243 232/.08);border-radius:2px;transition:transform .6s cubic-bezier(.2,.7,.2,1),filter .4s}
+.shots img{aspect-ratio:16/9;filter:saturate(.9) brightness(.92)}
+.shots li:first-child img{aspect-ratio:21/9}
+.shots .fr{overflow:hidden;border-radius:2px;outline:1px solid var(--line)}
+.shots a:hover img{transform:scale(1.035);filter:none}
+.shots figcaption{padding:.65rem 0 0;font-size:.92rem;color:var(--muted);line-height:1.45}
+.shots b{display:block;color:var(--cream);font-weight:600}
+.certs{display:grid;grid-template-columns:repeat(5,1fr);gap:.9rem;list-style:none;margin:0;padding:0}
+.certs a{display:block;text-decoration:none;font-size:.8rem;line-height:1.35;color:var(--muted)}
+.certs img{aspect-ratio:4/3;margin-bottom:.45rem;outline:1px solid var(--line)}
+.certs a:hover img{transform:translateY(-4px)}
+.certs a:hover span{color:var(--cream)}
+details{margin-top:1.4rem}
+summary{display:inline-flex;align-items:center;gap:.6rem;cursor:pointer;list-style:none;font-weight:500;padding:.5rem 0;border-bottom:1px solid var(--amber)}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--amber);font-size:1.2rem;line-height:1;transition:transform .3s}
+details[open] summary::after{transform:rotate(45deg)}
+details .certs{margin-top:1.2rem;grid-template-columns:repeat(6,1fr)}
+
+.mail{display:inline-block;margin:.4rem 0 2rem;font:400 clamp(1.9rem,3.7vw,3.4rem)/1.05 "GFS Didot",Didot,serif;text-decoration:none;background:linear-gradient(var(--amber),var(--amber)) 0 100%/0 2px no-repeat;transition:background-size .6s cubic-bezier(.2,.7,.2,1),color .3s}
+.mail:hover{background-size:100% 2px;color:var(--amber)}
+.links{display:flex;flex-wrap:wrap;gap:.4rem 2rem;list-style:none;margin:0 0 2.2rem;padding:0}
+footer{padding:2rem var(--gut) 2.2rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:.6rem 2rem;font-size:.82rem;color:var(--muted)}
+footer::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(rgb(var(--scrim)/0),rgb(var(--scrim)/.7))}
+footer p{margin:0}
+
+@media (max-width:1100px){.cols{grid-template-columns:1fr}.certs{grid-template-columns:repeat(4,1fr)}details .certs{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:760px){
+  .top{gap:.9rem;padding-top:.8rem}
+  .brand{display:none}
+  .top ul{gap:.85rem}
+  .top nav{overflow-x:auto;scrollbar-width:none}
+  .top nav a{font-size:.8rem}
+  .hero{padding-bottom:2.2rem}
+  .hero::before{height:80%}
+  .name .ln+.ln{padding-left:.3em}
+  .sec,.sec.r{min-height:0;padding:30vh var(--gut) 26vh;justify-content:flex-start}
+  .sec::before,.sec.r::before,.sec.wide::before{background:rgb(var(--scrim)/.7);-webkit-mask:linear-gradient(transparent,#000 22vh,#000 calc(100% - 18vh),transparent);mask:linear-gradient(transparent,#000 22vh,#000 calc(100% - 18vh),transparent)}
+  .jobs li{grid-template-columns:1fr}.jobs .when{grid-row:auto}.jobs li>p:last-child{grid-column:1}
+  .papers li,.colhead{grid-template-columns:3.6rem 1fr;gap:1rem}
+  .cites{font-size:2.8rem}.papers .lo .cites{font-size:1.9rem}
+  .sides div{grid-template-columns:1fr;gap:.2rem}
+  .shots{grid-template-columns:1fr}
+  .certs,details .certs{grid-template-columns:repeat(2,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+</head>
+<body>
+<div class="sky" aria-hidden="true"></div>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="vig" aria-hidden="true"></div>
+
+<header class="top">
+  <a class="back" href="index.html">← All ideas</a>
+  <a class="brand" href="#top">George Michoulis</a>
+  <nav aria-label="Sections">
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#papers">Papers</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<section id="top" class="hero" tabindex="-1" aria-label="Introduction">
+  <div>
+    <p class="kick">Blockchain developer and researcher · Thessaloniki, Greece</p>
+    <h1 class="name"><span class="ln"><span>George</span></span> <span class="ln"><span>Michoulis</span></span></h1>
+  </div>
+  <div class="hero-foot">
+    <p class="line">I work on smart contracts, graph-based machine learning and full-stack Web3 systems, and I teach networks and security.</p>
+    <div class="actions">
+      <a class="btn mag" href="#work">See my work <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a>
+      <a class="tlink mag" href="#contact">Contact</a>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="sec r" tabindex="-1" aria-labelledby="h-about">
+  <div class="panel">
+    <p class="where rv">Golden hour on Nea Paralia</p>
+    <h2 id="h-about" class="rv">About</h2>
+    <p class="lede rv">I'm based in Thessaloniki and I work remotely. I build and study blockchain systems.</p>
+    <p class="muted rv">My BSc in Applied Informatics at the University of Macedonia ended with a thesis on verifying academic credentials on Ethereum. My MSc in Data and Web Science at Aristotle University of Thessaloniki, funded by a DeepMind scholarship, used graph embeddings to detect fraud on blockchains.</p>
+    <dl class="sides rv">
+      <div><dt>Research</dt><dd>Papers and startup work on how effective ledgers are, and what they change in practice.</dd></div>
+      <div><dt>Build</dt><dd>Web3 products (NFTs, DeFi) and data science with graph embeddings, shipped in Solidity, TypeScript and the cloud.</dd></div>
+      <div><dt>Teach</dt><dd>Lectures on networks, security and application development, and public talks on Web3 and edge tech.</dd></div>
+    </dl>
+    <p class="small muted rv">MSc Data and Web Science, Aristotle University of Thessaloniki, 2020–2022 · BSc Applied Informatics, University of Macedonia, 2015–2020</p>
+  </div>
+</section>
+
+<section id="work" class="sec" tabindex="-1" aria-labelledby="h-work">
+  <div class="panel">
+    <p class="where rv">Sunset at the White Tower</p>
+    <h2 id="h-work" class="rv">Experience</h2>
+    <ol class="rows jobs">
+      <li class="rv"><p class="when">05/2026 – now</p><h3>Web3 Full-Stack Developer <span>Cyberscope by TAC</span></h3><p>End-to-end Web3 products: contracts, on-chain integrations, React and Next.js frontends, security tooling.</p></li>
+      <li class="rv"><p class="when">2024 – 2026</p><h3>Blockchain Developer &amp; Researcher <span>Sidroco Holdings Ltd</span></h3><p>An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ LMS and multinational EU projects.</p></li>
+      <li class="rv"><p class="when">2023 – 2025</p><h3>Lecturer &amp; Academic Partner <span>University of Derby / Mediterranean College</span></h3><p>Networks and security, web scripting and application development, with inclusivity-first assessment.</p></li>
+      <li class="rv"><p class="when">2022 – 2024</p><h3>Blockchain &amp; Full-Stack Developer <span>University of Nicosia / IFF</span></h3><p>Large Next.js, NestJS and Docker applications, and a Web3 NFT marketplace.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="papers" class="sec r" tabindex="-1" aria-labelledby="h-papers">
+  <div class="panel">
+    <p class="where rv">Blue hour over the city</p>
+    <h2 id="h-papers" class="rv">Papers</h2>
+    <p class="colhead rv" aria-hidden="true"><span>Cited by</span><span>Title, venue, year</span></p>
+    <ol class="rows papers">
+      <li class="rv"><span class="cites">32<span class="sr"> citations</span></span><div><h3>A process-aware approach for blockchain-based verification of academic qualifications</h3><p>Simulation Modelling Practice and Theory 121, 102642 · 2022</p></div></li>
+      <li class="rv"><span class="cites">11<span class="sr"> citations</span></span><div><h3>Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe</h3><p>XIV Balkan Conference on Operational Research · 2020</p></div></li>
+      <li class="rv"><span class="cites">7<span class="sr"> citations</span></span><div><h3>Exploring decentralized governance: a framework applied to Compound Finance</h3><p>Intl. Conf. on Mathematical Research for Blockchain Economy · 2023</p></div></li>
+      <li class="rv"><span class="cites">1<span class="sr"> citation</span></span><div><h3>FraMark: a blockchain marketplace for 5G network management using fractional NFTs</h3><p>7th World Symposium on Communication Engineering (WSCE) · 2024</p></div></li>
+      <li class="rv"><span class="cites">1<span class="sr"> citation</span></span><div><h3>Data security for smart cities</h3><p>2025</p></div></li>
+      <li class="rv lo"><span class="cites">0<span class="sr"> citations</span></span><div><h3>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management</h3><p>IEEE ICCE · 2025</p></div></li>
+      <li class="rv lo"><span class="cites">0<span class="sr"> citations</span></span><div><h3>Graph embedding and node features for drug-target interaction prediction</h3><p>Aristotle University of Thessaloniki, MSc work · 2022</p></div></li>
+      <li class="rv lo"><span class="cites">0<span class="sr"> citations</span></span><div><h3>Blockchain in higher education: permissioned and permissionless approaches</h3><p>4th Summit on Gender Equality in Computing · 2022</p></div></li>
+    </ol>
+    <p class="small muted rv" style="margin-top:1.2rem">Plus two Greek-language theses on verifying academic titles with Ethereum (2020, 2021). All of it on <a class="tl" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+  </div>
+</section>
+
+<section id="projects" class="sec wide" tabindex="-1" aria-labelledby="h-projects">
+  <div class="panel">
+    <p class="where rv">The lights come on</p>
+    <h2 id="h-projects" class="rv">Projects and certificates</h2>
+    <div class="cols">
+      <div class="rv">
+        <h4>Sites I built</h4>
+        <ul class="shots">
+          <li><a href="https://verde.uom.gr"><figure><div class="fr"><img src="../../img/portfolio/verde.uom.gr.PNG" alt="VerDe website, contact page with a map of the University of Macedonia" loading="lazy" decoding="async"></div><figcaption><b>verde.uom.gr</b>VerDe, the credential verification system from my papers. Shown: its contact page.</figcaption></figure></a></li>
+          <li><a href="https://bbf-gui.ddns.net"><figure><div class="fr"><img src="../../img/portfolio/bbf-gui.ddns.net.gif" alt="Blockchain Benchmarking Framework landing page" loading="lazy" decoding="async"></div><figcaption><b>bbf-gui.ddns.net</b>Blockchain Benchmarking Framework: deploy and evaluate blockchain protocols.</figcaption></figure></a></li>
+          <li><a href="https://metau.unic.ac.cy"><figure><div class="fr"><img src="../../img/portfolio/metau.unic.ac.cy.png" alt="University of Nicosia course site: the future of education is now" loading="lazy" decoding="async"></div><figcaption><b>metau.unic.ac.cy</b>University of Nicosia course site: decentralised, on-chain and in the metaverse.</figcaption></figure></a></li>
+          <li><figure><div class="fr"><img src="../../img/portfolio/accelerate.png" alt="Accelerate sign-in screen, University of Nicosia" loading="lazy" decoding="async"></div><figcaption><b>accelerate.unic.ac.cy</b>Sign-in screen for the University of Nicosia's Accelerate platform.</figcaption></figure></li>
+          <li><a href="https://celc.web.auth.gr"><figure><div class="fr"><img src="../../img/portfolio/celc.web.auth.gr.PNG" alt="Centre for European Legal Culture website in Greek" loading="lazy" decoding="async"></div><figcaption><b>celc.web.auth.gr</b>Greek-language site of the Centre for European Legal Culture.</figcaption></figure></a></li>
+          <li><a href="https://eudem.polsci.auth.gr"><figure><div class="fr"><img src="../../img/portfolio/eudem.polsci.auth.gr.PNG" alt="EUDEM Jean Monnet Chair website" loading="lazy" decoding="async"></div><figcaption><b>eudem.polsci.auth.gr</b>Site of the EUDEM Jean Monnet Chair.</figcaption></figure></a></li>
+          <li><a href="https://marlab.ode.uom.gr"><figure><div class="fr"><img src="../../img/portfolio/marlab.ode.uom.gr.PNG" alt="MarLab, Marketing Laboratory of the University of Macedonia" loading="lazy" decoding="async"></div><figcaption><b>marlab.ode.uom.gr</b>Marketing Laboratory (MarLab), University of Macedonia.</figcaption></figure></a></li>
+        </ul>
+      </div>
+      <div class="rv">
+        <h4>Recognition</h4>
+        <ul class="rows awards">
+          <li><span class="when">2020–2022</span><span>DeepMind Scholarship, Aristotle University of Thessaloniki</span></li>
+          <li><span class="when">06/2022</span><span>3rd place, Infinitech Hackathon (Crowdpolicy)</span></li>
+          <li><span class="when">2020–2021</span><span>Basic Research grant, University of Macedonia</span></li>
+          <li><span class="when">2025</span><span>Move/Sui Bootcamp Thessaloniki award</span></li>
+        </ul>
+        <h4 style="margin-top:2.4rem">Certificates</h4>
+        <ul class="certs">
+          <li><a href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg"><img src="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg" alt="Master's degree certificate, Data and Web Science" loading="lazy" decoding="async"><span>MSc Data and Web Science</span></a></li>
+          <li><a href="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg"><img src="../../img/renamed/1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg" alt="Bachelor's degree certificate" loading="lazy" decoding="async"><span>Bachelor's degree</span></a></li>
+          <li><a href="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png"><img src="../../img/renamed/Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png" alt="Move Bootcamp Thessaloniki award" loading="lazy" decoding="async"><span>Move Bootcamp award</span></a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg"><img src="../../img/renamed/Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg" alt="CCNA course certificate" loading="lazy" decoding="async"><span>CCNA course</span></a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png"><img src="../../img/renamed/Certificate-Of-Completion_Rust-Developer.png" alt="Certified Rust Developer certificate" loading="lazy" decoding="async"><span>Rust developer</span></a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg"><img src="../../img/renamed/Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg" alt="Machine Learning and Deep Neural Networks certificate" loading="lazy" decoding="async"><span>ML and deep neural networks</span></a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png"><img src="../../img/renamed/Certificate-Of-Completion_Cloud-Engineering.png" alt="Cloud Engineering certificate" loading="lazy" decoding="async"><span>Cloud engineering</span></a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png"><img src="../../img/renamed/Certificate-Of-Completion_Advanced-Ethical-Hacking.png" alt="Advanced Ethical Hacking certificate" loading="lazy" decoding="async"><span>Advanced ethical hacking</span></a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg"><img src="../../img/renamed/Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg" alt="Introduction to Digital Currencies certificate" loading="lazy" decoding="async"><span>Digital currencies</span></a></li>
+          <li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg"><img src="../../img/renamed/Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg" alt="How to Get Published with IEEE certificate" loading="lazy" decoding="async"><span>Publishing with IEEE</span></a></li>
+        </ul>
+      </div>
+    </div>
+    <details class="rv">
+      <summary>See all 34 certificates</summary>
+      <ul class="certs">
+        <li><a href="../../img/renamed/Award_Academic-Achievement.jpg"><img src="../../img/renamed/Award_Academic-Achievement.jpg" alt="Academic Achievement award" loading="lazy" decoding="async"><span>Academic achievement</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg"><img src="../../img/renamed/Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg" alt="TOEIC Listening and Reading certificate" loading="lazy" decoding="async"><span>TOEIC listening and reading</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg"><img src="../../img/renamed/Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg" alt="European Legal Culture program certificate, Aristotle University of Thessaloniki" loading="lazy" decoding="async"><span>European legal culture program</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg"><img src="../../img/renamed/Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg" alt="Cybersecurity eLearning Academy certificate" loading="lazy" decoding="async"><span>Cybersecurity eLearning academy</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg"><img src="../../img/renamed/Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg" alt="Digital Skills for Tourism certificate" loading="lazy" decoding="async"><span>Digital skills for tourism</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Discover-Customer.jpg"><img src="../../img/renamed/Certificate-Of-Completion_Discover-Customer.jpg" alt="Discover Customer certificate" loading="lazy" decoding="async"><span>Discover customer</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png"><img src="../../img/renamed/Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png" alt="Entrepreneurship, Funding and Development of New Enterprises certificate" loading="lazy" decoding="async"><span>Entrepreneurship and new enterprises</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg"><img src="../../img/renamed/Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg" alt="How to Design and Build a Website certificate" loading="lazy" decoding="async"><span>Design and build a website</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg"><img src="../../img/renamed/Certificate-Of-Completion_NFT-Talents-Program.jpg" alt="NFT Talents Program certificate" loading="lazy" decoding="async"><span>NFT Talents program</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png"><img src="../../img/renamed/Certificate-Of-Completion_Networking-Essentials.png" alt="Networking Essentials certificate" loading="lazy" decoding="async"><span>Networking essentials</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg"><img src="../../img/renamed/Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg" alt="Software Development for Telecommunication Networks certificate" loading="lazy" decoding="async"><span>Software for telecom networks</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Completion_The-Hour-Of-Code.jpg"><img src="../../img/renamed/Certificate-Of-Completion_The-Hour-Of-Code.jpg" alt="The Hour of Code certificate" loading="lazy" decoding="async"><span>The Hour of Code</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg"><img src="../../img/renamed/Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg" alt="Blockchain for the Legal Industry participation certificate" loading="lazy" decoding="async"><span>Blockchain for the legal industry</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg"><img src="../../img/renamed/Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg" alt="Blockchain in Education participation certificate" loading="lazy" decoding="async"><span>Blockchain in education</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg"><img src="../../img/renamed/Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg" alt="Data Analytics to Strengthen Healthcare Cybersecurity participation certificate" loading="lazy" decoding="async"><span>Healthcare cybersecurity analytics</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_EY-Cyber-Day.jpg"><img src="../../img/renamed/Certificate-Of-Participation_EY-Cyber-Day.jpg" alt="EY Cyber Day participation certificate" loading="lazy" decoding="async"><span>EY Cyber Day</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg"><img src="../../img/renamed/Certificate-Of-Participation_GNULinux-Command-Line.jpg" alt="GNU/Linux Command Line participation certificate" loading="lazy" decoding="async"><span>GNU/Linux command line</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg"><img src="../../img/renamed/Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg" alt="RippleX workshop launch event participation certificate" loading="lazy" decoding="async"><span>RippleX workshop</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png"><img src="../../img/renamed/Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png" alt="Migma marketing and brand participation certificate" loading="lazy" decoding="async"><span>Migma marketing and brand</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg"><img src="../../img/renamed/Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg" alt="Marine Educational Robotics Hydrobot program participation certificate" loading="lazy" decoding="async"><span>Hydrobot marine robotics</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg"><img src="../../img/renamed/Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg" alt="Processing Data in the Fog participation certificate" loading="lazy" decoding="async"><span>Processing data in the fog</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg"><img src="../../img/renamed/Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg" alt="SKGcode real estate chatbot project participation certificate" loading="lazy" decoding="async"><span>SKGcode real estate chatbot</span></a></li>
+        <li><a href="../../img/renamed/Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg"><img src="../../img/renamed/Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg" alt="VeChain ToolChain healthcare participation certificate" loading="lazy" decoding="async"><span>VeChain ToolChain in healthcare</span></a></li>
+        <li><a href="../../img/renamed/English-Certificate_English-Certificate-English-Proficiency.jpg"><img src="../../img/renamed/English-Certificate_English-Certificate-English-Proficiency.jpg" alt="English proficiency certificate" loading="lazy" decoding="async"><span>English proficiency</span></a></li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<section id="contact" class="sec" tabindex="-1" aria-labelledby="h-contact">
+  <div class="panel">
+    <p class="where rv">Night on the Thermaic Gulf</p>
+    <h2 id="h-contact" class="rv">Contact</h2>
+    <p class="lede rv">Write to me about Web3 work, research or teaching.</p>
+    <a class="mail rv" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+    <ul class="links rv">
+      <li><a class="tlink" href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a></li>
+      <li><a class="tlink" href="https://github.com/gmixoulis">GitHub</a></li>
+      <li><a class="tlink" href="https://twitter.com/GeorgeMicou">X</a></li>
+      <li><a class="tlink" href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a></li>
+    </ul>
+    <p class="small muted rv">Also on this site: <a class="tl" href="../../garden/">Zen Garden</a>, my personal notes, and <a class="tl" href="../../play/">Ledger Run</a>, my CV as a platformer.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <p>© 2026 George Michoulis · Thessaloniki</p>
+  <p>The waterfront is drawn live in WebGL. Stylised, not to scale.</p>
+</footer>
+
+<script type="module">
+import * as THREE from 'three';
+
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const root = document.documentElement, canvas = $('#scene');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const small = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+const G = window.gsap, ST = window.ScrollTrigger;
+const DEG = Math.PI / 180, clamp = (v, a, b) => Math.min(b, Math.max(a, v)), lerp = (a, b, s) => a + (b - a) * s;
+const sstep = (a, b, v) => { const x = clamp((v - a) / (b - a), 0, 1); return x * x * (3 - 2 * x); };
+const secs = $$('main > section');
+
+/* ---------------- content layer: smooth scroll, nav state, reveals, magnetic buttons ---------------- */
+let lenis = null;
+if (G && ST) {
+  G.registerPlugin(ST);
+  if (!reduce && window.Lenis) {
+    lenis = new window.Lenis({ lerp: .085 });
+    lenis.on('scroll', ST.update);
+    G.ticker.add(t => lenis.raf(t * 1000));
+    G.ticker.lagSmoothing(0);
+  }
+  const links = $$('.top nav a');
+  secs.forEach(s => ST.create({ trigger: s, start: 'top 50%', end: 'bottom 50%',
+    onToggle: self => self.isActive && links.forEach(a => a.classList.toggle('on', a.hash === '#' + s.id)) }));
+  ST.create({ start: () => innerHeight * .55, end: 'max', onToggle: self => $('.top').classList.toggle('solid', self.isActive) });
+  if (!reduce) {
+    root.classList.add('intro');
+    G.from('.name .ln > span', { yPercent: 112, duration: 1.6, ease: 'expo.out', stagger: .14, delay: .25, onComplete: () => root.classList.remove('intro') });
+    G.from('.kick, .hero-foot', { autoAlpha: 0, y: 18, duration: 1.2, ease: 'power2.out', stagger: .15, delay: .9 });
+    $$('.rv').forEach(el => G.from(el, { autoAlpha: 0, y: 30, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 94%', once: true } }));
+    if (matchMedia('(hover: hover)').matches) $$('.mag').forEach(el => {
+      const qx = G.quickTo(el, 'x', { duration: .6, ease: 'power3.out' }), qy = G.quickTo(el, 'y', { duration: .6, ease: 'power3.out' });
+      el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect(); qx((e.clientX - r.left - r.width / 2) * .28); qy((e.clientY - r.top - r.height / 2) * .38); });
+      el.addEventListener('pointerleave', () => { qx(0); qy(0); });
+    });
+  }
+}
+$$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+  const el = $(a.hash); if (!el) return;
+  e.preventDefault();
+  if (lenis) lenis.scrollTo(el, { duration: 2.6, easing: x => 1 - Math.pow(1 - x, 4) });
+  else el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+  el.focus({ preventScroll: true }); history.replaceState(null, '', a.hash);
+}));
+
+/* ---------------- the scene ---------------- */
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ canvas, antialias: !small && devicePixelRatio < 1.5, powerPreference: 'high-performance' }); }
+catch (e) { /* no WebGL: the painted .sky gradient stays as the backdrop */ }
+if (renderer) buildScene();
+
+function buildScene() {
+  const rnd = (a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; })(20260925);
+  // Stylised Thessaloniki: sea to the south (+z), city to the north (-z). The quay runs east from the port,
+  // turns at the White Tower and curves south-east along Nea Paralia.
+  const shoreZ = x => x > 600 ? 270 + .9 * (x - 600) : x > 0 ? .00075 * x * x : x > -900 ? .00012 * x * x : 97.2 - .216 * (x + 900);
+  const shoreS = x => x > 600 ? .9 : x > 0 ? .0015 * x : x > -900 ? .00024 * x : -.216;
+  const inland = (x, d) => { const s = shoreS(x), l = Math.hypot(1, s); return [x + d * s / l, shoreZ(x) - d / l, Math.atan(s)]; };
+  const groundY = d => .8 + 70 * sstep(110, 760, d);
+  const lampOn = x => .38 + .14 * clamp(Math.abs(x - 10) / 610, 0, 1);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 1, 9000);
+  const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
+  const U = {
+    uTime: { value: 0 }, uSunVis: { value: 1 }, uMoon: { value: 0 }, uLit: { value: 0 }, uT: { value: 0 },
+    uFogD: { value: .0004 }, uFogH: { value: .01 }, uExpo: { value: 1 }, uStars: { value: 0 }, uPx: { value: 500 }, uDpr: { value: 1 },
+    uSunDir: { value: V3(0, .1, 1) }, uMoonDir: { value: V3(0, .2, 1) }, uLightDir: { value: V3(0, 1, 0) }, uPtr: { value: V3(0, 0, 0) },
+  };
+  const PAL = {
+    uZenith: ['#20427c', '#283a78', '#2c2462', '#131d48', '#040918'],
+    uMid: ['#e0927f', '#d77886', '#9a5a8e', '#3a4486', '#0b1633'],
+    uHorizon: ['#ffb468', '#ff9460', '#e6788a', '#56609a', '#122343'],
+    uBand: ['#ffc377', '#ff9458', '#ff7f5a', '#e3845f', '#182747'],
+    uGlow: ['#ffa85a', '#ff7440', '#e0566e', '#6a4a8a', '#000000'],
+    uSunCol: ['#fff1c9', '#ffbe72', '#ff8a4e', '#000000', '#000000'],
+    uCloud: ['#ffc996', '#ff9a7c', '#e87890', '#6f5f92', '#252e4d'],
+    uLight: ['#ffc07e', '#ff9460', '#ff7a5c', '#44508a', '#3a4c7c'],
+    uAmb: ['#56658f', '#57557f', '#4a4377', '#2b3566', '#101935'],
+    uHaze: ['#dc9a6c', '#d98670', '#a86a86', '#3f4b7c', '#0e1936'],
+    uDeep: ['#0c2438', '#172240', '#1d1a3e', '#0a1433', '#020713'],
+  };
+  const KT = [0, .3, .5, .72, 1];
+  const SC = { sunEl: [2.6, 1.2, -1.6, -7, -16], light: [1.25, 1, .75, .1, .16], lit: [0, .02, .14, .4, .52], stars: [0, 0, .04, .55, 1],
+    moon: [0, 0, .05, .5, 1], fogD: [.00012, .00015, .00019, .0002, .00018], fogH: [.0011, .0015, .002, .002, .0016], expo: [1, 1.04, 1.1, 1.3, 1.5] };
+  const C = {};
+  for (const k in PAL) { C[k] = PAL[k].map(h => new THREE.Color(h)); U[k] = { value: new THREE.Color() }; }
+
+  const HEAD = `
+  uniform float uTime,uSunVis,uMoon,uLit,uT,uFogD,uFogH,uExpo,uStars,uPx,uDpr;
+  uniform vec3 uSunDir,uMoonDir,uLightDir,uPtr,uZenith,uMid,uHorizon,uBand,uGlow,uSunCol,uCloud,uLight,uAmb,uHaze,uDeep;
+  float h21(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
+  float h11(float n){return fract(sin(n)*43758.5453);}
+  float vn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h21(i),h21(i+vec2(1,0)),f.x),mix(h21(i+vec2(0,1)),h21(i+vec2(1,1)),f.x),f.y);}
+  float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<4;i++){s+=a*vn(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return s;}
+  float shoreZ(float x){return x>600.?270.+.9*(x-600.):x>0.?.00075*x*x:x>-900.?.00012*x*x:97.2-.216*(x+900.);}
+  float shoreS(float x){return x>600.?.9:x>0.?.0015*x:x>-900.?.00024*x:-.216;}
+  float shoreD(vec2 p){float s=shoreS(p.x);return (p.y-shoreZ(p.x))/sqrt(1.+s*s);}
+  vec3 s2l(vec3 c){return pow(c,vec3(2.2));}
+  `;
+  // sky gradient + sun/moon + belt of Venus + stratus; also used for water reflections and fog colour
+  const FRAG = HEAD + `
+  vec3 sky(vec3 rd,float cl,float disc){
+    float y=max(rd.y,0.);
+    float e=1.-exp(-y*6.);
+    vec3 c=mix(mix(uHorizon,uMid,smoothstep(0.,.5,e)),uZenith,smoothstep(.35,1.,e));
+    vec2 sh=normalize(uSunDir.xz);
+    float tw=dot(normalize(rd.xz+1e-4),sh)*.5+.5;
+    c=mix(c,uBand,exp(-y*7.)*(.12+.88*tw*tw));
+    float sd=max(dot(rd,uSunDir),0.);
+    c+=uGlow*(pow(sd,6.)*.3*exp(-y*5.)+pow(sd,60.)*.9)*(.4+.6*uSunVis);
+    c+=uGlow*.25*(1.-tw)*exp(-abs(y-.07)*16.)*smoothstep(.1,-.06,uSunDir.y);
+    c+=uSunCol*smoothstep(.99964,.99982,sd)*uSunVis*24.*disc;
+    if(cl>0.&&rd.y>0.){
+      vec2 uv=rd.xz/(rd.y+.07)*vec2(.5,1.8)+vec2(uTime*.005,0.);
+      float m=smoothstep(.57,.86,fbm(uv*1.3))*smoothstep(.0,.12,rd.y)*(1.-smoothstep(.28,.62,rd.y))*cl;
+      c=mix(c,mix(uCloud*.55,uGlow*1.4+uCloud*.5,pow(sd,5.)),m*.62);
+    }
+    float md=max(dot(rd,uMoonDir),0.);
+    c+=uMoon*(vec3(1.,.96,.88)*smoothstep(.99986,.99992,md)*6.*disc+vec3(.2,.24,.36)*pow(md,300.)+vec3(.05,.06,.1)*pow(md,10.));
+    return c;
+  }
+  vec3 fogCol(vec3 rd){return mix(sky(normalize(vec3(rd.x,max(rd.y,0.)*.35+.02,rd.z)),0.,0.),uHaze,.3);}
+  vec3 fog(vec3 c,vec3 wp){
+    vec3 d=wp-cameraPosition; float L=length(d); vec3 rd=d/L;
+    float b=.02,k=L*rd.y*b;
+    float hf=uFogH*exp(-cameraPosition.y*b)*(abs(k)<1e-3?L:(1.-exp(-k))/(rd.y*b));
+    return mix(c,fogCol(rd),clamp(1.-exp(-(hf+L*uFogD)),0.,1.));
+  }
+  vec3 fin(vec3 c){
+    c*=uExpo;
+    c=clamp((c*(2.51*c+.03))/(c*(2.43*c+.59)+.14),0.,1.);
+    return pow(c,vec3(1./2.2))+(h21(gl_FragCoord.xy+fract(uTime*7.)*91.)-.5)/180.;
+  }
+  `;
+  const VW = `varying vec3 vW; void main(){ vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }`;
+  const mat = (vs, fs, extra = {}, opts = {}) => new THREE.ShaderMaterial({ uniforms: { ...U, ...extra }, vertexShader: HEAD + vs, fragmentShader: FRAG + fs, ...opts });
+  const CLOUDS = small ? '.8' : '1.';
+
+  /* sky dome */
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(5000, 32, 16), mat(VW, `varying vec3 vW;
+    void main(){ vec3 rd=normalize(vW-cameraPosition); vec3 c=rd.y<0.?fogCol(rd):sky(rd,${CLOUDS},1.); gl_FragColor=vec4(fin(c),1.); }`,
+    {}, { side: THREE.BackSide, depthWrite: false, depthTest: false }));
+  sky.renderOrder = -10; sky.frustumCulled = false; scene.add(sky);
+
+  /* stars */
+  {
+    const n = small ? 500 : 1400, p = new Float32Array(n * 3), s = new Float32Array(n * 2);
+    for (let i = 0; i < n; i++) {
+      const y = .03 + Math.pow(rnd(), .8) * .97, a = rnd() * Math.PI * 2, r = Math.sqrt(1 - y * y);
+      p.set([Math.cos(a) * r * 4500, y * 4500, Math.sin(a) * r * 4500], i * 3); s.set([Math.pow(rnd(), 3), rnd()], i * 2);
+    }
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(p, 3)); g.setAttribute('aS', new THREE.BufferAttribute(s, 2));
+    const stars = new THREE.Points(g, mat(`attribute vec2 aS; varying float vA;
+      void main(){ vec4 mv=modelViewMatrix*vec4(position,1.); gl_Position=projectionMatrix*mv; gl_PointSize=(1.2+aS.x*2.4)*uDpr;
+        vA=(.35+.65*aS.x)*(.7+.3*sin(uTime*(.8+aS.y*2.5)+aS.y*50.))*smoothstep(.03,.25,normalize(position).y); }`,
+      `varying float vA; void main(){ float a=smoothstep(.5,.1,length(gl_PointCoord-.5)); gl_FragColor=vec4(vec3(.92,.94,1.)*a*vA*uStars,1.); }`,
+      {}, { blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false }));
+    stars.renderOrder = -9; stars.frustumCulled = false; scene.add(stars);
+    scene.userData.stars = stars;
+  }
+
+  /* water: Gerstner swell in the vertex shader, sum-of-sines ripples + fresnel sky reflection per pixel */
+  const NW = small ? 4 : 8;
+  {
+    const seg = small ? 90 : 170, g = new THREE.PlaneGeometry(2, 2, seg, seg); g.rotateX(-Math.PI / 2);
+    const a = g.attributes.position; // denser near the camera: quadratic remap to +-3400
+    for (let i = 0; i < a.count; i++) { const x = a.getX(i), z = a.getZ(i); a.setXYZ(i, Math.sign(x) * x * x * 3400, 0, Math.sign(z) * z * z * 3400); }
+    const water = new THREE.Mesh(g, mat(`varying vec3 vW;
+      vec3 gw(vec2 p,vec2 d,float L,float A){ float k=6.2832/L, ph=k*dot(d,p)-sqrt(9.8*k)*uTime; return vec3(d.x*cos(ph)*A*.6,A*sin(ph),d.y*cos(ph)*A*.6); }
+      void main(){ vec4 w=modelMatrix*vec4(position,1.);
+        vec3 o=gw(w.xz,vec2(.8,.6),58.,.34)+gw(w.xz,vec2(.35,.94),33.,.2)+gw(w.xz,vec2(.97,-.24),21.,.12);
+        w.xyz+=o*(1.-smoothstep(250.,800.,length(w.xz-cameraPosition.xz)));
+        vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }`,
+      `varying vec3 vW;
+      vec2 waves(vec2 p,float L){
+        vec2 g=vec2(0.); float k=.22,a=.125,fw=length(fwidth(p));
+        for(int i=0;i<${NW};i++){
+          float an=.6+sin(float(i)*2.4)*1.15; vec2 d=vec2(cos(an),sin(an));
+          g+=d*(a*k*cos(dot(d,p)*k+uTime*sqrt(9.8*k)+float(i)*1.7))*clamp(1.-fw*k*.35,0.,1.);
+          k*=1.38; a*=.74;
+        }
+        return g/(1.+L*.003);
+      }
+      void main(){
+        vec3 V=cameraPosition-vW; float L=length(V); V/=L;
+        vec2 g=waves(vW.xz,L);
+        vec2 pd=vW.xz-uPtr.xy; float pr=length(pd);
+        g+=pd/(pr+.001)*cos(pr*1.15-uTime*5.5)*exp(-pr*.1)*uPtr.z*.3*smoothstep(0.,3.,pr);
+        vec3 N=normalize(vec3(-g.x,1.,-g.y));
+        vec3 R=reflect(-V,N); R.y=abs(R.y)+.003; R=normalize(R); vec3 Rs=normalize(vec3(R.x,R.y*1.7+.03,R.z));
+        float F=.02+.98*pow(1.-max(dot(N,V),0.),5.);
+        float sd=shoreD(vW.xz);
+        vec3 c=mix(uDeep*(.75+.5*max(uLightDir.y,0.)),.8*sky(Rs,${small ? '0.' : '.8'},1.),F);
+        c=mix(c,c*.45+uDeep*.2,exp(-max(sd,0.)/45.)*.6);
+        float s=max(dot(R,uSunDir),0.);
+        c+=uSunCol*uSunVis*(pow(s,900.)*30.*(.4+.6*h21(floor(vW.xz*1.3)))+pow(s,260.)*.45);
+        float m=max(dot(R,uMoonDir),0.);
+        c+=uMoon*vec3(.85,.9,1.)*(pow(m,900.)*16.+pow(m,110.)*.4);
+        float an=atan(vW.z-cameraPosition.z,vW.x-cameraPosition.x)*240.+N.x*7.;
+        float id=floor(an),fr=fract(an)-.5;
+        float st=exp(-fr*fr*20.)*step(.52,h11(id))*(.3+.7*h11(id+3.1))*smoothstep(.25,.7,vn(vec2(an*.45,sd*.12-uTime*.5)));
+        st*=smoothstep(12.,-24.,shoreD(vW.xz+normalize(vW.xz-cameraPosition.xz)*90.));
+        c+=vec3(1.,.6,.28)*st*uLit*exp(-max(sd,0.)/110.)*smoothstep(2.,18.,sd)*(1.-smoothstep(500.,1600.,L))*1.5;
+        float fo=smoothstep(2.4,0.,sd+(vn(vW.xz*.35+uTime*.3)-.5)*1.8);
+        c=mix(c,(uAmb+uLight*.4)*1.1,fo*.5);
+        c=fog(c,vW);
+        c=mix(c,fogCol(-V),smoothstep(2000.,3300.,length(vW.xz-cameraPosition.xz)));
+        gl_FragColor=vec4(fin(c),1.);
+      }`));
+    water.frustumCulled = false; scene.add(water); scene.userData.water = water;
+  }
+
+  /* land: one strip following the quay, zoned by distance inland (quay, paving, garden, road, city, hills) */
+  {
+    const xs = []; for (let x = -2600; x <= 1800; x += Math.abs(x) < 1000 ? 8 : 25) xs.push(x);
+    const ds = [-.01, 0, 1.8, 2, 6, 20, 31, 44, 60, 90, 130, 180, 240, 320, 420, 540, 680, 850, 1100, 1500];
+    const nd = ds.length, pos = [], aD = [], aX = [], idx = [];
+    for (const x of xs) for (const d of ds) {
+      const [px, pz] = inland(x, d);
+      const hill = d > 150 ? (Math.sin(px * .006) * 14 + Math.sin(px * .017 + 1.3) * 7 + Math.sin(pz * .011) * 8) * sstep(150, 600, d) : 0;
+      pos.push(px, d < 0 ? -3 : groundY(d) + hill, pz); aD.push(Math.max(d, 0)); aX.push(x);
+    }
+    for (let i = 0; i < xs.length - 1; i++) for (let j = 0; j < nd - 1; j++) { const a = i * nd + j, b = a + nd; idx.push(a, b, a + 1, b, b + 1, a + 1); }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('aD', new THREE.Float32BufferAttribute(aD, 1)); g.setAttribute('aX', new THREE.Float32BufferAttribute(aX, 1));
+    g.setIndex(idx); g.computeVertexNormals();
+    scene.add(new THREE.Mesh(g, mat(`attribute float aD,aX; varying vec3 vW,vN; varying float vD,vX;
+      void main(){ vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; vN=normal; vD=aD; vX=aX; gl_Position=projectionMatrix*viewMatrix*w; }`,
+      `varying vec3 vW,vN; varying float vD,vX;
+      void main(){
+        vec3 n=normalize(vN);
+        vec3 b=vD<1.9?vec3(.8,.76,.69):vD<20.?vec3(.63,.57,.49):vD<31.?vec3(.17,.23,.13):vD<44.?vec3(.11,.11,.12):mix(vec3(.21,.19,.18),vec3(.14,.16,.11),smoothstep(300.,700.,vD));
+        vec3 c=s2l(b)*(uAmb*(.8+.2*n.y)+uLight*max(dot(n,uLightDir),0.));
+        float dx=(fract((vX+420.)/16.+.5)-.5)*16.,dy=vD-6.;
+        float th=.38+.14*clamp(abs(vX-10.)/610.,0.,1.);
+        c+=vec3(1.,.64,.34)*smoothstep(th,th+.025,uT)*step(-428.,vX)*step(vX,628.)*exp(-(dx*dx+dy*dy)*.03)*.9;
+        c+=vec3(1.,.6,.3)*uLit*.05*step(44.,vD)*vn(vW.xz*.08);
+        gl_FragColor=vec4(fin(fog(c,vW)),1.);
+      }`)));
+  }
+
+  /* buildings, port cranes, lamp posts: one instanced box draw; facades get procedural balconies + windows */
+  const glow = []; // [x,y,z, onAt, size, r,g,b]
+  {
+    const B = []; // [x, y, z, rotY, w, h, dep, seed]
+    const add = (x, d, w, h, dep, seed, y) => { const [px, pz, a] = inland(x, d); B.push([px, y ?? groundY(d) - 3, pz, -a, w, y == null ? h + 3 : h, dep, seed]); };
+    for (let x = -560; x < 660;) { const w = 12 + rnd() * 12; if (Math.abs(x + w / 2 - 10) > 80) add(x + w / 2, 52 + rnd() * 4, w - 1.5, 19 + rnd() * 11, 14 + rnd() * 5, rnd()); x += w; }
+    const dens = small ? .5 : 1;
+    for (let d = 84; d < 700; d += 24 + rnd() * 8) for (let x = -720 + rnd() * 20; x < 640 + d * .3;) {
+      const w = 10 + rnd() * 14;
+      if (Math.hypot(x - 10, d) > 115 && rnd() < dens * (d < 400 ? .92 : .7))
+        add(x + w / 2, d + rnd() * 6, w - 2, (d < 300 ? 12 : 9) + rnd() * (d < 300 ? 16 : 12) + (rnd() < .06 ? 14 : 0), 11 + rnd() * 8, rnd());
+      x += w + 3 + rnd() * 5;
+    }
+    for (let x = -890; x < -600; x += 30 + rnd() * 40) add(x, 40 + rnd() * 20, 26 + rnd() * 20, 8 + rnd() * 5, 16, -1);
+    for (const x of [-880, -805, -735, -668]) {
+      add(x, 5, 1.3, 30, 1.3, -1, .8); add(x, 17, 1.3, 30, 1.3, -1, .8); add(x, 11, 1.4, 1.6, 13, -1, 27);
+      add(x, -6, 1.4, 1.8, 50, -1, 30.5); add(x, 11, 1, 6, 1, -1, 30.5);
+      const [px, pz] = inland(x, 11); glow.push([px, 37, pz, .47, 1.6, 1, .16, .1]);
+    }
+    for (let x = -420; x <= 620; x += 16) {
+      add(x, 6, .35, 7, .35, -2, .8);
+      const [px, pz] = inland(x, 6); glow.push([px, 7.6, pz, lampOn(x), 1.7, 1, .72, .42]);
+    }
+    for (let i = 0; i < 13; i++) add(250 + Math.cos(i * 2.4) * 5 * Math.sqrt(i / 13), 9 + Math.sin(i * 2.4) * 5 * Math.sqrt(i / 13), .18, 6 + i % 5 * 2, .18, -2, .8);
+    const g = new THREE.BoxGeometry(1, 1, 1).translate(0, .5, 0);
+    const m = mat(`attribute float aSeed; varying vec3 vW,vN,vL,vO,vS; varying float vSeed;
+      void main(){ mat4 m=modelMatrix*instanceMatrix; vec4 w=m*vec4(position,1.); vW=w.xyz; vN=normalize(mat3(m)*normal); vO=normal;
+        vS=vec3(length(instanceMatrix[0].xyz),length(instanceMatrix[1].xyz),length(instanceMatrix[2].xyz));
+        vL=(position+vec3(.5,0.,.5))*vS; vSeed=aSeed; gl_Position=projectionMatrix*viewMatrix*w; }`,
+      `varying vec3 vW,vN,vL,vO,vS; varying float vSeed;
+      void main(){
+        vec3 n=normalize(vN); float ndl=max(dot(n,uLightDir),0.);
+        vec3 amb=uAmb*(.72+.28*n.y), lit=amb+uLight*ndl, c;
+        if(vSeed<0.){ c=s2l(vSeed<-1.5?vec3(.1,.1,.11):vec3(.22,.22,.24))*lit; }
+        else {
+          float r=vSeed;
+          vec3 base=s2l(r<.45?vec3(.93,.9,.84):r<.62?vec3(.91,.81,.65):r<.78?vec3(.89,.75,.69):r<.9?vec3(.81,.81,.78):vec3(.74,.67,.58));
+          vec2 uv=abs(vO.x)>.5?vec2(vL.z,vL.y):vec2(vL.x,vL.y);
+          float gy=uv.y-3.;
+          vec2 q=vec2(uv.x/3.3,gy/3.2), cell=floor(q), f=fract(q);
+          float det=1.-smoothstep(.22,.5,length(fwidth(q)));
+          float up=step(1.,cell.y);
+          float win=step(.2,f.x)*step(f.x,.8)*step(.3,f.y)*step(f.y,.84)*up*step(gy,vS.y-4.6);
+          float bias=.55+.9*fract(r*97.3);
+          float on=step(h21(cell+floor(r*977.)),uLit*bias);
+          vec3 lamp=mix(vec3(1.,.55,.22),vec3(1.,.8,.5),h21(cell+7.1));
+          if(h21(cell+3.3)<.1) lamp=vec3(.62,.76,1.);
+          lamp*=2.3;
+          vec3 wall=base*lit*mix(.6,1.,smoothstep(0.,10.,gy));
+          vec3 V=normalize(cameraPosition-vW);
+          vec3 glass=s2l(vec3(.13,.14,.18))*(amb*1.3+uLight*ndl*.25)+uHorizon*.05+uSunCol*pow(max(dot(reflect(-V,n),uSunDir),0.),50.)*uSunVis*1.5;
+          vec3 dc=mix(wall*(1.+step(f.y,.1)*up*.14)*(1.-step(.1,f.y)*step(f.y,.2)*up*.38),mix(glass,lamp,on),win);
+          dc+=vec3(1.,.6,.3)*step(cell.y,0.)*step(.25,f.y)*step(f.y,.8)*step(.1,f.x)*step(f.x,.9)*smoothstep(.2,.5,uLit)*step(.5,fract(r*13.1))*1.3;
+          float lf=clamp(uLit*bias,0.,1.);
+          vec3 avg=wall*.72+glass*.28*(1.-lf)+lamp*.28*lf*.8;
+          c=abs(vO.y)>.5?base*.5*lit:mix(avg,dc,det);
+        }
+        gl_FragColor=vec4(fin(fog(c,vW)),1.);
+      }`);
+    const im = new THREE.InstancedMesh(g, m, B.length), o = new THREE.Object3D(), seeds = new Float32Array(B.length);
+    B.forEach((b, i) => { o.position.set(b[0], b[1], b[2]); o.rotation.set(0, b[3], 0); o.scale.set(b[4], b[5], b[6]); o.updateMatrix(); im.setMatrixAt(i, o.matrix); seeds[i] = b[7]; });
+    g.setAttribute('aSeed', new THREE.InstancedBufferAttribute(seeds, 1));
+    im.frustumCulled = false; scene.add(im);
+  }
+
+  /* the White Tower (+ the Umbrellas sculpture): stone shader, floodlit at night */
+  {
+    const [tx, tz] = inland(10, 24), base = .8;
+    const stone = (col, flood, inst) => mat(`varying vec3 vW,vN;
+      void main(){ mat4 m=modelMatrix; ${inst ? 'm=m*instanceMatrix;' : ''} vec4 w=m*vec4(position,1.); vW=w.xyz; vN=normalize(mat3(m)*normal); gl_Position=projectionMatrix*viewMatrix*w; }`,
+      `uniform vec3 uCol,uC; uniform float uFlood,uWin; varying vec3 vW,vN;
+      void main(){
+        vec3 n=normalize(vN);
+        vec3 c=uCol*(uAmb*(.7+.3*n.y)+uLight*max(dot(n,uLightDir),0.)*1.15);
+        float hy=vW.y-uC.y;
+        c*=(.94+.06*step(.5,fract(vW.y*.42)))*mix(.78,1.,smoothstep(0.,30.,hy));
+        vec2 r=normalize(vW.xz-uC.xz+1e-4);
+        float an=atan(r.y,r.x)/6.2832, fl=floor(hy/6.5), wy=fract(hy/6.5);
+        float slit=step(.965,fract(an*9.+fl*.31))*step(.3,wy)*step(wy,.62)*step(1.,fl)*step(hy,30.);
+        c=mix(c,uAmb*.08,slit*uWin);
+        c*=1.-.25*uWin*step(31.3,hy)*step(hy,32.3);
+        c+=uCol*vec3(1.,.8,.56)*uFlood*smoothstep(.5,.72,uT)*(.12+.8*exp(-hy*.05))*(.45+.55*max(dot(r,vec2(-.25,.97)),0.));
+        gl_FragColor=vec4(fin(fog(c,vW)),1.);
+      }`, { uCol: { value: new THREE.Color('#efe6d6') }, uC: { value: V3(tx, base, tz) }, uFlood: { value: flood }, uWin: { value: +!inst } });
+    const tm = stone(0, .55, false);
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(12, 12.8, 34, 48).translate(0, 17, 0), tm); body.position.set(tx, base, tz); scene.add(body);
+    const tur = new THREE.Mesh(new THREE.CylinderGeometry(5.4, 5.6, 8, 28).translate(0, 4, 0), tm); tur.position.set(tx + 1.5, base + 34, tz - 1); scene.add(tur);
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(12.6, 12.6, 1.2, 48), tm); cap.position.set(tx, base + 33.6, tz); scene.add(cap);
+    const mg = new THREE.BoxGeometry(2.6, 2.6, 1.5).translate(0, 1.3, 0), merl = new THREE.InstancedMesh(mg, stone(0, .55, true), 34), o = new THREE.Object3D();
+    for (let i = 0; i < 34; i++) {
+      const top = i < 24, a = i / (top ? 24 : 10) * Math.PI * 2, r = top ? 11.9 : 5;
+      o.position.set((top ? tx : tx + 1.5) + Math.cos(a) * r, base + (top ? 34.2 : 42), (top ? tz : tz - 1) + Math.sin(a) * r);
+      o.rotation.set(0, -a + Math.PI / 2, 0); o.scale.set(top ? 1 : .8, top ? 1 : .8, 1); o.updateMatrix(); merl.setMatrixAt(i, o.matrix);
+    }
+    scene.add(merl);
+    const ug = new THREE.ConeGeometry(2.3, 1, 12, 1, true), um = new THREE.InstancedMesh(ug, stone(0, .3, true), 13);
+    um.material.side = THREE.DoubleSide; um.material.uniforms.uCol.value.set('#f4f1ea');
+    for (let i = 0; i < 13; i++) {
+      const [px, pz] = inland(250 + Math.cos(i * 2.4) * 5 * Math.sqrt(i / 13), 9 + Math.sin(i * 2.4) * 5 * Math.sqrt(i / 13));
+      o.position.set(px, .8 + 6 + i % 5 * 2, pz); o.rotation.set(Math.sin(i) * .25, 0, Math.cos(i * 1.7) * .25); o.scale.set(1, 1, 1); o.updateMatrix(); um.setMatrixAt(i, o.matrix);
+    }
+    scene.add(um);
+  }
+
+  /* distant ranges as layered silhouettes; Olympus across the gulf */
+  {
+    const nz = (f, s) => Math.sin(f * 23 + s) * .5 + Math.sin(f * 57 + s * 2) * .25 + Math.sin(f * 131 + s * 3) * .12;
+    const L = [
+      [238, 34, 2900, f => 60 + 380 * Math.pow(Math.max(0, 1 - Math.abs(f - .42) / .4), 1.7) + 60 * Math.max(0, 1 - Math.abs(f - .6) / .12) + 22 * nz(f, 1)],
+      [222, 64, 2150, f => 50 + 90 * Math.pow(Math.sin(f * Math.PI), 1.5) + 30 * nz(f, 4)],
+      [150, 50, 2700, f => 25 + 45 * Math.sin(f * Math.PI) + 10 * nz(f, 7)],
+      [0, 150, 1750, f => 120 + 70 * Math.sin(f * Math.PI * 1.3) + 90 * Math.max(0, 1 - Math.abs(f - .78) / .14) + 25 * nz(f, 9)],
+    ];
+    const pos = [];
+    for (const [az0, span, R, h] of L) {
+      const n = 90;
+      for (let i = 0; i < n; i++) {
+        const f0 = i / n, f1 = (i + 1) / n, p = [];
+        for (const f of [f0, f1]) { const a = (az0 + span * (f - .5)) * DEG; p.push([Math.sin(a) * R, Math.cos(a) * -R, h(f)]); }
+        const [[x0, z0, h0], [x1, z1, h1]] = p;
+        pos.push(x0, -40, z0, x1, -40, z1, x0, h0, z0, x1, -40, z1, x1, h1, z1, x0, h0, z0);
+      }
+    }
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    scene.add(new THREE.Mesh(g, mat(VW, `varying vec3 vW;
+      void main(){ vec3 c=mix(uAmb*.3,uHaze*.22,.4)+uGlow*.05*uSunVis; gl_FragColor=vec4(fin(fog(c,vW)),1.); }`, {}, { side: THREE.DoubleSide })));
+  }
+
+  /* glow points: promenade lamps (switch on in a wave from the tower), street lights, boats, crane beacons */
+  {
+    for (let i = 0; i < (small ? 110 : 240); i++) { const x = -700 + rnd() * 1340, d = 46 + Math.pow(rnd(), 1.3) * 560, [px, pz] = inland(x, d); glow.push([px, groundY(d) + 4, pz, .42 + rnd() * .26, 1.1, 1, .62, .3]); }
+    for (let i = 0; i < 9; i++) { const x = -500 + rnd() * 1100, z = shoreZ(x) + 140 + rnd() * 700; glow.push([x, 2, z, .5 + rnd() * .12, 1.3, 1, .93, .8]); }
+    const g = new THREE.BufferGeometry(), F = (f, k) => new THREE.BufferAttribute(new Float32Array(glow.flatMap(f)), k);
+    g.setAttribute('position', F(q => q.slice(0, 3), 3)); g.setAttribute('aOn', F(q => [q[3]], 1));
+    g.setAttribute('aSz', F(q => [q[4]], 1)); g.setAttribute('aCol', F(q => q.slice(5), 3));
+    const pts = new THREE.Points(g, mat(`attribute float aOn,aSz; attribute vec3 aCol; varying vec3 vC; varying float vA;
+      void main(){ vec4 mv=modelViewMatrix*vec4(position,1.); gl_Position=projectionMatrix*mv; float d=-mv.z;
+        gl_PointSize=clamp(aSz*4.*uPx/d,3.*uDpr,70.*uDpr); vA=smoothstep(aOn,aOn+.025,uT)*exp(-d*.0008); vC=aCol; }`,
+      `varying vec3 vC; varying float vA;
+      void main(){ float r=length(gl_PointCoord-.5)*2.; float a=(exp(-r*r*5.)*.55+exp(-r*r*38.)*1.1)*smoothstep(1.,.7,r); gl_FragColor=vec4(vC*a*vA,1.); }`,
+      {}, { transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+    pts.frustumCulled = false; scene.add(pts);
+  }
+
+  /* ---------------- camera path + time of day ---------------- */
+  const path = (pts) => new THREE.CatmullRomCurve3(pts.map(p => V3(...p)), false, 'centripetal');
+  const camP = path([[365, 55, 262], [294, 14, 84], [-66, 20, 62], [-150, 58, 300], [180, 72, 470], [382, 15, 150]]);
+  const camL = path([[-301, 140, 46], [20, 16, -20], [-6, 26, -30], [60, 50, -300], [-120, 30, -60], [330, -4, 450]]);
+  const YAWP = [-13, -6, 8, 0, 10, 9]; // portrait screens: degrees to turn (+ = right) toward what matters in each shot
+  const TK = [0, .16, .44, .72, .86, 1];
+  const sunAz = 276 * DEG, moonAz = 196 * DEG, moonEl = 10 * DEG;
+  const dir = (az, el) => V3(Math.sin(az) * Math.cos(el), Math.sin(el), -Math.cos(az) * Math.cos(el));
+  U.uMoonDir.value.copy(dir(moonAz, moonEl));
+  const kseg = t => { let i = 0; while (i < KT.length - 2 && t > KT[i + 1]) i++; return [i, clamp((t - KT[i]) / (KT[i + 1] - KT[i]), 0, 1)]; };
+  const sc = (k, i, s) => lerp(SC[k][i], SC[k][i + 1], s);
+  let scrimStep = -1;
+  const scrimA = [34, 16, 27], scrimB = [8, 11, 26], orbA = new THREE.Color('#ffd9a0'), orbB = new THREE.Color('#dfe6ff'), tmpC = new THREE.Color();
+
+  function setTime(t) {
+    const [i, s] = kseg(t);
+    for (const k in PAL) U[k].value.copy(C[k][i]).lerp(C[k][i + 1], s);
+    U.uSunDir.value.copy(dir(sunAz, sc('sunEl', i, s) * DEG));
+    U.uSunVis.value = sstep(-.04, .02, U.uSunDir.value.y);
+    U.uLight.value.multiplyScalar(sc('light', i, s));
+    U.uLightDir.value.copy(U.uSunDir.value).lerp(U.uMoonDir.value, sstep(.55, .85, t)).normalize();
+    if (U.uLightDir.value.y < .08) { U.uLightDir.value.y = .08; U.uLightDir.value.normalize(); }
+    U.uLit.value = sc('lit', i, s); U.uStars.value = sc('stars', i, s); U.uMoon.value = sc('moon', i, s);
+    U.uFogD.value = sc('fogD', i, s); U.uFogH.value = sc('fogH', i, s); U.uExpo.value = sc('expo', i, s); U.uT.value = t;
+    const q = Math.round(t * 24);
+    if (q !== scrimStep) {
+      scrimStep = q; const k = sstep(.35, .95, t);
+      root.style.setProperty('--scrim', scrimA.map((v, j) => Math.round(lerp(v, scrimB[j], k))).join(' '));
+      root.style.setProperty('--orb', '#' + tmpC.copy(orbA).lerp(orbB, sstep(.5, .8, t)).getHexString());
+    }
+  }
+
+  const look = V3(0, 0, 0), fwd = V3(0, 0, 0);
+  let introT = reduce ? 1 : 0; const t0 = performance.now();
+  function setCam(u) {
+    camera.position.copy(camP.getPoint(u)); look.copy(camL.getPoint(u));
+    if (camera.aspect < 1) {
+      const k = u * (YAWP.length - 1), i = Math.min(Math.floor(k), YAWP.length - 2), yaw = lerp(YAWP[i], YAWP[i + 1], sstep(0, 1, k - i)) * DEG;
+      look.sub(camera.position).applyAxisAngle(V3(0, 1, 0), -yaw).add(camera.position);
+    }
+    if (introT < 1) { // opening shot: a slow push-in and rise over the gulf (only when the page opens on the hero)
+      const e = (1 - Math.pow(1 - introT, 3)), k = (1 - e) * (1 - sstep(0, .06, u));
+      fwd.copy(look).sub(camera.position).normalize();
+      camera.position.addScaledVector(fwd, -k * 70); camera.position.y -= k * 18;
+    }
+    camera.lookAt(look);
+    scene.userData.stars.position.copy(camera.position);
+    sky.position.copy(camera.position);
+    scene.userData.water.position.set(Math.round(camera.position.x / 20) * 20, 0, Math.round(camera.position.z / 20) * 20);
+  }
+
+  /* scroll -> (camera u, time t): each section has a keyframe it reaches when centred */
+  let anchors = secs.map((_, k) => k / (secs.length - 1));
+  function measure() {
+    const max = Math.max(1, root.scrollHeight - innerHeight);
+    anchors = secs.map((s, k) => k === 0 ? 0 : k === secs.length - 1 ? 1 : clamp((s.offsetTop + s.offsetHeight / 2 - innerHeight / 2) / max, 0, 1));
+    for (let k = 1; k < anchors.length; k++) anchors[k] = Math.max(anchors[k], anchors[k - 1] + 1e-3);
+  }
+  function mapP(p) {
+    let k = 0; while (k < anchors.length - 2 && p > anchors[k + 1]) k++;
+    const s = clamp((p - anchors[k]) / (anchors[k + 1] - anchors[k]), 0, 1), e = s < .5 ? 2 * s * s : 1 - 2 * (1 - s) * (1 - s);
+    return [(k + e) / (secs.length - 1), lerp(TK[k], TK[k + 1], sstep(0, 1, s))];
+  }
+
+  let q = 1;
+  function resize() {
+    const w = innerWidth, h = canvas.clientHeight || innerHeight, dpr = Math.min(devicePixelRatio, small ? 1.5 : 2) * q;
+    renderer.setPixelRatio(dpr); renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.fov = clamp(2 * Math.atan(Math.tan(32 * DEG) / camera.aspect) / DEG, 40, 66); camera.updateProjectionMatrix();
+    U.uPx.value = h * dpr / (2 * Math.tan(camera.fov * DEG / 2)); U.uDpr.value = dpr;
+    measure();
+  }
+  let lastW = 0, lastH = 0;
+  const onResize = () => { if (innerWidth !== lastW || Math.abs(innerHeight - lastH) > 120) { lastW = innerWidth; lastH = innerHeight; resize(); if (reduce) draw(0, 0); } };
+  addEventListener('resize', onResize); if (ST) ST.addEventListener('refresh', measure);
+  lastW = innerWidth; lastH = innerHeight; resize();
+
+  /* pointer: a small wake ripple on the water under the cursor. The camera never follows it. */
+  const ray = new THREE.Raycaster(), plane = new THREE.Plane(V3(0, 1, 0), 0), hit = V3(0, 0, 0), ndc = new THREE.Vector2();
+  let ptrOn = false, ptrAmp = 0;
+  if (!reduce && !small) addEventListener('pointermove', e => { if (e.pointerType === 'mouse') { ndc.set(e.clientX / innerWidth * 2 - 1, -e.clientY / innerHeight * 2 + 1); ptrOn = true; } }, { passive: true });
+
+  function draw(u, t) { setTime(t); setCam(u); renderer.render(scene, camera); }
+  let prog = 0, last = performance.now(), acc = 0, frames = 0, first = true;
+  const scrollP = () => clamp(scrollY / Math.max(1, root.scrollHeight - innerHeight), 0, 1);
+  const done = () => { if (first) { first = false; requestAnimationFrame(() => canvas.classList.add('on')); } };
+  window.__dusk = { draw, stop: () => renderer.setAnimationLoop(null), get anchors() { return anchors; } }; // hooks for the screenshot checks
+
+  if (reduce) { draw(0, 0); done(); return; }
+  prog = scrollP();
+  renderer.setAnimationLoop(now => {
+    if (document.hidden) { last = now; return; }
+    const dt = clamp((now - last) / 1000, 0, .25); last = now;
+    U.uTime.value += dt; introT = Math.min(1, (now - t0) / 3600);
+    prog += (scrollP() - prog) * (1 - Math.exp(-dt * 3.2));
+    const [u, t] = mapP(prog);
+    if (ptrOn) { ray.setFromCamera(ndc, camera); if (ray.ray.intersectPlane(plane, hit)) { U.uPtr.value.x = hit.x; U.uPtr.value.y = hit.z; ptrAmp = 1; } ptrOn = false; }
+    ptrAmp *= Math.exp(-dt * 1.6); U.uPtr.value.z = ptrAmp;
+    draw(u, t); done();
+    // ponytail: coarse adaptive resolution; one step down per 2 s if frames run slow. Upgrade to a proper governor if needed.
+    acc += dt; frames++;
+    if (acc > 2) { if (acc / frames > 1 / 40 && q > .6 && !navigator.webdriver) { q -= .15; resize(); } acc = 0; frames = 0; }
+  });
+}
+</script>
+</body>
+</html>

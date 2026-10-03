@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Powers of Ten · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki, as one continuous zoom from Earth at night down to a single bit.">
+<meta name="color-scheme" content="dark light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}</script>
+<style>
+:root{--ink:#ece8e0;--dim:rgba(236,232,224,.66);--amber:#ffbb5c;--sodium:#f6c68d;
+  --paper:#f4f0e7;--pink:#1c1a16;--pdim:#5d584e;--rule:#dcd5c6;--plink:#8c3a0e}
+@media (prefers-color-scheme:dark){:root{--paper:#14120f;--pink:#ebe5d9;--pdim:#a79f90;--rule:#38332b;--plink:#f2ab6b}}
+*{box-sizing:border-box}
+html{background:#02030a;scrollbar-width:none}
+html::-webkit-scrollbar{display:none}
+body{margin:0;background:#02030a;color:var(--ink);font:17px/1.5 'EB Garamond',Georgia,serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid #ffcf8a;outline-offset:3px}
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block}
+#spacer{width:1px}
+.ui{position:fixed;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:flex-end;
+  padding:14px clamp(14px,2.4vw,28px);color:#fff;pointer-events:none;text-shadow:0 0 10px rgba(0,0,0,.75),0 0 2px rgba(0,0,0,.6)}
+.inv .back,.inv #readout{color:#000;text-shadow:none}.inv #readout .rule{border-color:#000}.inv #readout .rule b,.inv #readout .rule i{background:#000}
+.ui>*{pointer-events:auto}
+.ui.top{top:0;align-items:flex-start}
+.ui.bottom{bottom:0}
+.ui .mail{margin-left:auto}
+.back,#textBtn,.mail{font:400 16px/1.2 'EB Garamond',serif;color:inherit;text-decoration:none;background:none;border:0;padding:6px 0;cursor:pointer}
+.back{opacity:.72}
+#textBtn,.mail{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;text-decoration-color:rgba(255,255,255,.45)}
+.back:hover,#textBtn:hover,.mail:hover{opacity:1;text-decoration-color:#fff}
+#readout{font:400 11px/1.35 'Space Mono',monospace;letter-spacing:.02em;min-width:15ch}
+#readout .big{display:block;font:400 30px/1 'Space Mono',monospace;letter-spacing:-.02em;margin-bottom:6px}
+#readout .big sup{font-size:.52em;vertical-align:.9em;margin-left:1px}
+#readout .small{display:block;opacity:.8;max-width:34ch}
+#readout .rule{position:relative;display:block;width:150px;height:9px;margin-top:9px;border-left:1px solid rgba(255,255,255,.5)}
+#readout .rule b{position:absolute;bottom:0;width:1px;height:4px;background:rgba(255,255,255,.45)}
+#readout .rule i{position:absolute;bottom:0;left:0;height:1px;background:#fff;width:0}
+#finder{position:fixed;inset:0;pointer-events:none;z-index:2}
+.sq{position:absolute;left:50%;top:50%;border:1px solid rgba(255,255,255,.26);opacity:0;will-change:transform,opacity}
+.sq span{position:absolute;left:-1px;bottom:100%;padding-bottom:4px;font:400 10px/1 'Space Mono',monospace;color:rgba(255,255,255,.55);white-space:nowrap}
+#hint{position:fixed;left:0;right:0;bottom:15vh;margin:0;text-align:center;font:italic 400 18px/1 'EB Garamond',serif;color:var(--dim);z-index:3;pointer-events:none}
+#hint span{display:inline-block;animation:fade 1.4s .6s both}
+@keyframes fade{from{opacity:0}}
+#labels,#name-wrap{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:3}
+.lbl{position:absolute;left:0;top:0;opacity:0;visibility:hidden;will-change:transform,opacity;text-shadow:0 0 12px #000,0 0 3px #000,0 0 1px #000}
+.lbl .box{position:absolute;white-space:nowrap}
+.pin{position:absolute;left:-2.5px;top:-2.5px;width:5px;height:5px;border-radius:50%;background:#fff3de}
+.ringm{position:absolute;left:-8px;top:-8px;width:16px;height:16px;border:1px solid #ffe4c0;border-radius:50%}
+.tick{position:absolute;top:0;height:1px;background:rgba(255,236,210,.55)}
+.cap{font:500 12.5px/1.2 'EB Garamond',serif;letter-spacing:.2em;text-transform:uppercase;color:#f8d3a3}
+.water{font:italic 400 19px/1.2 'EB Garamond',serif;letter-spacing:.05em;color:rgba(178,200,236,.82)}
+.mono{font:400 11px/1.4 'Space Mono',monospace;letter-spacing:.02em;color:var(--dim)}
+.note{font:400 17px/1.35 'EB Garamond',serif;color:var(--ink);white-space:normal}
+.note em{color:var(--sodium)}
+/* earth label */
+#l-earth .box{left:38px;top:-17px}
+#l-earth h1{font:400 clamp(28px,3vw,40px)/1.02 'EB Garamond',serif;margin:.34rem 0 .3rem;letter-spacing:-.005em;color:#f7f3ec}
+#l-earth .role{font:italic 400 18px/1.2 'EB Garamond',serif;color:var(--dim);margin:0}
+#l-earth p{margin:0}
+.portrait #l-earth .box{left:0;top:30px;transform:translateX(-50%);text-align:center}
+/* map markers */
+.mk .box{top:-12px;width:min(300px,40vw);white-space:normal}
+.mk.r .box{left:18px}
+.mk.l .box{right:18px;text-align:right}
+.mk h2{font:500 20px/1.15 'EB Garamond',serif;margin:0 0 3px;color:#fbf5ea}
+.mk p{margin:0 0 3px;font-size:16px;line-height:1.3;color:var(--dim)}
+.mk .mono{color:var(--sodium)}
+.portrait .mk .box{width:min(230px,62vw)}
+.portrait #l-auth .box{right:auto;left:-20px;top:auto;bottom:16px;text-align:left}
+.portrait #l-uom .box{left:-20px;top:16px}
+.portrait #l-tower{display:none}
+.portrait .mk h2{font-size:17px}.portrait .mk p{font-size:14.5px}
+#l-window .box{left:22px;top:-8px;width:min(205px,56vw);white-space:normal}
+#l-screen .box{left:0;bottom:16px;transform:translateX(-50%);text-align:center;white-space:normal;width:min(560px,88vw)}
+#l-screen .host{font:400 13px/1.3 'Space Mono',monospace;color:#cfeeff}
+#l-screen .desc{font:400 17px/1.35 'EB Garamond',serif;color:var(--ink)}
+#l-hash .box{left:0;bottom:0;transform:translateX(-50%);text-align:center;width:min(520px,88vw);white-space:normal}
+#l-hash .desc{color:#f3dfc0}
+.cite{font:400 12px/1 'Space Mono',monospace;color:#ffcf8c}
+.cite .box{left:10px;top:-6px}
+#l-paper .box{left:0;top:18px;transform:translateX(-50%);width:min(470px,88vw);white-space:normal;text-align:center}
+#l-paper .t{font:400 19px/1.25 'EB Garamond',serif;color:#fff5e6;margin:4px 0}
+#l-paper .mono{color:#ffc978}
+#l-end .box{left:0;top:0;transform:translateX(-50%);text-align:center;white-space:nowrap}
+#l-end{position:fixed;z-index:4;mix-blend-mode:difference;text-shadow:none;color:#fff}
+#l-end a{pointer-events:auto;font:italic 400 clamp(22px,2.4vw,30px)/1.2 'EB Garamond',serif;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:6px}
+#l-end p{margin:10px 0 0;font:400 11px/1.4 'Space Mono',monospace;opacity:.75}
+/* reading mode and fallbacks */
+#text{position:fixed;inset:0;z-index:20;overflow:auto;background:var(--paper);color:var(--pink)}
+#text[hidden]{display:none}
+.tv{max-width:40rem;margin:0 auto;padding:clamp(20px,5vw,56px) clamp(18px,4vw,32px) 80px}
+.tv button{font:400 16px 'EB Garamond',serif;background:none;border:0;padding:6px 0;color:var(--plink);text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.tv h2{font:400 clamp(34px,6vw,50px)/1.05 'EB Garamond',serif;margin:28px 0 10px;letter-spacing:-.01em}
+.tv h3{font:500 22px/1.25 'EB Garamond',serif;margin:40px 0 10px;padding-top:16px;border-top:1px solid var(--rule)}
+.tv h3 small{display:block;font:400 11px/1.5 'Space Mono',monospace;color:var(--pdim);letter-spacing:.02em}
+.tv p,.tv li{font-size:18.5px;line-height:1.55}
+.tv .lede{font-size:21px;color:var(--pdim)}
+.tv ul,.tv ol{padding-left:1.1em}
+.tv li{margin-bottom:10px}
+.tv a{color:var(--plink);text-underline-offset:3px}
+.tv .meta{color:var(--pdim)}
+.tv code{font:400 13px/1.5 'Space Mono',monospace;word-break:break-all;color:var(--pdim)}
+.tv details li{font-size:16px;margin-bottom:3px}
+.reading{overflow:hidden}
+#stills{max-width:1100px;margin:0 auto;padding:70px clamp(14px,3vw,28px) 120px}
+#stills figure{margin:0 0 56px}
+#stills img{width:100%;height:auto;display:block;border-radius:2px}
+#stills figcaption{margin-top:12px;max-width:44rem;font-size:18px;line-height:1.5;color:var(--dim)}
+#stills figcaption b{display:block;font:400 12px/1.4 'Space Mono',monospace;color:var(--ink);margin-bottom:4px}
+.rm #gl,.rm #labels,.rm #finder,.rm #hint,.rm #readout,.rm #spacer{display:none}
+.nogl #gl,.nogl #labels,.nogl #finder,.nogl #hint,.nogl #readout,.nogl #spacer,.nogl #textBtn,.nogl #closeText{display:none}
+.nogl #text{position:static;display:block}
+.nogl .ui{position:absolute;color:var(--pink);text-shadow:none}.nogl .ui.bottom{position:fixed;left:auto}.nogl .mail{background:var(--paper);padding:6px 10px;border-radius:3px}
+.nogl .back,.nogl .mail{color:var(--pink)}
+@media (max-width:640px){#readout .big{font-size:24px}#readout .rule{width:110px}.back,#textBtn,.mail{font-size:15px}#hint{bottom:20vh}}
+@media (prefers-reduced-motion:reduce){#hint span{animation:none}}
+</style>
+<noscript><style>#text{display:block!important;position:static}#hint{display:none}</style></noscript>
+</head>
+<body>
+<header class="ui top">
+  <a class="back" href="index.html">← All ideas</a>
+  <button id="textBtn" type="button" aria-controls="text" aria-expanded="false">Read as text</button>
+</header>
+<main id="world">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div id="finder" aria-hidden="true"><div class="sq"><span></span></div><div class="sq"><span></span></div></div>
+  <div id="name-wrap">
+    <div class="lbl" id="l-earth"><span class="pin" style="display:none"></span><div class="box">
+      <p class="cap">Thessaloniki <span class="mono" style="letter-spacing:.02em;text-transform:none">&nbsp;40.64° N · 22.94° E</span></p>
+      <h1>George Michoulis</h1>
+      <p class="role">Blockchain developer and researcher</p>
+    </div></div>
+  </div>
+  <div id="labels" aria-hidden="true">
+    <div class="lbl" id="l-thess"><span class="pin"></span><div class="box cap" style="left:10px;top:-7px">Thessaloniki</div></div>
+    <div class="lbl" id="l-gulf"><div class="box water" style="transform:translate(-50%,-50%)">Thermaic Gulf</div></div>
+    <div class="lbl" id="l-chalk"><div class="box cap" style="transform:translate(-50%,-50%)">Chalkidiki</div></div>
+    <div class="lbl" id="l-aegean"><div class="box water" style="transform:translate(-50%,-50%)">Aegean Sea</div></div>
+    <div class="lbl" id="l-olymp"><div class="box mono" style="transform:translate(-50%,-50%)">▲ Olympus 2,918 m</div></div>
+    <div class="lbl" id="l-tower"><span class="pin" style="opacity:.7"></span><div class="box water" style="left:9px;top:-10px;font-size:15px">White Tower</div></div>
+    <div class="lbl mk r" id="l-uom"><span class="ringm"></span><div class="box">
+      <h2>University of Macedonia</h2>
+      <p class="mono">BSc Applied Informatics<br>2015–2020</p>
+      <p>My thesis checked academic credentials on Ethereum. Basic Research grant, 2020–2021.</p>
+    </div></div>
+    <div class="lbl mk l" id="l-auth"><span class="ringm"></span><div class="box">
+      <h2>Aristotle University of Thessaloniki</h2>
+      <p class="mono">MSc Data and Web Science<br>2020–2022</p>
+      <p>Graph-embedding methods for spotting fraud on blockchains, on a DeepMind scholarship.</p>
+    </div></div>
+    <div class="lbl" id="l-window"><div class="box note">I’m based in Thessaloniki and work remotely.</div></div>
+    <div class="lbl" id="l-screen"><div class="box"><div class="host"></div><div class="desc"></div><div class="mono count"></div></div></div>
+    <div class="lbl" id="l-hash"><div class="box">
+      <p class="mono" style="color:#ffc978;margin:0 0 4px">32 bytes · SHA-256</p>
+      <p class="note desc" style="margin:0">The fingerprint of my MSc certificate scan. Checking fingerprints like this against Ethereum was my BSc thesis.</p>
+    </div></div>
+    <div class="lbl" id="l-paper"><div class="box"><p class="mono"></p><p class="t"></p><p class="mono v" style="color:var(--dim)"></p></div></div>
+  </div>
+  <div class="lbl" id="l-end"><div class="box"><a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a><p>Scroll up to zoom back out to Earth.</p></div></div>
+  <p id="hint"><span>Scroll to zoom in.</span></p>
+  <div id="spacer"></div>
+  <section id="stills" hidden aria-label="The zoom as still frames"></section>
+</main>
+<footer class="ui bottom">
+  <div id="readout" aria-hidden="true"><span class="big">10<sup>7</sup> m</span><span class="small">17,800 km across · Earth at night</span><span class="rule"><i></i></span></div>
+  <a class="mail" href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>
+</footer>
+
+<article id="text" hidden role="dialog" aria-modal="true" aria-labelledby="text-title">
+ <div class="tv">
+  <button id="closeText" type="button">← Back to the zoom</button>
+  <h2 id="text-title">George Michoulis</h2>
+  <p class="lede">Blockchain developer and researcher, based in Thessaloniki, Greece, working remotely. This is the zoom as plain text, from the largest scale down to the smallest.</p>
+
+  <h3><small>10⁷ → 10⁴ m</small>Thessaloniki, where I studied</h3>
+  <p><strong>MSc Data and Web Science</strong>, Aristotle University of Thessaloniki, 2020–2022. My work there was on graph-embedding methods for fraud detection on blockchains, funded by a DeepMind scholarship.</p>
+  <p><strong>BSc Applied Informatics</strong>, University of Macedonia, 2015–2020. My thesis was on verifying academic credentials with Ethereum.</p>
+  <p class="meta">Awards: DeepMind Scholarship (Aristotle University of Thessaloniki, 2020–2022). 3rd place, Infinitech Hackathon (Crowdpolicy, 06/2022). Basic Research grant (University of Macedonia, 2020–2021). Move/Sui Bootcamp Thessaloniki award (2025).</p>
+
+  <h3><small>10⁻¹ m · a laptop screen</small>Sites I built</h3>
+  <ul id="t-sites"></ul>
+
+  <h3><small>10² B · the call stack, newest first</small>Where I’ve worked</h3>
+  <ol id="t-roles" style="list-style:none;padding:0"></ol>
+
+  <h3><small>32 B · one SHA-256 hash</small>Papers, and the certificate behind the hash</h3>
+  <p>The hash in the zoom is <code>6ceb10416ebd607dd8f4e7f0a59839c91e2dd43df91bbebd8add4f3d740879fd</code>, the SHA-256 of <a href="../../img/renamed/1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg">my MSc certificate scan</a> as published on this site. You can hash the file yourself and compare.</p>
+  <ul id="t-papers"></ul>
+  <p>Also two Greek-language theses on verifying academic titles with Ethereum (2020 and 2021). Everything is on <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+  <details><summary>All 34 certificate scans</summary><ul id="t-certs"></ul></details>
+
+  <h3><small>1 bit</small>Contact</h3>
+  <p><a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a></p>
+  <p><a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a>, <a href="https://github.com/gmixoulis">GitHub</a>, <a href="https://twitter.com/GeorgeMicou">X</a>, <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+  <p class="meta">Elsewhere on the site: the <a href="../../garden/">Zen Garden</a>, my personal notes, and <a href="../../play/">Ledger Run</a>, a platformer résumé.</p>
+ </div>
+</article>
+
+<script type="module">
+import * as THREE from 'three';
+
+/* ---------- content (facts from the CV) ---------- */
+const HASH='6ceb10416ebd607dd8f4e7f0a59839c91e2dd43df91bbebd8add4f3d740879fd';
+const SITES=[
+ {f:'bbf-gui.ddns.net.gif',h:'bbf-gui.ddns.net',t:'Blockchain Benchmarking Framework',d:'The Blockchain Benchmarking Framework, for deploying and evaluating different blockchain protocols.'},
+ {f:'metau.unic.ac.cy.png',h:'metau.unic.ac.cy',t:'University of Nicosia',d:'University of Nicosia courses, decentralised, on-chain and in the metaverse.'},
+ {f:'accelerate.png',h:'stg.accelerate.unic.ac.cy',t:'Log in',d:'A University of Nicosia sign-in page, on its staging server.',crop:.047},
+ {f:'celc.web.auth.gr.PNG',h:'celc.web.auth.gr',t:'ΚΕΝοΠ',d:'The Centre for European Legal Culture at Aristotle University of Thessaloniki.'},
+ {f:'eudem.polsci.auth.gr.PNG',h:'eudem.polsci.auth.gr',t:'EUDEM',d:'EUDEM, a Jean Monnet Chair site at Aristotle University of Thessaloniki.'},
+ {f:'marlab.ode.uom.gr.PNG',h:'marlab.ode.uom.gr',t:'MarLab',d:'MarLab, the Marketing Laboratory at the University of Macedonia.'},
+ {f:'verde.uom.gr.PNG',h:'verde.uom.gr',t:'VerDe',d:'VerDe, the academic credential verification system from my papers.'},
+];
+const ROLES=[
+ {o:'Cyberscope by TAC',r:'Web3 full-stack developer',y:'05/2026 – now',d:'Web3 products end to end: contracts, on-chain integrations, React and Next frontends, security tooling.'},
+ {o:'Sidroco Holdings Ltd',r:'Blockchain developer and researcher',y:'2024 – 2026',d:'An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ LMS and multinational EU projects.'},
+ {o:'University of Derby / Mediterranean College',r:'Lecturer and academic partner',y:'2023 – 2025',d:'I taught networks and security, web scripting and application development, with inclusivity-first assessment.'},
+ {o:'University of Nicosia / IFF',r:'Blockchain and full-stack developer',y:'2022 – 2024',d:'Large Next.js, NestJS and Docker applications, and a Web3 NFT marketplace.'},
+];
+const PAPERS=[
+ {c:32,y:2022,t:'A process-aware approach for blockchain-based verification of academic qualifications',v:'Simulation Modelling Practice and Theory 121, 102642'},
+ {c:11,y:2020,t:'Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe',v:'XIV Balkan Conference on Operational Research'},
+ {c:7,y:2023,t:'Exploring decentralized governance: a framework applied to Compound Finance',v:'Intl. Conference on Mathematical Research for Blockchain Economy'},
+ {c:1,y:2024,t:'FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs',v:'7th World Symposium on Communication Engineering (WSCE)'},
+ {c:1,y:2025,t:'Data security for smart cities',v:''},
+ {c:0,y:2025,t:'Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management',v:'IEEE ICCE 2025'},
+ {c:0,y:2022,t:'Graph Embedding and Node Features for Drug-Target Interaction Prediction',v:'Aristotle University of Thessaloniki (MSc work)'},
+ {c:0,y:2022,t:'Blockchain in Higher Education: permissioned and permissionless approaches',v:'4th Summit on Gender Equality in Computing'},
+];
+const CERTS=["1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg","1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg","Award_Academic-Achievement.jpg","Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg","Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg","Certificate-Of-Completion_Advanced-Ethical-Hacking.png","Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg","Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg","Certificate-Of-Completion_Cloud-Engineering.png","Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg","Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg","Certificate-Of-Completion_Discover-Customer.jpg","Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png","Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg","Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg","Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg","Certificate-Of-Completion_NFT-Talents-Program.jpg","Certificate-Of-Completion_Networking-Essentials.png","Certificate-Of-Completion_Rust-Developer.png","Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg","Certificate-Of-Completion_The-Hour-Of-Code.jpg","Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg","Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg","Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg","Certificate-Of-Participation_EY-Cyber-Day.jpg","Certificate-Of-Participation_GNULinux-Command-Line.jpg","Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg","Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png","Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg","Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg","Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg","Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg","English-Certificate_English-Certificate-English-Proficiency.jpg","Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png"];
+
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+/* ---------- text view (a11y / recruiter path) ---------- */
+$('#t-sites').innerHTML=SITES.map(s=>`<li><a href="http://${s.h}">${s.h}</a>. ${esc(s.d)}</li>`).join('');
+$('#t-roles').innerHTML=ROLES.map((r,i)=>`<li><strong>${r.r}</strong>, ${esc(r.o)} <span class="meta">· ${r.y}</span><br>${esc(r.d)}</li>`).join('');
+$('#t-papers').innerHTML=PAPERS.map(p=>`<li>${esc(p.t)}. <span class="meta">${p.v?esc(p.v)+', ':''}${p.y}. ${p.c?`Cited ${p.c} time${p.c>1?'s':''}.`:'Not cited yet.'}</span></li>`).join('');
+$('#t-certs').innerHTML=CERTS.map(f=>{const [k,t]=f.replace(/\.\w+$/,'').split('_');const nice=s=>s.replace(/^1/,'').replace(/-/g,' ');return `<li><a href="../../img/renamed/${f}">${nice(t)}</a> <span class="meta">(${nice(k)})</span></li>`}).join('');
+
+const textEl=$('#text'),tBtn=$('#textBtn');let paused=false,dirty=true;
+const shells=[$('#world'),$('.ui.top'),$('.ui.bottom')];
+function openText(){textEl.hidden=false;document.documentElement.classList.add('reading');tBtn.setAttribute('aria-expanded','true');shells.forEach(e=>e.inert=true);$('#closeText').focus();paused=true}
+function closeText(){textEl.hidden=true;document.documentElement.classList.remove('reading');tBtn.setAttribute('aria-expanded','false');shells.forEach(e=>e.inert=false);tBtn.focus();paused=false;dirty=true}
+tBtn.onclick=openText;$('#closeText').onclick=closeText;
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!textEl.hidden)closeText()});
+
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let glOK=false;try{glOK=!!document.createElement('canvas').getContext('webgl2')}catch(e){}
+if(!glOK){
+  document.documentElement.classList.add('nogl');
+  const t=$('#text-title'),h=document.createElement('h1');h.id=t.id;h.className='x';h.textContent=t.textContent;h.style.cssText='font:400 clamp(34px,6vw,50px)/1.05 "EB Garamond",serif;margin:28px 0 10px';t.replaceWith(h);
+  $('#l-earth h1').outerHTML='<p>George Michoulis</p>';textEl.hidden=false;textEl.removeAttribute('role');textEl.removeAttribute('aria-modal');
+  textEl.querySelector('.lede').insertAdjacentHTML('afterend','<p class="meta">This page is normally a 3D zoom from Earth down to a single bit. Your browser can’t run WebGL, so here it is as text.</p>');
+} else start();
+
+function start(){
+/* ---------- helpers ---------- */
+const clamp=(x,a=0,b=1)=>x<a?a:x>b?b:x;
+const sst=(a,b,x)=>{const t=clamp((x-a)/(b-a));return t*t*(3-2*t)};   // works for a>b too (q decreases as you zoom in)
+const band=(q,i0,i1,o0,o1)=>sst(i0,i1,q)*(1-sst(o0,o1,q));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const coarse=matchMedia('(pointer: coarse)').matches;
+let seed=7;const rnd=()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const gauss=()=>Math.sqrt(-2*Math.log(rnd()+1e-9))*Math.cos(6.2831853*rnd());
+
+/* ---------- renderer / camera ---------- */
+const cv=$('#gl');
+const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,powerPreference:'high-performance',preserveDrawingBuffer:RM});
+const PR=Math.min(devicePixelRatio||1,coarse?1.5:2);renderer.setPixelRatio(PR);
+const scene=new THREE.Scene();
+const D=10,FOV=38,DS=4.6,KAPPA=1.35;
+const cam=new THREE.PerspectiveCamera(FOV,1,.01,9000);cam.position.set(0,0,D);cam.lookAt(0,0,0);
+let VW=1,VH=1,F=1,visW=1,visH=1,portrait=false,qScreen=-.6;
+const LOWQ=coarse||Math.min(innerWidth,innerHeight)<700;
+
+/* ---------- sky backdrop ---------- */
+const skyMat=new THREE.ShaderMaterial({depthTest:false,depthWrite:false,uniforms:{uTop:{value:new THREE.Color()},uBot:{value:new THREE.Color()}},
+ vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,.9999,1.);}`,
+ fragmentShader:`uniform vec3 uTop,uBot;varying vec2 vUv;float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
+ void main(){vec3 c=mix(uBot,uTop,smoothstep(0.,1.,vUv.y));c+=(h(gl_FragCoord.xy)-.5)/255.;gl_FragColor=vec4(c,1.);}`});
+const sky=new THREE.Mesh(new THREE.PlaneGeometry(2,2),skyMat);sky.frustumCulled=false;sky.renderOrder=-100;scene.add(sky);
+const SKY=[[8,'#010207','#03050b'],[6,'#010207','#03050b'],[4.6,'#02030a','#07080c'],[3.3,'#03050b','#140c07'],[2.2,'#05070f','#1b1109'],[1.0,'#07080c','#0d0b0a'],[-.8,'#050607','#070707'],[-3.3,'#020508','#02070b'],[-5.4,'#02060a','#030a0e'],[-6.0,'#0a0602','#050301'],[-7.1,'#040302','#020201'],[-7.5,'#000000','#000000']].map(k=>[k[0],new THREE.Color(k[1]),new THREE.Color(k[2])]);
+function skyAt(q){for(let i=0;i<SKY.length-1;i++){const a=SKY[i],b=SKY[i+1];if(q<=a[0]&&q>=b[0]){const t=(a[0]-q)/(a[0]-b[0]);skyMat.uniforms.uTop.value.copy(a[1]).lerp(b[1],t);skyMat.uniforms.uBot.value.copy(a[2]).lerp(b[2],t);return}}
+ const k=q>SKY[0][0]?SKY[0]:SKY[SKY.length-1];skyMat.uniforms.uTop.value.copy(k[1]);skyMat.uniforms.uBot.value.copy(k[2]);}
+
+/* ---------- shared points shader ---------- */
+const PT_V=`attribute float aS;attribute vec3 aC;uniform float uSize,uGain,uPR,uAtt;varying vec3 vC;
+void main(){vec4 mv=modelViewMatrix*vec4(position,1.);gl_Position=projectionMatrix*mv;
+ float att=mix(1.,clamp(${D.toFixed(1)}/max(-mv.z,.001),.4,3.2),uAtt);float s=aS*uSize*att*uPR;
+ gl_PointSize=max(s,1.);vC=aC*uGain*clamp(s/1.6,.12,1.);}`;
+const PT_F=`varying vec3 vC;void main(){vec2 d=gl_PointCoord-.5;float r=dot(d,d)*4.;float a=exp(-r*6.)+.22*exp(-r*1.6);if(r>1.)discard;gl_FragColor=vec4(vC*a,1.);}`;
+const ptsMat=(u={})=>new THREE.ShaderMaterial({uniforms:{uSize:{value:1},uGain:{value:1},uPR:{value:PR},uAtt:{value:0},...u},vertexShader:PT_V,fragmentShader:PT_F,transparent:true,depthWrite:false,depthTest:false,blending:THREE.AdditiveBlending});
+function ptsGeo(pos,size,col){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('aS',new THREE.Float32BufferAttribute(size,1));g.setAttribute('aC',new THREE.Float32BufferAttribute(col,3));return g}
+
+/* ---------- stars ---------- */
+{const p=[],s=[],c=[];const n=LOWQ?1400:2600;
+ for(let i=0;i<n;i++){let v=new THREE.Vector3(gauss(),gauss(),gauss()).normalize();
+  if(rnd()<.35){const t=rnd()*6.283;v=new THREE.Vector3(Math.cos(t),.35*Math.sin(t)+.12*gauss(),Math.sin(t)*.9-.3+.1*gauss()).normalize()} // faint band
+  v.multiplyScalar(2400);p.push(v.x,v.y,v.z);const m=Math.pow(rnd(),5);s.push(.7+2.4*m);const w=rnd();c.push(...(w<.1?[1,.82,.62]:w<.25?[.7,.8,1]:[.92,.94,1]).map(x=>x*(.25+.9*m)))}
+ var stars=new THREE.Points(ptsGeo(p,s,c),ptsMat());stars.material.depthTest=true;stars.renderOrder=1;scene.add(stars)}
+
+/* ---------- geography (approximate coastline of the northern Aegean, lat/lon) ---------- */
+const W0=[40.6216,22.9550];                     // the zoom's focal point: one window in Thessaloniki
+const KX=111320*Math.cos(W0[0]*Math.PI/180),KY=110574;
+const g2m=(la,lo)=>[(lo-W0[1])*KX,(la-W0[0])*KY];
+const COAST=[39.2,23.25,39.3,23.22,39.4,23.1,39.52,22.97,39.65,22.86,39.8,22.76,39.9,22.68,40,22.61,40.06,22.575,40.12,22.56,40.2,22.575,40.27,22.6,40.33,22.615,40.37,22.645,40.39,22.64,40.42,22.615,40.465,22.585,40.485,22.62,40.49,22.665,40.515,22.68,40.53,22.7,40.51,22.735,40.52,22.755,40.55,22.775,40.58,22.8,40.605,22.825,40.625,22.855,40.638,22.885,40.636,22.9,40.626,22.903,40.624,22.915,40.629,22.921,40.633,22.927,40.632,22.933,40.6355,22.9365,40.6325,22.941,40.629,22.945,40.6264,22.9484,40.623,22.9505,40.619,22.952,40.613,22.954,40.6077,22.956,40.6,22.953,40.592,22.949,40.585,22.945,40.579,22.938,40.5755,22.9345,40.5725,22.941,40.566,22.951,40.556,22.96,40.542,22.967,40.53,22.972,40.52,22.976,40.512,22.97,40.506,22.95,40.501,22.93,40.497,22.9,40.495,22.875,40.499,22.845,40.504,22.82,40.49,22.825,40.475,22.845,40.462,22.862,40.44,22.875,40.415,22.885,40.385,22.898,40.355,22.94,40.325,23,40.307,23.065,40.282,23.15,40.255,23.23,40.238,23.285,40.205,23.315,40.15,23.315,40.1,23.305,40.05,23.33,40,23.34,39.965,23.36,39.955,23.42,39.945,23.52,39.928,23.62,39.925,23.695,39.965,23.66,40,23.59,40.04,23.5,40.08,23.44,40.13,23.39,40.19,23.345,40.23,23.38,40.26,23.45,40.265,23.5,40.24,23.58,40.22,23.66,40.16,23.715,40.1,23.77,40.03,23.81,39.98,23.87,39.95,23.93,39.98,23.97,40.05,23.99,40.12,23.95,40.18,23.86,40.2,23.79,40.26,23.74,40.32,23.715,40.355,23.8,40.37,23.9,40.33,23.98,40.27,24.08,40.21,24.2,40.15,24.29,40.13,24.34,40.16,24.39,40.22,24.32,40.28,24.22,40.33,24.12,40.37,24.02,40.385,23.93,40.397,23.88,40.45,23.86,40.515,23.83,40.59,23.79,40.64,23.73,40.665,23.7,40.705,23.68,40.723,23.715,40.76,23.77,40.785,23.85,40.82,24,40.86,24.15,40.9,24.28,40.937,24.41,40.97,24.6,40.98,24.9,42.2,24.9,42.2,20.8,39.2,20.8];
+const THASOS=[];for(let i=0;i<18;i++){const a=i/18*6.283,r=(11+2.5*Math.sin(a*3+1))/111;THASOS.push(40.68+r*Math.sin(a),24.66+r*Math.cos(a)*1.32)}
+const LAKES=[];
+function landPath(ctx,P){ctx.beginPath();for(const poly of [COAST,THASOS]){for(let i=0;i<poly.length;i+=2){const [x,y]=P(...g2m(poly[i],poly[i+1]));i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath()}}
+function mapCanvas(N,half,land,stroke,extras){
+ const c=document.createElement('canvas');c.width=c.height=N;const x=c.getContext('2d',{willReadFrequently:!stroke&&!extras});
+ const P=(mx,my)=>[(mx/half*.5+.5)*N,(.5-my/half*.5)*N];
+ if(stroke)x.filter=`blur(${Math.max(1,N/900)}px)`;landPath(x,P);x.fillStyle=land;x.fill();
+ x.globalCompositeOperation='destination-out';for(const [la,lo,rx,ry,r] of LAKES){const [px,py]=P(...g2m(la,lo));x.beginPath();x.ellipse(px,py,rx/half*.5*N,ry/half*.5*N,r,0,6.283);x.fill()}
+ x.globalCompositeOperation='source-over';x.filter='none';
+ if(extras)extras(x,P,N,half);
+ if(stroke){landPath(x,P);x.strokeStyle=stroke;x.lineWidth=Math.max(1,N/1400);x.stroke()}
+ return {c,x,P};
+}
+const regMask=mapCanvas(1024,150000,'#fff').x.getImageData(0,0,1024,1024).data;
+const cityMask=mapCanvas(2048,8500,'#fff').x.getImageData(0,0,2048,2048).data;
+function isLand(mx,my){
+ if(Math.abs(mx)<8400&&Math.abs(my)<8400){const i=Math.floor((mx/8500*.5+.5)*2048),j=Math.floor((.5-my/8500*.5)*2048);return cityMask[(j*2048+i)*4+3]>128}
+ const i=Math.floor((mx/150000*.5+.5)*1024),j=Math.floor((.5-my/150000*.5)*1024);if(i<0||j<0||i>1023||j>1023)return false;return regMask[(j*1024+i)*4+3]>128}
+function radialFade(x,N,a,b){x.globalCompositeOperation='destination-in';const g=x.createRadialGradient(N/2,N/2,N/2*a,N/2,N/2,N/2*b);g.addColorStop(0,'#000');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,N,N);x.globalCompositeOperation='source-over'}
+
+/* ---------- layers ---------- */
+const layers=[];
+function layer(L){const g=new THREE.Group();g.userData.L=L;scene.add(g);layers.push(g);return g}
+
+/* EARTH at night (10^7 m units) */
+const earth=layer(7);const R=.6371;
+const la0=W0[0]*Math.PI/180,lo0=W0[1]*Math.PI/180;
+const uE=new THREE.Vector3(-Math.sin(lo0),Math.cos(lo0),0),uN=new THREE.Vector3(-Math.sin(la0)*Math.cos(lo0),-Math.sin(la0)*Math.sin(lo0),Math.cos(la0)),uU=new THREE.Vector3(Math.cos(la0)*Math.cos(lo0),Math.cos(la0)*Math.sin(lo0),Math.sin(la0));
+const SUN=new THREE.Vector3(.62,.25,-.74).normalize();
+const earthMat=new THREE.ShaderMaterial({transparent:true,uniforms:{uA:{value:1},uE:{value:uE},uN:{value:uN},uU:{value:uU},uSun:{value:SUN}},
+ vertexShader:`varying vec3 vO,vWN,vV;void main(){vO=normalize(position);vec4 wp=modelMatrix*vec4(position,1.);vWN=normalize(mat3(modelMatrix)*normal);vV=cameraPosition-wp.xyz;gl_Position=projectionMatrix*viewMatrix*wp;}`,
+ fragmentShader:`uniform float uA;uniform vec3 uE,uN,uU,uSun;varying vec3 vO,vWN,vV;
+ float h3(vec3 p){p=fract(p*.3183099+.1);p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
+ float n3(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);
+  return mix(mix(mix(h3(i),h3(i+vec3(1,0,0)),f.x),mix(h3(i+vec3(0,1,0)),h3(i+vec3(1,1,0)),f.x),f.y),mix(mix(h3(i+vec3(0,0,1)),h3(i+vec3(1,0,1)),f.x),mix(h3(i+vec3(0,1,1)),h3(i+vec3(1,1,1)),f.x),f.y),f.z);}
+ float fbm(vec3 p){float a=.5,s=0.;for(int i=0;i<5;i++){s+=a*n3(p);p=p*2.03+vec3(1.7,9.2,3.1);a*=.5;}return s;}
+ void main(){vec3 n=normalize(vO);vec3 p=n.x*uE+n.y*uN+n.z*uU;
+  float mu=clamp(dot(normalize(vWN),normalize(vV)),0.,1.);float sd=dot(n,uSun);
+  vec3 q=p*2.4;float c=fbm(q+.8*vec3(fbm(q*1.3),fbm(q*1.3+4.),0.));float cl=smoothstep(.5,.78,c)*smoothstep(.06,.3,distance(n,vec3(0,0,1)));
+  float moon=.5+.5*dot(n,normalize(vec3(-.55,.55,.63)));
+  vec3 col=vec3(.008,.012,.022)+vec3(.006,.009,.016)*moon+vec3(.045,.056,.085)*moon*cl;
+  float day=smoothstep(-.03,.2,sd);vec3 dc=mix(vec3(.05,.13,.28),vec3(.86,.89,.94),cl)*(.35+.65*smoothstep(0.,.35,sd));col=mix(col,dc,day);
+  col+=vec3(.55,.25,.08)*exp(-abs(sd-.015)*40.)*.35*(.3+cl);
+  col+=vec3(.1,.26,.68)*pow(1.-mu,3.5)*(.07+2.4*max(sd+.12,0.));
+  gl_FragColor=vec4(col,uA);}`});
+const earthMesh=new THREE.Mesh(new THREE.SphereGeometry(R,160,120),earthMat);earthMesh.position.z=-R;earthMesh.renderOrder=-10;earth.add(earthMesh);
+const atmoMat=new THREE.ShaderMaterial({transparent:true,side:THREE.BackSide,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{uA:{value:1},uSun:{value:SUN}},
+ vertexShader:`varying vec3 vWN,vV,vO;void main(){vO=normalize(position);vec4 wp=modelMatrix*vec4(position,1.);vWN=normalize(mat3(modelMatrix)*normal);vV=normalize(cameraPosition-wp.xyz);gl_Position=projectionMatrix*viewMatrix*wp;}`,
+ fragmentShader:`uniform float uA;uniform vec3 uSun;varying vec3 vWN,vV,vO;void main(){float k=-dot(normalize(vWN),normalize(vV));float i=smoothstep(0.,.3,k);i=i*i*i;
+ float s=.06+2.4*max(dot(vO,uSun)+.2,0.);gl_FragColor=vec4(vec3(.22,.46,1.)*i*s*.9*uA,1.);}`});
+const atmo=new THREE.Mesh(new THREE.SphereGeometry(R*1.028,96,72),atmoMat);atmo.position.z=-R;earth.add(atmo);
+const lone=new THREE.Points(ptsGeo([0,0,0],[1],[1,1,1]),new THREE.ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{uA:{value:1},uPR:{value:PR}},
+ vertexShader:`uniform float uPR;void main(){gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);gl_PointSize=34.*uPR;}`,
+ fragmentShader:`uniform float uA;void main(){vec2 d=gl_PointCoord-.5;float r=dot(d,d)*4.;vec3 c=vec3(1.,.95,.84)*exp(-r*90.)+vec3(1.,.58,.22)*exp(-r*9.)*.55+vec3(1.,.45,.15)*exp(-r*2.5)*.12;gl_FragColor=vec4(c*uA,1.);}`}));
+lone.renderOrder=5;earth.add(lone);
+
+/* GROUND: northern Aegean and Thessaloniki (10^5 m units) */
+const ground=layer(5);
+const RN=LOWQ?1024:2048,CN=LOWQ?1024:2048;
+const glow=(x,P,N,half,pts)=>{x.globalCompositeOperation='source-atop';for(const [la,lo,r,a] of pts){const [px,py]=P(...g2m(la,lo));const g=x.createRadialGradient(px,py,0,px,py,r/half*.5*N);g.addColorStop(0,`rgba(255,130,50,${a})`);g.addColorStop(.4,`rgba(255,110,40,${a*.35})`);g.addColorStop(1,'rgba(255,100,30,0)');x.fillStyle=g;x.fillRect(0,0,N,N)}x.globalCompositeOperation='source-over'};
+const reg=mapCanvas(RN,150000,'#070a10','rgba(150,180,220,.05)',(x,P,N,half)=>{
+ glow(x,P,N,half,[[40.625,22.95,14000,.16],[40.271,22.507,5000,.06],[40.524,22.202,5000,.05],[40.792,22.408,4000,.04],[40.937,24.41,5000,.05],[41.09,23.55,5000,.05]]);
+ });
+radialFade(reg.x,RN,.45,1);
+const cityC=mapCanvas(CN,8500,'rgba(14,19,28,.7)','rgba(150,180,220,.04)',(x,P,N,half)=>{
+ glow(x,P,N,half,[[40.635,22.945,2600,.11],[40.655,22.955,1800,.07],[40.662,22.912,2600,.07],[40.612,22.972,2200,.08],[40.586,22.955,2000,.07],[40.598,22.99,1500,.05]]);
+ x.globalCompositeOperation='source-atop';const [px,py]=P(...g2m(40.652,22.995));const g=x.createRadialGradient(px,py,0,px,py,1900/half*.5*N);g.addColorStop(0,'rgba(0,0,0,.55)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,N,N);x.globalCompositeOperation='source-over'});
+radialFade(cityC.x,CN,.55,1);
+const tex=(c,srgb=true)=>{const t=new THREE.CanvasTexture(c);if(srgb)t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=4;return t};
+const regMesh=new THREE.Mesh(new THREE.PlaneGeometry(3,3),new THREE.MeshBasicMaterial({map:tex(reg.c),transparent:true,depthWrite:false,depthTest:false}));regMesh.renderOrder=1;ground.add(regMesh);
+const cityMesh=new THREE.Mesh(new THREE.PlaneGeometry(.17,.17),new THREE.MeshBasicMaterial({map:tex(cityC.c),transparent:true,depthWrite:false,depthTest:false}));cityMesh.renderOrder=2;ground.add(cityMesh);
+// lights
+{const P=[],S=[],C=[];const PAL=[[1,.58,.22],[1,.78,.52],[.86,.9,1]];
+ const add=(mx,my,s,ci,b)=>{P.push(mx/1e5,my/1e5,0);S.push(s);const c=PAL[ci];C.push(c[0]*b,c[1]*b,c[2]*b)};
+ const pick=w=>{const r=rnd();return r<w[0]?0:r<w[0]+w[1]?1:2};
+ const DENS=LOWQ?.55:1;
+ const TOWNS=[[40.271,22.507,.5,2.2],[40.27,22.595,.14,1.1],[40.1,22.5,.1,.9],[40.06,22.565,.07,.7],[40.005,22.595,.06,.7],[40.466,22.583,.05,.6],[40.418,22.615,.06,.7],[40.37,22.58,.04,.5],[40.628,22.444,.2,1.4],[40.524,22.202,.45,2],[40.629,22.068,.18,1.3],[40.792,22.408,.35,1.8],[40.73,22.6,.07,.8],[40.993,22.875,.3,1.6],[40.75,23.07,.15,1.1],[40.627,22.73,.06,.7],[40.465,22.862,.1,.9],[40.428,22.93,.1,.9],[40.312,23.063,.08,.9],[40.24,23.283,.12,1],[40.378,23.443,.08,.8],[40.078,23.445,.05,.8],[39.99,23.61,.04,.7],[40.005,23.575,.03,.6],[39.925,23.67,.02,.5],[40.05,23.41,.04,.6],[40.1,23.31,.02,.5],[40.035,23.35,.02,.5],[40.13,23.4,.03,.5],[40.195,23.33,.04,.6],[40.225,23.665,.05,.6],[40.095,23.78,.05,.6],[40.09,23.975,.03,.5],[39.98,23.88,.01,.3],[40.19,23.78,.02,.4],[40.328,23.98,.02,.4],[40.397,23.877,.04,.6],[40.383,23.925,.02,.4],[40.21,24.225,.006,.2],[40.253,24.245,.006,.2],[40.515,23.83,.02,.4],[40.59,23.79,.02,.4],[40.665,23.7,.04,.6],[40.723,23.71,.05,.7],[40.62,23.44,.02,.4],[40.487,23.593,.03,.5],[41.09,23.55,.35,1.8],[40.937,24.41,.4,1.8],[40.84,24.3,.03,.5],[40.915,24.25,.03,.5],[40.91,23.5,.06,.6],[40.82,23.36,.03,.5],[40.78,24.71,.04,.6],[39.64,22.42,.8,2.5],[40.36,22.25,.05,.6]];
+ for(const [la,lo,w,r] of TOWNS){const [cx,cy]=g2m(la,lo);const n=Math.round(w*900*DENS)+3;
+  for(let i=0;i<n;i++){const mx=cx+gauss()*r*600,my=cy+gauss()*r*600;if(!isLand(mx,my))continue;add(mx,my,.6+rnd()*.9,pick([.72,.22]),.55+rnd()*.5)}}
+ const ROADS=[[40.655,22.86,40.62,22.7,40.53,22.61,40.4,22.565,40.27,22.535,40.12,22.55,39.98,22.6,39.8,22.66],[40.66,22.84,40.63,22.62,40.56,22.36,40.52,22.2],[40.6,23.0,40.65,23.2,40.67,23.45,40.72,23.65,40.79,23.85,40.87,24.1,40.935,24.38],[40.56,23.01,40.45,23.12,40.33,23.23,40.25,23.28,40.2,23.33],[40.67,22.93,40.76,22.92,40.87,22.9,40.99,22.88],[40.68,22.95,40.74,23.06,40.85,23.3,41.08,23.54]];
+ for(const r of ROADS)for(let k=0;k<r.length-2;k+=2){const [x0,y0]=g2m(r[k],r[k+1]),[x1,y1]=g2m(r[k+2],r[k+3]);const L=Math.hypot(x1-x0,y1-y0),n=Math.floor(L/(LOWQ?600:380));
+  for(let i=0;i<n;i++){const t=i/n,x=lerp(x0,x1,t)+gauss()*25,y=lerp(y0,y1,t)+gauss()*25;if(isLand(x,y))add(x,y,.55,pick([.5,.2]),.45)}}
+ for(const [la,lo] of [[40.52,22.83],[40.55,22.86],[40.575,22.88],[40.49,22.88],[40.44,22.8],[40.6,22.89],[40.58,22.905],[40.47,22.79]]){const [x,y]=g2m(la,lo);add(x,y,.9,2,.9)}
+ // Thessaloniki: bent street grids of dim sodium lamps, brighter broken avenues
+ const CD=[[40.635,22.945,1.5,1],[40.655,22.955,1.1,.8],[40.662,22.912,1.7,.9],[40.673,22.94,1,.7],[40.612,22.972,1.4,.95],[40.586,22.955,1.3,.9],[40.598,22.99,1,.6],[40.588,23.03,.8,.4],[40.548,23.02,.9,.35],[40.652,22.85,1.8,.3],[40.53,22.97,1,.22],[40.5,22.93,1.2,.45],[40.47,22.865,.7,.25],[40.43,22.93,.8,.2]].map(([la,lo,s,w])=>[...g2m(la,lo),s*1000,w]);
+ const [fx,fy]=g2m(40.652,22.995),[ax,ay]=g2m(40.632,22.957);
+ const dens=(x,y)=>{let d=0;for(const [cx,cy,s,w] of CD){const dx=x-cx,dy=y-cy;d+=w*Math.exp(-(dx*dx+dy*dy)/(2*s*s))}
+  const f=Math.hypot(x-fx,y-fy),a=Math.hypot(x-ax,y-ay);return Math.min(1,d)*(f<1800?.08+.92*(f/1800)**3:1)*(a<380?.45:1)};
+ const hsh=(a,b)=>{let n=(Math.imul(a|0,374761393)+Math.imul(b|0,668265263))|0;n=Math.imul(n^(n>>>13),1274126177);return((n^(n>>>16))>>>0)/4294967296};
+ const vn=(x,y)=>{const xi=Math.floor(x),yi=Math.floor(y),u=x-xi,v=y-yi,su=u*u*(3-2*u),sv=v*v*(3-2*v);return lerp(lerp(hsh(xi,yi),hsh(xi+1,yi),su),lerp(hsh(xi,yi+1),hsh(xi+1,yi+1),su),sv)};
+ const H=9800,st=LOWQ?24:16;
+ for(const [gap,dir] of [[LOWQ?118:96,0],[LOWQ?132:110,1]])for(let u=-H,ui=0;u<H;u+=gap*(.8+.4*hsh(ui,dir+7)),ui++){const avenue=ui%7===3;
+  for(let t=-H;t<H;t+=st){if(hsh(ui*131+dir,Math.floor(t/130))>.8)continue;
+   const lx=dir?u:t,ly=dir?t:u,A=-.7+.5*(vn(lx/5200+3,ly/5200)-.5),ca=Math.cos(A),sa=Math.sin(A);
+   let x=lx*ca-ly*sa,y=lx*sa+ly*ca;x+=70*(vn(x/1100,y/1100)-.5);y+=70*(vn(x/1100+9,y/1100+4)-.5);
+   if(Math.abs(x)>9600||Math.abs(y)>11500||!isLand(x,y))continue;
+   const d=dens(x,y);if(d<.03||rnd()>d*(.3+.9*vn(x/700+2,y/700+5))*.95)continue;
+   const hot=avenue&&vn(ui*.37,t/900)>.42;
+   const lv=.55+.9*vn(ui*.61+dir*9,t/420);add(x+gauss()*2.5,y+gauss()*2.5,hot?1.05:.78+rnd()*.3,hot?pick([.5,.3]):pick([.86,.1]),((hot?.85:.36)+rnd()*.25)*lv);
+   if(rnd()<.05)add(x+gauss()*35,y+gauss()*35,.7+rnd()*.5,pick([.35,.4]),.5+rnd()*.5)}}
+ const MAJ=[[40.6355,22.9365,40.6264,22.9484,40.613,22.954,40.6,22.953,40.585,22.945],[40.644,22.927,40.6365,22.9475,40.63,22.957,40.623,22.964,40.614,22.975],[40.644,22.927,40.66,22.915,40.675,22.905,40.69,22.895],[40.644,22.927,40.648,22.905,40.655,22.88,40.66,22.86],[40.62,22.955,40.6,22.96,40.585,22.962,40.56,22.968],[40.69,22.915,40.678,22.945,40.667,22.965,40.645,22.99,40.61,23.0,40.585,23.005,40.555,22.99],[40.6,22.97,40.575,22.995,40.548,23.02]];
+ for(const r of MAJ)for(let k=0;k<r.length-2;k+=2){const [x0,y0]=g2m(r[k],r[k+1]),[x1,y1]=g2m(r[k+2],r[k+3]);const L=Math.hypot(x1-x0,y1-y0),n=Math.floor(L/(LOWQ?18:12));
+  for(let i=0;i<n;i++){const t=i/n;add(lerp(x0,x1,t)+gauss()*3,lerp(y0,y1,t)+gauss()*3,1,pick([.55,.3]),.62)}}
+ {const PORT=[40.638,22.885,40.636,22.9,40.626,22.903,40.624,22.915,40.629,22.921,40.633,22.927];for(let k=0;k<PORT.length-2;k+=2){const [x0,y0]=g2m(PORT[k],PORT[k+1]),[x1,y1]=g2m(PORT[k+2],PORT[k+3]);const n=Math.floor(Math.hypot(x1-x0,y1-y0)/30);for(let i=0;i<n;i++){const t=i/n;add(lerp(x0,x1,t),lerp(y0,y1,t),.9,2,.8)}}}
+ for(let k=0;k<2;k++){const [x0,y0]=g2m(40.5214,22.958),[x1,y1]=g2m(40.518,22.984);for(let i=0;i<50;i++){const t=i/49;add(lerp(x0,x1,t),lerp(y0,y1,t)+(k?22:-22),.6,2,.8)}}
+ var cityPts=new THREE.Points(ptsGeo(P,S,C),ptsMat({uAtt:{value:1}}));cityPts.renderOrder=3;ground.add(cityPts)}
+
+/* HOME: a street, a lit window, a room, a desk (1 m units; the laptop screen is the focal point) */
+const home=layer(0);
+const ST=-11.07;
+const facMat=new THREE.ShaderMaterial({transparent:true,uniforms:{uA:{value:1}},
+ vertexShader:`varying vec2 vP;void main(){vP=position.xy;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+ fragmentShader:`uniform float uA;varying vec2 vP;
+ float h1(float n){return fract(sin(n*91.345)*47453.5453);}
+ float h2(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+ float bx(vec2 p,vec2 a,vec2 b){vec2 w=fwidth(p)*.7;vec2 s=smoothstep(a-w,a+w,p)*(1.-smoothstep(b-w,b+w,p));return s.x*s.y;}
+ void main(){vec2 p=vP;float y=p.y;const float ST=${ST.toFixed(2)},GF=4.2,FH=3.,BW=14.;
+  float bxp=p.x+BW*.5;float bi=floor(bxp/BW);float lx=bxp-bi*BW;float r=h1(bi+11.);
+  float nf=bi==0.?6.:3.+floor(r*6.);float roof=ST+GF+nf*FH;
+  float lxL=mod(p.x-3.,22.)-11.;float dyL=y-(ST+6.4);float lg=exp(-(lxL*lxL)/70.)*exp(-abs(dyL)/5.);
+  vec3 c;float a;
+  if(y>roof){float par=step(y,roof+.8);
+   float sol=bx(vec2(lx,y-roof),vec2(3.+r*5.,.8),vec2(5.+r*5.,1.9))*step(.45,h1(bi+4.));
+   float ant=bx(vec2(lx,y-roof),vec2(9.+r*3.,.8),vec2(9.07+r*3.,3.6))*step(.6,h1(bi+6.));
+   float solid=max(max(par,sol),ant);float hz=clamp(exp(-(y-ST-14.)/26.),0.,1.);
+   a=max(solid,hz*.55);c=mix(vec3(.2,.1,.04),vec3(.03,.027,.025),solid);}
+  else if(y<ST){float dy=ST-y;a=1.-smoothstep(3.,8.,dy);float side=step(dy,2.4);
+   c=mix(vec3(.026,.024,.023),vec3(.05,.046,.042),side);c=mix(c,vec3(.1,.094,.088),1.-smoothstep(0.,.07,abs(dy-2.4)));
+   c+=vec3(.8,.42,.14)*exp(-(lxL*lxL)/(14.+dy*7.))*exp(-dy/3.2)*.4;}
+  else{a=1.;vec3 wall=mix(vec3(.05,.047,.044),vec3(.085,.078,.07),h1(bi*3.7+1.));wall*=.9+.1*h2(floor(p*vec2(2.,3.)));
+   c=wall*(.55+.45*smoothstep(0.,.15,lx)*smoothstep(BW,BW-.15,lx));
+   if(y<ST+GF){float bw=BW/3.;float bay=floor(lx/bw);float bl=lx-bay*bw;float yy=y-ST;float g=bx(vec2(bl,yy),vec2(.35,.25),vec2(bw-.35,3.35));
+    float lit=step(.7,h2(vec2(bi,bay)+3.));float sl=mix(.8+.2*step(.5,fract(yy*5.)),.9,smoothstep(.1,.3,fwidth(yy*5.)));
+    float mul=1.-.7*bx(vec2(fract(bl/1.1),yy),vec2(.47,0.),vec2(.53,4.));
+    vec3 shop=mix(vec3(1.,.8,.52),vec3(.8,.9,1.),step(.8,h2(vec2(bi,bay)+8.)))*(.1+.2*yy/3.35)*mul;c=mix(c,lit>.5?shop:vec3(.075,.075,.08)*sl,g);
+    c=mix(c,vec3(.12,.11,.1),bx(vec2(lx,yy),vec2(.2,3.5),vec2(BW-.2,3.75)));}
+   else{float fy=y-(ST+GF);float fi=floor(fy/FH);float ly=fy-fi*FH;float ow=BW/3.;float oi=floor(lx/ow);float ol=lx-oi*ow-ow*.5;
+    vec2 id=vec2(bi*5.+oi,fi);float rr=h2(id);bool tf=bi==0.&&fi==2.;
+    if(tf&&oi==1.&&abs(ol)<.6&&ly<2.3)discard;
+    float op=bx(vec2(ol,ly),vec2(-.6,.02),vec2(.6,2.3));
+    float warm=step(.83,rr),tv=step(.79,rr)*(1.-warm);vec3 inn=vec3(.012,.012,.016);
+    float cur=.72+.28*sin(ol*9.+rr*20.);
+    inn=mix(inn,vec3(1.,.63,.3)*(.42+.4*h2(id+7.))*cur*(.75+.25*ly/2.3),warm);inn=mix(inn,vec3(.3,.4,.78)*.32,tv);
+    float sh=floor(h2(id+2.)*4.)/4.;float shut=step(2.3*(1.-sh),ly);
+    float sl=mix(.85+.15*step(.5,fract(ly*12.)),.92,smoothstep(.1,.3,fwidth(ly*12.)));inn=mix(inn,vec3(.1,.095,.09)*sl,shut);
+    c=mix(c,inn,op);
+    if(!tf){float pk=floor(lx/ow+.5);float dx=lx-pk*ow;
+     float ac=bx(vec2(dx,ly),vec2(-.42,.2),vec2(.42,.74))*step(.5,h2(vec2(bi*5.+pk,fi)+5.))*step(.5,pk)*step(pk,2.5);
+     float fan=1.-smoothstep(.15,.18,length(vec2(dx-.12,ly-.47)));
+     c=mix(c,vec3(.15,.15,.145)*(1.-.4*fan)+vec3(.5,.25,.08)*lg*.25,ac);
+     c=mix(c,vec3(.016,.024,.016),(1.-smoothstep(.34,.42,length(vec2(ol-.98,(ly-.55)*.8))))*step(.72,h2(id+9.)));
+     float slab=bx(vec2(lx,ly),vec2(.25,0.),vec2(BW-.25,.18));float rz=bx(vec2(lx,ly),vec2(.25,.18),vec2(BW-.25,1.));
+     float fb=fract(lx*7.);float bars=1.-smoothstep(.06,.1,abs(fb-.5));bars=mix(bars,.14,smoothstep(.25,.7,fwidth(lx*7.)));
+     float top=1.-smoothstep(0.,.035,abs(ly-.97));top=mix(top,.3,smoothstep(.02,.06,fwidth(ly)));
+     c=mix(c,vec3(.03,.03,.032)+vec3(.6,.3,.1)*lg*.15,clamp(bars*.9+top,0.,1.)*rz);
+     c=mix(c,vec3(.12,.11,.1)+vec3(.9,.45,.15)*lg*.35,slab);}}
+   c+=vec3(.55,.26,.08)*lg*.22;}
+  vec2 hd=vec2(lxL,dyL)/vec2(.45,.2);float lh=exp(-dot(hd,hd));c+=vec3(1.,.8,.5)*lh*1.6;a=max(a,clamp(lh*1.6,0.,1.));
+  gl_FragColor=vec4(c,a*uA);}`});
+const facade=new THREE.Mesh(new THREE.PlaneGeometry(3000,700),facMat);facade.position.z=3;facade.renderOrder=5;home.add(facade);
+const lam=(c,o={})=>new THREE.MeshLambertMaterial({color:c,...o});
+const box=(w,h,d,m,x,y,z,ry=0)=>{const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);b.position.set(x,y,z);b.rotation.y=ry;home.add(b);return b};
+const FL=-.87;
+const metal=lam('#2a2826'),frameM=lam('#3a3632'),conc=lam('#6b645b');
+box(13.5,.18,1.25,conc,0,FL-.09,3.625);box(13.5,.035,.035,metal,0,FL+.72,4.23);
+{const n=97,bars=new THREE.InstancedMesh(new THREE.BoxGeometry(.014,.72,.014),metal,n);const m=new THREE.Matrix4();for(let i=0;i<n;i++){m.makeTranslation(-6.72+i*.14,FL+.36,4.23);bars.setMatrixAt(i,m)}home.add(bars)}
+box(.06,2.3,.25,frameM,-.63,FL+1.15,2.875);box(.06,2.3,.25,frameM,.63,FL+1.15,2.875);box(1.32,.3,.25,frameM,0,FL+2.45,2.875);
+{const c=document.createElement('canvas');c.width=256;c.height=64;const x=c.getContext('2d');for(let i=0;i<256;i++){x.fillStyle=`rgba(255,248,236,${.35+.35*Math.sin(i/9)**2})`;x.fillRect(i,0,1,64)}
+ const cur=new THREE.Mesh(new THREE.PlaneGeometry(1.0,2.25),lam('#f1e5d2',{map:tex(c),transparent:true,opacity:.55,side:THREE.DoubleSide,depthWrite:false}));cur.position.set(-.97,FL+1.14,2.62);home.add(cur)}
+const wallM=lam('#74695d'),floorM=lam('#4a3526'),ceilM=lam('#9a8f82');
+{const pl=(w,h,m,x,y,z,rx,ry)=>{const p=new THREE.Mesh(new THREE.PlaneGeometry(w,h),m);p.position.set(x,y,z);p.rotation.set(rx,ry,0);home.add(p)};
+ pl(3.8,3.2,floorM,0,FL,1.2,-Math.PI/2,0);pl(3.8,3.2,ceilM,0,FL+2.7,1.2,Math.PI/2,0);pl(3.2,2.7,wallM,-1.9,FL+1.35,1.2,0,Math.PI/2);pl(3.2,2.7,wallM,1.9,FL+1.35,1.2,0,-Math.PI/2);pl(3.8,2.7,wallM,0,FL+1.35,-.4,0,0)}
+const wood=lam('#6a4c34');box(1.4,.035,.62,wood,0,-.1375,-.09);for(const [x,z] of [[-.66,-.37],[.66,-.37],[-.66,.19],[.66,.19]])box(.04,.715,.04,wood,x,FL+.3575,z);
+{const c=document.createElement('canvas');c.width=512;c.height=356;const x=c.getContext('2d');x.fillStyle='#6f737a';x.fillRect(0,0,512,356);x.fillStyle='#2a2c31';
+ for(let r=0;r<6;r++)for(let k=0;k<14;k++){const w=r===5&&k>4&&k<9?0:30;if(w)x.fillRect(22+k*34,24+r*34,w,28)}x.fillRect(22+5*34,24+5*34,4*34-4,28);x.fillStyle='#62666d';x.fillRect(176,250,160,90);
+ const base=new THREE.Mesh(new THREE.BoxGeometry(.31,.016,.215),[metal,metal,lam('#ffffff',{map:tex(c)}),metal,metal,metal]);base.position.set(0,-.112,.1075);home.add(base)}
+box(.31,.205,.006,lam('#5d6168'),0,-.0015,-.004);
+box(.21,.02,.297,lam('#d9d2c3'),.47,-.11,-.06,.18);
+box(.07,.09,.07,lam('#2d3b46'),.3,-.075,.03);
+{const b=new THREE.Mesh(new THREE.CylinderGeometry(.07,.075,.02,28),metal);b.position.set(-.5,-.11,-.22);home.add(b);
+ const pole=new THREE.Mesh(new THREE.CylinderGeometry(.008,.008,.42,8),metal);pole.position.set(-.5,.1,-.22);home.add(pole);
+ const sh=new THREE.Mesh(new THREE.CylinderGeometry(.06,.12,.14,32,1,true),lam('#d8cbb5',{side:THREE.DoubleSide,emissive:'#a8742e'}));sh.position.set(-.5,.33,-.2);home.add(sh);
+ const bulb=new THREE.Mesh(new THREE.SphereGeometry(.028,16,12),new THREE.MeshBasicMaterial({color:'#fff1d6'}));bulb.position.set(-.5,.29,-.2);home.add(bulb)}
+const lampL=new THREE.PointLight('#ffb36b',1,0,2);lampL.position.set(-.5,.27,-.2);home.add(lampL);
+const scrL=new THREE.PointLight('#a9dcff',1,0,2);scrL.position.set(0,.01,.2);home.add(scrL);
+const strL=new THREE.PointLight('#ff8a3a',1,0,2);strL.position.set(1.5,-8,9);home.add(strL);
+scene.add(new THREE.HemisphereLight('#3b4866','#3a2412',.55));
+// the screen: seven tabs, then its pixels
+const TW=LOWQ?800:1280,TH=TW*5/8;
+const tabCanv=SITES.map(()=>{const c=document.createElement('canvas');c.width=TW;c.height=TH;const x=c.getContext('2d');x.fillStyle='#1c1f25';x.fillRect(0,0,TW,TH);return c});
+const tabTex=tabCanv.map(c=>tex(c,false));
+const scrMat=new THREE.ShaderMaterial({uniforms:{uA:{value:tabTex[0]},uB:{value:tabTex[1]},uMix:{value:0},uPix:{value:0},uTex:{value:new THREE.Vector2(TW,TH)},uAlpha:{value:1},uRes:{value:new THREE.Vector2(1,1)}},transparent:true,
+ vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+ fragmentShader:`uniform sampler2D uA,uB;uniform float uMix,uPix,uAlpha;uniform vec2 uTex,uRes;varying vec2 vUv;
+ void main(){vec3 c=mix(texture2D(uA,vUv).rgb,texture2D(uB,vUv).rgb,uMix);
+  if(uPix>0.){vec2 t=vUv*uTex;vec2 f=fract(t);vec2 cell=(floor(t)+.5)/uTex;vec3 pc=mix(texture2D(uA,cell).rgb,texture2D(uB,cell).rgb,uMix);
+   float sx=f.x*3.;float k=floor(sx);float fs=fract(sx);vec3 m=k<.5?vec3(1.,.08,.05):k<1.5?vec3(.05,1.,.1):vec3(.08,.12,1.);
+   float e=smoothstep(.1,.24,fs)*smoothstep(.9,.76,fs)*smoothstep(.04,.12,f.y)*smoothstep(.96,.88,f.y);
+   float big=1.-smoothstep(.06,.16,fwidth(t.x));vec2 sc=gl_FragCoord.xy/uRes-.5;
+   c=mix(c,max(pc,vec3(.05))*m*e*1.12*(1.-.9*dot(sc,sc)),uPix*big);}
+  gl_FragColor=vec4(c,uAlpha);}`});
+const scr=new THREE.Mesh(new THREE.PlaneGeometry(.292,.1825),scrMat);scr.position.set(-.5/TW*.292,-.5/TH*.1825,0);home.add(scr);
+const homeLit=home.children.filter(o=>o!==facade&&o!==scr);
+
+/* DIGITAL: code and the call stack fly past (world-space planes), then a hash layer */
+const digital=new THREE.Group();scene.add(digital);
+const FLY=[];
+function flyPlane(canvas,qk,off){const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:tex(canvas),transparent:true,depthWrite:false,depthTest:false,blending:THREE.AdditiveBlending}));
+ m.renderOrder=20;digital.add(m);const f={m,qk,off,a:canvas.width/canvas.height};FLY.push(f);return f}
+
+/* HASH (the 32 bytes), orbiting papers, one hex digit, bits */
+const LH=-6.1;const hashL=layer(LH);const blk=new THREE.Group();hashL.add(blk);
+const CW=.85/16,CH=CW*198/128,BP=.19*CW;
+let TI=-1,J0=0,BITS='';{let best=1e9;for(let i=0;i<64;i++){const b=parseInt(HASH[i],16).toString(2).padStart(4,'0'),j=b.indexOf('10');if(j<0)continue;const r=i>>4,c=i%16,d=Math.hypot(c-7.5,(r-1.5)*1.5);if(d<best-1e-6){best=d;TI=i;J0=j;BITS=b}}}
+const TR=TI>>4,TC=TI%16,TCX=(TC-7.5)*CW,TCY=(1.5-TR)*CH,XB=TCX+(J0-1)*BP;
+blk.position.set(-XB,-TCY,0);
+
+/* ---------- labels ---------- */
+const V=new THREE.Vector3();
+const LBL=[];
+const lbl=(id,obj,pos,bandFn,clampIt)=>{const el=$(id);const o={el,obj,p:new THREE.Vector3(...pos),band:bandFn,a:-1,x:0,y:0,box:clampIt?el.querySelector('.box'):null};LBL.push(o);return o};
+function measure(){for(const L of LBL){if(L.box){L.box.style.transform='';L.ol=L.box.offsetLeft;L.ow=L.box.offsetWidth}if(L.cw)L.hw=L.el.querySelector('.box').offsetWidth/2}}
+const gpos=(la,lo)=>{const [x,y]=g2m(la,lo);return [x/1e5,y/1e5,0]};
+const bGulf=q=>band(q,5.75,5.4,4.55,4.25),bCity=q=>band(q,4.0,3.78,3.0,2.7);
+lbl('#l-earth',earth,[0,0,0],q=>1-sst(6.55,6.2,q));
+lbl('#l-thess',ground,gpos(40.64,22.94),bGulf);for(const [id,la,lo] of [['#l-gulf',40.4,22.77],['#l-chalk',40.38,23.36],['#l-aegean',40.0,23.05],['#l-olymp',40.085,22.358]])lbl(id,ground,gpos(la,lo),bGulf).cw=1;
+lbl('#l-tower',ground,gpos(40.6264,22.9484),bCity);lbl('#l-uom',ground,gpos(40.6254,22.96),bCity,1);lbl('#l-auth',ground,gpos(40.632,22.957),bCity,1);
+lbl('#l-window',home,[.66,1.3,3],q=>band(q,2.05,1.8,.62,.42),1);
+const Lscreen=lbl('#l-screen',home,[0,.093,0],q=>band(q,qScreen+.22,qScreen+.08,qScreen-.3,qScreen-.5));
+lbl('#l-hash',blk,[0,.3,0],q=>band(q,-5.7,-5.95,-6.3,-6.48));
+const Lpaper=lbl('#l-paper',blk,[0,0,0],q=>band(q,-5.75,-5.98,-6.3,-6.48));
+const Lend=lbl('#l-end',blk,[XB,TCY-.78*BP,0],q=>sst(-7.36,-7.58,q));
+// orbit: ring + bodies + citation counts
+const ring=new THREE.Group();ring.rotation.x=.2;blk.add(ring);const RR=.6;
+{const p=[];for(let i=0;i<=256;i++){const a=i/256*6.2832;p.push(Math.cos(a)*RR,0,Math.sin(a)*RR)}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(p,3));
+ var ringLine=new THREE.Line(g,new THREE.ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{uA:{value:1}},
+  vertexShader:`varying float vZ;void main(){vZ=position.z/${RR.toFixed(2)};gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+  fragmentShader:`uniform float uA;varying float vZ;void main(){gl_FragColor=vec4(vec3(1.,.66,.28)*(.16+.3*smoothstep(-1.,1.,vZ))*uA,1.);}`}));ringLine.renderOrder=22;ring.add(ringLine)}
+const bodyGeo=ptsGeo(new Array(PAPERS.length*3).fill(0),PAPERS.map(p=>3+2.2*Math.sqrt(p.c+.3)),PAPERS.flatMap(()=>[1,.72,.36]));
+const bodies=new THREE.Points(bodyGeo,ptsMat({uAtt:{value:1}}));bodies.renderOrder=23;ring.add(bodies);
+const CITE=PAPERS.map((p,i)=>{const d=document.createElement('div');d.className='lbl cite';d.innerHTML=`<div class="box">${p.c}</div>`;$('#labels').appendChild(d);return {el:d,i,a:-1}});
+
+/* ---------- fonts, canvases that need them, screenshots ---------- */
+const ready=(async()=>{
+ try{await Promise.all(['400 40px "Space Mono"','700 40px "Space Mono"','400 40px "EB Garamond"','italic 400 40px "EB Garamond"'].map(f=>document.fonts.load(f)))}catch(e){}
+ buildFly();buildHash();layoutFly();measure();
+ await Promise.all(SITES.map((s,i)=>new Promise(res=>{const im=new Image();im.onload=()=>{drawTab(i,im);res()};im.onerror=()=>{drawTab(i,null);res()};im.src='../../img/portfolio/'+s.f})));
+ dirty=true;
+})();
+function drawTab(i,im){const c=tabCanv[i],x=c.getContext('2d'),k=TW/1280;
+ x.fillStyle='#1c1f25';x.fillRect(0,0,TW,TH);
+ const tw=(TW-40*k)/SITES.length;x.font=`${13*k}px "Space Mono"`;x.textBaseline='middle';
+ SITES.forEach((s,j)=>{const on=j===i;x.fillStyle=on?'#30343c':'#23262d';x.beginPath();x.roundRect(12*k+j*tw,8*k,tw-6*k,30*k,[8*k,8*k,0,0]);x.fill();
+  x.fillStyle=on?'#e8eef7':'#8a909b';x.save();x.beginPath();x.rect(12*k+j*tw,8*k,tw-18*k,30*k);x.clip();x.fillText(s.t,24*k+j*tw,24*k);x.restore()});
+ x.fillStyle='#30343c';x.fillRect(0,38*k,TW,44*k);x.fillStyle='#1c1f25';x.beginPath();x.roundRect(90*k,45*k,TW-180*k,30*k,15*k);x.fill();
+ x.fillStyle='#9aa2ad';x.font=`${15*k}px "Space Mono"`;x.fillText('← →  ↻',18*k,60*k);x.fillStyle='#e9eef5';x.fillText(SITES[i].h,112*k,60*k);
+ const top=82*k,ch=TH-top;x.fillStyle='#fff';x.fillRect(0,top,TW,ch);
+ if(im){const cr=SITES[i].crop||0,sy=im.naturalHeight*cr,sh=im.naturalHeight-sy,sw=im.naturalWidth,ar=TW/ch;let w=sw,h=sw/ar;if(h>sh){h=sh;w=sh*ar}x.drawImage(im,(sw-w)/2,sy,w,h,0,top,TW,ch)}
+ tabTex[i].needsUpdate=true;dirty=true}
+function wrap(x,t,maxW){const out=[];let line='';for(const w of t.split(' ')){const tt=line?line+' '+w:w;if(x.measureText(tt).width>maxW&&line){out.push(line);line=w}else line=tt}out.push(line);return out}
+function textCanvas(rows,W){const c=document.createElement('canvas'),x=c.getContext('2d');const pad=60;let H=pad*2;const laid=[];
+ for(const r of rows){x.font=r.f;const lines=r.wrap?wrap(x,r.t,W-pad*2-(r.dx||0)):[r.t];for(const l of lines){laid.push({...r,t:l});H+=r.lh}H+=r.after||0}
+ c.width=W;c.height=Math.ceil(H);x.textBaseline='alphabetic';let y=pad;
+ for(const r of laid){y+=r.lh;x.font=r.f;x.shadowColor=r.g||'rgba(120,210,255,.55)';x.shadowBlur=r.gb??14;
+  if(r.parts){let px=pad+(r.dx||0);for(const [t,col] of r.parts){x.fillStyle=col;x.fillText(t,px,y-r.lh*.28);px+=x.measureText(t).width}}
+  else{x.fillStyle=r.c;const tw=x.measureText(r.t).width;x.fillText(r.t,r.right?W-pad-tw:pad+(r.dx||0),y-r.lh*.28)}
+  if(r.right2){x.fillStyle=r.c2;const tw=x.measureText(r.right2).width;x.fillText(r.right2,W-pad-tw,y-r.lh*.28)}
+  y+=r.after||0}
+ return c}
+let flyBuilt='';
+function buildFly(){const key=portrait?'p':'l';if(flyBuilt===key)return;flyBuilt=key;
+ FLY.forEach(f=>{f.m.material.map.dispose();digital.remove(f.m)});FLY.length=0;
+ const CODE=['// illustrative sketch, not deployed code','contract CredentialRegistry {','  struct Record {','    address issuer;','    bool revoked;','  }','  mapping(bytes32 => Record) records;','  mapping(address => bool) trusted;','','  function verify(bytes32 fileHash)','    external view returns (bool)','  {','    Record memory r = records[fileHash];','    if (r.issuer == address(0)) return false;','    if (r.revoked) return false;','    return trusted[r.issuer];','  }','}','','// who called it? the stack, newest first ↓'];
+ const KW=/^(contract|struct|mapping|function|external|view|returns|memory|if|return)$/,TY=/^(address|bool|bytes32)$/;
+ const rows=CODE.map(l=>{if(l.trim().startsWith('//'))return {parts:[[l,'#6f9bb3']],f:'400 30px "Space Mono"',lh:46,g:'rgba(0,0,0,0)'};
+  const parts=[];l.replace(/([A-Za-z_][A-Za-z0-9_]*)|([^A-Za-z_]+)/g,(m,w,o)=>{parts.push([m,w?(KW.test(w)?'#7fe0ff':TY.test(w)?'#9fffe0':(w==='fileHash'?'#ffffff':'#d9f2ff')):'#8fb5c8'])});return {parts,f:'400 30px "Space Mono"',lh:46}});
+ flyPlane(textCanvas(rows,1000),-4.0,[0,.02]);
+ const W=portrait?820:1300,o=portrait?.035:.1;
+ const offs=[[-o,.05],[o,-.05],[-o*.9,-.05],[o*.9,.05]];
+ ROLES.forEach((r,i)=>{flyPlane(textCanvas([
+  {t:`#${i}`,f:'700 28px "Space Mono"',c:'#7fe0ff',lh:40,right2:r.y,c2:'#7fe0ff'},
+  {t:'at '+r.o,f:'400 30px "Space Mono"',c:'#e6f6ff',lh:46,wrap:true},
+  {t:r.r,f:'400 64px "EB Garamond"',c:'#ffffff',lh:78,g:'rgba(150,220,255,.45)',after:8},
+  {t:r.d,f:'400 25px "Space Mono"',c:'#9cc3d6',lh:38,wrap:true,g:'rgba(0,0,0,0)'}],W),-4.4-i*.4,offs[i])});
+}
+function buildHash(){
+ const k=LOWQ?.5:1,cw=128*k,ch=198*k,pad=80*k,c=document.createElement('canvas');c.width=16*cw+2*pad;c.height=4*ch+2*pad;const x=c.getContext('2d');
+ x.font=`400 ${150*k}px "Space Mono"`;x.textAlign='center';x.textBaseline='middle';x.shadowColor='rgba(255,140,30,.95)';x.shadowBlur=26*k;
+ for(let i=0;i<64;i++){const r=i>>4,cc=i%16;x.fillStyle=i===TI?'#ffe4b0':'#ffae3d';x.fillText(HASH[i],pad+cc*cw+cw/2,pad+r*ch+ch/2+6*k)}
+ const m=new THREE.Mesh(new THREE.PlaneGeometry(c.width/cw*CW,c.height/ch*CH),new THREE.MeshBasicMaterial({map:tex(c),transparent:true,depthWrite:false,depthTest:false,blending:THREE.AdditiveBlending}));m.renderOrder=21;blk.add(m);hashPlane=m;
+ const n=document.createElement('canvas'),s=LOWQ?512:1024,np=s*.3;n.width=s+2*np;n.height=s*198/128+2*np;const y=n.getContext('2d');
+ y.font=`400 ${s*150/128}px "Space Mono"`;y.textAlign='center';y.textBaseline='middle';y.shadowColor='rgba(255,140,30,.95)';y.shadowBlur=s*.2;y.fillStyle='#ffe0a6';y.fillText(HASH[TI],n.width/2,n.height/2+s*6/128);
+ nib=new THREE.Mesh(new THREE.PlaneGeometry(n.width/s*CW,n.height/(s*198/128)*CH),new THREE.MeshBasicMaterial({map:tex(n),transparent:true,depthWrite:false,depthTest:false,blending:THREE.AdditiveBlending}));nib.position.set(TCX,TCY,0);nib.renderOrder=24;blk.add(nib);
+}
+let hashPlane=null,nib=null;
+const bitsMat=new THREE.ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,uniforms:{uA:{value:0},uFinal:{value:0},uW:{value:0},uBits:{value:new THREE.Vector4(...BITS.split('').map(Number))},uJ0:{value:J0}},
+ vertexShader:`varying vec2 vP;void main(){vP=position.xy;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+ fragmentShader:`uniform float uA,uFinal,uW,uJ0;uniform vec4 uBits;varying vec2 vP;
+ float sdB(vec2 p,vec2 b,float r){vec2 q=abs(p)-b+r;return length(max(q,0.))+min(max(q.x,q.y),0.)-r;}
+ float glyph(vec2 p,float bit){if(bit>.5){float st=sdB(p-vec2(.05,0.),vec2(.07,.5),.015);vec2 f=p-vec2(-.1,.37);float an=.62;f=mat2(cos(an),-sin(an),sin(an),cos(an))*f;return min(st,sdB(f,vec2(.15,.05),.012));}
+  float o=sdB(p,vec2(.27,.5),.25);return abs(o+.07)-.07;}
+ void main(){vec2 p=vP/${BP.toFixed(8)};float j=floor(p.x+uJ0+1.);vec3 col=vec3(0.);float a=0.;
+  float bit=j<.5?uBits.x:j<1.5?uBits.y:j<2.5?uBits.z:uBits.w;bool inR=j>-.5&&j<3.5&&abs(p.y)<.8;
+  float d=inR?glyph(vec2(p.x-(j-uJ0-.5),p.y)*vec2(1.,.92),bit):1.;float aa=max(fwidth(p.y)*.8,1e-5);float m=1.-smoothstep(-aa,aa,d);
+  bool pair=abs(j-uJ0-.5)<.6;float keep=pair?1.:1.-uFinal;
+  vec3 ink=mix(vec3(1.,.74,.36),vec3(1.),uW);col=ink*m*keep;a=m*keep;
+  float fw=max(fwidth(p.x),1e-5);float left=1.-smoothstep(-fw,fw,p.x);
+  vec3 fin=mix(vec3(0.),vec3(1.),left);vec3 fg=mix(vec3(1.),vec3(0.),left);
+  col=mix(col,mix(fin,fg,m*(pair?1.:0.)),uFinal);a=mix(a,1.,uFinal);
+  gl_FragColor=vec4(col,a*uA);}`});
+const bits=new THREE.Mesh(new THREE.PlaneGeometry(BP*120,BP*120),bitsMat);bits.position.set(XB,TCY,0);bits.renderOrder=25;blk.add(bits);
+
+/* ---------- timeline: scroll position -> zoom depth q (log10 of the metres in view) ---------- */
+const STOPS=[{q:7.25},{q:5.1,w:1.5},{q:3.62,w:1.3},{q:1.6,w:1.2},{q:.72,w:1.0},{q:-.12,w:.8},{id:'screen',q:()=>qScreen,w:.7,hold:2.8},{q:-3.3,w:1.3},{q:-4.0,w:.9},{q:-4.4,w:.55},{q:-4.8,w:.55},{q:-5.2,w:.55},{q:-5.6,w:.55},{id:'hash',q:LH,w:.8,hold:2.2},{q:-7.2,w:1.0},{q:-7.62,w:.8}];
+let SEG=[],TOTAL=0;
+function buildTimeline(){SEG=[];let acc=0,prev=STOPS[0].q;const qv=s=>typeof s.q==='function'?s.q():s.q;
+ for(let i=1;i<STOPS.length;i++){const s=STOPS[i],q=qv(s);SEG.push({m:1,a:prev,b:q,s:acc,l:s.w});acc+=s.w;prev=q;
+  if(s.hold){SEG.push({m:0,a:q,b:q-.05,s:acc,l:s.hold,id:s.id});acc+=s.hold;prev=q-.05}}
+ TOTAL=acc;$('#spacer').style.height=Math.round((TOTAL+1)*VH)+'px'}
+const sub={screen:0,hash:0};
+function qAt(pv){let q=STOPS[0].q;sub.screen=0;sub.hash=0;
+ for(const g of SEG){if(pv<g.s)break;const t=clamp((pv-g.s)/g.l);if(g.m){const e=t-.64*Math.sin(6.2832*t)/6.2832;q=lerp(g.a,g.b,e)}else{q=lerp(g.a,g.b,t);sub[g.id]=t}
+  if(pv>=g.s+g.l&&g.id)sub[g.id]=1}
+ return q}
+
+/* ---------- readout + viewfinder ---------- */
+const RB=$('#readout .big'),RS=$('#readout .small'),RI=$('#readout .rule i'),SQ=[...document.querySelectorAll('.sq')];
+{const r=$('#readout .rule');for(let i=0;i<=10;i++){const b=document.createElement('b');b.style.left=i*10+'%';r.appendChild(b)}}
+const DIG=[[-3.5,3.3],[-4.0,2.72],[-5.6,2.08],[-6.1,1.505],[-6.75,0],[-7.2,-.301],[-7.62,-.903]];
+function readV(q){if(q>-3.5)return [q,'m'];for(let i=0;i<DIG.length-1;i++){const a=DIG[i],b=DIG[i+1];if(q>=b[0])return [lerp(a[1],b[1],(a[0]-q)/(a[0]-b[0])),'B']}return [DIG[DIG.length-1][1],'B']}
+const sig=x=>Number(x.toPrecision(x>=100?3:2)).toLocaleString('en');
+function fmtM(v){const m=10**v;return m>=1e3?sig(m/1e3)+' km':m>=1?sig(m)+' m':m>=.01?sig(m*100)+' cm':m>=.001?sig(m*1e3)+' mm':sig(m*1e6)+' µm'}
+function fmtB(v){const b=10**v;if(b>=1.5)return sig(b)+' bytes';if(b>=.95)return '1 byte';const n=Math.max(1,Math.round(b*8));return n+(n>1?' bits':' bit')}
+function place(q){if(q>6.3)return 'Earth at night';if(q>5.6)return 'the northern Aegean';if(q>4.5)return 'Thermaic Gulf, northern Aegean';if(q>2.7)return 'Thessaloniki';if(q>1.1)return 'a street, one lit window';if(q>-.3)return 'a room, a desk';if(q>-1.4)return 'a laptop screen';if(q>-3.5)return 'the pixels of that screen';
+ if(q>-4.22)return 'source code (illustrative)';if(q>-5.85)return 'the call stack';if(q>-6.55)return 'a SHA-256 hash';if(q>-7.0)return 'the hex digit '+HASH[TI];if(q>-7.42)return HASH[TI]+' in binary';return 'the end of the zoom'}
+let lastRead='';
+function readout(q,pv){const [v,u]=readV(q);const n=Math.floor(v+.45);const big=`10<sup>${n<0?'−'+(-n):n}</sup> ${u}`;
+ const small=(u==='m'?fmtM(v)+' across':fmtB(v))+' · '+place(q);const key=big+small;if(key!==lastRead){lastRead=key;RB.innerHTML=big;RS.textContent=small}
+ RI.style.width=(clamp(pv/TOTAL)*100).toFixed(2)+'%';
+ const Fpx=Math.min(VW,VH),g=band(q,99,98,-3.2,-3.42)+band(q,-3.62,-3.85,-6.55,-6.8);const n0=Math.floor(v);
+ SQ.forEach((el,i)=>{const e=n0-i,sz=10**(e-v)*Fpx,r=sz/Fpx;const o=(i?sst(.018,.05,r):1-sst(.6,.97,r))*g;
+  if(o<.005){el.style.opacity=0;return}el.style.opacity=o.toFixed(3);el.style.width=el.style.height=sz.toFixed(1)+'px';el.style.transform=`translate(-50%,-50%)`;
+  const t=`10${String(e<0?'−'+(-e):e).split('').map(ch=>'⁰¹²³⁴⁵⁶⁷⁸⁹'['0123456789'.indexOf(ch)]||'⁻').join('')} ${u}`;if(el.firstChild.textContent!==t)el.firstChild.textContent=t})}
+
+/* ---------- per-frame update ---------- */
+let frontPaper=-1,tabShown=-1;const HINT=$('#hint');
+function update(q,pv){
+ skyAt(q);
+ stars.material.uniforms.uGain.value=1-sst(6.7,6.1,q);stars.visible=q>6.1;
+ for(const g of layers)g.scale.setScalar(F*10**(g.userData.L-q));
+ // earth
+ const aE=1-sst(6.3,5.85,q);earth.visible=aE>0;earthMat.uniforms.uA.value=aE;atmoMat.uniforms.uA.value=aE;lone.material.uniforms.uA.value=1-sst(6.4,6.0,q);
+ // ground
+ const aG=band(q,6.75,6.2,2.2,1.85);ground.visible=aG>0;
+ ground.rotation.set(-(.28*sst(5.6,4.6,q)+.32*sst(4.6,3.6,q)+.8*sst(3.6,2.3,q)),0,.7*sst(5.9,4.2,q));
+ regMesh.material.opacity=aG*(1-sst(3.4,2.8,q));cityMesh.material.opacity=aG*sst(4.9,4.4,q)*(1-sst(3.0,2.6,q));
+ const cu=cityPts.material.uniforms;cu.uGain.value=aG*clamp(10**((q-3.6)*-.55),.05,1.25);cu.uSize.value=1.25+.5*clamp(5.2-q,0,3.4);
+ // home
+ const aH=band(q,2.9,2.45,-3.35,-3.8);home.visible=aH>0;facMat.uniforms.uA.value=aH;facade.visible=q>-.2;scrMat.uniforms.uAlpha.value=aH;
+ const inRoom=aH>.5&&q>-1.8;homeLit.forEach(o=>o.visible=inRoom);
+ const s2=(F*10**(-q))**2;lampL.intensity=1.15*s2;scrL.intensity=.09*s2*(.6+.4*sst(1,.2,q));strL.intensity=26*s2;
+ const tf=clamp(sub.screen*7-.5,0,6),ti=Math.min(5,Math.floor(tf)),fr=tf-ti;
+ scrMat.uniforms.uA.value=tabTex[ti];scrMat.uniforms.uB.value=tabTex[Math.min(6,ti+1)];scrMat.uniforms.uMix.value=tf>=6?1:sst(.42,.58,fr);scrMat.uniforms.uPix.value=sst(-1.7,-2.3,q);scrMat.uniforms.uRes.value.set(VW*PR,VH*PR);
+ const shown=Math.round(tf);if(shown!==tabShown){tabShown=shown;const s=SITES[shown],el=Lscreen.el;el.querySelector('.host').textContent=s.h;el.querySelector('.desc').textContent=s.d;el.querySelector('.count').textContent=`${shown+1} / 7 sites I built · scrolling switches tabs`}
+ // digital fly-through
+ const aD=sst(-3.2,-3.45,q)*(1-sst(-5.9,-6.2,q));digital.visible=aD>0;
+ if(aD>0)for(const f of FLY){const d=DS*10**((q-f.qk)*KAPPA);const a=aD*sst((f.qk>-4.1?9:4.4)*DS,(f.qk>-4.1?3:1.9)*DS,d)*(1-sst(.72*DS,.3*DS,d));f.m.visible=a>.003;f.m.material.opacity=a;f.m.position.set(f.ox,f.oy,D-d)}
+ // hash
+ const aHash=sst(-5.3,-5.75,q);hashL.visible=aHash>0&&q>-7.9;
+ if(hashPlane){hashPlane.material.opacity=aHash*(1-sst(-6.45,-6.8,q));nib.material.opacity=band(q,-6.3,-6.55,-6.95,-7.12)}
+ const aR=band(q,-5.72,-5.96,-6.3,-6.48);ring.visible=aR>0;ringLine.material.uniforms.uA.value=aR;bodies.material.uniforms.uGain.value=aR*1.4;
+ const rot=sub.hash*7/8*6.2832;const bp=bodyGeo.attributes.position;
+ PAPERS.forEach((p,i)=>{const a=Math.PI/2+i*Math.PI/4-rot;bp.setXYZ(i,Math.cos(a)*RR,0,Math.sin(a)*RR)});bp.needsUpdate=true;
+ const fp=Math.round(sub.hash*7);if(fp!==frontPaper){frontPaper=fp;const p=PAPERS[fp],el=Lpaper.el;el.querySelector('.mono').textContent=`${p.c?`cited ${p.c} time${p.c>1?'s':''}`:'not cited yet'} · ${p.y}`;el.querySelector('.t').textContent=p.t;el.querySelector('.v').textContent=p.v}
+ bitsMat.uniforms.uA.value=sst(-6.88,-7.08,q);bitsMat.uniforms.uW.value=sst(-7.05,-7.35,q);bitsMat.uniforms.uFinal.value=sst(-7.28,-7.52,q);bits.visible=q<-6.85;
+ // labels
+ scene.updateMatrixWorld();
+ for(const L of LBL){let a=L.band(q);if(a>0&&L.obj.visible!==false){V.copy(L.p);L.obj.localToWorld(V);V.project(cam);if(V.z>1||V.z<-1)a=0;L.x=(V.x+1)/2*VW;L.y=(1-V.y)/2*VH}else a=0;
+  if(L===Lpaper&&a>0){const i=frontPaper,ang=Math.PI/2+i*Math.PI/4-rot;V.set(Math.cos(ang)*RR,0,Math.sin(ang)*RR);ring.localToWorld(V);V.project(cam);L.x=(V.x+1)/2*VW;L.y=(1-V.y)/2*VH}
+  place2(L,a)}
+ for(const c of CITE){let a=aR;if(a>0){const ang=Math.PI/2+c.i*Math.PI/4-rot;V.set(Math.cos(ang)*RR,0,Math.sin(ang)*RR);ring.localToWorld(V);V.project(cam);c.x=(V.x+1)/2*VW;c.y=(1-V.y)/2*VH;a*=.35+.65*(.5+.5*Math.sin(ang));if(c.i===frontPaper)a*=.0}place2(c,a)}
+ document.documentElement.classList.toggle('inv',q<-7.42);
+ if(HINT)HINT.style.opacity=(1-sst(7.2,7.1,q)).toFixed(3);
+ readout(q,pv);
+}
+function place2(L,a){if(Math.abs(a-L.a)<.002&&a===0)return;L.a=a;const s=L.el.style;if(a<=0.002){s.visibility='hidden';s.opacity=0;return}
+ if(L.hw)L.x=clamp(L.x,12+L.hw,VW-12-L.hw);
+ s.visibility='visible';s.opacity=a.toFixed(3);s.transform=`translate3d(${L.x.toFixed(1)}px,${L.y.toFixed(1)}px,0)`;
+ if(L.ow){const l=L.x+L.ol,r=l+L.ow;const dx=l<12?12-l:r>VW-12?VW-12-r:0;L.box.style.transform=dx?`translateX(${dx.toFixed(1)}px)`:''}}
+
+/* ---------- layout ---------- */
+function layoutFly(){const vh=2*DS*Math.tan(FOV*Math.PI/360),vw=vh*cam.aspect;
+ for(const f of FLY){const w=Math.min(vw*(portrait?.94:.84),vh*.8*f.a);f.m.scale.set(w,w/f.a,1);f.ox=f.off[0]*vw;f.oy=f.off[1]*vh}}
+let lastW=0,lastH=0;
+function resize(){VW=innerWidth;VH=innerHeight;if(coarse&&VW===lastW&&Math.abs(VH-lastH)<140&&lastH)return;lastW=VW;lastH=VH;
+ const pv=TOTAL?scrollY/VH/TOTAL:0;
+ renderer.setSize(VW,VH,false);cam.aspect=VW/VH;cam.updateProjectionMatrix();
+ visH=2*D*Math.tan(FOV*Math.PI/360);visW=visH*cam.aspect;F=Math.min(visW,visH);portrait=VW<VH*.9;document.documentElement.classList.toggle('portrait',portrait);
+ qScreen=Math.log10(Math.max(.292/(.84*visW/F),.1825/(.66*visH/F)));
+ if(flyBuilt)buildFly();layoutFly();buildTimeline();if(pv)scrollTo(0,pv*TOTAL*VH);measure();dirty=true}
+resize();addEventListener('resize',resize);
+
+/* ---------- loop ---------- */
+let qCur=qAt(scrollY/VH),sCur=0,hCur=0,last=performance.now();
+addEventListener('scroll',()=>dirty=true,{passive:true});
+function frame(now){requestAnimationFrame(frame);if(paused)return;const dt=Math.min(.2,(now-last)/1000);last=now;
+ const pv=scrollY/VH,qT=qAt(pv),k=window.__snap?1:1-Math.exp(-dt*5.5);
+ if(Math.abs(qT-qCur)>2.5)qCur=lerp(qCur,qT,.35);
+ const moving=Math.abs(qT-qCur)>1e-4||Math.abs(sub.screen-sCur)>1e-4||Math.abs(sub.hash-hCur)>1e-4;
+ if(!moving&&!dirty)return;dirty=false;
+ qCur=lerp(qCur,qT,k);const ts=sub.screen,th=sub.hash;sCur=lerp(sCur,ts,k);hCur=lerp(hCur,th,k);sub.screen=sCur;sub.hash=hCur;
+ update(qCur,pv);renderer.render(scene,cam);sub.screen=ts;sub.hash=th}
+if(!RM)requestAnimationFrame(frame);
+
+/* ---------- reduced motion: one still per scale, stacked ---------- */
+if(RM){document.documentElement.classList.add('rm');$('#stills').hidden=false;$('#hint').hidden=true;
+ ready.then(()=>{const shots=[
+  [7.25,0,0,'Earth at night. One point of light on the northern Aegean: Thessaloniki, 40.64° N, 22.94° E. George Michoulis, blockchain developer and researcher.'],
+  [5.1,0,0,'The Thermaic Gulf. Thessaloniki’s lights at the head of the gulf, Chalkidiki to the south-east, Olympus to the south-west.'],
+  [3.62,0,0,'Thessaloniki. University of Macedonia: BSc Applied Informatics, 2015–2020, with a thesis on checking academic credentials on Ethereum and a Basic Research grant (2020–2021). Aristotle University of Thessaloniki: MSc Data and Web Science, 2020–2022, graph-embedding methods for spotting fraud on blockchains, on a DeepMind scholarship.'],
+  [1.95,0,0,'A street at night, one lit window. I’m based in Thessaloniki and work remotely.'],
+  [-.12,0,0,'A room, a desk, a laptop.'],
+  [null,.93,0,'The screen, one tab per site I built: '+SITES.map(s=>`${s.h} (${s.d.replace(/\.$/,'')})`).join('; ')+'.'],
+  [-3.45,1,1,'Closer still: the red, green and blue sub-pixels of one pixel.'],
+  [-4.0,1,1,'Source code, an illustrative sketch rather than deployed code: a contract that verifies a credential by its file hash.'],
+  [-4.4,1,1,'The call stack, newest first. '+ROLES.map(r=>`${r.r}, ${r.o}, ${r.y}: ${r.d}`).join(' ')],
+  [LH,1,0,'32 bytes: the SHA-256 of my MSc certificate scan. Checking fingerprints like this against Ethereum was my BSc thesis. Orbiting it, my papers, sized by citations: '+PAPERS.map(p=>`${p.t} (${p.y}, ${p.c} citations)`).join('; ')+'.'],
+  [-7.2,1,1,'One hex digit, “'+HASH[TI]+'”, is four bits: '+BITS+'.'],
+  [-7.62,1,1,'One bit. The end of the zoom. Write to me at gmixoulis@gmail.com.']];
+  const box=$('#stills');const pvDummy=0;
+  for(const [q0,ss,hs,cap] of shots){const q=q0===null?qScreen-.03:q0;sub.screen=ss;sub.hash=hs;update(q,pvDummy);renderer.render(scene,cam);
+   const fig=document.createElement('figure');const [v,u]=readV(q);const img=new Image();img.src=cv.toDataURL('image/jpeg',.86);img.alt=cap.split('. ')[0]+'.';img.width=VW;img.height=VH;
+   fig.append(img);const fc=document.createElement('figcaption');const n=Math.floor(v+.45);fc.innerHTML=`<b>10<sup>${n<0?'−'+(-n):n}</sup> ${u} · ${place(q)}</b>${esc(cap)}`;fig.append(fc);box.append(fig)}
+  document.querySelectorAll('.lbl').forEach(l=>l.style.visibility='hidden');
+  box.insertAdjacentHTML('afterbegin','<p class="note" style="margin:0 0 30px;color:var(--dim)">Reduced motion is on, so the zoom is shown as one still per scale, from Earth down to a single bit.</p>');
+  document.documentElement.classList.remove('inv');const h=$('#l-earth h1');h.style.cssText='font:400 clamp(34px,5vw,54px)/1.05 "EB Garamond",serif;margin:0 0 8px';box.prepend(h);
+ })}
+window.__zoom={qAt,get TOTAL(){return TOTAL},get qScreen(){return qScreen},pts:cityPts.geometry.attributes.position.count};
+}
+</script>
+</body>
+</html>

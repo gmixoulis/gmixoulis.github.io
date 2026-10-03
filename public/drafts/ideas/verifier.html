@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Verifier · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher. Drop one of my certificates to check it against the fingerprints I published.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e9e8e3;--panel:#f5f4f0;--ink:#18191b;--muted:#55575c;--rule:#c9c7c0;--tick:#a3a19a;
+  --accent:#4b32c3;--wash:#ebe8f6;
+  --mono:"Fragment Mono",ui-monospace,Menlo,monospace;
+  --gut:clamp(1rem,4vw,3rem);--w:min(76rem,100% - 2*var(--gut));
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#121315;--panel:#1b1c1f;--ink:#e8e6e0;--muted:#a2a3a7;--rule:#313337;--tick:#55575c;
+  --accent:#a99bff;--wash:#24223a;color-scheme:dark;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.55 "Familjen Grotesk",Georgia,serif;font-kerning:normal}
+a{color:inherit;text-decoration-color:var(--tick);text-underline-offset:.18em;text-decoration-thickness:1px}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.wrap{width:var(--w);margin-inline:auto}
+.mono,code{font-family:var(--mono);font-size:.86em;font-variant-numeric:tabular-nums}
+.back{display:inline-block;margin:1rem 0 0;font-size:.875rem;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--ink)}
+
+/* header */
+.top{display:grid;grid-template-columns:1fr auto;align-items:end;gap:1rem 3rem;padding:clamp(1.25rem,4vw,2.5rem) 0 clamp(1.5rem,3vw,2.25rem)}
+h1{margin:0;font-weight:500;font-size:clamp(2.75rem,8vw,6rem);line-height:.92;letter-spacing:-.04em}
+.line{margin:1rem 0 0;max-width:36rem;font-size:clamp(1.05rem,1.6vw,1.2rem);color:var(--muted)}
+.line b{font-weight:500;color:var(--ink)}
+.reach{margin:0;text-align:right;font-size:.95rem;color:var(--muted);line-height:1.7}
+.reach a{color:var(--ink)}
+
+/* the bench: platen + readout */
+.bench{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:clamp(1rem,2.5vw,2rem)}
+.platen{position:relative;min-height:26rem;background:var(--panel);border:1px solid var(--rule);display:grid;place-items:center;padding:2.5rem 1.5rem 3rem;transition:border-color .2s,background-color .2s}
+.platen::before,.platen::after{content:"";position:absolute;background:var(--tick);pointer-events:none}
+.platen::before{left:0;right:0;top:0;height:10px;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='10'%3E%3Cpath d='M.5 0v10M5.5 0v3M10.5 0v3M15.5 0v3M20.5 0v3M25.5 0v6M30.5 0v3M35.5 0v3M40.5 0v3M45.5 0v3' stroke='%23000'/%3E%3C/svg%3E") repeat-x;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='10'%3E%3Cpath d='M.5 0v10M5.5 0v3M10.5 0v3M15.5 0v3M20.5 0v3M25.5 0v6M30.5 0v3M35.5 0v3M40.5 0v3M45.5 0v3' stroke='%23000'/%3E%3C/svg%3E") repeat-x}
+.platen::after{top:0;bottom:0;left:0;width:10px;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='50'%3E%3Cpath d='M0 .5h10M0 5.5h3M0 10.5h3M0 15.5h3M0 20.5h3M0 25.5h6M0 30.5h3M0 35.5h3M0 40.5h3M0 45.5h3' stroke='%23000'/%3E%3C/svg%3E") repeat-y;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='50'%3E%3Cpath d='M0 .5h10M0 5.5h3M0 10.5h3M0 15.5h3M0 20.5h3M0 25.5h6M0 30.5h3M0 35.5h3M0 40.5h3M0 45.5h3' stroke='%23000'/%3E%3C/svg%3E") repeat-y}
+.reg{position:absolute;width:14px;height:14px;border:0 solid var(--ink);pointer-events:none}
+.reg.a{top:-8px;left:-8px;border-width:1px 0 0 1px}.reg.b{top:-8px;right:-8px;border-width:1px 1px 0 0}
+.reg.c{bottom:-8px;left:-8px;border-width:0 0 1px 1px}.reg.d{bottom:-8px;right:-8px;border-width:0 1px 1px 0}
+.platen.over{border-color:var(--accent);background:var(--wash)}
+.prompt{text-align:center;max-width:26rem}
+.prompt h2{margin:0;font-weight:500;font-size:clamp(1.45rem,2.6vw,2.1rem);line-height:1.15;letter-spacing:-.02em}
+.prompt p{margin:.9rem 0 0;color:var(--muted);font-size:.95rem}
+.over .prompt h2::after{content:" Release to check."}
+.platen.has{place-items:stretch}
+.platen.has .prompt{position:absolute;left:0;right:0;bottom:.8rem;max-width:none}
+.platen.has .prompt h2{font-size:.95rem;font-weight:400;color:var(--muted);letter-spacing:0}
+.platen.has .prompt p{display:none}
+.spec{display:flex;gap:1.25rem;justify-content:center;align-items:center;width:100%;min-height:0}
+.spec figure{margin:0;flex:1 1 0;min-width:0;max-width:34rem;text-align:center}
+.spec img{display:block;width:100%;max-height:19rem;object-fit:contain;background:var(--bg);box-shadow:0 1px 0 var(--rule),0 12px 24px -18px rgba(0,0,0,.45)}
+.spec figcaption{margin-top:.6rem;font-size:.85rem;color:var(--muted);overflow-wrap:anywhere}
+.slip{border:1px solid var(--rule);background:var(--bg);padding:1.25rem 1.4rem;max-width:24rem;font-family:var(--mono);font-size:.95rem;line-height:1.5}
+.slip mark{background:var(--ink);color:var(--bg);padding:0 .1em}
+.tools{grid-column:1;display:flex;flex-wrap:wrap;gap:.75rem 1.25rem;align-items:center;font-size:.95rem;color:var(--muted)}
+input[type=file]{font:inherit;color:var(--muted);max-width:100%}
+input[type=file]::file-selector-button,button{font:500 .95rem/1 "Familjen Grotesk",Georgia,serif;color:var(--ink);background:var(--panel);border:1px solid var(--ink);border-radius:2px;padding:.65rem .95rem;margin-right:.75rem;cursor:pointer}
+button{margin:0}
+input[type=file]::file-selector-button:hover,button:hover{background:var(--ink);color:var(--bg)}
+button[aria-busy=true]{opacity:.6;cursor:progress}
+
+.readout{grid-column:2;grid-row:1/span 2;background:var(--panel);border:1px solid var(--rule);padding:clamp(1.1rem,2vw,1.75rem);display:flex;flex-direction:column;gap:1.1rem;min-width:0}
+.rl{margin:0;display:flex;justify-content:space-between;gap:1rem;font-size:.95rem;color:var(--muted)}
+.fp{display:grid;grid-template-columns:repeat(4,auto);justify-content:space-between;gap:.35rem .9rem;margin:0;padding:1rem 0;border-block:1px solid var(--rule);font:400 clamp(1.15rem,2vw,1.6rem)/1.25 var(--mono);letter-spacing:.03em}
+.fp span{display:block;color:var(--tick)}
+.fp.on span{color:var(--ink)}
+.fp.ok span{color:var(--accent)}
+.fp.run span{animation:settle .32s both;animation-delay:calc(var(--i)*38ms)}
+.fp .pub{display:block;font-size:.62em;color:var(--muted);letter-spacing:.06em}
+@keyframes settle{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.cap{margin:-.4rem 0 0;font-size:.85rem;color:var(--muted)}
+.log{list-style:none;margin:0;padding:0;font:400 .82rem/1.7 var(--mono);color:var(--muted)}
+.log li{display:flex;justify-content:space-between;gap:1rem}
+.log li span:last-child{white-space:nowrap}
+.log:empty{display:none}
+.verdict{margin-top:auto}
+.verdict p{margin:0}
+.v{display:grid;grid-template-columns:auto 1fr;gap:.2rem 1rem;align-items:start;animation:appear .35s both}
+@keyframes appear{from{opacity:0}to{opacity:1}}
+.sym{grid-row:1/span 4;font:400 3.2rem/1 var(--mono);margin-top:-.2rem}
+.ok .sym{color:var(--accent)}
+.vt{font-size:1.15rem;font-weight:500;line-height:1.35}
+.ok .vt strong{color:var(--accent);font-weight:600}
+.v p+p{margin-top:.35rem;color:var(--muted);font-size:.95rem}
+.demo{font-size:.85rem!important;color:var(--ink)!important;border-left:2px solid var(--accent);padding-left:.6rem}
+.idle{color:var(--muted)}
+
+.honest{margin:clamp(1.5rem,3vw,2.25rem) 0 0;max-width:46rem;font-size:1.05rem}
+.honest b{font-weight:500}
+
+/* appendix */
+.appx{margin-top:clamp(3.5rem,8vw,6.5rem);border-top:1px solid var(--rule);padding-top:clamp(2rem,4vw,3rem);display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(2rem,4vw,4.5rem);font-size:1rem}
+.appx h2{margin:0 0 .8rem;font-size:1.3rem;font-weight:500;letter-spacing:-.01em}
+.appx p{margin:0 0 .9rem;max-width:38rem}
+.appx .q{color:var(--muted)}
+.papers{list-style:none;margin:0 0 1rem;padding:0}
+.papers li{padding:.6rem 0;border-bottom:1px solid var(--rule);display:grid;grid-template-columns:4.2rem 1fr;gap:0 1rem}
+.papers li:first-child{border-top:1px solid var(--rule)}
+.papers .n{font:400 .9rem/1.6 var(--mono);color:var(--muted);text-align:right}
+.papers .n b{display:block;font-weight:400;font-size:1.35rem;line-height:1.1;color:var(--ink)}
+.papers i{font-style:normal;color:var(--muted);font-size:.9rem;display:block}
+.files{grid-column:1/-1}
+.files>p{max-width:46rem}
+.groups{columns:2 26rem;column-gap:clamp(2rem,4vw,4rem)}
+.groups section{break-inside:avoid;margin-bottom:1.5rem}
+.groups h3{margin:0 0 .3rem;font-size:1rem;font-weight:600}
+.groups ul{list-style:none;margin:0;padding:0}
+.groups li{display:grid;grid-template-columns:1fr auto;gap:.1rem 1rem;padding:.45rem 0;border-top:1px solid var(--rule);font-size:.95rem;line-height:1.35}
+.groups li .m{grid-column:1;font:400 .78rem/1.5 var(--mono);color:var(--muted)}
+.groups li .d{grid-column:2;grid-row:1/span 2;align-self:center;font-size:.85rem;white-space:nowrap}
+.contact{grid-column:1}
+footer{margin:clamp(3rem,6vw,5rem) auto 2.5rem;padding-top:1rem;border-top:1px solid var(--rule);font-size:.85rem;color:var(--muted)}
+footer p{margin:0;max-width:52rem}
+
+@media (max-width:860px){
+  .top{grid-template-columns:1fr}
+  .reach{text-align:left}
+  .bench{grid-template-columns:minmax(0,1fr)}
+  .readout,.tools{grid-column:1;grid-row:auto}
+  .platen{min-height:16rem;padding:2rem 1.25rem 2.75rem}
+  .spec img{max-height:14rem}
+  .appx{grid-template-columns:minmax(0,1fr)}
+  .contact{grid-column:auto}
+}
+@media (max-width:480px){
+  .fp{gap:.3rem .5rem}
+  .spec{gap:.75rem}
+  .papers li{grid-template-columns:3.4rem 1fr;gap:0 .75rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap"><a class="back" href="index.html">← All ideas</a></div>
+<header class="top wrap">
+  <div>
+    <h1>George Michoulis</h1>
+    <p class="line">I'm a blockchain developer and researcher in Thessaloniki, working on smart contracts, graph-based ML and full-stack Web3 systems. My first papers were about verifying academic credentials, so this page checks <b>my own certificates</b> in front of you.</p>
+  </div>
+  <p class="reach">Now: Web3 full-stack developer, <a href="#now">Cyberscope by TAC</a><br><a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a></p>
+</header>
+
+<main class="wrap">
+  <section class="bench" aria-labelledby="drop">
+    <div class="platen" id="platen">
+      <span class="reg a"></span><span class="reg b"></span><span class="reg c"></span><span class="reg d"></span>
+      <div class="spec" id="spec" hidden></div>
+      <div class="prompt">
+        <h2 id="drop">Drop one of my certificates here to check it.</h2>
+        <p>It's fingerprinted in your browser and compared with the 34 files I published on this site. Nothing is uploaded.</p>
+      </div>
+    </div>
+    <div class="tools">
+      <input type="file" id="file" aria-label="Choose a certificate file to check">
+      <button type="button" id="tamper">Try a tampered copy</button>
+    </div>
+
+    <div class="readout" id="readout">
+      <p class="rl"><span>Fingerprint</span><span class="mono">SHA-256</span></p>
+      <p class="fp" id="fp">
+        <span style="--i:0">····</span><span style="--i:1">····</span><span style="--i:2">····</span><span style="--i:3">····</span><span style="--i:4">····</span><span style="--i:5">····</span><span style="--i:6">····</span><span style="--i:7">····</span><span style="--i:8">····</span><span style="--i:9">····</span><span style="--i:10">····</span><span style="--i:11">····</span><span style="--i:12">····</span><span style="--i:13">····</span><span style="--i:14">····</span><span style="--i:15">····</span>
+      </p>
+      <p class="cap" id="cap">64 characters, grouped in fours. Change one byte of the file and nearly all of them change.</p>
+      <ol class="log" id="log"></ol>
+      <div class="verdict" id="verdict" role="status" aria-live="polite"><p class="idle">Waiting for a file. No file handy? Download one from the list below and drop it back in, or try a tampered copy.</p></div>
+    </div>
+  </section>
+
+  <p class="honest"><b>What a match proves:</b> the file is identical, byte for byte, to the one I published on this site. It is not a blockchain anchor and not issuer verification. My papers on VerDe describe how a version anchored by the issuing university works.</p>
+
+  <div class="appx">
+    <section id="now" aria-labelledby="now-h">
+      <h2 id="now-h">What I do now</h2>
+      <p>Since May 2026 I've been a Web3 full-stack developer at Cyberscope by TAC. I build Web3 products end to end: contracts, on-chain integrations, React and Next frontends, and security tooling.</p>
+      <p class="q">Before that I was a blockchain developer and researcher at Sidroco Holdings (2024–2026: an NFT marketplace for 5G, Hyperledger Fabric prototypes, EU projects), a lecturer in networks, security and application development at the University of Derby / Mediterranean College (2023–2025), and a blockchain and full-stack developer at the University of Nicosia / IFF (2022–2024).</p>
+      <p class="q">I studied Applied Informatics at the University of Macedonia, with a thesis on Ethereum credential verification, and Data and Web Science at Aristotle University of Thessaloniki on a DeepMind scholarship, working on graph embeddings for blockchain fraud detection. Both degree scans are in the list below.</p>
+    </section>
+
+    <section aria-labelledby="res-h">
+      <h2 id="res-h">Research</h2>
+      <p class="q">Citation counts from Google Scholar. The first two are the VerDe papers this page grew out of.</p>
+      <ol class="papers">
+        <li><span class="n"><b>32</b>cited</span><span>A process-aware approach for blockchain-based verification of academic qualifications<i>2022 · Simulation Modelling Practice and Theory 121, 102642</i></span></li>
+        <li><span class="n"><b>11</b>cited</span><span>Verification of academic qualifications through Ethereum blockchain: an introduction to VerDe<i>2020 · XIV Balkan Conference on Operational Research</i></span></li>
+        <li><span class="n"><b>7</b>cited</span><span>Exploring decentralized governance: a framework applied to Compound Finance<i>2023 · Intl. Conf. on Mathematical Research for Blockchain Economy</i></span></li>
+        <li><span class="n"><b>1</b>cited</span><span>FraMark: a blockchain marketplace for 5G network management using fractional NFTs<i>2024 · 7th World Symposium on Communication Engineering</i></span></li>
+        <li><span class="n"><b>1</b>cited</span><span>Data security for smart cities<i>2025</i></span></li>
+        <li><span class="n"><b>0</b>cited</span><span>Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management<i>2025 · IEEE ICCE 2025</i></span></li>
+        <li><span class="n"><b>0</b>cited</span><span>Graph embedding and node features for drug-target interaction prediction<i>2022 · Aristotle University of Thessaloniki, MSc work</i></span></li>
+        <li><span class="n"><b>0</b>cited</span><span>Blockchain in higher education: permissioned and permissionless approaches<i>2022 · 4th Summit on Gender Equality in Computing</i></span></li>
+      </ol>
+      <p class="q">Plus two Greek-language theses on verifying academic titles with Ethereum (2020, 2021). <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">All of it on Google Scholar</a>.</p>
+    </section>
+
+    <section class="files" id="files" aria-labelledby="files-h">
+      <h2 id="files-h">The 34 files</h2>
+      <p class="q">Every certificate I published, with its size and the start of its fingerprint. Download one, drop it into the checker above, and it should match.</p>
+      <div class="groups" id="groups"></div>
+    </section>
+
+    <section class="contact" aria-labelledby="contact-h">
+      <h2 id="contact-h">Contact</h2>
+      <p>I'm in Thessaloniki, Greece, and work remotely. Email me at <a href="mailto:gmixoulis@gmail.com">gmixoulis@gmail.com</a>, or find me on <a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a>, <a href="https://github.com/gmixoulis">GitHub</a> and <a href="https://twitter.com/GeorgeMicou">X</a>.</p>
+      <p class="q">Elsewhere on the site: my notes in the <a href="../../garden/">zen garden</a>, and <a href="../../play/">Ledger Run</a>, a résumé you can play.</p>
+    </section>
+  </div>
+</main>
+
+<footer class="wrap">
+  <p>Prototype. The fingerprints are SHA-256 hashes computed with your browser's Web Crypto API. The 34 published fingerprints are written into this page's source.</p>
+</footer>
+
+<script type="application/json" id="manifest">[{"file":"1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg","sha256":"9af145af6604cbb2b5a650f46e505aec7f1e3c9c1f6ffbfa93d0314fe0a20735","kind":"Bachelor Degree","title":"Bachelor Degree Computer Science","bytes":518531},{"file":"1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg","sha256":"6ceb10416ebd607dd8f4e7f0a59839c91e2dd43df91bbebd8add4f3d740879fd","kind":"Master Degree","title":"Master Degree Data And Web Science","bytes":285793},{"file":"Award_Academic-Achievement.jpg","sha256":"0c07faa9bf8292d33a73230601a9c720adc75f3d2493043c429c1036d04506da","kind":"Award","title":"Academic Achievement","bytes":429000},{"file":"Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg","sha256":"0c3f3a9ee4d82a993bf60f216c4efafcc4b68339f981cf122d4f137e4d38ebd9","kind":"Certificate Of Achievement","title":"Introduction To Digital Currencies","bytes":442013},{"file":"Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg","sha256":"09487366836ffd674c1a2a3c720e559e9e210b9be58d010d10b403bcbb90f3d8","kind":"Certificate Of Achievement","title":"TOEIC Listening Reading Test","bytes":623130},{"file":"Certificate-Of-Completion_Advanced-Ethical-Hacking.png","sha256":"b31fda845d322157d4e2ed9e0215dd53d1a6c0f4152c441e77f4aa71aae3d332","kind":"Certificate Of Completion","title":"Advanced Ethical Hacking","bytes":106296},{"file":"Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg","sha256":"9536ec64825ef54abe1d23a8ec8c9b264b16ff1f62df872237d6532e92a778c7","kind":"Certificate Of Completion","title":"Aristoteleio University Of Thessaloniki European Legal Culture Program","bytes":492225},{"file":"Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg","sha256":"5b36a7541e71d37e82fca2397644fb6bde7f2d750eff46a8995a8c11fd970d20","kind":"Certificate Of Completion","title":"CCNA Cisco Certified Network Associate","bytes":673119},{"file":"Certificate-Of-Completion_Cloud-Engineering.png","sha256":"1e6a9f000ba3e1261ca10c147fbfb151bd58edf6d6687a86030ffb02d0a34551","kind":"Certificate Of Completion","title":"Cloud Engineering","bytes":482023},{"file":"Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg","sha256":"f9bad98208f2f0f98d486e4955c49735ae8a31d1af51b70a68c2a44ea86cd325","kind":"Certificate Of Completion","title":"Cybersecurity ELearning Academy","bytes":2514713},{"file":"Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg","sha256":"b78e61ae010e5406d05e08806d82d3d92579a633aa7acf5d9da01ba0c0208c40","kind":"Certificate Of Completion","title":"Digital Skills For Tourism","bytes":290740},{"file":"Certificate-Of-Completion_Discover-Customer.jpg","sha256":"435b78e11ec9dd861e1a31e611bdc0e4646c2105f79dfe3846c7d3b7c13bcddd","kind":"Certificate Of Completion","title":"Discover Customer","bytes":754776},{"file":"Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png","sha256":"e5cbccc98078ae5cf10084a4aaa91c2861e89802235fda2711c41be9a4467cef","kind":"Certificate Of Completion","title":"Entrepreneurship Funding And Development Of New Enterprises","bytes":778987},{"file":"Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg","sha256":"912905c5b4180bd2665f00d11dc4e388eb20900c93aadf9f98be4dba2f12cec9","kind":"Certificate Of Completion","title":"How To Design Build A Website","bytes":292082},{"file":"Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg","sha256":"bd1f56ad8e3deb87dd1527a6e4e7bb83e8c902040a96a2f4a69beefc12177768","kind":"Certificate Of Completion","title":"How To Get Published With IEEE","bytes":370301},{"file":"Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg","sha256":"a2bf19377fdd121c5e72a95ac9ba3ea98aabfa8e1f742aaec82f49e67dc78555","kind":"Certificate Of Completion","title":"Machine Learning And Deep Neural Networks","bytes":490790},{"file":"Certificate-Of-Completion_NFT-Talents-Program.jpg","sha256":"eb21921a38442fca9306f28aaccb574fac065056b83892ec523d1b51075af1aa","kind":"Certificate Of Completion","title":"NFT Talents Program","bytes":691908},{"file":"Certificate-Of-Completion_Networking-Essentials.png","sha256":"dbbe0750414bdb47208327c58d6879a4350808874c72d163a4ccfe2f7e0dcfe8","kind":"Certificate Of Completion","title":"Networking Essentials","bytes":52629},{"file":"Certificate-Of-Completion_Rust-Developer.png","sha256":"0c39590c73f9d9ee91c8ca473b4f60657c61fdad7975322b719371ba349ae501","kind":"Certificate Of Completion","title":"Rust Developer","bytes":66679},{"file":"Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg","sha256":"a30e58003dde82bd6006c0c7abd58aa6c2c33c0bafb106508111d01de009134c","kind":"Certificate Of Completion","title":"Software Development For Telecommunication Networks","bytes":214937},{"file":"Certificate-Of-Completion_The-Hour-Of-Code.jpg","sha256":"ae79f81fdfd43149cd21d35c41c1aa0de234a06f175007efb87f14b962b692cb","kind":"Certificate Of Completion","title":"The Hour Of Code","bytes":612414},{"file":"Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg","sha256":"8edd5690041ea36a6b4f30b19cce83b306f77520bde82d3e3549e53d94f1d0f2","kind":"Certificate Of Participation","title":"Blockchain For The Legal Industry How Is The","bytes":699384},{"file":"Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg","sha256":"7f9ccad4e3e8ca81db62d0c69cdc7870fa73b150eb03f974d1c718c8c62ce98b","kind":"Certificate Of Participation","title":"Blockchain In Education Remote Learning Social Distancing And","bytes":690739},{"file":"Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg","sha256":"d08eb84b89d084b2fcaa95959fa44174cf8b141feea294c31821bd24c86f7415","kind":"Certificate Of Participation","title":"Data Analytics To Strengthen Healthcare Cybersecurity","bytes":537811},{"file":"Certificate-Of-Participation_EY-Cyber-Day.jpg","sha256":"75f584e97c59f46409c340ba2b47adc1104cc7f6731fe99cab50a5ef78bb81ba","kind":"Certificate Of Participation","title":"EY Cyber Day","bytes":1391508},{"file":"Certificate-Of-Participation_GNULinux-Command-Line.jpg","sha256":"4cd76e6f2ff242d0a82afd59ab9904ea30f4a58d6fbec58e245e0bc984d9c168","kind":"Certificate Of Participation","title":"GNULinux Command Line","bytes":587798},{"file":"Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg","sha256":"7d873f4edb6082f351d2d3af1f06c8a0c446ad7fce4ec9d1f7c4844944cf838a","kind":"Certificate Of Participation","title":"Launch Event RippleX Workshop","bytes":315726},{"file":"Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png","sha256":"1ae2bccb58ce560b22e4fc488aa81e1c15e3c017efc0d701b1847891dc3ba8b0","kind":"Certificate Of Participation","title":"MIGMA MARKETING KAI BRAND","bytes":233697},{"file":"Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg","sha256":"d0b8be6cb3fef418fb55fbfb42be8961df72899b032ded3dfc9b639444af6b40","kind":"Certificate Of Participation","title":"Marine Educational Robotics Hydrobot Program","bytes":286832},{"file":"Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg","sha256":"9d16f85acaf146271b6a6b481ce555a8d516eed1cffa142ca13ca26505f69137","kind":"Certificate Of Participation","title":"Processing Data In The Fog The Example Of","bytes":588439},{"file":"Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg","sha256":"5a5e9dfc4fddc45a0c3740f33bd4a0b570f566c0f128e993522c68a6d306c00a","kind":"Certificate Of Participation","title":"Skgcode Project Creation Of A Real Estate Chatbot","bytes":287376},{"file":"Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg","sha256":"a23e160160f0c50e4b54b5f901a82a156a2b966d9f46983ad62cda10ab699e51","kind":"Certificate Of Participation","title":"VeChain ToolChain Digital Transformation Of The Healthcare Industry","bytes":370907},{"file":"English-Certificate_English-Certificate-English-Proficiency.jpg","sha256":"ccbd8dae228cdb7be545bf4c7fdfc7175d7e9f6ee8c4b6cc2bb1b6f14d99b96f","kind":"English Certificate","title":"English Certificate English Proficiency","bytes":287947},{"file":"Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png","sha256":"0e762b1875f458b3346b56cfadef4ebc4a43fbf7cdc6a642b9cbdab8b4d38adc","kind":"Move Sui First Thessaloniki Bootacamp Award","title":"Move Bootcamp Thessaloniki","bytes":727481}]</script>
+<script>
+(() => {
+  const IMG = '../../img/renamed/';
+  const M = JSON.parse(document.getElementById('manifest').textContent);
+  // Demo entry for #demo-match / #demo-mismatch: a test string, never a certificate.
+  const DEMO_TEXT = 'Demo certificate: a short test string built into this page.';
+  const DEMO = { demo: true, kind: 'Demo entry', title: 'the built-in test string', bytes: DEMO_TEXT.length,
+    sha256: '949396cf3f075149fcffc4a6f4cc41c5611d945752ce74b4cd5d055f997b2bf3' };
+  const byHash = new Map(M.map((e, i) => [e.sha256, Object.assign({ n: i + 1 }, e)]));
+  const $ = id => document.getElementById(id);
+  const platen = $('platen'), spec = $('spec'), fp = $('fp'), cells = [...fp.children], cap = $('cap'), logEl = $('log'), verdict = $('verdict');
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const hex = buf => [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+  const quads = h => h.match(/.{4}/g);
+  const num = n => n.toLocaleString('en-US');
+  const size = n => n < 1048576 ? Math.round(n / 1024) + ' KB' : (n / 1048576).toFixed(1) + ' MB';
+  const ms = t => t < 1 ? '<1 ms' : Math.round(t) + ' ms';
+  const kindLabel = k => k.charAt(0) + k.slice(1).toLowerCase();
+  const CAP = cap.textContent;
+  let run = 0;
+
+  function paint(h, state, pub) {
+    fp.className = 'fp';
+    const g = quads(h), p = pub && quads(pub);
+    cells.forEach((c, i) => { c.innerHTML = p ? `<span class="pub">${p[i]}</span>${g[i]}` : g[i]; });
+    void fp.offsetWidth; // restart the reveal
+    fp.className = 'fp on run ' + state;
+  }
+  function show(html, specHtml) {
+    verdict.innerHTML = html;
+    spec.hidden = !specHtml;
+    spec.innerHTML = specHtml || '';
+    platen.classList.toggle('has', !!specHtml);
+  }
+  function fail(msg) {
+    run++;
+    logEl.innerHTML = '';
+    fp.className = 'fp';
+    cells.forEach(c => { c.textContent = '····'; });
+    cap.textContent = CAP;
+    show(`<p>${msg}</p>`);
+  }
+  function log(rows) {
+    logEl.innerHTML = rows.map(([a, b]) => `<li><span>${esc(a)}</span><span>${esc(b)}</span></li>`).join('');
+  }
+  const scan = (e, cap) => `<figure><img src="${IMG + e.file}" alt="Scan of my ${esc(e.title)} certificate"><figcaption>${esc(cap)}</figcaption></figure>`;
+
+  // One path for every check: bytes in, fingerprint + comparison out.
+  async function check(bytes, o) {
+    if (!(window.crypto && crypto.subtle)) return fail('This browser can only compute SHA-256 on a secure (https) page.');
+    const id = ++run;
+    verdict.innerHTML = '<p class="idle">Computing the fingerprint…</p>';
+    const t1 = performance.now();
+    const h = hex(await crypto.subtle.digest('SHA-256', bytes));
+    const t2 = performance.now();
+    if (id !== run) return null;
+    const hit = byHash.get(h) || (o.demo && h === DEMO.sha256 ? DEMO : null);
+    log([
+      [`Read ${num(bytes.length)} bytes`, o.readMs == null ? 'in memory' : ms(o.readMs)],
+      ['Computed SHA-256', ms(t2 - t1)],
+      [`Compared with ${M.length} published${o.demo ? ' + demo' : ''}`, hit ? (hit.demo ? 'demo entry' : `match, no. ${hit.n}`) : 'no match'],
+    ]);
+    return { h, hit };
+  }
+
+  function matched(e, demoNote) {
+    return `<div class="v ok"><span class="sym" aria-hidden="true">≡</span>
+      <p class="vt">Match. This is ${e.demo ? '' : 'my '}<strong>${esc(e.title)}</strong>.</p>
+      <p>${esc(kindLabel(e.kind))} · ${num(e.bytes)} bytes${e.file ? ` · <a href="${IMG + e.file}">${esc(e.file)}</a>` : ''}</p>
+      <p>It is identical, byte for byte, to the ${e.demo ? 'demo entry' : 'file I published here'}.</p>
+      ${demoNote ? `<p class="demo">${demoNote}</p>` : ''}</div>`;
+  }
+  function unmatched(lines, demoNote) {
+    return `<div class="v no"><span class="sym" aria-hidden="true">≢</span>
+      <p class="vt">No match.</p>${lines.map(l => `<p>${l}</p>`).join('')}
+      ${demoNote ? `<p class="demo">${demoNote}</p>` : ''}</div>`;
+  }
+  const POINT = 'A different scan, a re-saved copy, or even one changed byte gives a completely different fingerprint. That is the point.';
+
+  async function checkFile(f) {
+    if (f.size > 50 * 1048576) return fail(`That file is ${size(f.size)}. The largest file I published is 2.4 MB, so it can't match.`);
+    const t0 = performance.now();
+    let buf;
+    try { buf = await f.arrayBuffer(); } catch { return fail("I couldn't read that file. Try choosing it again."); }
+    const r = await check(new Uint8Array(buf), { readMs: performance.now() - t0 });
+    if (!r) return;
+    cap.textContent = CAP;
+    if (r.hit) {
+      paint(r.h, 'ok');
+      cap.textContent = 'Identical to the fingerprint I published for this file.';
+      show(matched(r.hit), scan(r.hit, 'The scan I published, shown from this site'));
+    } else {
+      paint(r.h, 'no');
+      const same = M.find(e => e.file === f.name);
+      const lines = [`This file's fingerprint isn't one of the 34 I published.`, POINT];
+      if (same) lines.push(`Its name matches my file <em>${esc(same.title)}</em>, but its contents don't.`);
+      const isImg = /^image\//.test(f.type);
+      show(unmatched(lines), isImg ? `<figure><img src="${URL.createObjectURL(f)}" alt="The file you dropped"><figcaption>Your file: ${esc(f.name)}</figcaption></figure>` : `<div class="slip">${esc(f.name)}<br>${num(f.size)} bytes</div>`);
+    }
+    if (innerWidth < 861) $('readout').scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
+
+  async function tamper() {
+    const btn = $('tamper'), e = M.find(x => x.file.includes('CCNA'));
+    if (location.protocol === 'file:') return fail("The tampered copy needs to fetch one of my files, and browsers block that for a page opened straight from disk. It works once the page is served from the site. Until then, download a certificate below, change anything in it (even re-saving it will do), and drop it in.");
+    btn.setAttribute('aria-busy', 'true');
+    let bytes;
+    try {
+      const res = await fetch(IMG + e.file);
+      if (!res.ok) throw new Error(res.status);
+      bytes = new Uint8Array(await res.arrayBuffer());
+    } catch {
+      btn.removeAttribute('aria-busy');
+      return fail("I couldn't fetch the original file just now. Try again, or download a certificate below and drop it in.");
+    }
+    btn.removeAttribute('aria-busy');
+    // Flip one bit in the last scan lines, away from JPEG markers, so the picture still decodes.
+    let at = bytes.length - 64;
+    while (bytes[at] >= 0xfe || bytes[at - 1] === 0xff) at--;
+    const copy = bytes.slice(), was = copy[at];
+    copy[at] ^= 1;
+    const r = await check(copy, {});
+    if (!r) return;
+    let diff = 0;
+    for (let i = 0; i < 64; i++) if (r.h[i] !== e.sha256[i]) diff++;
+    paint(r.h, 'no', e.sha256);
+    cap.textContent = 'Small line: the fingerprint I published. Large line: the tampered copy.';
+    const url = URL.createObjectURL(new Blob([copy], { type: 'image/jpeg' }));
+    show(unmatched([
+      `I changed one byte of my CCNA certificate: byte ${num(at + 1)} of ${num(copy.length)}, from 0x${was.toString(16)} to 0x${copy[at].toString(16)}.`,
+      `The two scans look the same, but ${diff} of the 64 fingerprint characters changed, so it no longer matches anything I published.`,
+    ]), scan(e, 'Published') + `<figure><img src="${url}" alt="The tampered copy, which looks the same"><figcaption>Tampered copy, one byte changed</figcaption></figure>`);
+  }
+
+  // Testing hooks: #demo-match and #demo-mismatch run the real check on a built-in test string.
+  async function demo() {
+    const k = location.hash;
+    if (k !== '#demo-match' && k !== '#demo-mismatch') return;
+    const text = k === '#demo-match' ? DEMO_TEXT : DEMO_TEXT.slice(0, -1) + '!';
+    const r = await check(new TextEncoder().encode(text), { demo: true });
+    if (!r) return;
+    const slip = `<div class="slip">${k === '#demo-match' ? esc(text) : esc(text.slice(0, -1)) + '<mark>!</mark>'}</div>`;
+    paint(r.h, r.hit ? 'ok' : 'no');
+    cap.textContent = r.hit ? 'Identical to the fingerprint of the demo entry.' : CAP;
+    show(r.hit
+      ? matched(r.hit, 'Demo: this hashed a test string built into the page, not one of my certificates.')
+      : unmatched(["This fingerprint isn't one of the published ones.", POINT], 'Demo: the built-in test string with its last character changed, not a real file.'), slip);
+  }
+
+  // Wiring
+  $('file').addEventListener('change', e => { const f = e.target.files[0]; if (f) checkFile(f); });
+  $('tamper').addEventListener('click', tamper);
+  addEventListener('dragover', e => { e.preventDefault(); platen.classList.add('over'); });
+  addEventListener('dragleave', e => { if (!e.relatedTarget) platen.classList.remove('over'); });
+  addEventListener('drop', e => {
+    e.preventDefault(); platen.classList.remove('over');
+    const f = e.dataTransfer.files[0];
+    if (f) checkFile(f);
+  });
+  addEventListener('hashchange', demo);
+  demo();
+
+  // The list of 34, grouped by kind
+  const GROUPS = [['Degrees', /Degree/], ['Awards', /Award/], ['Certificates of achievement', /Achievement/],
+    ['Certificates of completion', /Completion/], ['Certificates of participation', /Participation/], ['Language', /English/]];
+  $('groups').innerHTML = GROUPS.map(([name, re]) => {
+    const items = M.filter(e => re.test(e.kind));
+    return `<section><h3>${name} <span class="mono q">${items.length}</span></h3><ul>${items.map(e =>
+      `<li><a href="${IMG + e.file}">${esc(e.title)}</a><span class="m">${size(e.bytes)} · ${quads(e.sha256).slice(0, 2).join(' ')} …</span><a class="d" href="${IMG + e.file}" download aria-label="Download ${esc(e.title)} to test">Download to test</a></li>`).join('')}</ul></section>`;
+  }).join('');
+})();
+</script>
+</body>
+</html>

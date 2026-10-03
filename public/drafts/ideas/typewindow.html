@@ -1,0 +1,1118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Type as window · George Michoulis</title>
+<meta name="description" content="George Michoulis, blockchain developer and researcher in Thessaloniki. Smart contracts, graph-based ML and full-stack Web3 systems.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a090b">
+<!-- Dark only, on purpose: the page is a sheet of ink with the words cut out of it, and the light
+     behind the cut-outs only reads against a dark sheet. -->
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&display=swap" rel="stylesheet">
+<style>
+:root{--s:#0a090b;--ink:#f2e9d8;--ink2:#d2c9ba;--mute:#a59c8e;--coral:#ff6a48;--coral2:#ff8e70;--line:rgba(242,233,216,.14);--pad:clamp(16px,3.3vw,56px);color-scheme:dark}
+*{box-sizing:border-box}
+html{background:var(--s);-webkit-text-size-adjust:100%;overflow-x:clip}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{margin:0;background:var(--s);color:var(--ink2);font:400 15px/1.5 Newsreader,Georgia,serif;font-optical-sizing:auto;-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit;text-underline-offset:3px;text-decoration-thickness:1px;text-decoration-color:rgba(242,233,216,.35);transition:color .25s,text-decoration-color .25s}
+a:hover{color:var(--ink);text-decoration-color:var(--coral)}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;text-align:inherit}
+:focus-visible{outline:2px solid var(--coral2);outline-offset:3px;border-radius:2px}
+p,ol,ul,figure{margin:0}
+ol,ul{padding:0;list-style:none}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.js main{visibility:hidden}
+.js.ready main{visibility:visible}
+
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+.no-gl #gl{display:none}
+/* no WebGL: the cut-outs look into a still, lit field instead of particles */
+.no-gl body{background:radial-gradient(60vw 50vh at 28% 42%,#4a2418 0,rgba(20,16,20,0) 70%),radial-gradient(55vw 45vh at 76% 66%,#1f2745 0,rgba(20,16,20,0) 70%),#141015 fixed}
+
+.back{position:fixed;z-index:40;left:calc(var(--pad) - 10px);top:12px;padding:7px 10px;background:var(--s);border-radius:3px;font:500 13px/1 Archivo,sans-serif;color:var(--mute);text-decoration:none}
+.back:hover{color:var(--ink)}
+.seam{position:fixed;z-index:35;left:0;top:0;width:100%;height:1px;background:linear-gradient(90deg,rgba(255,106,72,0),var(--coral) 18%,#ffd9cc 50%,var(--coral) 82%,rgba(255,106,72,0));box-shadow:0 0 14px 1px rgba(255,106,72,.5);opacity:0;pointer-events:none;will-change:transform,opacity}
+
+/* the giant words: white type on the ink sheet, blended with `darken`, so the sheet stays exactly
+   --s while the white letters take whatever the canvas shows behind them */
+.plate{background:var(--s);mix-blend-mode:darken}
+.w{margin:0;font:800 100px/.84 Archivo,sans-serif;font-stretch:125%;letter-spacing:-.018em;color:#fff;white-space:nowrap;width:max-content}
+.w .ln{display:block;width:max-content}
+.w .bl{display:inline-block;width:0;height:0;vertical-align:baseline}
+.w .ln+.ln{margin-top:var(--gap,0)}
+#w0,#w5{--gap:.17em}
+.mail{display:block;font:inherit;letter-spacing:inherit;color:#fff;cursor:copy}
+.mail:focus-visible{outline:0}
+
+/* shared small type */
+.lab{font:500 12.5px/1.45 Archivo,sans-serif;letter-spacing:.005em;color:var(--mute)}
+.yr{font:500 12.5px/1.4 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:var(--coral2)}
+.role{display:block;font:600 14.5px/1.3 Archivo,sans-serif;color:var(--ink)}
+.org{display:block;font:italic 400 14.5px/1.35 Newsreader,serif;color:var(--ink2)}
+.d{display:block;font:400 14px/1.4 Newsreader,serif;color:var(--ink2)}
+.ti{font:400 1em/1.32 Newsreader,serif;color:var(--ink)}
+.num{display:block;font:600 22px/.95 Archivo,sans-serif;font-stretch:112.5%;letter-spacing:-.03em;color:var(--coral2);margin-bottom:.25em}
+.num i{font:italic 400 12.5px/1 Newsreader,serif;letter-spacing:0;color:var(--mute);margin-left:.35em}
+.site{font:500 13px/1.3 Archivo,sans-serif;color:var(--ink2);text-decoration:none;border-bottom:1px solid rgba(242,233,216,.22);padding-bottom:1px}
+.site:hover,.site:focus-visible,.site.on{color:var(--ink);border-color:var(--coral)}
+.site .desc{display:none}
+.site img{display:none}
+.cf{text-decoration:none;color:var(--ink);transition:color .2s}
+.cf.hot{color:var(--coral2)}
+.sep{color:var(--coral);opacity:.75}
+.soc a{font:600 13px/1.2 Archivo,sans-serif;color:var(--ink);text-decoration:none;border-bottom:1px solid rgba(255,106,72,.55);padding-bottom:1px}
+.soc a:hover{color:var(--coral2)}
+.status{font:italic 400 14px/1.3 Newsreader,serif;color:var(--coral2);min-height:1.3em}
+
+/* ---------- wide: pinned sheets that wipe into each other ---------- */
+.wide .plate,.wide .notes{position:fixed;inset:0;clip-path:inset(0 0 100% 0)}
+.wide .plate,.wide .notes{pointer-events:none}
+.wide .plate .mail,.wide .notes a,.wide .notes button,.wide .notes .hov{pointer-events:auto}
+.wide .mv{position:absolute;left:0;top:0;transform-origin:50% 50%}
+.wide .pl{position:absolute;margin:0}
+.wide .rv{opacity:0;translate:0 10px;transition:opacity .7s ease,translate .9s cubic-bezier(.2,.8,.2,1)}
+.wide .live .rv{opacity:1;translate:none;transition-delay:calc(150ms + var(--d,0)*70ms)}
+.wide .axis{height:0}
+.wide .axis span{position:absolute;top:0;transform:translateX(-50%);font:500 11.5px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:var(--mute)}
+.wide .axis span::before{content:"";position:absolute;left:50%;top:-9px;width:1px;height:5px;background:var(--mute);opacity:.7}
+.wide .axis::before{content:"";position:absolute;left:0;right:0;top:-12px;height:1px;background:var(--line)}
+.wide .roles li{padding-left:12px;border-left:1px solid rgba(255,106,72,.5)}
+.wide .roles li.now{border-left-color:var(--coral)}
+.wide .roles .yr{display:block;margin-bottom:2px}
+.wide .roles li:hover .role{color:var(--coral2)}
+.wide .sites{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.wide .sites .lbl{font:italic 400 14px/1.3 Newsreader,serif;color:var(--mute)}
+.wide .stack li{writing-mode:vertical-rl;rotate:180deg;white-space:nowrap;font:500 12px/16px Archivo,sans-serif;letter-spacing:.02em;color:var(--mute)}
+.wide .papers .pc{cursor:default}
+.wide .papers .pv{font:500 12px/1.4 Archivo,sans-serif;color:var(--mute)}
+.wide .papers .pv b{font-weight:600;color:var(--coral2);font-variant-numeric:tabular-nums}
+.wide .papers li.on .ti{color:var(--coral2)}
+.wide .bio p{font-size:14px;line-height:1.42}
+.wide .bio b{display:block;font:600 13px/1.35 Archivo,sans-serif;color:var(--ink)}
+.wide .tail{font-size:14px}
+.wide .courses li,.wide .tTalk,.wide .awards li{font:400 15px/1.3 Newsreader,serif;color:var(--ink)}
+.wide .courses li b,.wide .awards li b{display:block;font:600 1.02em/1.2 Archivo,sans-serif;color:var(--ink)}
+.wide .awards li span{display:block}
+.wide .awards li .lab{font-size:.8em;margin-top:.2em}
+.wide .courses li{text-align:center}
+.wide .certs .cf,.wide .certs .sep{position:absolute;white-space:pre}
+.wide .soc li{text-align:center}
+.wide .mailring{position:absolute;inset:-10px -14px;border:2px solid var(--coral2);border-radius:6px;opacity:0;transition:opacity .2s;pointer-events:none}
+.wide .mfocus .mailring{opacity:1}
+.wide .n-hint{font:italic 400 14px/1 Newsreader,serif;color:var(--mute);text-align:center}
+.wide .n-lede{font-size:16px;line-height:1.45}
+.wide .n-lede b{font:600 16px/1.4 Archivo,sans-serif;color:var(--ink)}
+.wide .n-now{font:400 14px/1.35 Newsreader,serif;color:var(--ink);text-align:center}
+.wide .n-now b{display:block;font:600 12px/1.3 Archivo,sans-serif;color:var(--coral2);margin-bottom:3px}
+
+/* ---------- flow: phones and reduced motion. Words wrap, details stack under each word ---------- */
+.flow .plate{position:relative;padding:clamp(56px,10vh,110px) var(--pad) 20px}
+.flow #c0 .plate{padding-top:clamp(84px,16vh,150px)}
+.flow .notes{position:relative;background:var(--s);padding:8px var(--pad) clamp(64px,11vh,120px)}
+.flow .notes>.mv{max-width:680px}
+.flow .mv>*+*{margin-top:1.4rem}
+.flow .n-hint,.flow .axis,.flow .mailring{display:none}
+.flow .n-lede{font-size:17px;line-height:1.45;color:var(--ink2)}
+.flow .n-lede b{display:block;font:600 18px/1.3 Archivo,sans-serif;color:var(--ink);margin-bottom:.35rem}
+.flow .n-now{font-size:15px;color:var(--ink2)}
+.flow .n-now b{font:600 13px/1.3 Archivo,sans-serif;color:var(--coral2);margin-right:.4em}
+.flow .roles li{padding:14px 0;border-top:1px solid var(--line)}
+.flow .roles .yr{display:block;margin-bottom:3px}
+.flow .sites{display:grid;grid-template-columns:1fr 1fr;gap:18px 14px}
+.flow .sites .lbl{grid-column:1/-1;font:italic 400 15px/1.3 Newsreader,serif;color:var(--mute)}
+.flow .site{display:block;border:0}
+.flow .site img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;margin-bottom:7px;background:#17141a;border:1px solid var(--line)}
+.flow .site .desc{display:block;font:400 13.5px/1.35 Newsreader,serif;color:var(--mute);margin-top:2px}
+.flow .stack{display:flex;flex-wrap:wrap;gap:6px 18px;font:500 13px/1.4 Archivo,sans-serif;color:var(--mute)}
+.flow .bio p+p{margin-top:.8rem}
+.flow .bio b{display:block;font:600 14px/1.35 Archivo,sans-serif;color:var(--ink)}
+.flow .papers li{padding:14px 0;border-top:1px solid var(--line)}
+.flow .papers .num{font-size:22px}
+.flow .papers .ti{font-size:16px}
+.flow .papers .pv{margin-top:4px;font:500 12.5px/1.4 Archivo,sans-serif;color:var(--mute)}
+.flow .papers .pv b{font-weight:600;color:var(--coral2)}
+.flow .courses li,.flow .awards li{padding:10px 0;border-top:1px solid var(--line);color:var(--ink)}
+.flow .courses li b,.flow .awards li b{font:600 14px/1.3 Archivo,sans-serif;color:var(--ink)}
+.flow .awards li span{display:block;color:var(--ink2)}
+.flow .certs{font:500 13.5px/1.75 Archivo,sans-serif;font-stretch:92%}
+.flow .certs li{display:inline}
+.flow .soc{display:flex;flex-wrap:wrap;gap:10px 22px}
+.flow .mail{white-space:nowrap}
+
+.peek{position:fixed;z-index:45;left:0;top:0;width:300px;padding:6px;background:#141215;border:1px solid var(--line);border-radius:3px;box-shadow:0 22px 60px rgba(0,0,0,.65);opacity:0;pointer-events:none;transition:opacity .22s ease}
+.peek.on{opacity:1}
+.peek img,.peek canvas{display:block;width:100%;height:auto;background:#1c191d}
+.peek canvas{display:none}
+.peek.gif img{display:none}.peek.gif canvas{display:block}
+.peek p{margin:7px 3px 2px;font:400 13px/1.35 Newsreader,serif;color:var(--ink2)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a class="back" href="index.html">← All ideas</a>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="seam" aria-hidden="true"></div>
+
+<main>
+<!-- 0 · name -->
+<section class="ch" id="c0" aria-labelledby="w0">
+  <div class="plate"><div class="mv"><h1 class="w" id="w0">George Michoulis</h1></div></div>
+  <div class="notes"><div class="mv">
+    <p class="n-lede pl rv"><b>Blockchain developer and researcher.</b> Solidity contracts, graph embeddings that catch fraud on chains, and lectures on networks and security.</p>
+    <p class="n-now pl rv"><b>Now</b>Cyberscope by TAC, since 05/2026</p>
+    <p class="n-where pl rv lab">Thessaloniki, Greece<br>Works remotely</p>
+    <p class="n-hint pl" aria-hidden="true">scroll</p>
+  </div></div>
+</section>
+
+<!-- 1 · build -->
+<section class="ch" id="c1" aria-labelledby="w1">
+  <div class="plate"><div class="mv"><h2 class="w" id="w1">Build</h2></div></div>
+  <div class="notes"><div class="mv">
+    <h3 class="sr">Roles</h3>
+    <ol class="roles">
+      <li class="pl rv hov" data-l="0" data-s="2022" data-e="2024"><span class="yr">2022 – 2024</span><b class="role">Blockchain &amp; Full-Stack Developer</b><span class="org">University of Nicosia / IFF</span><span class="d">Next.js, NestJS and Docker apps, and a Web3 NFT marketplace.</span></li>
+      <li class="pl rv hov" data-l="1" data-s="2023" data-e="2025"><span class="yr">2023 – 2025</span><b class="role">Lecturer &amp; Academic Partner</b><span class="org">University of Derby / Mediterranean College</span><span class="d">Networks and security, web scripting, application development.</span></li>
+      <li class="pl rv hov" data-l="2" data-s="2024" data-e="2026"><span class="yr">2024 – 2026</span><b class="role">Blockchain Developer &amp; Researcher</b><span class="org">Sidroco Holdings Ltd</span><span class="d">An NFT marketplace for 5G, Hyperledger Fabric prototypes, an Erasmus+ LMS and EU research projects.</span></li>
+      <li class="pl rv hov now" data-l="3" data-s="2026.33" data-e="2026.9"><span class="yr">05/2026 – now</span><b class="role">Web3 Full-Stack Developer</b><span class="org">Cyberscope by TAC</span><span class="d">Contracts, on-chain integrations, React and Next frontends, security tooling.</span></li>
+    </ol>
+    <div class="axis pl rv" aria-hidden="true"><span data-y="2022">2022</span><span data-y="2023">2023</span><span data-y="2024">2024</span><span data-y="2025">2025</span><span data-y="2026">2026</span></div>
+    <h3 class="sr">Sites I built</h3>
+    <ul class="sites pl rv">
+      <li class="lbl" aria-hidden="true">sites I built</li>
+      <li><a class="site" href="../../img/portfolio/verde.uom.gr.PNG" data-peek="../../img/portfolio/verde.uom.gr.PNG"><img src="../../img/portfolio/verde.uom.gr.PNG" alt="" loading="lazy">verde.uom.gr<span class="desc">VerDe, the credential verification system from my papers. Its contact page shows website and email cards beside a map of the University of Macedonia area.</span></a></li>
+      <li><a class="site" href="../../img/portfolio/metau.unic.ac.cy.png" data-peek="../../img/portfolio/metau.unic.ac.cy.png"><img src="../../img/portfolio/metau.unic.ac.cy.png" alt="" loading="lazy">metau.unic.ac.cy<span class="desc">University of Nicosia course site headed “The future of education is now”, with a Connect Wallet button.</span></a></li>
+      <li><a class="site" href="../../img/portfolio/accelerate.png" data-peek="../../img/portfolio/accelerate.png"><img src="../../img/portfolio/accelerate.png" alt="" loading="lazy">accelerate.unic.ac.cy<span class="desc">University of Nicosia sign-in page, an email and password form beside red and black circles.</span></a></li>
+      <li><button type="button" class="site" data-peek="../../img/portfolio/bbf-gui.ddns.net.gif">bbf-gui.ddns.net<span class="desc">Blockchain Benchmarking Framework, for deploying and evaluating blockchain protocols. A violet isometric city of buildings and coins.</span></button></li>
+      <li><a class="site" href="../../img/portfolio/celc.web.auth.gr.PNG" data-peek="../../img/portfolio/celc.web.auth.gr.PNG"><img src="../../img/portfolio/celc.web.auth.gr.PNG" alt="" loading="lazy">celc.web.auth.gr<span class="desc">Greek-language site of a centre for European legal culture, with a stone arched bridge over a river.</span></a></li>
+      <li><a class="site" href="../../img/portfolio/eudem.polsci.auth.gr.PNG" data-peek="../../img/portfolio/eudem.polsci.auth.gr.PNG"><img src="../../img/portfolio/eudem.polsci.auth.gr.PNG" alt="" loading="lazy">eudem.polsci.auth.gr<span class="desc">EUDEM Jean Monnet Chair site, with a ring-of-stars logo and flags outside a glass building.</span></a></li>
+      <li><a class="site" href="../../img/portfolio/marlab.ode.uom.gr.PNG" data-peek="../../img/portfolio/marlab.ode.uom.gr.PNG"><img src="../../img/portfolio/marlab.ode.uom.gr.PNG" alt="" loading="lazy">marlab.ode.uom.gr<span class="desc">MarLab, the Marketing Laboratory of the University of Macedonia: menu, banner and news column.</span></a></li>
+    </ul>
+    <h3 class="sr">Tools</h3>
+    <ul class="stack">
+      <li class="pl rv">Solidity</li><li class="pl rv">TypeScript</li><li class="pl rv">React and Next.js</li><li class="pl rv">NestJS and Docker</li><li class="pl rv">Hyperledger Fabric</li><li class="pl rv">Graph embeddings</li>
+    </ul>
+  </div></div>
+</section>
+
+<!-- 2 · research -->
+<section class="ch" id="c2" aria-labelledby="w2">
+  <div class="plate"><div class="mv"><h2 class="w" id="w2" aria-label="Research">Research</h2></div></div>
+  <div class="notes"><div class="mv">
+    <div class="bio">
+      <p class="pl rv"><b>MSc Data and Web Science, 2020–2022</b>Aristotle University of Thessaloniki. Graph-embedding methods for spotting fraud on blockchains, funded by a DeepMind scholarship.</p>
+      <p class="pl rv"><b>BSc Applied Informatics, 2015–2020</b>University of Macedonia. The thesis verified academic credentials on Ethereum.</p>
+      <p class="pl rv"><b>Since then</b>Papers and startup work on how well ledgers hold up in practice.</p>
+    </div>
+    <h3 class="sr">Papers, with citation counts</h3>
+    <ol class="papers">
+      <li class="hov" data-n="0" data-c="32"><p class="pc pl"><span class="num">32<i>citations</i></span><span class="ti">A process-aware approach for blockchain-based verification of academic qualifications</span></p><p class="pv pl"><b>2022</b> · Simulation Modelling Practice and Theory 121, 102642</p></li>
+      <li class="hov" data-n="1" data-c="11"><p class="pc pl"><span class="num">11<i>citations</i></span><span class="ti">Verification of Academic Qualifications through Ethereum Blockchain: An Introduction to VerDe</span></p><p class="pv pl"><b>2020</b> · XIV Balkan Conference on Operational Research</p></li>
+      <li class="hov" data-n="2" data-c="7"><p class="pc pl"><span class="num">7<i>citations</i></span><span class="ti">Exploring decentralized governance: a framework applied to Compound Finance</span></p><p class="pv pl"><b>2023</b> · Intl. Conf. on Mathematical Research for Blockchain Economy</p></li>
+      <li class="hov" data-n="3" data-c="1"><p class="pc pl"><span class="num">1<i>citation</i></span><span class="ti">FraMark: A Blockchain Marketplace for 5G Network Management using Fractional NFTs</span></p><p class="pv pl"><b>2024</b> · 7th World Symposium on Communication Engineering (WSCE)</p></li>
+      <li class="hov" data-n="4" data-c="1"><p class="pc pl"><span class="num">1<i>citation</i></span><span class="ti">Data security for smart cities</span></p><p class="pv pl"><b>2025</b></p></li>
+      <li class="hov" data-n="5" data-c="0"><p class="pc pl"><span class="num">0<i>citations</i></span><span class="ti">Unlocking 5G network slicing: a survey on blockchain marketplaces utilizing NFTs, AI, and advanced resource management</span></p><p class="pv pl"><b>2025</b> · IEEE ICCE 2025</p></li>
+      <li class="hov" data-n="6" data-c="0"><p class="pc pl"><span class="num">0<i>citations</i></span><span class="ti">Graph Embedding and Node Features for Drug-Target Interaction Prediction</span></p><p class="pv pl"><b>2022</b> · Aristotle University of Thessaloniki, MSc work</p></li>
+      <li class="hov" data-n="7" data-c="0"><p class="pc pl"><span class="num">0<i>citations</i></span><span class="ti">Blockchain in Higher Education: permissioned and permissionless approaches</span></p><p class="pv pl"><b>2022</b> · 4th Summit on Gender Equality in Computing</p></li>
+    </ol>
+    <p class="tail pl rv">Also two Greek-language theses on verifying academic titles with Ethereum, 2020 and 2021. Counts from <a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Google Scholar</a>.</p>
+  </div></div>
+</section>
+
+<!-- 3 · teach -->
+<section class="ch" id="c3" aria-labelledby="w3">
+  <div class="plate"><div class="mv"><h2 class="w" id="w3">Teach</h2></div></div>
+  <div class="notes"><div class="mv">
+    <p class="tT pl rv lab">Lecturer and academic partner<br><span class="yr">2023 – 2025</span></p>
+    <p class="tU pl rv org">University of Derby / Mediterranean College</p>
+    <h3 class="sr">Courses</h3>
+    <ul class="courses">
+      <li class="pl rv"><b>Networks</b>and Security</li>
+      <li class="pl rv"><b>Web</b>Scripting</li>
+      <li class="pl rv"><b>Application</b>Development</li>
+    </ul>
+    <p class="tTalk pl rv">Public talks on Web3 and edge tech</p>
+  </div></div>
+</section>
+
+<!-- 4 · proof -->
+<section class="ch" id="c4" aria-labelledby="w4">
+  <div class="plate"><div class="mv"><h2 class="w" id="w4">Proof</h2></div></div>
+  <div class="notes"><div class="mv">
+    <h3 class="sr">Awards</h3>
+    <ol class="awards">
+      <li class="pl rv"><b>DeepMind Scholarship</b><span>Aristotle University of Thessaloniki</span><span class="lab">2020–2022</span></li>
+      <li class="pl rv"><b>3rd place</b><span>Infinitech Hackathon, Crowdpolicy</span><span class="lab">06/2022</span></li>
+      <li class="pl rv"><b>Basic Research grant</b><span>University of Macedonia</span><span class="lab">2020–2021</span></li>
+      <li class="pl rv"><b>Move/Sui Bootcamp</b><span>Thessaloniki award</span><span class="lab">2025</span></li>
+    </ol>
+    <h3 class="sr">Certificates, each linked to its scan</h3>
+    <ul class="certs"></ul>
+    <p class="pcap pl rv lab">34 certificates, set inside the letters. Each title opens its scan.</p>
+  </div></div>
+</section>
+
+<!-- 5 · contact -->
+<section class="ch" id="c5" aria-labelledby="w5">
+  <div class="plate"><div class="mv"><h2 class="w" id="w5"><button type="button" class="mail" aria-label="Copy the email address gmixoulis@gmail.com">gmixoulis@gmail.com</button></h2></div></div>
+  <div class="notes"><div class="mv">
+    <span class="mailring pl" aria-hidden="true"></span>
+    <p class="howto pl rv">Click the address to copy it, or <a href="mailto:gmixoulis@gmail.com">open your mail app</a>.<span class="status" role="status" aria-live="polite"></span></p>
+    <h3 class="sr">Elsewhere</h3>
+    <ul class="soc">
+      <li class="pl rv"><a href="https://www.linkedin.com/in/george-michoulis/">LinkedIn</a></li>
+      <li class="pl rv"><a href="https://github.com/gmixoulis">GitHub</a></li>
+      <li class="pl rv"><a href="https://twitter.com/GeorgeMicou">X</a></li>
+      <li class="pl rv"><a href="https://scholar.google.com/citations?user=nk0lq8YAAAAJ">Scholar</a></li>
+    </ul>
+    <p class="loc pl rv lab">Thessaloniki, Greece<br>Works remotely</p>
+    <p class="also pl rv lab">Also on this site: <a href="../../garden/">Zen garden</a> and <a href="../../play/">Ledger Run</a><br>© 2026 George Michoulis</p>
+  </div></div>
+</section>
+</main>
+
+<div class="peek" aria-hidden="true"><img alt=""><canvas></canvas><p></p></div>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+/* Layout, glyph analysis and scroll choreography.
+   Each giant word is rendered once into an offscreen canvas at its exact DOM glyph positions. From that
+   mask we measure counters (largest empty rectangle inside each letter, histogram method), stems
+   (longest vertical ink runs) and the horizontal ink spans used to flow the certificates inside the
+   letters of "Proof". The small type is then set in those places. */
+(() => {
+const html = document.documentElement;
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const secs = $$('.ch'), words = secs.map(s => $('.w', s)), plates = secs.map(s => $('.plate', s)), notes = secs.map(s => $('.notes', s));
+const mvs = secs.map(s => $$('.mv', s));
+const HOLD = [.8, 1.5, 3.2, 1.2, 1.7, 1.1], WIPE = .8, LH = .84;
+const LINES = [['George|Michoulis', 'George|Michoulis'], ['Build', 'Build'], ['Research', 'Rese|arch'], ['Teach', 'Teach'], ['Proof', 'Proof'], ['gmixoulis|@gmail.com', 'gmixoulis|@gmail|.com']];
+const CAPH = [.6, .42, 1, .42, .5, .5], CY = [.47, .39, .5, .47, .45, .43];
+const TW = window.TW = { v: 0, state: 0, anc: secs.map(() => ({ x: -1e4, y: -1e4, s: 1 })), glow: [innerWidth / 2, innerHeight / 2], geo: null, render: null, pulse() {}, hi() {}, wide: false, rm: RM, t0: 0, intro: 0 };
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const sm = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+let vw = 0, vh = 0, pad = 16, wide = false, lenis = null, AN = [], boxes = [], starts = [], lastW = 0;
+const last = { clip: [], tf: [] };
+
+/* ---------- certificates (34 real scans, titles in sentence case) ---------- */
+const CERTS = [
+  ['1Master-Degree_1Master-Degree-Data-And-Web-Science.jpg', 'MSc Data and Web Science', 'degree'],
+  ['1Bachelor-Degree_Bachelor-Degree-Computer-Science.jpg', 'BSc Applied Informatics', 'degree'],
+  ['Award_Academic-Achievement.jpg', 'Academic achievement award', 'award'],
+  ['Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png', 'Move bootcamp Thessaloniki award', 'award'],
+  ['Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg', 'CCNA, Cisco Certified Network Associate'],
+  ['Certificate-Of-Completion_Networking-Essentials.png', 'Networking essentials'],
+  ['Certificate-Of-Completion_Advanced-Ethical-Hacking.png', 'Advanced ethical hacking'],
+  ['Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg', 'Cybersecurity eLearning academy'],
+  ['Certificate-Of-Completion_Rust-Developer.png', 'Rust developer'],
+  ['Certificate-Of-Completion_Cloud-Engineering.png', 'Cloud engineering'],
+  ['Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg', 'Machine learning and deep neural networks'],
+  ['Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg', 'Introduction to digital currencies'],
+  ['Certificate-Of-Completion_NFT-Talents-Program.jpg', 'NFT Talents program'],
+  ['Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg', 'How to get published with IEEE'],
+  ['Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg', 'Software development for telecommunication networks'],
+  ['Certificate-Of-Completion_How-To-Design-Build-A-Website.jpg', 'How to design and build a website'],
+  ['Certificate-Of-Completion_The-Hour-Of-Code.jpg', 'The Hour of Code'],
+  ['Certificate-Of-Participation_GNULinux-Command-Line.jpg', 'GNU/Linux command line'],
+  ['Certificate-Of-Participation_Launch-Event-RippleX-Workshop.jpg', 'RippleX workshop launch event'],
+  ['Certificate-Of-Participation_VeChain-ToolChain-Digital-Transformation-Of-The-Healthcare-Industry.jpg', 'VeChain ToolChain: digital transformation of the healthcare industry'],
+  ['Certificate-Of-Participation_Blockchain-For-The-Legal-Industry-How-Is-The.jpg', 'Blockchain for the legal industry…'],
+  ['Certificate-Of-Participation_Blockchain-In-Education-Remote-Learning-Social-Distancing-And.jpg', 'Blockchain in education: remote learning, social distancing and…'],
+  ['Certificate-Of-Participation_Data-Analytics-To-Strengthen-Healthcare-Cybersecurity.jpg', 'Data analytics to strengthen healthcare cybersecurity'],
+  ['Certificate-Of-Participation_Processing-Data-In-The-Fog-The-Example-Of.jpg', 'Processing data in the fog…'],
+  ['Certificate-Of-Participation_EY-Cyber-Day.jpg', 'EY Cyber Day'],
+  ['Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg', 'Skgcode project: creating a real-estate chatbot'],
+  ['Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png', 'Entrepreneurship, funding and development of new enterprises'],
+  ['Certificate-Of-Completion_Discover-Customer.jpg', 'Discover customer'],
+  ['Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png', 'Marketing mix and brand'],
+  ['Certificate-Of-Completion_Digital-Skills-For-Tourism.jpg', 'Digital skills for tourism'],
+  ['Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg', 'European legal culture program, Aristotle University of Thessaloniki'],
+  ['Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg', 'Marine educational robotics, Hydrobot program'],
+  ['Certificate-Of-Achievement_TOEIC-Listening-Reading-Test.jpg', 'TOEIC listening and reading test'],
+  ['English-Certificate_English-Certificate-English-Proficiency.jpg', 'Certificate of proficiency in English'],
+];
+const kindOf = f => { const k = f.split('_')[0]; return /Completion/.test(k) ? 'certificate of completion' : /Participation/.test(k) ? 'certificate of participation' : /Achievement/.test(k) ? 'certificate of achievement' : /Degree/.test(k) ? 'degree' : /Award/.test(k) ? 'award' : 'certificate'; };
+const certURL = f => '../../img/renamed/' + f;
+const certList = $('.certs');
+function certsFlow() {
+  certList.innerHTML = CERTS.map(([f, t], i) => `<li><a class="cf" data-i="${i}" href="${certURL(f)}" data-peek="${certURL(f)}" aria-label="${t}, ${kindOf(f)} (opens the scan)">${t}</a>${i < CERTS.length - 1 ? '<span class="sep" aria-hidden="true"> / </span>' : ''}</li>`).join('');
+}
+
+/* ---------- words: lines + fit to width ---------- */
+function buildLines(el, spec) {
+  const host = $('.mail', el) || el, parts = spec.split('|');
+  host.innerHTML = parts.map(p => `<span class="ln">${p}<i class="bl"></i></span>`).join(el.id === 'w0' ? ' ' : '');
+}
+function fit(el, k) {
+  const lns = $$('.ln', el);
+  lns.forEach(l => l.style.fontSize = '100px');
+  const w100 = lns.map(l => l.getBoundingClientRect().width);
+  let F = w100.map(w => (vw - 2 * pad) / w * 100);
+  if (wide && k === 2) F = [Math.min(vh * .72, 820)];
+  const tot = F.reduce((s, f) => s + f * LH, 0), cap = (wide ? CAPH[k] : .95) * vh;
+  if (tot > cap) F = F.map(f => f * cap / tot);
+  lns.forEach((l, i) => l.style.fontSize = F[i].toFixed(2) + 'px');
+  return F;
+}
+
+/* ---------- glyph mask ---------- */
+function analyze(el, F) {
+  const r = el.getBoundingClientRect(), W = Math.ceil(r.width) + 2, H0 = Math.ceil(r.height), PY = Math.ceil(Math.max(...F) * .3), H = H0 + 2 * PY;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const x = cv.getContext('2d', { willReadFrequently: true }); x.fillStyle = '#fff';
+  const rg = document.createRange(), chars = [], lines = [];
+  for (const ln of $$('.ln', el)) {
+    const fs = parseFloat(ln.style.fontSize);
+    x.font = `800 expanded ${fs}px Archivo`; if ('fontStretch' in x) x.fontStretch = 'expanded';
+    const base = ln.querySelector('.bl').getBoundingClientRect().top - r.top;
+    const L = { fs, base, xTop: base - x.measureText('x').actualBoundingBoxAscent, capTop: base - x.measureText('H').actualBoundingBoxAscent, i0: chars.length };
+    const tn = ln.firstChild, txt = tn.textContent;
+    for (let i = 0; i < txt.length; i++) {
+      rg.setStart(tn, i); rg.setEnd(tn, i + 1); const cr = rg.getBoundingClientRect();
+      x.fillText(txt[i], cr.left - r.left, base + PY);
+      chars.push({ c: txt[i], x: cr.left - r.left, w: cr.width, L });
+    }
+    L.i1 = chars.length; lines.push(L);
+  }
+  const d = x.getImageData(0, 0, W, H).data, mask = new Uint8Array(W * H);
+  for (let i = 0; i < W * H; i++) mask[i] = d[i * 4 + 3] > 127 ? 1 : 0;
+  return { el, W, H, H0, PY, F, mask, chars, lines, cv };
+}
+const at = (A, x, y) => { x |= 0; y = (y | 0) + A.PY; return x >= 0 && x < A.W && y >= 0 && y < A.H ? A.mask[y * A.W + x] : 0; };
+
+/* largest empty rectangle in a region, keeping m px clear of ink (grid step 2px) */
+function freeRect(A, x0, y0, x1, y1, m = 8) {
+  x0 = Math.round(x0); y0 = Math.round(y0); const g = 2, cw = Math.max(1, Math.floor((x1 - x0) / g)), ch = Math.max(1, Math.floor((y1 - y0) / g));
+  const fil = new Uint8Array(cw * ch);
+  for (let j = 0; j < ch; j++) for (let i = 0; i < cw; i++) { const px = x0 + i * g, py = y0 + j * g; fil[j * cw + i] = at(A, px, py) | at(A, px + 1, py) | at(A, px, py + 1) | at(A, px + 1, py + 1); }
+  const r = Math.ceil(m / g), tmp = new Uint8Array(cw * ch), dil = new Uint8Array(cw * ch);
+  for (let j = 0; j < ch; j++) for (let i = 0; i < cw; i++) { let f = 0; for (let a = Math.max(0, i - r); a <= Math.min(cw - 1, i + r) && !f; a++) f = fil[j * cw + a]; tmp[j * cw + i] = f; }
+  for (let j = 0; j < ch; j++) for (let i = 0; i < cw; i++) { let f = 0; for (let b = Math.max(0, j - r); b <= Math.min(ch - 1, j + r) && !f; b++) f = tmp[b * cw + i]; dil[j * cw + i] = f; }
+  const hg = new Int32Array(cw); let best = null, bs = 0;
+  for (let j = 0; j < ch; j++) {
+    for (let i = 0; i < cw; i++) hg[i] = dil[j * cw + i] ? 0 : hg[i] + 1;
+    const st = [];
+    for (let i = 0; i <= cw; i++) {
+      const h = i < cw ? hg[i] : 0;
+      while (st.length && hg[st[st.length - 1]] >= h) {
+        const t = st.pop(), hh = hg[t], left = st.length ? st[st.length - 1] + 1 : 0, wd = i - left;
+        const sc = Math.min(wd, hh * 4) * Math.min(hh, wd);        // favour blocks that can hold text
+        if (hh && sc > bs) { bs = sc; best = { x: x0 + left * g, y: y0 + (j - hh + 1) * g, w: wd * g, h: hh * g }; }
+      }
+      if (i < cw) st.push(i);
+    }
+  }
+  if (best) best.a = best.w * best.h;
+  return best;
+}
+/* vertical stems of a character: columns whose longest ink run is close to the longest in the glyph */
+function stems(A, c, frac = .7) {
+  const x0 = Math.max(0, Math.floor(c.x)), x1 = Math.min(A.W, Math.ceil(c.x + c.w)), yB = Math.ceil(c.L.base) + 2, runs = [];
+  for (let x = x0; x < x1; x++) { let best = 0, bs = 0, cur = 0, cs = 0; for (let y = -A.PY; y < yB; y++) { if (at(A, x, y)) { if (!cur) cs = y; cur++; if (cur > best) { best = cur; bs = cs; } } else cur = 0; } runs.push([best, bs]); }
+  const mx = Math.max(0, ...runs.map(r => r[0])), out = []; let g = null;
+  runs.forEach((r, i) => { if (r[0] >= mx * frac && r[0] > c.L.fs * .3) { if (g && i - g.e <= 1) { g.e = i; g.top = Math.min(g.top, r[1]); g.bot = Math.max(g.bot, r[1] + r[0]); } else out.push(g = { s: i, e: i, top: r[1], bot: r[1] + r[0] }); } });
+  return out.filter(g => g.e - g.s + 1 >= c.L.fs * .12).map(g => ({ x0: x0 + g.s, x1: x0 + g.e + 1, top: g.top, bot: g.bot }));
+}
+/* ink spans across a horizontal band (all rows inked), inset from the edges */
+function spans(A, y0, y1, ins) {
+  const out = []; let s = -1;
+  for (let x = 0; x <= A.W; x++) {
+    let f = x < A.W; for (let y = y0; y < y1 && f; y++) f = at(A, x, y);
+    if (f && s < 0) s = x;
+    if (!f && s >= 0) { if (x - s - 2 * ins >= 24) out.push([s + ins, x - ins]); s = -1; }
+  }
+  return out;
+}
+function nearestInk(A, cx, cy, depth) {
+  for (let r = 2; r < 600; r += 3) for (let k = 0; k < 24; k++) {
+    const a = k / 24 * 6.2832, x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
+    if (at(A, x, y)) { const x2 = x + Math.cos(a) * depth, y2 = y + Math.sin(a) * depth; return at(A, x2, y2) ? [x2, y2] : [x, y]; }
+  }
+  return [cx, cy];
+}
+const put = (el, x, y, w) => { el.style.left = Math.round(x) + 'px'; el.style.top = Math.round(y) + 'px'; if (w != null) el.style.width = Math.round(w) + 'px'; };
+function fitInto(el, r, max = 15, min = 11, align = .5) {
+  el.style.width = Math.floor(r.w) + 'px'; let fs = max;
+  for (; fs > min; fs -= .5) { el.style.fontSize = fs + 'px'; if (el.scrollHeight <= r.h + 1 && el.scrollWidth <= r.w + 1) break; }
+  el.style.fontSize = fs + 'px';
+  const h = el.offsetHeight; put(el, r.x, r.y + Math.max(0, (r.h - h) * align));
+  return el.scrollHeight <= r.h + 2;
+}
+const bandOf = c => /[A-Z@]/.test(c.c) ? c.L.capTop : c.L.xTop;
+const pocket = (A, c, m = 9) => freeRect(A, c.x - 3, bandOf(c) + 4, c.x + c.w + 3, c.L.base - 3, m);
+
+/* ---------- compositions (wide) ---------- */
+const PLACE = [
+  function name(A, n) {
+    const [L1, L2] = A.lines, C1 = A.chars.slice(L1.i0, L1.i1), C2 = A.chars.slice(L2.i0, L2.i1);
+    put($('.n-lede', n), C2[0].x + L2.fs * .03, L2.base + 30, Math.min(520, A.W * .42));
+    const wh = $('.n-where', n); wh.style.textAlign = 'right'; put(wh, A.W - 260, L2.base + 30, 260);
+    const o = C1.find(c => c.c === 'o'), ro = o && pocket(A, o, 7);
+    if (ro) fitInto($('.n-now', n), ro, 14, 10.5);
+    const e = C1[C1.length - 1], re = e && pocket(A, e, 6);
+    if (re) fitInto($('.n-hint', n), re, 14, 11);
+  },
+  function build(A, n) {
+    const L = A.lines[0], W = A.W, Y0 = 2022, Y1 = 2026.95, X = y => (y - Y0) / (Y1 - Y0) * W;
+    const ax = $('.axis', n); put(ax, 0, L.base + 22, W); $$('span', ax).forEach(s => s.style.left = X(+s.dataset.y) + 'px');
+    const rw = Math.min(W * .34, 390);
+    $$('.roles li', n).forEach((li, i) => { li.style.setProperty('--d', i); put(li, Math.min(X(+li.dataset.s), W - rw), L.base + 50 + i * 66, rw); });
+    const sites = $('.sites', n); put(sites, 0, L.capTop - 44, W);
+    const st = []; A.chars.forEach(c => st.push(...stems(A, c)));
+    $$('.stack li', n).forEach((li, i) => {
+      const s = st[i]; if (!s) { li.style.display = 'none'; return; }
+      const y = s.bot - (s.bot - s.top) * .3; let gl = 0, gr = 0;
+      while (gl < 60 && !at(A, s.x0 - 1 - gl, y)) gl++;
+      while (gr < 60 && !at(A, s.x1 + gr, y)) gr++;
+      const h = li.offsetHeight, left = gl >= 18 || gl >= gr ? s.x0 - Math.min(gl, 40) / 2 - 8 : s.x1 + Math.min(gr, 40) / 2 - 8;
+      li.style.setProperty('--d', i); put(li, left, s.bot - h - 2);
+    });
+  },
+  function research(A, n) {
+    const L = A.lines[0], C = A.chars;
+    const pk = C.map((c, i) => ({ c, i, r: pocket(A, c, 10) })).filter(p => p.r).sort((a, b) => b.r.a - a.r.a);
+    const P = $$('.papers li', n).map(li => ({ li, c: +li.dataset.c, n: +li.dataset.n, len: $('.ti', li).textContent.length }));
+    const top3 = P.slice().sort((a, b) => b.c - a.c).slice(0, 3), rest = P.filter(p => !top3.includes(p)).sort((a, b) => b.len - a.len);
+    const order = top3.concat(rest), nodes = [];
+    order.forEach((p, i) => {
+      const k = pk[i]; if (!k) return;
+      const num = $('.num', p.li); num.style.fontSize = (15 + p.c * .95).toFixed(1) + 'px';
+      fitInto($('.pc', p.li), { x: k.r.x, y: k.r.y, w: k.r.w, h: k.r.h }, 15.5, 10.5, .5);
+      put($('.pv', p.li), k.c.x + 12, L.base + 24, Math.max(k.c.w - 24, 190));
+      p.li.dataset.ch = k.i;
+      const q = nearestInk(A, k.r.x + k.r.w / 2, k.r.y + k.r.h / 2, L.fs * .06);
+      nodes.push({ x: q[0] - A.W / 2, y: q[1] - A.H0 / 2, c: p.c, n: p.n });
+    });
+    A.nodes = nodes;
+    const bio = $$('.bio p', n), band = [L.capTop + 2, L.xTop - 20];
+    const cols = [C[1], C[3], C[5]];
+    bio.forEach((p, i) => { const c = cols[i]; p.style.setProperty('--d', i); fitInto(p, { x: c.x + 8, y: band[0], w: Math.min(400, c.w * 1.6), h: band[1] - band[0] }, 14, 11.5, 0); });
+    const t = $('.tail', n); put(t, C[6].x + 12, L.base + 84, Math.min(470, A.W - C[6].x - 24));
+  },
+  function teach(A, n) {
+    const L = A.lines[0], C = A.chars, T = C[0], s = stems(A, T)[0];
+    if (s) {
+      let yb = Math.ceil(L.capTop) + 2; const cx = Math.round(T.x + (s.x0 - T.x) * .4);
+      while (yb < L.base && at(A, cx, yb)) yb++;
+      const tT = $('.tT', n); tT.style.textAlign = 'right'; put(tT, T.x - 30, yb + 18, s.x0 - T.x + 30 - 16);
+      const tU = $('.tU', n), room = L.xTop - yb - 8, hx = C[4].x;
+      if (room >= 20) { tU.style.fontSize = Math.min(16, room - 6) + 'px'; put(tU, s.x1 + 16, yb + (room - tU.offsetHeight) / 2 + 2, hx - s.x1 - 40); }
+      else put(tU, s.x1 + 16, L.base + 26, 420);
+    }
+    const cs = $$('.courses li', n);
+    [1, 2, 3].forEach((ci, i) => { const r = pocket(A, C[ci], 8); if (r) { cs[i].style.setProperty('--d', i + 2); fitInto(cs[i], r, 17, 11); } });
+    const rh = pocket(A, C[4], 8), tk = $('.tTalk', n); tk.style.textAlign = 'center';
+    if (rh) fitInto(tk, rh, 16, 11); else put(tk, C[4].x, L.base + 26, 260);
+    A.enso = { rx: A.W * .45, ry: (L.base - L.xTop) * .42, yOff: (L.xTop + L.base) / 2 - A.H0 / 2 + (L.base - L.xTop) * .03, th: L.fs * .15 };
+  },
+  function proof(A, n) {
+    const L = A.lines[0], C = A.chars, aw = $$('.awards li', n);
+    [0, 2, 3, 4].forEach((ci, i) => { const r = pocket(A, C[ci], 8); if (r) { aw[i].style.setProperty('--d', i); fitInto(aw[i], r, 15, 10.5); } });
+    certsShape(A);
+    put($('.pcap', n), 0, L.base + 26, A.W);
+  },
+  function mail(A, n) {
+    const Lz = A.lines[A.lines.length - 1];
+    const cand = A.chars.filter(c => /[goa@m]/.test(c.c)).map(c => ({ c, r: pocket(A, c, 4) })).filter(p => p.r && p.r.w >= 44 && p.r.h >= 18).sort((a, b) => b.r.a - a.r.a).slice(0, 4).sort((a, b) => (a.c.L.base - b.c.L.base) || (a.c.x - b.c.x));
+    const L1 = A.lines[0], rideY = L1.xTop - 22, hx = A.chars.filter(c => c.L === L1 && /[mxou]/.test(c.c));
+    $$('.soc li', n).forEach((li, i) => {
+      li.style.setProperty('--d', i); const p = cand.length === 4 ? cand[i] : null;
+      if (p) { fitInto(li, p.r, 14, 11); return; }
+      const c = hx[i] || hx[hx.length - 1]; put(li, c.x, rideY, c.w);            // perched on the x-height line
+    });
+    put($('.howto', n), 0, Lz.base + 32, Math.min(460, A.W * .4));
+    put($('.loc', n), A.W * .47, Lz.base + 32, 220);
+    const al = $('.also', n); al.style.textAlign = 'right'; put(al, A.W - 330, Lz.base + 32, 330);
+    const ring = $('.mailring', n); Object.assign(ring.style, { left: '0px', top: '0px', width: A.W + 'px', height: A.H0 + 'px' });
+  },
+];
+
+/* certificates flowed inside the letter shapes of "Proof" */
+function certsShape(A) {
+  let r = null;
+  for (let fs = 17; fs >= 9.5 && !(r && !r.extra.length); fs -= .5) r = certsFlowAt(A, fs);   // largest size that fits inside the letters
+  certList.style.font = `500 ${r.fs}px/${r.LHc}px Archivo, sans-serif`; certList.style.fontStretch = '87.5%';
+  $$('.cf,.sep', certList).forEach(e => e.style.height = r.LHc + 'px');
+  A.certOverflow = r.extra.length;
+}
+function certsFlowAt(A, fs) {
+  const LHc = Math.round(fs * 1.22), cx = document.createElement('canvas').getContext('2d');
+  cx.font = `500 semi-condensed ${fs}px Archivo`; if ('fontStretch' in cx) cx.fontStretch = 'semi-condensed';
+  const sp = cx.measureText(' ').width, sepW = cx.measureText('/').width;
+  const L = A.lines[0], y0 = Math.floor(L.capTop - 4), y1 = Math.ceil(L.base + 2);
+  const slots = [];
+  for (let y = y0; y + LHc <= y1; y += LHc) spans(A, y + 1, y + LHc - 1, Math.max(3, fs * .3)).forEach(s => slots.push({ y, x0: s[0], x1: s[1] }));
+  const toks = []; CERTS.forEach(([f, t], i) => { t.split(' ').forEach(w => toks.push({ i, w, ww: cx.measureText(w).width })); if (i < CERTS.length - 1) toks.push({ i: -1, w: '/', ww: sepW }); });
+  const frags = []; let ti = 0, si = 0;
+  const extra = [];   // overflow lines under the word, if the letters run out of room
+  while (ti < toks.length) {
+    let s = slots[si++];
+    if (!s) { if (fs > 9.5) return { fs, LHc, extra: [1] }; const y = y1 + 34 + extra.length * LHc; s = { y, x0: 0, x1: A.W }; extra.push(s); }
+    let x = s.x0; const line = [];
+    while (ti < toks.length) {
+      const t = toks[ti], need = (line.length ? sp : 0) + t.ww;
+      if (x + need > s.x1) break;
+      x += need; line.push(t); ti++;
+    }
+    if (!line.length) continue;
+    while (line.length > 1 && line[0].i === -1) line.shift();
+    // justify: spread the leftover across the gaps (except the very last line)
+    const gaps = line.length - 1, used = line.reduce((a, t) => a + t.ww, 0) + gaps * sp;
+    const add = ti < toks.length && gaps ? Math.min((s.x1 - s.x0 - used) / gaps, fs * .8) : 0;
+    let px = s.x0;
+    line.forEach((t, k) => {
+      const prev = frags[frags.length - 1];
+      if (prev && prev.i === t.i && prev.y === s.y && t.i >= 0) { prev.t += ' ' + t.w; prev.w = px + t.ww - prev.x; }
+      else frags.push({ i: t.i, t: t.w, x: px, y: s.y, w: t.ww });
+      px += t.ww + sp + add;
+    });
+    frags.forEach(f => { if (f.y === s.y && f.i >= 0) f.ws = add; });
+  }
+  if (extra.length) return { fs, LHc, extra };
+  const seen = new Set();
+  certList.innerHTML = CERTS.map(([f, t], i) => {
+    const fr = frags.filter(g => g.i === i);
+    const a = fr.map((g, k) => { const first = !seen.has(i); seen.add(i);
+      return `<a class="cf" data-i="${i}" href="${certURL(f)}" data-peek="${certURL(f)}" style="left:${g.x.toFixed(1)}px;top:${g.y}px;word-spacing:${(g.ws || 0).toFixed(2)}px"${first ? ` aria-label="${t}, ${kindOf(f)} (opens the scan)"` : ' aria-hidden="true" tabindex="-1"'}>${g.t}</a>`; }).join('');
+    return `<li>${a}</li>`;
+  }).join('') + frags.filter(g => g.i === -1).map(g => `<li aria-hidden="true"><span class="sep" style="left:${g.x.toFixed(1)}px;top:${g.y}px">/</span></li>`).join('');
+  return { fs, LHc, extra };
+}
+
+/* ---------- geometry handed to the particle system (px, relative to each word's centre) ---------- */
+function geoFrom(A) {
+  const fill = a => ({ cv: a.cv, W: a.W, H: a.H, H0: a.H0, PY: a.PY, fs: Math.max(...a.F) });
+  const B = A[1], BL = B.lines[0], Y0 = 2022, Y1 = 2026.95, X = y => (y - Y0) / (Y1 - Y0) * B.W - B.W / 2;
+  const lanes = [[2022, 2024], [2023, 2025], [2024, 2026], [2026.33, Y1 + .4]].map((s, i) => ({ y: BL.xTop + (BL.base - BL.xTop) * (.16 + .23 * i) - B.H0 / 2, x0: X(s[0]), x1: X(s[1]) }));
+  const R = A[2];
+  if (!R.nodes) {    // flow layout: one node per letter, by the same citation ranking
+    const pk = R.chars.map((c, i) => ({ c, r: pocket(R, c, 6) })).filter(p => p.r).sort((a, b) => b.r.a - a.r.a), cit = [32, 11, 7, 1, 1, 0, 0, 0];
+    R.nodes = pk.slice(0, 8).map((p, i) => { const q = nearestInk(R, p.r.x + p.r.w / 2, p.r.y + p.r.h / 2, p.c.L.fs * .06); return { x: q[0] - R.W / 2, y: q[1] - R.H0 / 2, c: cit[i], n: i }; });
+  }
+  const T = A[3], TL = T.lines[0];
+  const enso = T.enso || { rx: T.W * .45, ry: (TL.base - TL.xTop) * .42, yOff: (TL.xTop + TL.base) / 2 - T.H0 / 2, th: TL.fs * .15 };
+  const M = A[5], at_ = M.chars.find(c => c.c === '@'), ML = at_.L;
+  const mc = { cx: at_.x + at_.w / 2 - M.W / 2, cy: ML.base - ML.fs * .33 - M.H0 / 2 };
+  mc.R = Math.max(...[[-M.W / 2, -M.H0 / 2], [M.W / 2, -M.H0 / 2], [-M.W / 2, M.H0 / 2], [M.W / 2, M.H0 / 2]].map(p => Math.hypot(p[0] - mc.cx, p[1] - mc.cy))) + 60;
+  return {
+    name: fill(A[0]),
+    build: { lanes, band: [BL.capTop - B.H0 / 2, BL.base - B.H0 / 2], W: B.W, F: BL.fs },
+    research: { nodes: R.nodes, W: R.W, H0: R.H0, F: Math.max(...R.F) },
+    teach: Object.assign({ F: TL.fs }, enso),
+    proof: fill(A[4]),
+    mail: mc,
+  };
+}
+
+/* ---------- layout ---------- */
+function sizeSections() {
+  let acc = 0;
+  secs.forEach((s, k) => { starts[k] = acc; s.style.height = ((k < 5 ? HOLD[k] + WIPE : HOLD[k] + 1) * vh) + 'px'; acc += HOLD[k] + WIPE; });
+}
+function layout() {
+  vw = innerWidth; vh = innerHeight; lastW = vw;
+  wide = vw > 760 && !RM; TW.wide = wide;
+  pad = clamp(vw * .033, 16, 56);
+  html.classList.toggle('wide', wide); html.classList.toggle('flow', !wide);
+  $$('.pl').forEach(e => e.removeAttribute('style'));
+  $$('.stack li').forEach(e => e.removeAttribute('style'));
+  mvs.flat().forEach(m => m.removeAttribute('style'));
+  secs.forEach(s => s.style.height = '');
+  last.clip = []; last.tf = [];
+  plates.concat(notes).forEach(p => p.style.clipPath = '');
+  certsFlow();
+  words.forEach((w, k) => buildLines(w, LINES[k][wide ? 0 : 1]));
+  const Fs = words.map((w, k) => fit(w, k));
+  AN = words.map((w, k) => {
+    if (wide) {
+      const W = w.offsetWidth, H = w.offsetHeight, left = k === 2 ? Math.round(pad) : Math.round((vw - W) / 2), top = Math.round(vh * CY[k] - H / 2);
+      mvs[k].forEach(m => Object.assign(m.style, { left: left + 'px', top: top + 'px', width: W + 'px', height: H + 'px' }));
+      boxes[k] = { left, top, W, H };
+    }
+    return analyze(w, Fs[k]);
+  });
+  if (wide) { PLACE.forEach((f, k) => f(AN[k], notes[k])); sizeSections(); }
+  TW.geo = geoFrom(AN); TW.v++; TW.AN = AN; TW.dbg = { pocket, stems, freeRect };
+  document.dispatchEvent(new Event('tw:layout'));
+}
+
+/* ---------- choreography ---------- */
+const seam = $('.seam'), hint = $('.n-hint');
+function choreoWide() {
+  const u = scrollY / vh; let st = 0, seamY = -1, seamO = 0;
+  for (let k = 0; k < 6; k++) {
+    const a = starts[k], inW = k ? clamp((u - (a - WIPE)) / WIPE) : 1, outW = k < 5 ? clamp((u - (a + HOLD[k])) / WIPE) : 0, p = clamp((u - a) / HOLD[k]);
+    const ei = ease(inW), eo = ease(outW); if (k) st += ei;
+    if (k && inW > 0 && inW < 1) { seamY = (1 - ei) * vh; seamO = sm(0, .06, inW) * (1 - sm(.94, 1, inW)); }
+    const vis = inW > 0 && outW < 1, top = Math.round((1 - ei) * vh), bot = Math.round((1 - eo) * vh);
+    const clip = vis ? `inset(${top}px 0px ${vh - bot}px 0px)` : 'inset(0px 0px 100% 0px)';
+    if (clip !== last.clip[k]) { plates[k].style.clipPath = notes[k].style.clipPath = clip; last.clip[k] = clip; }
+    const b = boxes[k]; let tx = 0;
+    if (k === 2) { const span = Math.max(0, b.W - (vw - 2 * pad)); const q = sm(.04, .96, p); tx = -span * q; }
+    const ty = ((1 - ei) * .09 - eo * .06) * vh, sc = 1 + (1 - ei) * .07 - eo * .045;
+    const tf = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0) scale(${sc.toFixed(4)})`;
+    if (tf !== last.tf[k]) { mvs[k].forEach(m => m.style.transform = tf); last.tf[k] = tf; }
+    TW.anc[k] = { x: b.left + b.W / 2 + tx, y: b.top + b.H / 2 + ty, s: sc };
+    secs[k].classList.toggle('live', vis && inW > .9 && outW < .3 && (k > 0 || TW.intro > 1.1));
+  }
+  seam.style.opacity = seamO.toFixed(3); if (seamY >= 0) seam.style.transform = `translateY(${seamY.toFixed(1)}px)`;
+  hint.style.opacity = (1 - sm(.01, .12, u)) * sm(1.8, 2.6, TW.intro);
+  TW.state = st;
+  const a = TW.anc[Math.round(st)]; TW.glow = [clamp(a.x, vw * .2, vw * .8), a.y];
+}
+function choreoFlow() {
+  const m = vh * .5, cs = words.map((w, k) => { const r = w.getBoundingClientRect(); TW.anc[k] = { x: r.left + r.width / 2, y: r.top + r.height / 2, s: r.width / (AN[k].W - 2) }; return TW.anc[k].y; });
+  let st = 0;
+  if (cs[0] >= m) st = 0; else if (cs[5] <= m) st = 5;
+  else for (let k = 0; k < 5; k++) if (cs[k] <= m && cs[k + 1] > m) { st = k + sm(.25, .75, (m - cs[k]) / (cs[k + 1] - cs[k])); break; }
+  TW.state = st; const a = TW.anc[Math.round(st)]; TW.glow = [a.x, a.y];
+  secs.forEach(s => s.classList.add('live'));
+}
+const choreo = () => wide ? choreoWide() : choreoFlow();
+
+function tick(now) {
+  requestAnimationFrame(tick);
+  if (document.hidden) return;
+  TW.intro = TW.t0 ? now / 1000 - TW.t0 : 0;
+  if (lenis) lenis.raf(now);
+  choreo();
+  if (TW.render) TW.render(now, false);
+}
+let pend = 0;
+const still = () => { if (pend) return; pend = requestAnimationFrame(now => { pend = 0; choreo(); if (TW.render) TW.render(now, true); }); };
+TW.redraw = still;
+
+/* ---------- interactions ---------- */
+const peek = $('.peek'), pImg = $('img', peek), pCv = $('canvas', peek), pCap = $('p', peek);
+function showPeek(el) {
+  if (!wide || !el.dataset.peek) return;
+  const src = el.dataset.peek, gif = /\.gif$/i.test(src);
+  peek.classList.toggle('gif', gif);
+  if (gif) { const im = new Image(); im.onload = () => { pCv.width = 600; pCv.height = Math.round(600 * im.naturalHeight / im.naturalWidth); pCv.getContext('2d').drawImage(im, 0, 0, pCv.width, pCv.height); }; im.src = src; }   // first frame only: the GIF stays still
+  else if (pImg.getAttribute('src') !== src) pImg.src = src;
+  const d = $('.desc', el); pCap.textContent = d ? d.textContent : (el.getAttribute('aria-label') || '').replace(/ \(opens the scan\)$/, '');
+  const r = el.getBoundingClientRect(), W = 300, H = 230;
+  const x = clamp(r.left + r.width / 2 - W / 2, 12, vw - W - 12), y = r.top - H - 16 > 50 ? r.top - H - 16 : r.bottom + 16;
+  peek.style.transform = `translate(${Math.round(x)}px,${Math.round(y)}px)`; peek.classList.add('on');
+}
+const hidePeek = () => peek.classList.remove('on');
+document.addEventListener('pointerover', e => {
+  const el = e.target.closest('[data-peek]'); if (el) showPeek(el);
+  const cf = e.target.closest('.cf'); $$('.cf.hot').forEach(a => a.classList.remove('hot'));
+  if (cf) $$(`.cf[data-i="${cf.dataset.i}"]`).forEach(a => a.classList.add('hot'));
+});
+document.addEventListener('pointerout', e => { if (e.target.closest('[data-peek]') && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('[data-peek]'))) hidePeek(); });
+document.addEventListener('focusin', e => { const el = e.target.closest('[data-peek]'); el ? showPeek(el) : hidePeek(); });
+$('.site[data-peek$=".gif"]').addEventListener('click', e => { const b = e.currentTarget; peek.classList.contains('on') ? hidePeek() : showPeek(b); });
+addEventListener('scroll', () => { if (peek.classList.contains('on') && !document.activeElement.closest('[data-peek]')) hidePeek(); }, { passive: true });
+
+$$('.roles li').forEach(li => { li.addEventListener('pointerenter', () => TW.hi('lanes', +li.dataset.l)); li.addEventListener('pointerleave', () => TW.hi(null)); });
+$$('.papers li').forEach(li => { const on = () => { li.classList.add('on'); TW.hi('con', +li.dataset.n); }, off = () => { li.classList.remove('on'); TW.hi(null); };
+  $$('.pc,.pv', li).forEach(p => { p.classList.add('hov'); p.addEventListener('pointerenter', on); p.addEventListener('pointerleave', off); }); });
+
+const mail = $('.mail'), status = $('.status'); let stT = 0;
+mail.addEventListener('click', async () => {
+  const s = 'gmixoulis@gmail.com'; let ok = false;
+  try { await navigator.clipboard.writeText(s); ok = true; } catch (e) {
+    const ta = document.createElement('textarea'); ta.value = s; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-99px;opacity:0'; document.body.append(ta); ta.select();
+    try { ok = document.execCommand('copy'); } catch (_) {} ta.remove();
+  }
+  status.textContent = ok ? ' Copied. It’s on your clipboard.' : ' Copying didn’t work here. The address is gmixoulis@gmail.com.';
+  TW.pulse(1); clearTimeout(stT); stT = setTimeout(() => status.textContent = '', 5000);
+});
+mail.addEventListener('focus', () => { if (mail.matches(':focus-visible')) secs[5].classList.add('mfocus'); });
+mail.addEventListener('blur', () => secs[5].classList.remove('mfocus'));
+
+/* keyboard: focusing something in a sheet that isn't showing scrolls to it */
+secs.forEach((s, k) => s.addEventListener('focusin', e => {
+  if (!wide) return;
+  const u = scrollY / vh, a = starts[k];
+  let target = a + HOLD[k] * .35;
+  if (k === 2) target = a + HOLD[2] * (e.target.closest('.tail') ? .98 : .1);
+  if (k === 2 || u < a - .05 || u > a + HOLD[k] + .05) { lenis ? lenis.scrollTo(target * vh, { duration: 1.1 }) : scrollTo(0, target * vh); }
+}));
+
+/* ---------- boot ---------- */
+function init() {
+  layout(); html.classList.add('ready');
+  if (wide) {
+    lenis = new Lenis({ lerp: .085, wheelMultiplier: .9 });
+    lenis.on('scroll', () => {});
+  }
+  TW.t0 = performance.now() / 1000;
+  if (RM) { still(); addEventListener('scroll', still, { passive: true }); document.addEventListener('tw:gl', still); }
+  else requestAnimationFrame(tick);
+  let rt = 0;
+  addEventListener('resize', () => {
+    if (!wide && innerWidth === lastW) return;          // phones: ignore the URL bar changing the height
+    clearTimeout(rt); rt = setTimeout(() => {
+      const u = scrollY / vh, wasWide = wide; layout();
+      if (wide !== wasWide) { if (lenis) { lenis.destroy(); lenis = null; } if (wide && !RM) lenis = new Lenis({ lerp: .085, wheelMultiplier: .9 }); }
+      if (wide) scrollTo(0, u * vh);
+      if (RM) still();
+    }, 180);
+  });
+}
+const fontsOK = Promise.all(['800 expanded 100px Archivo', '500 semi-condensed 12px Archivo', '600 13px Archivo', '400 15px Newsreader', 'italic 400 15px Newsreader'].map(f => document.fonts.load(f))).then(() => document.fonts.ready);
+Promise.race([fontsOK, new Promise(r => setTimeout(r, 3500))]).then(init, init);
+setTimeout(() => { if (!window.TW.gl) html.classList.add('no-gl'); }, 9000);
+})();
+</script>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<script type="module">
+/* The light behind the sheet: ~90k GPU particles (positions and velocities in float textures,
+   three's GPUComputationRenderer ping-pong). Each particle springs toward a per-chapter target and is
+   stirred by curl noise (curl of three simplex potentials, analytic gradient from Ashima/Gustavson's
+   webgl-noise). Adapted from particles.html. Targets are built from the same glyph masks as the page,
+   in px around each word's centre, so the formations sit exactly behind the letters. */
+import * as THREE from 'three';
+import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+
+const TW = window.TW, html = document.documentElement;
+const MOBILE = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+const S = MOBILE ? 144 : 300, N = S * S;
+const FOV = 35, TAN = Math.tan(FOV * Math.PI / 360), CZ = 10;
+
+let renderer = null;
+try { if (document.createElement('canvas').getContext('webgl2')) renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gl'), antialias: false, powerPreference: 'high-performance' }); } catch (e) { renderer = null; }
+if (!renderer) { html.classList.add('no-gl'); await new Promise(() => {}); }
+TW.gl = 1;
+const DPR = Math.min(devicePixelRatio || 1, MOBILE ? 1.5 : 2);
+renderer.setPixelRatio(DPR); renderer.setClearColor(0, 1);
+let vw = innerWidth, vh = innerHeight;
+
+let seed = 1;
+const rnd = () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+const gauss = () => { let u = 0; while (!u) u = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(6.2832 * rnd()); };
+const pack = (b, acc, node = 15) => (acc ? 16 : 0) + node + Math.min(b / 1.6, .999);
+const tex = () => { const t = new THREE.DataTexture(new Float32Array(N * 4), S, S, THREE.RGBAFormat, THREE.FloatType); t.needsUpdate = true; return t; };
+const T = { name: tex(), lanes: tex(), con: tex(), enso: tex(), proof: tex(), rip: tex() };
+
+/* ---------- formations ---------- */
+function genFill(tx, G, o, sd) {      // particles inside the letters, brighter along the cut edge
+  seed = sd; const { cv, W, H, PY, H0, fs } = G;
+  const d = cv.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, W, H).data;
+  const cb = document.createElement('canvas'); cb.width = W; cb.height = H; const xb = cb.getContext('2d', { willReadFrequently: true });
+  xb.filter = `blur(${Math.max(2, fs * .035).toFixed(1)}px)`; xb.drawImage(cv, 0, 0); const db = xb.getImageData(0, 0, W, H).data;
+  const inside = [], edge = [];
+  for (let i = 0; i < W * H; i++) if (d[i * 4 + 3] > 140) { inside.push(i); edge.push(Math.min(1, Math.max(0, (1 - db[i * 4 + 3] / 255) * 2.2))); }
+  const a = tx.image.data;
+  if (!inside.length) return;
+  const pick = rim => { for (;;) { const j = (rnd() * inside.length) | 0; if (rnd() < rim + (1 - rim) * edge[j]) return j; } };
+  for (let i = 0; i < N; i++) {
+    const j = pick(o.rim), q = inside[j], e = edge[j];
+    const px = q % W + rnd() - W / 2, py = (q / W | 0) + rnd() - PY - H0 / 2;
+    const z = -(1 - e) * o.dz * (.6 + .4 * rnd()) + gauss() * o.dz * .15;
+    const b = o.b0 + o.b1 * e * e + (rnd() < o.sp ? o.spb : 0);
+    a.set([px, py, z, pack(b, rnd() < o.a0 + o.a1 * (1 - e) * (1 - e))], i * 4);
+  }
+  tx.needsUpdate = true;
+}
+function genLanes(G) {                 // four streams, one per role, spanning its years
+  const a = T.lanes.image.data; seed = 31;
+  const len = G.lanes.map(l => l.x1 - l.x0), tot = len.reduce((s, v) => s + v, 0);
+  for (let i = 0; i < N; i++) {
+    let L, z, b, acc;
+    if (rnd() < .2) { L = 4; z = rnd(); b = .05 + .06 * rnd(); acc = rnd() < .06; }
+    else {
+      let t = rnd() * tot; L = 0; while (L < 3 && t > len[L]) { t -= len[L]; L++; }
+      const spray = rnd() < .2; z = gauss() * G.F * (spray ? .05 : .016); b = spray ? .1 : .24; acc = L === 3 ? rnd() < .85 : rnd() < .04;
+    }
+    a.set([rnd(), L, z, pack(b, acc, L === 4 ? 15 : L)], i * 4);
+  }
+  T.lanes.needsUpdate = true;
+  G.lanes.forEach((l, i) => { U.uLaneY.value[i] = l.y; U.uSpan.value[i].set(l.x0, l.x1); });
+  U.uLaneY.value[4] = 0; U.uSpan.value[4].set(-G.W / 2 - 30, G.W / 2 + 30); U.uBand.value.set(G.band[0], G.band[1]); U.uLF.value = G.F;
+}
+function genCon(G) {                   // a nebula of the papers: cores sized by real citations, filaments, gas
+  const a = T.con.image.data; seed = 47; const F = G.F, nd = G.nodes;
+  if (!nd.length) return;
+  const wt = nd.map(n => Math.pow(n.c + 1, .85) + 1.4), ws = wt.reduce((s, v) => s + v, 0);
+  const pickN = () => { let t = rnd() * ws, i = 0; while (i < nd.length - 1 && t > wt[i]) { t -= wt[i]; i++; } return i; };
+  const byN = {}; nd.forEach(n => byN[n.n] = n);
+  const sorted = nd.slice().sort((p, q) => p.x - q.x), E = [];
+  for (let i = 0; i < sorted.length - 1; i++) E.push([sorted[i], sorted[i + 1]]);
+  [[0, 1], [1, 7], [0, 7], [3, 5], [0, 2], [6, 1]].forEach(([p, q]) => byN[p] && byN[q] && E.push([byN[p], byN[q]]));
+  for (let i = 0; i < N; i++) {
+    const k = rnd(); let p, b, acc, node = 15;
+    if (k < .46) {
+      const j = pickN(), n = nd[j]; node = n.n; const sg = F * (.016 + .013 * Math.sqrt(n.c + 1)) * (k < .28 ? 1 : 2.6);
+      p = [n.x + gauss() * sg, n.y + gauss() * sg, gauss() * sg * .7];
+      b = k < .28 ? .5 : .12; acc = rnd() < (n.c >= 7 ? .45 : .12) * (k < .28 ? 1 : .6);
+      if (k < .05) { p = [n.x + gauss() * sg * .15, n.y + gauss() * sg * .15, gauss() * sg * .1]; b = n.c >= 30 ? 1 : n.c >= 7 ? .7 : .35; }
+    } else if (k < .78) {
+      const e = E[(rnd() * E.length) | 0], A = e[0], B = e[1], t = rnd(), u = 1 - t, dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy) || 1;
+      const bend = Math.min(.18 * L, F * .32) * ((A.n + B.n) % 2 ? 1 : -1), cx = (A.x + B.x) / 2 - dy / L * bend, cy = (A.y + B.y) / 2 + dx / L * bend;
+      const sp = F * (.006 + .03 * Math.sin(Math.PI * t) * rnd()), tw = Math.sin(t * 11 + A.n) * F * .012;
+      p = [u * u * A.x + 2 * u * t * cx + t * t * B.x + gauss() * sp + tw, u * u * A.y + 2 * u * t * cy + t * t * B.y + gauss() * sp - tw, gauss() * sp + F * .1 * Math.sin(Math.PI * t)];
+      b = .26; acc = rnd() < .1;
+    } else {
+      const n = nd[(rnd() * nd.length) | 0]; let x = n.x + gauss() * F * .42, y = n.y + gauss() * F * .22;
+      x += F * .12 * Math.sin(y / F * 4 + 1.2); y += F * .08 * Math.sin(x / F * 2.5 + .4);
+      p = [x, y, gauss() * F * .2]; b = .11; acc = rnd() < .2;
+    }
+    a.set([p[0], p[1], p[2], pack(b, acc, node)], i * 4);
+  }
+  T.con.needsUpdate = true;
+}
+function genEnso(G) {                  // a dry-brush ensō, drawn as a loop that runs through every letter
+  const a = T.enso.image.data; seed = 23; const { rx, ry, yOff, th } = G, A0 = 3.62, SPAN = 5.72;
+  const hb = n => { const s = Math.sin(n * 91.7 + 12.3) * 43758.5; return s - Math.floor(s); };
+  for (let i = 0; i < N; i++) {
+    let x, y, z, b, acc;
+    const t = Math.pow(rnd(), .9), ang = A0 + t * SPAN, s = rnd() * 2 - 1, br = Math.floor((s + 1) * 9);
+    const dry = Math.max(0, (t - .38) / .62), gap = hb(br) < dry * .75 && Math.sin(t * 70 + br * 5.1) > .15 - dry;
+    if (rnd() < .9 && !gap) {
+      const w = th * (.55 + .45 * Math.pow(Math.sin(Math.PI * Math.min(1, t * 1.1 + .05)), .5)) * (t > .9 ? Math.max(.25, 1 - (t - .9) * 7) : 1);
+      const c = Math.cos(ang), sn = Math.sin(ang), nx = c / rx, ny = sn / ry, nl = Math.hypot(nx, ny), off = s * w * .5;
+      x = rx * c + nx / nl * off; y = yOff + ry * sn + ny / nl * off; z = gauss() * th * .12;
+      b = (.2 + .5 * (1 - .6 * t)) * (1 - .35 * Math.abs(s)) + (rnd() < .02 ? .5 : 0); acc = rnd() < .015 + .55 * Math.pow(t, 4);
+    } else {
+      const u = rnd() * 6.2832, rr = 1 + gauss() * .18;
+      x = rx * Math.cos(u) * rr; y = yOff + ry * Math.sin(u) * rr + gauss() * th * .5; z = gauss() * th * .6; b = .06; acc = rnd() < .15;
+    }
+    a.set([x, y, z, pack(b, acc)], i * 4);
+  }
+  T.enso.needsUpdate = true;
+}
+function genRip(G) {                   // rings leaving the @, one every couple of seconds
+  const a = T.rip.image.data; seed = 71;
+  for (let i = 0; i < N; i++) {
+    const ring = rnd() < .78, ph = ring ? ((((rnd() * 6) | 0) + gauss() * .035) / 6 + 1) % 1 : rnd();
+    a.set([rnd() * 6.2832, ph, gauss() * 14, pack(ring ? .95 : .2, rnd() < (ring ? .4 : .12))], i * 4);
+  }
+  T.rip.needsUpdate = true;
+  U.uRipC.value.set(G.cx, G.cy); U.uRipR.value = G.R;
+}
+
+/* ---------- shaders ---------- */
+const NOISE = `
+vec3 m289(vec3 x){return x-floor(x*(1./289.))*289.;}vec4 m289(vec4 x){return x-floor(x*(1./289.))*289.;}
+vec4 perm(vec4 x){return m289(((x*34.)+10.)*x);}vec4 tis(vec4 r){return 1.79284291400159-.85373472095314*r;}
+vec3 sng(vec3 v){const vec2 C=vec2(1./6.,1./3.);const vec4 D=vec4(0.,.5,1.,2.);
+vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;
+vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;i=m289(i);
+vec4 p=perm(perm(perm(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
+vec3 ns=.142857142857*D.wyz-D.xzx;vec4 j=p-49.*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.*x_);
+vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
+vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;vec4 sh=-step(h,vec4(0.));vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
+vec4 nm=tis(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));p0*=nm.x;p1*=nm.y;p2*=nm.z;p3*=nm.w;
+vec4 m=max(.5-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);vec4 m2=m*m;vec4 m4=m2*m2;
+vec4 px=vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3));vec4 t=m2*m*px;
+return 105.*(-8.*(t.x*x0+t.y*x1+t.z*x2+t.w*x3)+m4.x*p0+m4.y*p1+m4.z*p2+m4.w*p3);}
+vec3 curl(vec3 p){vec3 a=sng(p),b=sng(p+vec3(31.4,-47.9,12.7)),c=sng(p+vec3(-23.1,-11.3,18.5));return vec3(c.y-b.z,a.z-c.x,b.x-a.y);}`;
+
+const COMMON = `
+uniform float uTime,uDt,uState,uAsp,uTan,uSnap,uPulse,uTurb,uFlow,uWpp,uLF,uRipR;
+uniform vec2 uView,uBand,uRipC;uniform vec3 uA[6];uniform mat3 uR2,uR3;
+uniform sampler2D tName,tLanes,tCon,tEnso,tProof,tRip;
+uniform float uLaneY[5];uniform vec2 uSpan[5];
+float hh(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+vec3 s2w(vec2 px,float z){vec2 n=vec2(px.x/uView.x*2.-1.,1.-px.y/uView.y*2.);float d=10.-z;return vec3(n.x*uTan*uAsp*d,n.y*uTan*d,z);}
+vec3 anc(vec3 A,vec3 q){return s2w(A.xy,0.)+vec3(q.x,-q.y,q.z)*uWpp*A.z;}
+vec3 form(int f,vec2 uv,vec2 id,out float b,out float a,out float k,out float n,out float j){
+  vec4 t;vec3 p;j=0.;float fade=1.;
+  if(f==0){t=textureLod(tName,uv,0.);p=s2w(uA[0].xy+t.xy*uA[0].z,t.z);k=1.;n=.014;}
+  else if(f==1){t=textureLod(tLanes,uv,0.);int L=int(t.y+.5);vec2 s=uSpan[L];float len=max(s.y-s.x,1.);
+    float sp=(L==4?16.:50.)/len;float u=fract(t.x+uFlow*sp),u0=fract(t.x+(uFlow-uDt)*sp);j=step(u,u0);
+    float x=mix(s.x,s.y,u),y;
+    if(L==4)y=mix(uBand.x,uBand.y,t.z);
+    else y=uLaneY[L]+t.z*(1.+.6*sin(x/uLF*5.+uFlow*.7))+(sin(x/uLF*2.6+uFlow*.9+float(L)*1.7)*.012+sin(x/uLF*7.-uFlow*1.3)*.004)*uLF;
+    p=s2w(uA[1].xy+vec2(x,y)*uA[1].z,(hh(id+3.)-.5)*(L==4?1.:.08));k=2.4;n=.008;
+    fade=smoothstep(0.,.07,u)*smoothstep(1.,.9,u);}
+  else if(f==2){t=textureLod(tCon,uv,0.);p=anc(uA[2],uR2*t.xyz);k=.75;n=.03;}
+  else if(f==3){t=textureLod(tEnso,uv,0.);p=anc(uA[3],uR3*t.xyz);k=.8;n=.028;}
+  else if(f==4){t=textureLod(tProof,uv,0.);p=s2w(uA[4].xy+t.xy*uA[4].z,t.z);k=.55;n=.05;}
+  else{t=textureLod(tRip,uv,0.);float r=fract(t.y+uFlow*.075),r0=fract(t.y+(uFlow-uDt)*.075);j=step(r,r0);
+    p=anc(uA[5],vec3(uRipC+vec2(cos(t.x),sin(t.x))*r*uRipR,t.z));k=2.2;n=.01;
+    fade=smoothstep(0.,.05,r)*pow(1.-r,1.25)*(1.+uPulse*3.5);}
+  float fl=floor(t.w);b=fract(t.w)*1.6*fade;a=step(15.5,fl);
+  return p;
+}
+vec3 target(vec2 uv,vec2 id,out float b,out float a,out float k,out float n,out float j,out int f){
+  int i0=int(floor(uState));float fr=uState-float(i0);int i1=min(i0+1,5);
+  vec3 p=form(i0,uv,id,b,a,k,n,j);f=i0;
+  if(fr>.001){
+    float sy=p.y/(uTan*max(10.-p.z,.1));                 // sweep bottom-up, following the wipe
+    float thr=.05+.88*clamp(.55*hh(id)+.45*(sy*.5+.5),0.,1.);
+    if(fr>thr){p=form(i1,uv,id,b,a,k,n,j);f=i1;}
+  }
+  return p;
+}`;
+const VEL = `${COMMON}${NOISE}
+uniform vec3 uPtr;uniform float uPtrS,uPtrR,uPtrSw;
+void main(){
+  vec2 uv=gl_FragCoord.xy/resolution.xy,id=floor(gl_FragCoord.xy);
+  vec4 P=texture2D(texturePosition,uv),V=texture2D(textureVelocity,uv);
+  float b,a,k,n,j;int f;vec3 T=target(uv,id,b,a,k,n,j,f);
+  if(uSnap>.5){gl_FragColor=vec4(0.,0.,0.,b);return;}
+  float r=hh(id+.7);vec3 d=T-P.xyz;float dist=length(d);
+  float K=24.*k*(.5+r);
+  vec3 acc=d*K;
+  float amp=n+(.45+.6*r)*smoothstep(.04,1.6,dist)+uTurb*(.4+r);
+  acc+=curl(P.xyz*.42+vec3(0.,uTime*.035,uTime*.05))*amp*5.;
+  float wv=mix(V.w,b,1.-exp(-uDt*4.));
+  vec2 q=P.xy-uPtr.xy;float l=length(q)+1e-4;float fp=uPtrS*smoothstep(uPtrR,0.,l);
+  acc.xy+=q/l*fp*15.+vec2(-q.y,q.x)/l*fp*(5.+uPtrSw*16.);
+  vec3 v=(V.xyz+acc*uDt)*exp(-uDt*1.7*sqrt(K));
+  gl_FragColor=vec4(v,wv);
+}`;
+const POS = `${COMMON}
+void main(){
+  vec2 uv=gl_FragCoord.xy/resolution.xy,id=floor(gl_FragCoord.xy);
+  vec4 P=texture2D(texturePosition,uv),V=texture2D(textureVelocity,uv);
+  float b,a,k,n,j;int f;vec3 T=target(uv,id,b,a,k,n,j,f);
+  vec3 p=P.xyz+V.xyz*uDt;
+  if(uSnap>.5||(j>.5&&(f==1||f==5)))p=T;
+  gl_FragColor=vec4(p,uSnap>.5?a:mix(P.w,a,1.-exp(-uDt*3.)));
+}`;
+
+const gpu = new GPUComputationRenderer(S, S, renderer);
+if (!renderer.extensions.has('EXT_color_buffer_float')) gpu.setDataType(THREE.HalfFloatType);
+const velVar = gpu.addVariable('textureVelocity', VEL, gpu.createTexture());
+const posVar = gpu.addVariable('texturePosition', POS, gpu.createTexture());
+gpu.setVariableDependencies(velVar, [velVar, posVar]); gpu.setVariableDependencies(posVar, [velVar, posVar]);
+const v2 = () => new THREE.Vector2(), v3 = () => new THREE.Vector3();
+const U = {
+  uTime: { value: 0 }, uDt: { value: 1 / 60 }, uState: { value: 0 }, uAsp: { value: vw / vh }, uTan: { value: TAN }, uSnap: { value: 1 },
+  uPulse: { value: 0 }, uTurb: { value: 0 }, uFlow: { value: 0 }, uWpp: { value: 1 }, uLF: { value: 300 }, uRipR: { value: 500 },
+  uView: { value: v2() }, uBand: { value: v2() }, uRipC: { value: v2() }, uA: { value: [v3(), v3(), v3(), v3(), v3(), v3()] },
+  uR2: { value: new THREE.Matrix3() }, uR3: { value: new THREE.Matrix3() },
+  tName: { value: T.name }, tLanes: { value: T.lanes }, tCon: { value: T.con }, tEnso: { value: T.enso }, tProof: { value: T.proof }, tRip: { value: T.rip },
+  uLaneY: { value: [0, 0, 0, 0, 0] }, uSpan: { value: [v2(), v2(), v2(), v2(), v2()] },
+  uPtr: { value: v3() }, uPtrS: { value: 0 }, uPtrR: { value: 1 }, uPtrSw: { value: 0 },
+};
+Object.assign(velVar.material.uniforms, U); Object.assign(posVar.material.uniforms, U);
+const err = gpu.init(); if (err) { html.classList.add('no-gl'); console.warn(err); await new Promise(() => {}); }
+
+const geo = new THREE.BufferGeometry(), ref = new Float32Array(N * 2);
+for (let i = 0; i < N; i++) { ref[i * 2] = (i % S + .5) / S; ref[i * 2 + 1] = ((i / S | 0) + .5) / S; }
+geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(N * 3), 3));
+geo.setAttribute('ref', new THREE.BufferAttribute(ref, 2));
+const CREAM = new THREE.Color(1, .9, .76), CORAL = new THREE.Color(1, .32, .17);
+const pmat = new THREE.ShaderMaterial({
+  uniforms: { tPos: { value: null }, tVel: { value: null }, tHi: { value: T.con }, uPS: { value: 1 }, uSize: { value: MOBILE ? .017 : .0125 }, uIntro: { value: 0 },
+    uHi: { value: -1 }, uHiAmt: { value: 0 }, uFocus: { value: CZ }, uCoc: { value: .06 }, uIC: { value: v3() }, uMaxPx: { value: 18 }, uGain: { value: MOBILE ? .7 : 1 }, uCream: { value: CREAM }, uCoral: { value: CORAL } },
+  vertexShader: `
+    uniform sampler2D tPos,tVel,tHi;uniform vec3 uIC;uniform float uPS,uSize,uIntro,uHi,uHiAmt,uFocus,uCoc,uMaxPx,uGain;uniform vec3 uCream,uCoral;
+    attribute vec2 ref;varying vec3 vC;
+    float hh(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+    void main(){
+      vec2 id=floor(ref*${S}.);vec4 P=texture2D(tPos,ref),V=texture2D(tVel,ref);
+      float r=hh(id+11.),r2=hh(id+23.),r3=hh(id+37.);vec3 p=P.xyz;
+      float e0=clamp((uIntro-.05-r*.85-r2*.2)/1.3,0.,1.),e=1.-pow(1.-e0,3.),im=1.;
+      if(e0<1.){vec3 d=p-uIC;float bump=sin(3.1416*e);
+        float an=(1.-e)*(1.-e)*(3.2+2.2*r3),cs=cos(an),sn=sin(an);
+        p=uIC+vec3(mat2(cs,sn,-sn,cs)*d.xy*e,d.z*e+(r2-.5)*2.2*bump);
+        im=smoothstep(0.,.05,e0)*(1.+bump*1.4);}
+      vec4 mv=modelViewMatrix*vec4(p,1.);gl_Position=projectionMatrix*mv;
+      float dep=max(-mv.z,.1),base=uSize*(.55+.9*r)*uPS/dep,coc=abs(dep-uFocus)*uCoc*uPS/dep;
+      float px=min(sqrt(base*base+coc*coc),uMaxPx);gl_PointSize=max(px,1.);
+      float lum=V.w*(1.+min(length(V.xyz)*.45,1.2))*(base*base)/(px*px)*im;
+      float node=mod(floor(texture2D(tHi,ref).w),16.);lum*=1.+step(abs(node-uHi),.5)*2.6*uHiAmt;
+      if(lum<.0004){gl_Position=vec4(2.,2.,2.,1.);gl_PointSize=0.;}
+      vC=mix(uCream,uCoral,P.w)*lum*uGain;
+    }`,
+  fragmentShader: `varying vec3 vC;void main(){vec2 c=gl_PointCoord*2.-1.;float d=dot(c,c);if(d>1.)discard;d=1.-d;gl_FragColor=vec4(vC*d*d,1.);}`,
+  transparent: true, depthWrite: false, depthTest: false, blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor,
+});
+const points = new THREE.Points(geo, pmat); points.frustumCulled = false;
+const scene = new THREE.Scene(); scene.add(points);
+const camera = new THREE.PerspectiveCamera(FOV, vw / vh, .1, 100); camera.position.set(0, 0, CZ);   // the camera never moves
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(vw, vh), .6, .55, .3);
+composer.addPass(bloom);
+/* the space seen through the letters: a lit gradient that never drops below the sheet colour
+   (#0a090b), so `darken` keeps the sheet flat while the cut-outs always read */
+const fin = new ShaderPass({
+  uniforms: { tDiffuse: { value: null }, uE: { value: v3() }, uC: { value: v3() }, uRes: { value: v2() }, uG: { value: v2() }, uT: { value: 0 }, uX: { value: 1.2 } },
+  vertexShader: `varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+  fragmentShader: `uniform sampler2D tDiffuse;uniform vec3 uE,uC;uniform vec2 uRes,uG;uniform float uT,uX;varying vec2 vUv;
+    void main(){vec3 c=texture2D(tDiffuse,vUv).rgb;c=1.-exp(-c*uX);
+      vec2 q=(vUv-uG)*vec2(uRes.x/uRes.y,1.);vec3 bg=mix(uC,uE,smoothstep(0.,.95,length(q)));
+      vec3 col=1.-(1.-bg)*(1.-c);col+=(fract(sin(dot(vUv*uRes+uT,vec2(12.9898,78.233)))*43758.5453)-.5)/255.;gl_FragColor=vec4(col,1.);}`,
+});
+composer.addPass(fin);
+// per chapter: [edge rgb, centre rgb] in 0..255, all channels above the sheet (10,9,11)
+const BG = [[24, 20, 25, 62, 40, 38], [18, 21, 28, 30, 44, 60], [19, 19, 30, 46, 42, 92], [25, 21, 21, 66, 50, 38], [21, 20, 25, 40, 36, 46], [28, 18, 19, 96, 40, 28]];
+
+/* ---------- layout sync ---------- */
+function regen() {
+  const G = TW.geo; if (!G) return;
+  vw = innerWidth; vh = innerHeight;
+  renderer.setSize(vw, vh, false); composer.setSize(vw, vh); camera.aspect = vw / vh; camera.updateProjectionMatrix();
+  U.uAsp.value = vw / vh; U.uView.value.set(vw, vh); U.uWpp.value = 2 * TAN * CZ / vh; fin.uniforms.uRes.value.set(vw * DPR, vh * DPR);
+  pmat.uniforms.uPS.value = vh * DPR / (2 * TAN);
+  genFill(T.name, G.name, { rim: .22, dz: 1.5, b0: .36, b1: 1.05, sp: .035, spb: .9, a0: .03, a1: .22 }, 11);
+  genLanes(G.build); genCon(G.research); genEnso(G.teach);
+  genFill(T.proof, G.proof, { rim: .7, dz: .6, b0: .12, b1: .16, sp: .02, spb: .45, a0: .03, a1: .12 }, 17);
+  genRip(G.mail);
+  U.uSnap.value = 1;
+}
+document.addEventListener('tw:layout', regen);
+if (TW.v) regen();
+
+/* ---------- hover highlights and the contact pulse ---------- */
+let hiT = 0, pulseAt = -9;
+TW.hi = (kind, n) => { if (!kind) { hiT = 0; return; } pmat.uniforms.tHi.value = kind === 'lanes' ? T.lanes : T.con; pmat.uniforms.uHi.value = n; hiT = 1; };
+TW.pulse = () => { pulseAt = performance.now() / 1000; };
+let pulsedContact = false;
+
+/* ---------- pointer: a local push and swirl, never the camera ---------- */
+const ptr = { x: -1e4, y: -1e4, t: -1e9, v: 0 };
+addEventListener('pointermove', e => { ptr.v = Math.min(1, ptr.v + Math.hypot(e.movementX || 0, e.movementY || 0) / 120); ptr.x = e.clientX; ptr.y = e.clientY; ptr.t = performance.now(); }, { passive: true });
+const s2w = (px, py) => { const nx = px / vw * 2 - 1, ny = 1 - py / vh * 2; return new THREE.Vector3(nx * TAN * (vw / vh) * CZ, ny * TAN * CZ, 0); };
+
+/* ---------- frame ---------- */
+const m4 = new THREE.Matrix4(), eu = new THREE.Euler();
+let last = 0, lastScroll = scrollY, turb = 0;
+TW.render = (nowMs, snap) => {
+  if (!TW.geo) return;
+  const now = nowMs / 1000; if (!last) last = now; const dt = Math.min(now - last, 4 / 15); last = now;
+  for (let k = 0; k < 6; k++) { const a = TW.anc[k]; U.uA.value[k].set(a.x, a.y, a.s); }
+  const st = Math.min(Math.max(TW.state, 0), 5); U.uState.value = st;
+  const i0 = Math.min(Math.floor(st), 4), f = st - i0, e = f * f * (3 - 2 * f), A = BG[i0], B = BG[i0 + 1], mix = j => (A[j] + (B[j] - A[j]) * e) / 255;
+  fin.uniforms.uE.value.set(mix(0), mix(1), mix(2)); fin.uniforms.uC.value.set(mix(3), mix(4), mix(5)); fin.uniforms.uT.value = now % 10;
+  fin.uniforms.uG.value.set(TW.glow[0] / vw, 1 - TW.glow[1] / vh);
+  U.uR2.value.setFromMatrix4(m4.makeRotationFromEuler(eu.set(.05 * Math.sin(now * .11), .07 * Math.sin(now * .07), 0)));
+  U.uR3.value.setFromMatrix4(m4.makeRotationFromEuler(eu.set(.16 * Math.sin(now * .13), .1 * Math.sin(now * .09 + 1), .02 * Math.sin(now * .1))));
+  const pw = s2w(ptr.x, ptr.y), idle = performance.now() - ptr.t;
+  U.uPtr.value.copy(pw); U.uPtrR.value = (MOBILE ? 80 : 130) * U.uWpp.value;
+  U.uPtrS.value += ((idle < 1400 && !TW.rm ? 1 : 0) - U.uPtrS.value) * (1 - Math.exp(-dt * 4)); ptr.v *= Math.exp(-dt * 2.5); U.uPtrSw.value = ptr.v;
+  const vs = Math.abs(scrollY - lastScroll) / Math.max(dt, 1 / 120); lastScroll = scrollY;
+  turb += (Math.min(vs / 2600, .45) - turb) * (1 - Math.exp(-dt * 3)); U.uTurb.value = turb;
+  pmat.uniforms.uHiAmt.value += (hiT - pmat.uniforms.uHiAmt.value) * (1 - Math.exp(-dt * 6));
+  if (st > 4.6 && !pulsedContact) { pulsedContact = true; pulseAt = now + .4; } if (st < 4) pulsedContact = false;
+  const pt = now - pulseAt; U.uPulse.value = pt < 0 ? 0 : pt < .35 ? pt / .35 : Math.exp(-(pt - .35) * 1.8);
+  U.uTime.value = now;
+  const intro = TW.rm ? 99 : TW.intro; pmat.uniforms.uIntro.value = intro;
+  if (intro < 3) { const a = TW.anc[0]; pmat.uniforms.uIC.value.copy(s2w(a.x, a.y)); }
+  if (snap || U.uSnap.value > .5) { U.uSnap.value = 1; U.uDt.value = 1 / 60; gpu.compute(); if (!snap) U.uSnap.value = 0; }
+  else { const n = Math.min(4, Math.ceil(dt * 15 - .01)) || 1; U.uDt.value = dt / n; for (let k = 0; k < n; k++) { U.uFlow.value += dt / n; gpu.compute(); } }
+  pmat.uniforms.tPos.value = gpu.getCurrentRenderTarget(posVar).texture;
+  pmat.uniforms.tVel.value = gpu.getCurrentRenderTarget(velVar).texture;
+  composer.render();
+};
+document.addEventListener('visibilitychange', () => { last = 0; });
+document.dispatchEvent(new Event('tw:gl'));
+</script>
+</body>
+</html>
