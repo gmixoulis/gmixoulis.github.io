@@ -7,7 +7,7 @@
 const path = Astro.url.pathname;
 const home = path === '/';
 const garden = path.startsWith('/garden');
-/* The blog shows no header, only a way back: the blog index goes home, posts and tag pages go to the index. */
+/* The blog shows no header, only a way back and the theme toggle: the blog index goes home, posts and tag pages go to the index. */
 const back = path.replace(/\/$/, '') === '/garden' ? { href: '/', label: 'Home' } : { href: '/garden/', label: 'Blog' };
 const sections = [
   ['about', 'About'], ['skills', 'Skills'], ['work', 'Experience'], ['research', 'Research'], ['certificates', 'Certificates'],
@@ -15,9 +15,10 @@ const sections = [
 ];
 ---
 
-{garden ? (
+{garden ? (<>
   <a class="back" href={back.href}><span aria-hidden="true">←</span>{back.label}</a>
-) : (<>
+  <button class="pill tg float" id="theme" type="button" aria-label="Switch to light theme"><i aria-hidden="true"></i><span>Light</span></button>
+</>) : (<>
 {home && <a class="skip" href="#main">Skip to content</a>}
 <header class:list={['nav', !home && 'scrolled inner']} id="nav">
   <a class="brand" href={home ? '#top' : '/'}>George Michoulis</a>
@@ -68,6 +69,9 @@ const sections = [
   .back:hover span{transform:translateX(-3px)}
   .back:active{transform:scale(.97)}
   .back:focus-visible{outline:2px solid var(--a2);outline-offset:3px}
+  /* Blog pages have no header, so the theme toggle floats top-right, level with the Back pill. */
+  .float{position:fixed;top:16px;right:var(--pad);z-index:30;background:var(--nav);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  .float:focus-visible{outline:2px solid var(--a2);outline-offset:3px}
   .skip{position:fixed;left:12px;top:-60px;z-index:50;background:var(--solid);color:var(--solid-fg);padding:8px 14px;border-radius:8px}
   .skip:focus{top:12px}
   .nav :focus-visible,.skip:focus-visible{outline:2px solid var(--a2);outline-offset:3px;border-radius:6px}
