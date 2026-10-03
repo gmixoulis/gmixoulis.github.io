@@ -324,3 +324,7 @@ body{font-family:var(--font-atkinson,var(--ui))}
 .arow{display:grid;grid-template-columns:18px minmax(0,1fr);column-gap:12px;align-items:start}
 .arow svg{grid-row:1/3;margin-top:4px;color:var(--a2)}
 .more[open]>summary.tbtn{margin-bottom:18px}
+/* LinkedIn: one column. Heading with the Follow button, then the feed full width. */
+.li-one{max-width:920px}
+.li-one .frame{margin-top:28px}
+.li-one .fine{max-width:none;margin-top:12px}

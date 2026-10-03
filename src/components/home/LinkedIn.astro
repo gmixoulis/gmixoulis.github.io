@@ -4,12 +4,10 @@ import { profile, linkedin } from '@/data/profile';
 ---
 
 <section class="sec li" id="linkedin" tabindex="-1" aria-labelledby="h-li">
-  <div class="wrap li-g">
-    <div class="li-t">
-      <h2 class="h2" id="h-li" data-rv>{linkedin.h}</h2>
-      <p class="body" data-rv>{linkedin.body}</p>
+  <div class="wrap li-one">
+    <div class="chead">
+      <h2 class="h2" id="h-li" data-rv>{linkedin.h[0]} <span class="dim">{linkedin.h[1]}</span></h2>
       <a class="pill" data-rv href={profile.linkedin} target="_blank" rel="noopener noreferrer">Follow on LinkedIn <span aria-hidden="true">↗</span></a>
-      <p class="fine" data-rv>{linkedin.fine}</p>
     </div>
     <figure class="frame" data-rv>
       <div class="bar"><span class="url">{linkedin.url}</span></div>
@@ -21,5 +19,6 @@ import { profile, linkedin } from '@/data/profile';
         </div>
       </div>
     </figure>
+    <p class="fine">{linkedin.fine}</p>
   </div>
 </section>

@@ -230,8 +230,7 @@ export const activities = {
 };
 
 export const linkedin = {
-  h: 'Latest on LinkedIn.',
-  body: 'My recent posts, loaded from my LinkedIn profile.',
+  h: ['LinkedIn.', 'My latest posts.'],
   fine: 'Third-party embed: the feed loads from sociablekit.com.',
   url: 'linkedin.com/in/george-michoulis',
   loading: 'Loading posts from LinkedIn…',
