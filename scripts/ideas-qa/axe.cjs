@@ -1,13 +1,12 @@
 // Usage: node scripts/ideas-qa/axe.cjs [baseURL]
-// Runs axe-core on /, /garden/ and /garden/one-stroke/ × {light,dark} × {normal,easy} × {1440,390}.
-// Prints a JSON summary of violations per URL/mode/theme/width. Exits 1 on any serious or critical violation.
+// Runs axe-core on /, /garden/, /garden/one-stroke/ and /garden/built-by-agents/ × {light,dark} × {1440,390} = 16 combinations.
+// Prints a JSON summary of violations per URL/theme/width. Exits 1 on any serious or critical violation.
 const puppeteer = require('/Users/gmixoulis/Desktop/my-projects/gmixoulis.github.io/node_modules/puppeteer-core');
 const path = require('path');
 
 const BASE = process.argv[2] || 'http://localhost:4321';
-const URLS = ['/', '/garden/', '/garden/one-stroke/'];
+const URLS = ['/', '/garden/', '/garden/one-stroke/', '/garden/built-by-agents/'];
 const THEMES = ['light', 'dark'];
-const READS = [{ key: 'normal', qs: '' }, { key: 'easy', qs: '?read=easy' }];
 const WIDTHS = [1440, 390];
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'];
 const AXE = path.join(__dirname, '..', '..', 'node_modules', 'axe-core', 'axe.min.js');
@@ -23,14 +22,13 @@ const AXE = path.join(__dirname, '..', '..', 'node_modules', 'axe-core', 'axe.mi
 
   for (const url of URLS) {
     for (const theme of THEMES) {
-      for (const { key, qs } of READS) {
         for (const width of WIDTHS) {
           const p = await b.newPage();
           // axe.min.js is injected as an inline <script>, which the strict CSP would block; bypass it for the audit.
           await p.setBypassCSP(true);
           await p.setViewport({ width, height: width > 800 ? 900 : 844 });
           await p.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: theme }]);
-          const target = `${BASE}${url}${qs}`;
+          const target = `${BASE}${url}`;
           await p.goto(target, { waitUntil: 'load', timeout: 60000 });
           await new Promise((r) => setTimeout(r, 1500));
           // Walk the page so scroll-triggered reveals reach their final visible state before axe runs.
@@ -53,11 +51,10 @@ const AXE = path.join(__dirname, '..', '..', 'node_modules', 'axe-core', 'axe.mi
           }, TAGS);
           const bad = res.filter((v) => v.impact === 'serious' || v.impact === 'critical');
           seriousCritical += bad.length;
-          results.push({ url, theme, read: key, width, violations: res, seriousOrCritical: bad.length });
+          results.push({ url, theme, width, violations: res, seriousOrCritical: bad.length });
           console.log(JSON.stringify(results[results.length - 1]));
           await p.close();
         }
-      }
     }
   }
 

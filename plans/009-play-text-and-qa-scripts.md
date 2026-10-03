@@ -124,3 +124,16 @@ After `bun run build` (exit 0):
 - The orchestrator creates a worktree on branch `plan-009` from master with `node_modules` symlinked, and dispatches
   `pi-delegate` there (`--provider deepseek --model deepseek-v4-pro`). It reviews the diff, reruns the checks,
   checks the plate frame visually, then moves the commit onto master (cherry-pick, files staged by name) and asks before pushing.
+
+## Outcome (2026-10-03)
+**DONE**, with the default decision (`contrast.cjs` deleted).
+- **Checks.** The build passes. In the built `/play/` page: "blockchain developer and researcher" appears 0 times,
+  "fraud detection" once (the line-354 interests list, kept on purpose), "drug-target interaction prediction" 3 times.
+  JSON-LD parses; the title and the 128-character description match the Constants.
+- **The game.** A headless walk (holding the right arrow) to the EDUCATION station shows the full new sentence on two
+  lines. The text container has 0px of overflow, there's no overlap with the BSc block, and no console errors were logged.
+- **QA scripts.** `page-check.cjs` is OK on `/play/` and `/`. `axe.cjs` ran 16 combinations with 0 violations.
+- **Process.** Pi ran in a separate worktree (branch `plan-009`). Its relay hit the orchestrator's 10-minute
+  background limit during Step 4, so the orchestrator finished Step 4 and the checks. Next time, give the relay a
+  longer `timeout` (the Bash tool caps a background command at 10 min, so run it with `nohup` and wait for `result.json`).
+- **Still open.** Is "blockchain fraud detection" on line 354 of /play/ separate real work? That's the owner's call.
