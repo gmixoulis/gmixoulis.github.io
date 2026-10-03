@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /play/
-Disallow: /play/dist/about.html
-Disallow: /play/dist/cv.html
-Sitemap: https://gmixoulis.github.io/play/dist/sitemap.xml

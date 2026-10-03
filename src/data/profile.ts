@@ -238,12 +238,13 @@ export const linkedin = {
 };
 
 export const contact = {
-  h: ['Have a project, a role or a research idea?', 'Write to me.'],
+  h: ['Contact.', 'Write to me.'],
+  /** In order of importance: the first 3 show, the rest behind 'See all'. */
   socials: [
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/george-michoulis/' },
     { label: 'GitHub', href: 'https://github.com/gmixoulis' },
-    { label: 'X', href: 'https://twitter.com/GeorgeMicou' },
     { label: 'Google Scholar', href: 'https://scholar.google.com/citations?user=nk0lq8YAAAAJ' },
+    { label: 'X', href: 'https://twitter.com/GeorgeMicou' },
     { label: 'ORCID', href: 'https://orcid.org/0000-0002-5139-448X' },
     { label: 'Semantic Scholar', href: 'https://www.semanticscholar.org/author/2180238066' },
   ],
