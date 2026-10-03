@@ -197,18 +197,23 @@ export const certificates = {
 };
 
 export const projects = {
-  /** Listed in order of importance: the first SHOWN are on the slider, the rest behind 'See all'. */
+  /** In order of importance, all on the slider. UI drafts are design prototypes I built, shown without descriptions. */
   h: ['Projects.', 'The most important first.'],
   items: [
     { wide: true, img: '/img/portfolio/verde.uom.gr.PNG', w: 1840, h: 907, alt: 'VerDe website, contact page with a map of the University of Macedonia',
       name: 'VerDe', host: 'verde.uom.gr', d: 'The **Ethereum system for verifying degrees**, from my BSc thesis.', tag: 'From my thesis' },
-    { img: '/img/portfolio/george-michoulis.com.png', w: 1840, h: 940, alt: 'Homepage of george-michoulis.com: the name George Michoulis in large type above an iridescent glass cube linked to a chain of smaller cubes', name: 'This site', host: 'george-michoulis.com', d: 'Built with an **agent pipeline**: one agent plans and reviews, another writes the code.', tag: 'Agentic' },
     { img: '/img/portfolio/bbf-gui.ddns.net.gif', w: 1377, h: 956, alt: 'Blockchain Benchmarking Framework landing page', freeze: true,
       name: 'Blockchain Benchmarking Framework', host: 'bbf-gui.ddns.net', d: 'Deploys and **benchmarks blockchain protocols**.' },
     { img: '/img/portfolio/metau.unic.ac.cy.png', w: 1698, h: 943, alt: 'University of Nicosia metaverse course site with a Connect Wallet button',
       name: 'UNIC metaverse course', host: 'metau.unic.ac.cy', d: 'A course site that is **on-chain and in the metaverse**.' },
     { img: '/img/portfolio/accelerate.png', w: 1910, h: 998, alt: 'Sign-in page of the UNIC Accelerate platform',
       name: 'UNIC Accelerate', host: 'accelerate.unic.ac.cy', d: "Sign-in for the University of Nicosia's **Accelerate platform**." },
+    { img: '/img/portfolio/drafts/ink-fluid.webp', w: 720, h: 450, alt: 'UI draft: Ink in water', name: 'Ink in water', host: 'UI draft', d: '' },
+    { img: '/img/portfolio/drafts/particles.webp', w: 720, h: 450, alt: 'UI draft: Particles', name: 'Particles', host: 'UI draft', d: '' },
+    { img: '/img/portfolio/drafts/glass.webp', w: 720, h: 450, alt: 'UI draft: Glass sculpture', name: 'Glass sculpture', host: 'UI draft', d: '' },
+    { img: '/img/portfolio/drafts/dusk.webp', w: 720, h: 450, alt: 'UI draft: Thessaloniki at dusk', name: 'Thessaloniki at dusk', host: 'UI draft', d: '' },
+    { img: '/img/portfolio/drafts/terrain.webp', w: 720, h: 450, alt: 'UI draft: Topography', name: 'Topography', host: 'UI draft', d: '' },
+    { img: '/img/portfolio/drafts/gravity.webp', w: 720, h: 450, alt: 'UI draft: Gravity', name: 'Gravity', host: 'UI draft', d: '' },
     { img: '/img/portfolio/celc.web.auth.gr.PNG', w: 1600, h: 936, alt: 'Centre for European Legal Culture website in Greek',
       name: 'Centre for European Legal Culture', host: 'celc.web.auth.gr', d: 'Greek-language site with news, publications and members.', tag: 'Freelance, WordPress' },
     { img: '/img/portfolio/eudem.polsci.auth.gr.PNG', w: 1896, h: 944, alt: 'EUDEM Jean Monnet Chair website',

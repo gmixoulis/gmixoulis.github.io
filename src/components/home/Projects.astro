@@ -1,7 +1,5 @@
 ---
 import { projects } from '@/data/profile';
-const SHOWN = 4; // the list is in order of importance
-const first = projects.items.slice(0, SHOWN), rest = projects.items.slice(SHOWN);
 const bold = (t: string) => t.split('**');
 ---
 
@@ -15,20 +13,10 @@ const bold = (t: string) => t.split('**');
   </div>
   <div class="rail" id="rail" tabindex="0" role="region" aria-label="Projects. Scroll sideways, drag, or use the arrow buttons.">
     <ul class="track">
-      {first.map((p) => (
-        <li class="card pcard"><figure class="pj"><div class="th"><img src={p.img} width={p.w} height={p.h} alt={p.alt} loading="lazy" decoding="async" draggable="false" data-freeze={p.freeze} /></div><figcaption><p class="pt"><b>{p.name}</b><span class="host">{p.host}</span></p><p class="pd">{bold(p.d).map((t, i) => (i % 2 ? <b>{t}</b> : t))}</p></figcaption></figure></li>
+      {projects.items.map((p) => (
+        <li class="card pcard"><figure class="pj"><div class="th"><img src={p.img} width={p.w} height={p.h} alt={p.alt} loading="lazy" decoding="async" draggable="false" data-freeze={p.freeze} /></div><figcaption><p class="pt"><b>{p.name}</b><span class="host">{p.host}</span></p>{p.d && <p class="pd">{bold(p.d).map((t, i) => (i % 2 ? <b>{t}</b> : t))}</p>}</figcaption></figure></li>
       ))}
     </ul>
   </div>
   <div class="rbar" aria-hidden="true"><i id="rbar"></i></div>
-  {rest.length > 0 && (
-    <div class="wrap">
-      <details class="more" data-rv>
-        <summary class="tbtn">See all {projects.items.length} projects</summary>
-        <ul class="plain prest">
-          {rest.map((p) => <li><b>{p.name}</b><span>{bold(p.d).join('')} <a class="lnk" href={`https://${p.host}`} target="_blank" rel="noopener noreferrer">{p.host}</a>{p.tag && ` · ${p.tag}`}</span></li>)}
-        </ul>
-      </details>
-    </div>
-  )}
 </section>
