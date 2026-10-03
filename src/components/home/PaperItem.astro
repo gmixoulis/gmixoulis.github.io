@@ -1,0 +1,11 @@
+---
+import type { Paper } from '@/data/profile';
+interface Props { p: Paper; top: number }
+const { p, top } = Astro.props;
+---
+
+<li><article class="paper spot">
+  <h3>{p.url ? <a href={p.url} target="_blank" rel="noopener noreferrer">{p.title}</a> : p.title}</h3>
+  <p class="venue">{p.venue}{p.firstAuthor && <span class="fa">First author</span>}</p>
+  <p class="pm">{p.year && <time datetime={p.year}>{p.year}</time>}{p.cites > 0 && <b class:list={[p.cites === top && 'hi']}>{p.cites} citation{p.cites === 1 ? '' : 's'}</b>}</p>
+</article></li>

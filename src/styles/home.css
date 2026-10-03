@@ -303,3 +303,13 @@ body{font-family:var(--font-atkinson,var(--ui))}
 .act .ic{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:linear-gradient(var(--panel),var(--panel)) padding-box,var(--acc) border-box;color:var(--a2)}
 .act h3{margin:14px 0 4px}
 @media (max-width:860px){.shelf{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Research: one column. Heading row (cube stage beside the heading only), then the top papers; the rest behind 'See all'. */
+.res-one{max-width:920px}
+.rhead{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:32px;align-items:center;margin-bottom:24px}
+.rhead .stage.r{display:block;height:240px;margin:0}
+.rm .rhead .stage.r{display:none}
+.more{margin-top:18px}
+.more>summary{list-style:none;display:inline-flex;cursor:pointer}
+.more>summary::-webkit-details-marker{display:none}
+.more[open]>summary{margin-bottom:12px}
+@media (max-width:760px){.rhead{grid-template-columns:minmax(0,1fr)}.rhead .stage.r{height:180px}}

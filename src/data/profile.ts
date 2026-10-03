@@ -54,14 +54,14 @@ const citesClause = (s: Stats) => (s.cites > 0 ? `${s.cites} citation${s.cites =
 
 export const skills = {
   h: ['How I work,', 'with proof for each.'],
-  items: (_s: Stats) => [
+  items: (s: Stats) => [
     { area: 'teach', h: 'Leadership', p: '**Led blockchain work** at Sidroco and **frontend teams** at the University of Nicosia.' },
     { area: 'res', h: 'Ownership', p: '**Contract to frontend** at Cyberscope. Took **VerDe from thesis to a live system**.' },
     { area: 'cur', h: 'Critical thinking', p: 'I build **smart-contract audit tooling** and **benchmarked blockchains** as first author.' },
     { area: 'learn', h: 'Communication', p: "**Taught three university modules**; talks at GEC'22 and EU workshops." },
     { area: 'cli', h: 'Collaboration', p: 'Worked on **EU proposals that won funding**; co-authored NANCY D3.3.' },
     { area: 'team', h: 'Problem solving', p: "**3rd** at the Infinitech hackathon, **1st** in UoM's Basic Research Awards." },
-    { area: 'lang', h: 'Mentoring', p: '**Fair assessment**: oral exams, projects and personal feedback.' },
+    { area: 'lang', h: 'Learning fast', p: `**${s.certs} certificates** and counting, from Cisco networking to Azure cloud and machine learning.` },
   ],
 };
 
@@ -98,7 +98,7 @@ export const work = {
 
 export const research = {
   /** h: count word + dimmed rest. */
-  h: (s: Stats) => [`${Word(s.papers)} paper${s.papers === 1 ? '' : 's'}`, 'on blockchain benchmarking, credentials, governance and 5G.'],
+  h: (s: Stats) => ['Research.', `${Word(s.papers)} papers, the most important first.`],
   note: (s: Stats) => (citesClause(s) ? `${citesClause(s)[0].toUpperCase()}${citesClause(s).slice(1)}, as of ${s.asOf}. ` : ''),
   also: "I also gave two poster flash talks at GEC'22, the 4th Summit on Gender Equality in Computing, on 16 June 2022: one on blockchain in higher education, one on a gender equality observatory for scientific research. In Greek, I wrote a BSc thesis (2020) and a student-conference paper (2021) on verifying academic titles with Ethereum.",
 };
@@ -214,7 +214,7 @@ export const projects = {
 
 /** `glyph` picks the isometric drawing in Activities.astro. */
 export const activities = {
-  h: ['Outside work.', 'Theatre, languages, politics and hackathons.'],
+  h: ['Outside work.', 'Theatre, languages, politics and agentic AI.'],
   items: [
     { glyph: 'fitness', h: 'Fitness', p: 'Workouts and staying fit.' },
     { glyph: 'news', h: 'The news', p: 'I keep up with it.' },
@@ -222,7 +222,7 @@ export const activities = {
     { glyph: 'anime', h: 'Anime', p: 'Watching it.' },
     { glyph: 'theatre', h: 'Theatre', p: 'Acting on stage and watching plays.' },
     { glyph: 'citizen', h: 'Active citizen', p: 'Politically engaged.' },
-    { glyph: 'hackathons', h: 'Hackathons', p: '3rd at Infinitech 2022, and the Move/Sui Bootcamp award in Thessaloniki.' },
+    { glyph: 'agentic', h: 'Agentic AI', p: 'I build with AI agents that write, test and ship code.' },
     { glyph: 'volunteering', h: 'Volunteering', p: 'MKI Hellas, 2019: a Dialogflow chatbot and a web page.' },
   ],
 };

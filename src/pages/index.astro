@@ -1,5 +1,6 @@
 ---
 import { rankCerts, pickFeatured } from '@/lib/certRank';
+import { rankPapers } from '@/lib/paperRank';
 import fs from 'node:fs';
 import path from 'node:path';
 import { Font } from 'astro:assets';
@@ -47,7 +48,7 @@ const listed: Paper[] = [
       isPartOf: { '@type': 'CreativeWork', name: venue } };
   }),
 ];
-const sorted = [...listed].sort((a, b) => b.cites - a.cites || b.year.localeCompare(a.year));
+const sorted = rankPapers(listed);
 
 // Totals and h-index over every Scholar item (hidden ones too), as Scholar counts them.
 const all = [...listed.map((p) => p.cites), ...json.filter((p) => hiddenPubs.some((h) => norm(h) === norm(p.title as string))).map(count)]

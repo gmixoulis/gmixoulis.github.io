@@ -1,30 +1,31 @@
 ---
 import { profile, research, type Paper, type Stats } from '@/data/profile';
+import PaperItem from './PaperItem.astro';
 interface Props { papers: Paper[]; stats: Stats }
-const { papers, stats } = Astro.props;
+const { papers, stats } = Astro.props; // already ranked by importance (src/lib/paperRank.ts)
 const [h, dim] = research.h(stats);
 const top = Math.max(0, ...papers.map((p) => p.cites));
+const SHOWN = 4;
+const first = papers.slice(0, SHOWN), rest = papers.slice(SHOWN);
 ---
 
 <section class="sec research" id="research" tabindex="-1" aria-labelledby="h-res">
-  <div class="wrap res-g">
-    <div class="res-l">
-      <p class="eyebrow" data-rv>Research</p>
-      <h2 class="h2" id="h-res" data-rv>{h} <span class="dim">{dim}</span></h2>
-      <p class="note" data-rv>{research.note(stats)}<a class="lnk" href={profile.scholar} target="_blank" rel="noopener noreferrer">Scholar profile <span aria-hidden="true">↗</span></a></p>
+  <div class="wrap res-one">
+    <div class="rhead">
+      <div>
+        <p class="eyebrow" data-rv>Research</p>
+        <h2 class="h2" id="h-res" data-rv>{h} <span class="dim">{dim}</span></h2>
+        <p class="note" data-rv>{research.note(stats)}<a class="lnk" href={profile.scholar} target="_blank" rel="noopener noreferrer">Scholar profile <span aria-hidden="true">↗</span></a></p>
+      </div>
       <div class="stage r" data-stage="4" aria-hidden="true"></div>
     </div>
-    <div>
-    <ol class="papers" data-rv>
-      {papers.map((p) => (
-        <li><article class="paper spot">
-          <h3>{p.url ? <a href={p.url} target="_blank" rel="noopener noreferrer">{p.title}</a> : p.title}</h3>
-          <p class="venue">{p.venue}{p.firstAuthor && <span class="fa">First author</span>}</p>
-          <p class="pm">{p.year && <time datetime={p.year}>{p.year}</time>}{p.cites > 0 && <b class:list={[p.cites === top && 'hi']}>{p.cites} citation{p.cites === 1 ? '' : 's'}</b>}</p>
-        </article></li>
-      ))}
-    </ol>
-    <p class="note also" data-rv>{research.also}</p>
-    </div>
+    <ol class="papers" data-rv>{first.map((p) => <PaperItem p={p} top={top} />)}</ol>
+    {rest.length > 0 && (
+      <details class="more" data-rv>
+        <summary class="tbtn">See all {papers.length} papers</summary>
+        <ol class="papers" start={SHOWN + 1}>{rest.map((p) => <PaperItem p={p} top={top} />)}</ol>
+        <p class="note also">{research.also}</p>
+      </details>
+    )}
   </div>
 </section>
