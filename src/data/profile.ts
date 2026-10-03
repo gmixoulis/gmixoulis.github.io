@@ -7,7 +7,7 @@ export const site = {
   url: 'https://george-michoulis.com/',
   title: 'George Michoulis · Software Engineer → Agentic Software Engineer',
   description:
-    'George Michoulis is a software engineer in Thessaloniki, Greece, moving into agentic software engineering. Full-stack and Web3 products, plus published blockchain research.',
+    'Software engineer in Thessaloniki, Greece, moving into agentic software engineering. Full-stack and Web3 products, plus published blockchain research.',
   shortDescription:
     'Software Engineer → Agentic Software Engineer in Thessaloniki, Greece. Full-stack and Web3 products, plus blockchain research.',
   ogImage: 'https://george-michoulis.com/og.png',
@@ -53,17 +53,19 @@ export type Stats = { papers: number; cites: number; h: number; certs: number; f
 const citesClause = (s: Stats) => (s.cites > 0 ? `${s.cites} citation${s.cites === 1 ? '' : 's'} and an h-index of ${s.h} on Google Scholar` : '');
 
 export const skills = {
-  h: ['How I work,', 'with proof for each.'],
+  /** In order of importance: the first 4 sit beside the cube, the rest behind 'See all'. */
+  h: ['Skills.', 'The ones that matter most first.'],
   items: (s: Stats) => [
-    { area: 'teach', h: 'Leadership', p: '**Led blockchain work** at Sidroco and **frontend teams** at the University of Nicosia.' },
-    { area: 'res', h: 'Ownership', p: '**Contract to frontend** at Cyberscope. Took **VerDe from thesis to a live system**.' },
+    { area: 'teach', h: 'Ownership', p: '**Contract to frontend** at Cyberscope. Took **VerDe from thesis to a live system**.' },
+    { area: 'res', h: 'Problem solving', p: "**3rd** at the Infinitech hackathon, **1st** in UoM's Basic Research Awards." },
     { area: 'cur', h: 'Critical thinking', p: 'I build **smart-contract audit tooling** and **benchmarked blockchains** as first author.' },
-    { area: 'learn', h: 'Communication', p: "**Taught three university modules**; talks at GEC'22 and EU workshops." },
-    { area: 'cli', h: 'Collaboration', p: 'Worked on **EU proposals that won funding**; co-authored NANCY D3.3.' },
-    { area: 'team', h: 'Problem solving', p: "**3rd** at the Infinitech hackathon, **1st** in UoM's Basic Research Awards." },
-    { area: 'lang', h: 'Learning fast', p: `**${s.certs} certificates** and counting, from Cisco networking to Azure cloud and machine learning.` },
-  ],
+    { area: 'learn', h: 'Leadership', p: '**Led blockchain work** at Sidroco and **frontend teams** at the University of Nicosia.' },
+    { h: 'Collaboration', p: 'Worked on **EU proposals that won funding**; co-authored NANCY D3.3.' },
+    { h: 'Communication', p: "**Taught three university modules**; talks at GEC'22 and EU workshops." },
+    { h: 'Learning fast', p: `**${s.certs} certificates** and counting, from Cisco networking to Azure cloud and machine learning.` },
+  ] as { area?: string; h: string; p: string }[],
 };
+
 
 /** `when`: [datetime, label] pairs joined by "-"; `since` prefixes "Since". `org` parts are joined by a dimmed "/". */
 export const work = {
@@ -198,6 +200,7 @@ export const projects = {
   items: [
     { wide: true, img: '/img/portfolio/verde.uom.gr.PNG', w: 1840, h: 907, alt: 'VerDe website, contact page with a map of the University of Macedonia',
       name: 'VerDe', host: 'verde.uom.gr', d: 'The **Ethereum system for verifying degrees**, from my BSc thesis.', tag: 'From my thesis' },
+    { img: '/img/portfolio/george-michoulis.com.png', w: 1840, h: 940, alt: 'Homepage of george-michoulis.com: the name George Michoulis in large type above an iridescent glass cube linked to a chain of smaller cubes', name: 'This site', host: 'george-michoulis.com', d: 'Built with an **agent pipeline**: one agent plans and reviews, another writes the code.', tag: 'Agentic' },
     { img: '/img/portfolio/bbf-gui.ddns.net.gif', w: 1377, h: 956, alt: 'Blockchain Benchmarking Framework landing page', freeze: true,
       name: 'Blockchain Benchmarking Framework', host: 'bbf-gui.ddns.net', d: 'Deploys and **benchmarks blockchain protocols**.' },
     { img: '/img/portfolio/metau.unic.ac.cy.png', w: 1698, h: 943, alt: 'University of Nicosia metaverse course site with a Connect Wallet button',
@@ -261,7 +264,7 @@ export const person = {
   url: 'https://george-michoulis.com/',
   email: 'mailto:gmixoulis@gmail.com',
   image: 'https://george-michoulis.com/og.png',
-  jobTitle: 'Software Engineer',
+  jobTitle: ['Software Engineer', 'Agentic Software Engineer'],
   description: about.def,
   identifier: { '@type': 'PropertyValue', propertyID: 'ORCID', value: '0000-0002-5139-448X', url: 'https://orcid.org/0000-0002-5139-448X' },
   homeLocation: { '@type': 'Place', name: 'Thessaloniki, Greece', address: { '@type': 'PostalAddress', addressLocality: 'Thessaloniki', addressCountry: 'GR' } },
@@ -282,7 +285,7 @@ export const person = {
     'Move/Sui Bootcamp Thessaloniki award',
     'Progress Award, Greek Ministry of Education (2015)',
   ],
-  knowsAbout: ['Blockchain', 'Ethereum', 'Smart contracts', 'Solidity', 'TypeScript', 'Web3', 'NFTs', 'DeFi', 'Hyperledger Fabric',
+  knowsAbout: ['Agentic software engineering', 'AI coding agents', 'Multi-agent orchestration', 'Blockchain', 'Ethereum', 'Smart contracts', 'Solidity', 'TypeScript', 'Web3', 'NFTs', 'DeFi', 'Hyperledger Fabric',
     'Blockchain benchmarking', '5G network slicing', 'Graph embeddings', 'Next.js', 'NestJS', 'Docker', 'Networks and security', 'WordPress'],
   knowsLanguage: ['English'],
   sameAs: [
