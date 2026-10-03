@@ -87,8 +87,10 @@ export const work = {
   education: [
     { b: 'MSc Data and Web Science', span: 'Aristotle University of Thessaloniki, 2020-2022, DeepMind scholarship, ',
       link: { href: 'https://doi.org/10.26262/heal.auth.ir.338875', text: 'thesis on graph embeddings for drug-target interaction prediction' } },
-    { b: 'BSc Applied Informatics', span: 'University of Macedonia, 2015-2020, thesis on verifying academic qualifications with blockchain' },
-  ] as { b: string; span: string; link?: { href: string; text: string } }[],
+    { b: 'BSc Applied Informatics', span: 'University of Macedonia, 2015-2020, ',
+      link: { href: 'https://dspace.lib.uom.gr/handle/2159/24707', text: 'thesis on verifying academic qualifications with blockchain' },
+      en: '/docs/michoulis-bsc-thesis-2020-en.pdf' },
+  ] as { b: string; span: string; link?: { href: string; text: string }; en?: string }[],
   awards: [
     { b: 'DeepMind scholarship', span: 'Aristotle University of Thessaloniki, 2020-2022' },
     { b: '3rd place, Infinitech Hackathon', span: 'Crowdpolicy, 06/2022' },

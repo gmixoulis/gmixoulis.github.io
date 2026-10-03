@@ -12,7 +12,7 @@ import { work } from '@/data/profile';
       <li aria-hidden="true" class="chain-fill" style="list-style:none;padding:0"></li>
     </ol>
     <div class="box" data-rv><h3 class="big">Education</h3><ul class="plain">
-      {work.education.map((e) => <li><b>{e.b}</b><span>{e.span}{e.link && <a class="lnk" href={e.link.href} target="_blank" rel="noopener noreferrer">{e.link.text}</a>}</span></li>)}
+      {work.education.map((e) => <li><b>{e.b}</b><span>{e.span}{e.link && <a class="lnk" href={e.link.href} target="_blank" rel="noopener noreferrer">{e.link.text}</a>}{e.en && <> (<a class="lnk" href={e.en} target="_blank" rel="noopener">English translation</a>)</>}</span></li>)}
     </ul></div>
     <div class="box" data-rv><h3 class="big">Awards</h3><ul class="plain">
       {work.awards.map((a) => <li><b>{a.b}</b><span>{a.span}</span></li>)}
