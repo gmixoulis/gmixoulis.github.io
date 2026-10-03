@@ -215,16 +215,17 @@ export const projects = {
 
 /** `glyph` picks the isometric drawing in Activities.astro. */
 export const activities = {
-  h: ['Outside work.', 'Theatre, languages, politics and agentic AI.'],
+  /** In order of importance: the first 4 are cards, the rest behind 'See all'. */
+  h: ['Outside work.', 'The ones that matter most first.'],
   items: [
+    { glyph: 'agentic', h: 'Agentic AI', p: 'I build with **AI agents that write, test and ship code**.' },
+    { glyph: 'volunteering', h: 'Volunteering', p: '**MKI Hellas, 2019**: a Dialogflow chatbot and a web page.' },
+    { glyph: 'theatre', h: 'Theatre', p: '**Acting on stage** and watching plays.' },
+    { glyph: 'languages', h: 'Languages', p: 'I keep **learning new ones**.' },
+    { glyph: 'citizen', h: 'Active citizen', p: 'Politically engaged.' },
     { glyph: 'fitness', h: 'Fitness', p: 'Workouts and staying fit.' },
     { glyph: 'news', h: 'The news', p: 'I keep up with it.' },
-    { glyph: 'languages', h: 'Languages', p: 'I keep learning new ones.' },
     { glyph: 'anime', h: 'Anime', p: 'Watching it.' },
-    { glyph: 'theatre', h: 'Theatre', p: 'Acting on stage and watching plays.' },
-    { glyph: 'citizen', h: 'Active citizen', p: 'Politically engaged.' },
-    { glyph: 'agentic', h: 'Agentic AI', p: 'I build with AI agents that write, test and ship code.' },
-    { glyph: 'volunteering', h: 'Volunteering', p: 'MKI Hellas, 2019: a Dialogflow chatbot and a web page.' },
   ],
 };
 

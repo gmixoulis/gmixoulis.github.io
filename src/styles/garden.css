@@ -464,7 +464,6 @@
 
 /* List thumbnails: fixed box, cropped (never stretched). */
 .z-thumb { display: block; width: 160px; height: 100px; object-fit: cover; margin-top: 0.75rem; }
-/* Transparent sumi artwork vanishes on dark paper: in dark mode, mount covers and thumbnails on a paper plate. */
+/* Transparent sumi artwork vanishes on dark paper: in dark mode, invert the ink to white. */
 .dark .garden .z-cover img,
-.dark .garden .z-thumb { background: var(--z-ink); border-radius: 2px; }
-.dark .garden .z-cover img { padding: clamp(0.75rem, 3vw, 2rem); box-sizing: border-box; }
+.dark .garden .z-thumb { filter: invert(1); }

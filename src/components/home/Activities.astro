@@ -1,6 +1,9 @@
 ---
 import { activities } from '@/data/profile';
 import { Dumbbell, Newspaper, Languages, Tv, Drama, Vote, Bot, HeartHandshake } from '@lucide/astro';
+const SHOWN = 4; // the list is in order of importance
+const first = activities.items.slice(0, SHOWN), rest = activities.items.slice(SHOWN);
+const bold = (t: string) => t.split('**');
 const icons = { fitness: Dumbbell, news: Newspaper, languages: Languages, anime: Tv, theatre: Drama, citizen: Vote, agentic: Bot, volunteering: HeartHandshake };
 ---
 
@@ -8,9 +11,17 @@ const icons = { fitness: Dumbbell, news: Newspaper, languages: Languages, anime:
   <div class="wrap">
     <h2 class="h2" id="h-acts" data-rv>{activities.h[0]} <span class="dim">{activities.h[1]}</span></h2>
     <ul class="shelf" data-rv>
-      {activities.items.map((a) => { const I = icons[a.glyph as keyof typeof icons]; return (
-        <li class="act"><span class="ic" aria-hidden="true"><I size={22} stroke-width={1.75} /></span><h3>{a.h}</h3><p>{a.p}</p></li>
+      {first.map((a) => { const I = icons[a.glyph as keyof typeof icons]; return (
+        <li class="act"><span class="ic" aria-hidden="true"><I size={22} stroke-width={1.75} /></span><h3>{a.h}</h3><p>{bold(a.p).map((t, i) => (i % 2 ? <b>{t}</b> : t))}</p></li>
       ); })}
     </ul>
+    {rest.length > 0 && (
+      <details class="more" data-rv>
+        <summary class="tbtn">See all {activities.items.length}</summary>
+        <ul class="plain prest">
+          {rest.map((a) => { const I = icons[a.glyph as keyof typeof icons]; return <li class="arow"><I size={18} stroke-width={1.75} aria-hidden="true" /><b>{a.h}</b><span>{a.p}</span></li>; })}
+        </ul>
+      </details>
+    )}
   </div>
 </section>
