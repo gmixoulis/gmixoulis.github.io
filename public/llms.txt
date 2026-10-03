@@ -20,7 +20,7 @@
 
 ## Education
 - MSc in Data and Web Science, Aristotle University of Thessaloniki (2020 – 2022), funded by a DeepMind scholarship. Thesis: "Graph Embedding and Node Features for Drug-Target Interaction Prediction" (DOI 10.26262/heal.auth.ir.338875).
-- BSc in Applied Informatics, University of Macedonia (2015 – 2020). Thesis (in Greek): "Verifying the validity of academic qualifications with blockchain technology" (https://dspace.lib.uom.gr/handle/2159/24707). English translation: https://george-michoulis.com/docs/michoulis-bsc-thesis-2020-en.pdf
+- BSc in Applied Informatics, University of Macedonia (2015 – 2020). Thesis (in Greek): "Verifying the validity of academic qualifications with blockchain technology" (https://dspace.lib.uom.gr/handle/2159/24707). English translation: https://george-michoulis.com/docs/michoulis-bsc-thesis-2020-en.pdf; Greek PDF: https://george-michoulis.com/docs/michoulis-bsc-thesis-2020-el.pdf
 
 ## Selected publications
 - Benchmarking blockchain technologies for agricultural applications. IEEE DCOSS-IoT 2026. https://doi.org/10.1109/DCOSS-IoT69657.2026.00085
