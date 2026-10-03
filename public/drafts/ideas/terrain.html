@@ -207,7 +207,7 @@ button{font:inherit;color:inherit}
       <h3>Rivers: what I studied</h3>
       <dl>
         <dt>MSc Data and Web Science, Aristotle University of Thessaloniki, 2020 – 2022</dt>
-        <dd>Graph-embedding methods for blockchain fraud detection, funded by a DeepMind scholarship.</dd>
+        <dd>Graph-embedding methods for drug–target interaction prediction, funded by a DeepMind scholarship.</dd>
         <dt>BSc Applied Informatics, University of Macedonia, 2015 – 2020</dt>
         <dd>My thesis was on verifying academic credentials with Ethereum.</dd>
       </dl>
@@ -724,7 +724,7 @@ RIDGES.slice(1).forEach((r, i) => {
 {
   const b = riverAt(.3), m = riverAt(.83);
   addMark({ kind: 'rv', pri: 76, minZ: 0, x: b.x, z: b.z, lift: 8, fzoom: .45, name: 'BSc Applied Informatics', sub: 'University of Macedonia, 2015 – 2020', more: '<p>My thesis was on verifying academic credentials with Ethereum.</p>' });
-  addMark({ kind: 'rv', pri: 75, minZ: 0, x: m.x, z: m.z, lift: 8, fzoom: .45, name: 'MSc Data and Web Science', sub: 'Aristotle University of Thessaloniki, 2020 – 2022', more: '<p>Graph-embedding methods for blockchain fraud detection, funded by a DeepMind scholarship.</p>' });
+  addMark({ kind: 'rv', pri: 75, minZ: 0, x: m.x, z: m.z, lift: 8, fzoom: .45, name: 'MSc Data and Web Science', sub: 'Aristotle University of Thessaloniki, 2020 – 2022', more: '<p>Graph-embedding methods for drug–target interaction prediction, funded by a DeepMind scholarship.</p>' });
 }
 AWARDS.forEach(a => addMark({ kind: 'tg', pri: 50, minZ: .18, x: X(a.y), z: a.z, lift: 20, fzoom: .6, name: esc(a.name), sub: esc(a.sub), more: `<p>${esc(a.sub)}.${a.note ? ' ' + a.note : ''}</p>` }));
 addMark({ kind: 'nt', plain: true, pri: 20, minZ: .05, x: (NOWX + XMAX) / 2 + .05, z: -2.4, lift: 0, name: 'unsurveyed' });
