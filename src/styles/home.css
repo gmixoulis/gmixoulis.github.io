@@ -313,3 +313,9 @@ body{font-family:var(--font-atkinson,var(--ui))}
 .more>summary::-webkit-details-marker{display:none}
 .more[open]>summary{margin-bottom:12px}
 @media (max-width:760px){.rhead{grid-template-columns:minmax(0,1fr)}.rhead .stage.r{height:180px}}
+.pd b{color:var(--fg);font-weight:700}
+.projects .more{margin-top:26px}
+.prest{gap:16px;font-size:16px;line-height:1.6}
+.prest b{font-weight:600;color:var(--fg)}
+.prest span{display:block;font-size:15px;color:var(--fg-2)}
+.more>summary.tbtn{align-items:center;height:40px;margin:0;line-height:1}

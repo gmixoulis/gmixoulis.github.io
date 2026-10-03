@@ -193,22 +193,23 @@ export const certificates = {
 };
 
 export const projects = {
-  h: ["Sites and systems I've built.", 'Most of them live on university domains.'],
+  /** Listed in order of importance: the first SHOWN are on the slider, the rest behind 'See all'. */
+  h: ['Projects.', 'The most important first.'],
   items: [
     { wide: true, img: '/img/portfolio/verde.uom.gr.PNG', w: 1840, h: 907, alt: 'VerDe website, contact page with a map of the University of Macedonia',
-      name: 'VerDe', host: 'verde.uom.gr', d: 'The Ethereum system for verifying academic qualifications that I introduced at the Balkan Conference on Operational Research.', tag: 'From my thesis' },
+      name: 'VerDe', host: 'verde.uom.gr', d: 'The **Ethereum system for verifying degrees**, from my BSc thesis.', tag: 'From my thesis' },
     { img: '/img/portfolio/bbf-gui.ddns.net.gif', w: 1377, h: 956, alt: 'Blockchain Benchmarking Framework landing page', freeze: true,
-      name: 'Blockchain Benchmarking Framework', host: 'bbf-gui.ddns.net', d: 'A framework that deploys and evaluates blockchain protocols.' },
+      name: 'Blockchain Benchmarking Framework', host: 'bbf-gui.ddns.net', d: 'Deploys and **benchmarks blockchain protocols**.' },
     { img: '/img/portfolio/metau.unic.ac.cy.png', w: 1698, h: 943, alt: 'University of Nicosia metaverse course site with a Connect Wallet button',
-      name: 'UNIC metaverse course', host: 'metau.unic.ac.cy', d: 'A course site for education that is “decentralised, on-chain and in the metaverse”.' },
+      name: 'UNIC metaverse course', host: 'metau.unic.ac.cy', d: 'A course site that is **on-chain and in the metaverse**.' },
     { img: '/img/portfolio/accelerate.png', w: 1910, h: 998, alt: 'Sign-in page of the UNIC Accelerate platform',
-      name: 'UNIC Accelerate', host: 'accelerate.unic.ac.cy', d: "The sign-in page of the University of Nicosia's Accelerate platform." },
+      name: 'UNIC Accelerate', host: 'accelerate.unic.ac.cy', d: "Sign-in for the University of Nicosia's **Accelerate platform**." },
     { img: '/img/portfolio/celc.web.auth.gr.PNG', w: 1600, h: 936, alt: 'Centre for European Legal Culture website in Greek',
-      name: 'Centre for European Legal Culture', host: 'celc.web.auth.gr', d: 'A Greek-language site with news, publications and member pages.', tag: 'Freelance, WordPress' },
+      name: 'Centre for European Legal Culture', host: 'celc.web.auth.gr', d: 'Greek-language site with news, publications and members.', tag: 'Freelance, WordPress' },
     { img: '/img/portfolio/eudem.polsci.auth.gr.PNG', w: 1896, h: 944, alt: 'EUDEM Jean Monnet Chair website',
-      name: 'EUDEM Jean Monnet Chair', host: 'eudem.polsci.auth.gr', d: "The chair's activities, staff members and news.", tag: 'Freelance, WordPress' },
+      name: 'EUDEM Jean Monnet Chair', host: 'eudem.polsci.auth.gr', d: "The chair's activities, staff and news.", tag: 'Freelance, WordPress' },
     { img: '/img/portfolio/marlab.ode.uom.gr.PNG', w: 1835, h: 917, alt: 'MarLab, the University of Macedonia Marketing Laboratory website',
-      name: 'MarLab', host: 'marlab.ode.uom.gr', d: "The University of Macedonia's Marketing Laboratory: membership, research, education and publications.", tag: 'Freelance, WordPress' },
+      name: 'MarLab', host: 'marlab.ode.uom.gr', d: "The University of Macedonia's Marketing Laboratory.", tag: 'Freelance, WordPress' },
   ] as { wide?: boolean; img: string; w: number; h: number; alt: string; freeze?: boolean; name: string; host: string; d: string; tag?: string }[],
 };
 
