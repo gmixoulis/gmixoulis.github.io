@@ -3,7 +3,7 @@
  * Works on what the rename workflow already produces: "<Kind>_<Title>.<ext>" plus the optional label in profile.ts.
  * Score = kind of document + who issued it + how big it was. Degrees are pinned above everything.
  */
-export type Rankable = { file: string; title: string; by: string };
+export type Rankable = { file: string; title: string; by: string; pin?: boolean };
 
 /** Big-name issuers: an attendance certificate from one of these can still reach the top. Matched as whole words. */
 const TOP = ['harvard', 'mit', 'stanford', 'oxford', 'cambridge', 'princeton', 'yale', 'berkeley', 'eth zurich',
@@ -32,7 +32,18 @@ export function certScore(c: Rankable): number {
   if (/\b(webinar|workshop|event|day)\b|hour of code/.test(text)) s -= 6;
   const year = Number(text.match(/\b(19|20)\d{2}\b/)?.[0] ?? 0);
   if (year >= 2020) s += 3;
+  if (year && year < 2016) s -= 20; // school-era
+  // relevance to a software engineer's work
+  if (/linux|machine learning|neural|cloud|azure|security|hacking|cyber|blockchain|network|rust|software|developer|programming|smart contract|\bsui\b|\bmove\b|data/.test(text)) s += 15;
+  else if (/marketing|brand|tourism|customer/.test(text)) s -= 10;
   return s;
+}
+
+/** Show the degrees, every pinned certificate, then the best-scoring ones up to `n` non-degrees. */
+export function pickFeatured<T extends Rankable>(ranked: T[], n = 6): Set<T> {
+  const out = new Set(ranked.filter((c) => isDegree(c) || c.pin));
+  for (const c of ranked) { if ([...out].filter((x) => !isDegree(x)).length >= n) break; out.add(c); }
+  return out;
 }
 
 /** Degrees first, then by score (stable for ties). */

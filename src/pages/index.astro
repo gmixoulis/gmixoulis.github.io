@@ -1,5 +1,5 @@
 ---
-import { rankCerts, isDegree } from '@/lib/certRank';
+import { rankCerts, pickFeatured } from '@/lib/certRank';
 import fs from 'node:fs';
 import path from 'node:path';
 import { Font } from 'astro:assets';
@@ -68,8 +68,8 @@ const certs: Cert[] = [
 ].map((c) => ({ ...c, src: `/img/renamed/${encodeURIComponent(c.file)}` }));
 /* Ranked by importance (src/lib/certRank.ts): the degrees, then the 6 most valuable are shown; the dialog lists all in this order. */
 const ranked = rankCerts(certs);
-let top = 0;
-ranked.forEach((c) => { c.featured = isDegree(c) || top++ < 6; });
+const shown = pickFeatured(ranked);
+ranked.forEach((c) => { c.featured = shown.has(c); });
 
 const built = new Date();
 const stats: Stats = {

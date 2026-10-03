@@ -1,6 +1,6 @@
 // Run: bun scripts/ideas-qa/cert-rank.check.ts
 import assert from 'node:assert';
-import { certScore, rankCerts } from '../../src/lib/certRank';
+import { certScore, rankCerts, pickFeatured } from '../../src/lib/certRank';
 const c = (file: string, title: string, by = '') => ({ file, title, by });
 const msc = c('1Master-Degree_X.jpg', 'MSc', 'Aristotle University');
 const harvardAtt = c('Certificate-Of-Attendance_AI.jpg', 'AI talk', 'Harvard University, 2024');
@@ -12,4 +12,12 @@ assert.ok(r[0] === msc, 'degree first');
 assert.ok(certScore(harvardAtt) > certScore(localAtt) + 25, 'Harvard attendance far above a local one');
 assert.ok(certScore(ccna) > certScore(webinar), 'a 132-hour course beats a webinar');
 assert.ok(certScore(harvardAtt) > certScore(webinar), 'big-name attendance beats an ordinary webinar');
+const school = c('Award_X.jpg', 'Progress Award', 'Ministry, 2015');
+const linux = { ...c('Certificate-Of-Participation_Linux.jpg', 'GNU/Linux command line', 'University, 2017'), pin: true };
+assert.ok(certScore(c('Certificate-Of-Completion_ML.jpg', 'Machine learning', 'X University, 2021')) > certScore(c('Certificate-Of-Completion_Mkt.jpg', 'Marketing', 'X University, 2021')), 'technical beats marketing');
+assert.ok(certScore(school) < 50, 'school-era award drops');
+const many = rankCerts([msc, ccna, webinar, localAtt, harvardAtt, school, linux, ...Array.from({ length: 8 }, (_, i) => c(`Certificate-Of-Completion_C${i}.jpg`, `Cloud course ${i}, 90 hours`, 'Microsoft, 2024'))]);
+const shown = pickFeatured(many);
+assert.ok(shown.has(msc) && shown.has(linux), 'degree and pinned always shown');
+assert.equal([...shown].filter((x) => !x.file.includes('Degree')).length, 6, 'exactly 6 besides degrees');
 console.log('cert-rank ok:', r.map((x) => x.title).join(' > '));

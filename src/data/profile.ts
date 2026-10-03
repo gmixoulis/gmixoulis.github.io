@@ -160,7 +160,7 @@ export const certificates = {
     { file: 'Move-Sui-First-Thessaloniki-Bootacamp-Award_Move-Bootcamp-Thessaloniki.png', title: 'Move/Sui Bootcamp Thessaloniki award', by: 'Move Bootcamp Thessaloniki', w: 3543, h: 3542 },
     { file: 'Certificate-Of-Completion_CCNA-Cisco-Certified-Network-Associate.jpg', title: 'Accelerated CCNA, 132 hours', by: 'University of Thessaly, 2020', w: 2175, h: 1439 },
     { file: 'Certificate-Of-Completion_Rust-Developer.png', title: 'Certified Rust developer', by: 'W3Schools, 2025', w: 2342, h: 1656 },
-    { file: 'Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg', title: 'Machine learning and deep neural networks', by: 'Aristotle University of Thessaloniki, 2021', w: 1755, h: 1240 },
+    { file: 'Certificate-Of-Completion_Machine-Learning-And-Deep-Neural-Networks.jpg', title: 'Machine learning and deep neural networks (CVML), 17 hours, 1.5 ECTS', by: 'Aristotle University of Thessaloniki, 2021', w: 1755, h: 1240 },
     { file: 'Certificate-Of-Completion_How-To-Get-Published-With-IEEE.jpg', title: 'How to get published with IEEE', by: 'IEEE, 2020', w: 1650, h: 1275 },
     { file: 'Certificate-Of-Achievement_Introduction-To-Digital-Currencies.jpg', title: 'Introduction to digital currencies', by: 'University of Nicosia, 2020', w: 1754, h: 1241 },
     { file: 'Certificate-Of-Completion_Cloud-Engineering.png', title: 'Cloud engineering (Azure), 90 hours', by: 'Code.Hub, 2024', w: 2481, h: 3509 },
@@ -173,7 +173,7 @@ export const certificates = {
     { file: 'Certificate-Of-Completion_Networking-Essentials.png', title: 'Networking essentials', by: 'Cisco Networking Academy', w: 303, h: 303 },
     { file: 'Certificate-Of-Completion_Cybersecurity-ELearning-Academy.jpg', title: 'Cybersecurity eLearning Academy, 20 hours', by: 'College Link, 2023', w: 6667, h: 4959 },
     { file: 'Certificate-Of-Completion_Software-Development-For-Telecommunication-Networks.jpg', title: 'Software development for telecommunication networks', by: 'Intracom Telecom, 2019', w: 2127, h: 1496 },
-    { file: 'Certificate-Of-Participation_GNULinux-Command-Line.jpg', title: 'GNU/Linux command line', by: 'University of Macedonia and GreekLUG, 2017', w: 1495, h: 2171 },
+    { file: 'Certificate-Of-Participation_GNULinux-Command-Line.jpg', title: 'GNU/Linux command line', by: 'University of Macedonia and GreekLUG, 2017', pin: true, w: 1495, h: 2171 },
     { file: 'Certificate-Of-Completion_The-Hour-Of-Code.jpg', title: 'The Hour of Code', by: 'Code.org, 2013', w: 2066, h: 1498 },
     { file: 'Certificate-Of-Completion_Entrepreneurship-Funding-And-Development-Of-New-Enterprises.png', title: 'Founding, funding and development of startups', by: 'Athens University of Economics and Business, 2023', w: 1575, h: 1112 },
     { file: 'Certificate-Of-Participation_MIGMA-MARKETING-KAI-BRAND.png', title: 'Marketing mix and brand', by: 'National and Kapodistrian University of Athens, 2023', w: 1654, h: 2339 },
@@ -189,7 +189,7 @@ export const certificates = {
     { file: 'Certificate-Of-Participation_Skgcode-Project-Creation-Of-A-Real-Estate-Chatbot.jpg', title: 'skg.code project: a real-estate chatbot', by: 'skg.code, 2019', w: 2219, h: 1519 },
     { file: 'Certificate-Of-Participation_Marine-Educational-Robotics-Hydrobot-Program.jpg', title: 'Hydrobot marine educational robotics', by: 'Eugenides Foundation, 2015', w: 2157, h: 1509 },
     { file: 'Certificate-Of-Completion_Aristoteleio-University-Of-Thessaloniki-European-Legal-Culture-Program.jpg', title: 'Internship, Center for European Legal Culture', by: 'Aristotle University of Thessaloniki, 2019-2020', w: 1755, h: 1241 },
-  ] as { file: string; title: string; by: string; w: number; h: number; featured?: boolean }[],
+  ] as { file: string; title: string; by: string; w: number; h: number; pin?: boolean }[],
 };
 
 export const projects = {
