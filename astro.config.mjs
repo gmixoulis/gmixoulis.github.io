@@ -110,7 +110,7 @@ export default defineConfig({
   ],
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/drafts/'),
+      filter: (page) => !page.includes('/drafts/') && !page.includes('/garden/tags/'),
       customPages: ['https://george-michoulis.com/play/'],
     }),
     stripToolReceipts(),

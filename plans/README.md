@@ -11,6 +11,7 @@ by the orchestrator, who reviews every diff and commits. Execute in order unless
 | 002 | Canonical domain, sitemap, robots.txt, built-in CSP | P1 | M | 001 | DONE |
 | 003 | Delete dead game/UI code; "Play" button in nav | P2 | S | — | DONE |
 | 004 | Garden performance: self-hosted fonts, optimised images, small favicon | P1 | M | 001–003 | IN PROGRESS |
+| 008 | Agentic case study, stale-file cleanup, /play/ canonical, tag noindex | P1 | M | 001, 002 | DONE |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (one-line reason) | REJECTED (one-line rationale)
 

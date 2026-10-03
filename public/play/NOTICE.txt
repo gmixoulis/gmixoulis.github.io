@@ -12,5 +12,5 @@ If requested by the original creator, this project will be immediately removed.
 
 ---
 
-Adapted for George Michoulis (gmixoulis.github.io/play/) with original resume content.
+Adapted for George Michoulis (george-michoulis.com/play/) with original resume content.
 Visual system, sprites, and animations retained from the dokson / colace.me interactive resume.

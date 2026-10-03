@@ -11,6 +11,7 @@
 - X: https://twitter.com/GeorgeMicou
 
 ## Work
+- Agentic software engineering (2026 – present): this website is built and maintained by an AI agent pipeline he designed and reviews. An orchestrator agent (Claude Code) writes numbered plans and reviews every diff, an executor agent (Pi with DeepSeek) implements them, and scripted checks gate each step. Write-up: https://george-michoulis.com/garden/built-by-agents/
 - Web3 Full-Stack Developer, Cyberscope by TAC (May 2026 – present): end-to-end Web3 products, smart contracts, on-chain integrations, React/Next.js frontends and security tooling.
 - Blockchain Developer & Researcher, Sidroco Holdings Ltd (2024 – 2026): an NFT marketplace for 5G networks, Hyperledger Fabric prototypes, an Erasmus+ Moodle LMS, and EU research projects including the Horizon Europe NANCY project.
 - Lecturer & Academic Partner, University of Derby / Mediterranean College (2023 – 2025): Networks & Security, Web Scripting, Application Development.
@@ -38,4 +39,5 @@
 ## On this site
 - [Home](https://george-michoulis.com/): profile, experience, research, certificates and projects
 - [Zen Garden](https://george-michoulis.com/garden/): blog posts (RSS: https://george-michoulis.com/garden/rss.xml)
+- [How a pipeline of agents builds this site](https://george-michoulis.com/garden/built-by-agents/): a case study of his agentic engineering workflow
 - [Ledger Run](https://george-michoulis.com/play/): a playable platformer version of this CV
