@@ -1,9 +1,9 @@
 /* The stage: an iridescent 2×2×2 "genesis" block on a glossy floor under a light beam, hash-linked to a short
    chain of smaller blocks that a pulse travels along. Techniques: instanced RoundedBox cubelets with a custom
    thin-film interference shader (optical path difference → per-channel cosine, the usual Airy-style
-   approximation), procedural softbox environment (a dark stage, or a white studio with black flags in the light
-   theme), seam glow from an inner core, mirrored instanced draw for the floor reflection, additive volumetric
-   beam and dust, UnrealBloom (dark theme only). Loaded by main.ts after first paint. */
+   approximation), procedural softbox environment, seam glow from an inner core, mirrored instanced draw for the floor
+   reflection, additive volumetric beam and dust, UnrealBloom. The dark theme's stage only: main.ts loads it when the
+   page is (or turns) dark, and it stops drawing while the page is light (shore.ts draws that). */
 import {
   AdditiveBlending, BackSide, BufferAttribute, BufferGeometry, Color, CylinderGeometry, DoubleSide, Group, HalfFloatType,
   InstancedBufferAttribute, InstancedMesh, Matrix4, Mesh, PerspectiveCamera, PlaneGeometry, Points, Quaternion, Scene,
@@ -23,7 +23,7 @@ export function run(S: Stage, cv: HTMLCanvasElement) {
   const renderer = new WebGLRenderer({ canvas: cv, antialias: false, powerPreference: 'high-performance' });
   const scene = new Scene(), cam = new PerspectiveCamera(30, 1, 0.1, 100);
   const U = { uTime: { value: 0 }, uHue: { value: 0 }, uCore: { value: 0.5 }, uBeam: { value: 0 }, uDim: { value: 1 }, uChain: { value: 1 }, uP: { value: 0 },
-    uLight: { value: 0 }, uL: { value: new Vector3(0, 1, 1) }, uB: { value: new Vector3() }, uBg: { value: new Vector3() }, uPR: { value: dpr } };
+    uL: { value: new Vector3(0, 1, 1) }, uB: { value: new Vector3() }, uBg: { value: new Vector3() }, uPR: { value: dpr } };
 
   const ENV = `
   vec3 env(vec3 R){
@@ -35,17 +35,8 @@ export function run(S: Stage, cv: HTMLCanvasElement) {
     float hz=exp(-pow(R.y*7.,2.))*.1;
     float sky=smoothstep(-.05,.9,R.y)*.12*(.4+.6*uBeam);
     return vec3(top+s1+s2+s3+hz+sky);
-  }
-  vec3 envL(vec3 R){
-    float a=atan(R.x,R.z);
-    float band=smoothstep(-.3,.05,R.y)*smoothstep(.8,.35,R.y);
-    float dome=.5+1.7*smoothstep(.15,.95,R.y);
-    float box=exp(-pow((a-.55)*2.6,2.))*smoothstep(.12,.4,R.y)*smoothstep(.95,.62,R.y)*1.5;
-    float f1=exp(-pow((a+1.95)*2.4,2.))*band,f2=exp(-pow((a-1.9)*3.,2.))*band*.8;
-    float fl=smoothstep(.02,-.4,R.y);float hz=exp(-pow(R.y*6.,2.));
-    return vec3((dome+box)*(1.-.9*f1)*(1.-.8*f2)*(1.-.55*fl)*(1.-.3*hz));
   }`;
-  const COMMON = `uniform float uTime,uHue,uCore,uBeam,uDim,uChain,uP,uLight;uniform vec3 uL,uB,uBg;`;
+  const COMMON = `uniform float uTime,uHue,uCore,uBeam,uDim,uChain,uP;uniform vec3 uL,uB,uBg;`;
   const cubeVS = `attribute vec3 aSgn;attribute float aG;varying vec3 vW,vN,vO,vS;varying float vG;
   void main(){vec4 w=modelMatrix*instanceMatrix*vec4(position,1.);vW=w.xyz;vN=normalize(mat3(modelMatrix)*mat3(instanceMatrix)*normal);vO=position;vS=aSgn;vG=aG;gl_Position=projectionMatrix*viewMatrix*w;}`;
   const cubeFS = COMMON + `varying vec3 vW,vN,vO,vS;varying float vG;` + ENV + `
@@ -60,9 +51,7 @@ export function run(S: Stage, cv: HTMLCanvasElement) {
     vec3 g3=exp(-(.5+vO*vS)*17.);vec3 dc=vW-uB;float g=min(g3.x+g3.y+g3.z,1.3)*(.25+exp(-dot(dc,dc)*1.1))*(1.+vG*5.);
     vec3 gc=mix(vec3(.06,.58,1.),vec3(.62,.24,1.),.5+.5*sin(dot(vW,vec3(.9,.6,.4))+uHue*4.));
     vec3 cd=vec3(.007,.007,.009)+env(R)*fc*(.1+.9*F)*1.25+sp+edge*(.04+.3*F+vG*.6)*fc+gc*g*uCore*.5;
-    vec3 cl=vec3(.02,.021,.026)+envL(R)*mix(vec3(1.),fc,.2+.45*F)*(.22+.78*F)*1.3+sp+edge*(.08+.25*F)*fc*.5;
-    vec3 o=mix(1.-exp(-cd*1.15),1.-exp(-cl*1.15),uLight);
-    o=mix(o,gc*.8,uLight*min(g*uCore*.45,.75));
+    vec3 o=1.-exp(-cd*1.15);
     #ifdef REFL
     o=mix(uBg,o,exp(-max(-vW.y,0.)*.85)*.5);
     #endif
@@ -90,8 +79,7 @@ export function run(S: Stage, cv: HTMLCanvasElement) {
   chainR.instanceMatrix = chain.instanceMatrix;
   const coreVS = `varying vec3 vW,vN;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;vN=normalize(mat3(modelMatrix)*normal);gl_Position=projectionMatrix*viewMatrix*w;}`;
   const coreFS = COMMON + `uniform float uF;varying vec3 vW,vN;void main(){float c=abs(dot(normalize(vN),normalize(cameraPosition-vW)));float k=pow(1.-c,1.5);
-    vec3 o=1.-exp(-mix(vec3(.55,.85,1.)*1.4,vec3(.7,.35,1.),k)*uCore*.8*uF);
-    o=mix(o,mix(vec3(.2,.42,.95),vec3(.5,.26,.92),k)*(.55+.45*uF),uLight);gl_FragColor=vec4(mix(uBg,o,uDim),1.);}`;
+    vec3 o=1.-exp(-mix(vec3(.55,.85,1.)*1.4,vec3(.7,.35,1.),k)*uCore*.8*uF);gl_FragColor=vec4(mix(uBg,o,uDim),1.);}`;
   const coreGeo = new RoundedBoxGeometry(0.62, 0.62, 0.62, 3, 0.12);
   const core = new Mesh(coreGeo, new ShaderMaterial({ uniforms: { ...U, uF: { value: 1 } }, vertexShader: coreVS, fragmentShader: coreFS }));
   const coreR = new Mesh(coreGeo, new ShaderMaterial({ uniforms: { ...U, uF: { value: 0.3 } }, vertexShader: coreVS, fragmentShader: coreFS }));
@@ -100,7 +88,7 @@ export function run(S: Stage, cv: HTMLCanvasElement) {
   lgeo.setAttribute('aK', new InstancedBufferAttribute(new Float32Array([0, 1, 2, 3]), 1));
   const links = new InstancedMesh(lgeo, mk(`attribute float aK;varying float vY,vK;void main(){vY=uv.y;vK=aK;gl_Position=projectionMatrix*viewMatrix*modelMatrix*instanceMatrix*vec4(position,1.);}`,
     COMMON + `varying float vY,vK;void main(){float u=uP-vK;float p=exp(-pow((vY-u)*5.,2.))*step(-.3,u)*step(u,1.3);
-      vec3 o=mix(1.-exp(-(vec3(.2,.26,.46)*.5+vec3(.55,.9,1.)*p*2.2)),mix(vec3(.5,.52,.6),vec3(.16,.28,.9),p),uLight);
+      vec3 o=1.-exp(-(vec3(.2,.26,.46)*.5+vec3(.55,.9,1.)*p*2.2));
       gl_FragColor=vec4(mix(uBg,o,uDim*uChain),1.);}`), 4);
   for (const m of [cubes, cubesR, chain, chainR, links]) m.frustumCulled = false;
   const block = new Group(), blockR = new Group(), mirror = new Group();
@@ -109,7 +97,7 @@ export function run(S: Stage, cv: HTMLCanvasElement) {
   const sky = new Mesh(new SphereGeometry(48, 24, 12), mk(
     `varying vec3 vW;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}`,
     COMMON + `varying vec3 vW;void main(){vec3 d=normalize(vW-cameraPosition);
-      float h=exp(-pow(d.x*2.2,2.))*smoothstep(-.1,.6,d.y)*.004*uBeam*uDim*(1.-uLight);
+      float h=exp(-pow(d.x*2.2,2.))*smoothstep(-.1,.6,d.y)*.004*uBeam*uDim;
       gl_FragColor=vec4(uBg+vec3(h*.8,h*.85,h),1.);}`, { side: BackSide, depthWrite: false }));
   sky.renderOrder = -1; scene.add(sky);
   const floor = new Mesh(new PlaneGeometry(60, 60), mk(
@@ -117,8 +105,7 @@ export function run(S: Stage, cv: HTMLCanvasElement) {
     COMMON + `varying vec3 vW;void main(){vec2 d=vW.xz-uB.xz;float r2=dot(d,d);float near=smoothstep(3.6,1.,uB.y);
       float pool=exp(-r2*.085)*uBeam;float sh=1.-.8*exp(-r2*.8)*near;
       vec3 dk=uBg+1.-exp(-(vec3(.042,.044,.054)*pool*sh+vec3(.25,.35,.7)*exp(-r2*.45)*uCore*.025)*uDim);
-      vec3 lt=uBg*(1.-(.2*exp(-r2*.7)*near+.05*exp(-r2*.12))*uDim);
-      gl_FragColor=vec4(mix(dk,lt,uLight),.8);}`, { transparent: true, depthWrite: false }));
+      gl_FragColor=vec4(dk,.8);}`, { transparent: true, depthWrite: false }));
   floor.rotation.x = -Math.PI / 2; floor.renderOrder = 1; scene.add(floor);
 
   const beam = new Mesh(new CylinderGeometry(0.5, 1.75, 11, 64, 1, true), mk(
@@ -256,21 +243,18 @@ export function run(S: Stage, cv: HTMLCanvasElement) {
     const dt = Math.min(0.25, (now - last) / 1000); last = now;
     const dim = update(dt, (now - t0) / 1000); dark = dim < 0.002 ? dark + 1 : 0; if (dark < 3) composer.render(dt);
   };
+  const light = () => root.dataset.theme === 'light';
   const loop = (now: number) => {
-    raf = requestAnimationFrame(loop); const dt = now - last; draw(now);
+    raf = requestAnimationFrame(loop); const dt = now - last;
+    if (light()) { last = now; dark = 0; return; } // dark = 0: redraw at once when the page turns dark again
+    draw(now);
     if (++frames > 40 && frames < 160) { slow += dt; if (frames === 159 && slow / 119 > 30 && dpr > 1) { dpr = Math.max(1, dpr - 0.5); W = 0; resize(); } }
   };
-  /* the light theme re-lights the scene: white studio, black flags, soft contact shadow, no bloom, beam or dust */
-  const BG = [new Color('#0a0a0b'), new Color('#edeef1')];
-  const relight = () => {
-    const l = root.dataset.theme === 'light' ? 1 : 0;
-    U.uLight.value = l; U.uBg.value.set(BG[l].r, BG[l].g, BG[l].b); renderer.setClearColor(BG[l], 1);
-    bloom.enabled = !l; beam.visible = dust.visible = !l; dark = 0;
-    if (S.reduced) draw(t0 + 3000);
-  };
-  addEventListener('gm-theme', relight);
-  relight();
-  if (S.reduced) addEventListener('resize', () => draw(t0 + 3000));
+  const BG = new Color('#0a0a0b');
+  U.uBg.value.set(BG.r, BG.g, BG.b); renderer.setClearColor(BG, 1);
+  /* reduced motion draws one still frame, again whenever the page turns dark or resizes */
+  const still = () => { dark = 0; if (!light()) draw(t0 + 3000); };
+  if (S.reduced) { still(); addEventListener('resize', still); addEventListener('gm-theme', still); }
   else {
     raf = requestAnimationFrame(loop);
     document.addEventListener('visibilitychange', () => { cancelAnimationFrame(raf); if (!document.hidden) { last = performance.now(); raf = requestAnimationFrame(loop); } });

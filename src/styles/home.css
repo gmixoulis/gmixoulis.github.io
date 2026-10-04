@@ -27,6 +27,27 @@ img{max-width:100%;height:auto}
 .no-gl #gl{display:none}.no-gl .fallback{display:block}
 .no-gl .stage.r,.rm .stage.r{display:none}.no-gl .contact .stage,.rm .contact .stage{height:64px}
 header,main,footer{position:relative;z-index:1}
+/* light (plan 011): the shore (shore.ts) replaces the cube. The olive shade sits above the content, multiplied like real
+   light; shore.ts sets its opacity (shown only near the hero and Contact). */
+#shore,.olive{display:none;position:fixed;inset:0;width:100%;height:100vh;height:100lvh;pointer-events:none}
+[data-theme=light] #shore{display:block;z-index:0;opacity:0;transition:opacity 1.2s ease}
+[data-theme=light] #shore.on{opacity:1}
+[data-theme=light] .olive{display:block;z-index:15;mix-blend-mode:multiply;opacity:0}
+.olive.far{filter:blur(7px)}.olive.near{filter:blur(2px)}
+[data-theme=light] #gl{visibility:hidden}
+[data-theme=light] .fallback,[data-theme=light] .tile::before{display:none}
+[data-theme=light] .tile{border-color:transparent}
+[data-theme=light] .btn-p{animation:none;background:var(--solid);color:var(--solid-fg);border-color:transparent}
+[data-theme=light] .btn-p::after{display:none}
+[data-theme=light] .btn-p:hover{background:var(--solid);filter:brightness(1.08)}
+[data-theme=light] .chain-fill{background:linear-gradient(var(--a1),var(--a3))}
+[data-theme=light] :is(.panel,.blk,.act,.cg a,.card a,.frame,.box,.mail,.th){box-shadow:0 14px 28px -20px var(--shade)}
+/* phones: the Skills and Research slots would only be empty water, so they fold away */
+@media (max-width:860px){
+  [data-theme=light] .tile,[data-theme=light] .rhead .stage.r{display:none}
+  [data-theme=light] .bento{grid-template-areas:"teach res" "cur learn" "cli lang" "team team"}
+}
+@media (max-width:560px){[data-theme=light] .bento{grid-template-areas:"teach" "res" "cur" "learn" "cli" "team" "lang"}}
 
 /* buttons */
 .btn{position:relative;display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 24px;border-radius:13px;font:500 15px var(--ui);white-space:nowrap;transition:transform .6s var(--ease),color .2s;will-change:transform}

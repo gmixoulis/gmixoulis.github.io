@@ -12,18 +12,26 @@ const reduce = S.reduced;
 const $ = <T extends Element = HTMLElement>(s: string) => document.querySelector<T>(s)!;
 const $$ = <T extends Element = HTMLElement>(s: string) => [...document.querySelectorAll<T>(s)];
 
-/* the stage: after first paint, so the h1 stays the LCP (even the WebGL 2 probe waits: a first GL context can
-   take seconds on slow devices); no WebGL 2 shows the CSS fallback */
-(async () => {
+/* the stage, per theme: the cube (scene.ts, three.js, WebGL 2) in dark, the shore (shore.ts, WebGL 1) in light. Each
+   loads the first time its theme is shown, after first paint so the h1 stays the LCP (even the WebGL 2 probe waits:
+   a first GL context can take seconds on slow devices). No WebGL 2 in dark shows the CSS fallback. */
+const started = { dark: false, light: false };
+const stage = async () => {
+  const t = root.dataset.theme === 'light' ? 'light' : 'dark';
+  if (started[t]) return;
+  started[t] = true;
   try {
     await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
+    if (t === 'light') return (await import('./shore')).run(S, $<HTMLCanvasElement>('#shore'));
     if (!document.createElement('canvas').getContext('webgl2')) throw new Error('no webgl2');
     (await import('./scene')).run(S, $<HTMLCanvasElement>('#gl'));
   } catch (e) {
-    root.classList.add('no-gl');
-    console.warn('Stage fallback:', (e as Error).message);
+    if (t === 'dark') root.classList.add('no-gl');
+    console.warn(`Stage fallback (${t}):`, (e as Error).message);
   }
-})();
+};
+stage();
+addEventListener('gm-theme', stage);
 
 /* Lenis smooth scroll (off for reduced motion) */
 let lenis: Lenis | null = null;

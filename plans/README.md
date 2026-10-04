@@ -13,6 +13,7 @@ by the orchestrator, who reviews every diff and commits. Execute in order unless
 | 004 | Garden performance: self-hosted fonts, optimised images, small favicon | P1 | M | 001–003 | IN PROGRESS |
 | 008 | Agentic case study, stale-file cleanup, /play/ canonical, tag noindex | P1 | M | 001, 002 | DONE |
 | 009 | /play/ text and thesis fix; QA scripts without Easy read | P2 | S | 008 | DONE |
+| 011 | Light mode becomes a calm Aegean shore (no blocks) | P1 | M | — | DONE |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (one-line reason) | REJECTED (one-line rationale)
 
