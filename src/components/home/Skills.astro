@@ -2,23 +2,15 @@
 import { skills, type Stats } from '@/data/profile';
 interface Props { stats: Stats }
 const items = skills.items(Astro.props.stats);
-const first = items.slice(0, 4), rest = items.slice(4);
-const bold = (t: string) => t.split('**');
 ---
 
 <section class="sec skills" id="skills" tabindex="-1" aria-labelledby="h-skills">
   <div class="wrap">
     <h2 class="h2" id="h-skills" data-rv>{skills.h[0]} <span class="dim">{skills.h[1]}</span></h2>
     <div class="bento" data-rv>
-      {first.slice(0, 2).map((s) => <div class="sk panel spot" style={`grid-area:${s.area}`}><h3>{s.h}</h3><p>{bold(s.p).map((x, i) => (i % 2 ? <b>{x}</b> : x))}</p></div>)}
+      {items.slice(0, 2).map((s) => <div class="sk panel spot" style={`grid-area:${s.area}`}><h3>{s.h}</h3><p>{s.p.split('**').map((t, i) => (i % 2 ? <b>{t}</b> : t))}</p></div>)}
       <div class="tile" data-stage="2" aria-hidden="true"></div>
-      {first.slice(2).map((s) => <div class="sk panel spot" style={`grid-area:${s.area}`}><h3>{s.h}</h3><p>{bold(s.p).map((x, i) => (i % 2 ? <b>{x}</b> : x))}</p></div>)}
+      {items.slice(2).map((s) => <div class="sk panel spot" style={`grid-area:${s.area}`}><h3>{s.h}</h3><p>{s.p.split('**').map((t, i) => (i % 2 ? <b>{t}</b> : t))}</p></div>)}
     </div>
-    {rest.length > 0 && (
-      <details class="more" data-rv>
-        <summary class="tbtn">See all {items.length}</summary>
-        <ul class="plain prest">{rest.map((s) => <li><b>{s.h}</b><span>{bold(s.p).map((x, i) => (i % 2 ? <b>{x}</b> : x))}</span></li>)}</ul>
-      </details>
-    )}
   </div>
 </section>

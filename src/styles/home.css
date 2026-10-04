@@ -331,12 +331,4 @@ body{font-family:var(--font-atkinson,var(--ui))}
 .li-one{max-width:920px}
 .li-one .frame{margin-top:28px}
 .li-one .fine{max-width:none;margin-top:12px}
-.cmore{margin-top:22px;text-align:center}
-.cmore[open]>summary.tbtn{margin-bottom:6px}
-.cmore .socials{margin-top:0}
-/* Skills: the top 4 beside the cube; the rest behind 'See all'. */
-.bento{grid-template-areas:"teach res cube cube" "cur learn cube cube"}
-.skills .more{margin-top:22px}
-@media (max-width:860px){.bento{grid-template-areas:"cube cube" "teach res" "cur learn"}}
-@media (max-width:560px){.bento{grid-template-areas:"cube" "teach" "res" "cur" "learn"}}
 .plain span b{display:inline;font-weight:700;color:var(--fg)}

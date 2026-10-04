@@ -1,6 +1,5 @@
 ---
 import { profile, contact } from '@/data/profile';
-const first = contact.socials.slice(0, 3), rest = contact.socials.slice(3);
 ---
 
 <section class="sec contact" id="contact" tabindex="-1" aria-labelledby="h-contact">
@@ -9,14 +8,8 @@ const first = contact.socials.slice(0, 3), rest = contact.socials.slice(3);
     <address class="mail" data-rv><a href={`mailto:${profile.email}`}>{profile.email}</a><button class="copy mag" id="copy" type="button"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="4.5" y="4.5" width="8" height="8" rx="2" /><path d="M9.5 4.5V3a1.5 1.5 0 0 0-1.5-1.5H3A1.5 1.5 0 0 0 1.5 3v5A1.5 1.5 0 0 0 3 9.5h1.5" /></svg><span>Copy email</span></button></address>
     <p class="sr" id="live" aria-live="polite"></p>
     <ul class="socials" data-rv>
-      {first.map((s) => <li><a href={s.href} target="_blank" rel="noopener noreferrer">{s.label} ↗</a></li>)}
+      {contact.socials.map((s) => <li><a href={s.href} target="_blank" rel="noopener noreferrer">{s.label} ↗</a></li>)}
     </ul>
-    {rest.length > 0 && (
-      <details class="more cmore" data-rv>
-        <summary class="tbtn">See all {contact.socials.length}</summary>
-        <ul class="socials">{rest.map((s) => <li><a href={s.href} target="_blank" rel="noopener noreferrer">{s.label} ↗</a></li>)}</ul>
-      </details>
-    )}
   </div>
   <div class="stage" data-stage="9" aria-hidden="true"></div>
 </section>

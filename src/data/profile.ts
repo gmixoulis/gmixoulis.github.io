@@ -53,19 +53,17 @@ export type Stats = { papers: number; cites: number; h: number; certs: number; f
 const citesClause = (s: Stats) => (s.cites > 0 ? `${s.cites} citation${s.cites === 1 ? '' : 's'} and an h-index of ${s.h} on Google Scholar` : '');
 
 export const skills = {
-  /** In order of importance: the first 4 sit beside the cube, the rest behind 'See all'. */
-  h: ['Skills.', 'The ones that matter most first.'],
+  h: ['How I work,', 'with proof for each.'],
   items: (s: Stats) => [
-    { area: 'teach', h: 'Ownership', p: '**Contract to frontend** at Cyberscope. Took **VerDe from thesis to a live system**.' },
-    { area: 'res', h: 'Problem solving', p: "**3rd** at the Infinitech hackathon, **1st** in UoM's Basic Research Awards." },
+    { area: 'teach', h: 'Leadership', p: '**Led blockchain work** at Sidroco and **frontend teams** at the University of Nicosia.' },
+    { area: 'res', h: 'Ownership', p: '**Contract to frontend** at Cyberscope. Took **VerDe from thesis to a live system**.' },
     { area: 'cur', h: 'Critical thinking', p: 'I build **smart-contract audit tooling** and **benchmarked blockchains** as first author.' },
-    { area: 'learn', h: 'Leadership', p: '**Led blockchain work** at Sidroco and **frontend teams** at the University of Nicosia.' },
-    { h: 'Collaboration', p: 'Worked on **EU proposals that won funding**; co-authored NANCY D3.3.' },
-    { h: 'Communication', p: "**Taught three university modules**; talks at GEC'22 and EU workshops." },
-    { h: 'Learning fast', p: `**${s.certs} certificates** and counting, from Cisco networking to Azure cloud and machine learning.` },
-  ] as { area?: string; h: string; p: string }[],
+    { area: 'learn', h: 'Communication', p: "**Taught three university modules**; talks at GEC'22 and EU workshops." },
+    { area: 'cli', h: 'Collaboration', p: 'Worked on **EU proposals that won funding**; co-authored NANCY D3.3.' },
+    { area: 'team', h: 'Problem solving', p: "**3rd** at the Infinitech hackathon, **1st** in UoM's Basic Research Awards." },
+    { area: 'lang', h: 'Learning fast', p: `**${s.certs} certificates** and counting, from Cisco networking to Azure cloud and machine learning.` },
+  ],
 };
-
 
 /** `when`: [datetime, label] pairs joined by "-"; `since` prefixes "Since". `org` parts are joined by a dimmed "/". */
 export const work = {
@@ -249,14 +247,12 @@ export const linkedin = {
 
 export const contact = {
   h: ['Contact.', 'Write to me.'],
-  /** In order of importance: the first 3 show, the rest behind 'See all'. */
   socials: [
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/george-michoulis/' },
     { label: 'GitHub', href: 'https://github.com/gmixoulis' },
     { label: 'Google Scholar', href: 'https://scholar.google.com/citations?user=nk0lq8YAAAAJ' },
-    { label: 'X', href: 'https://twitter.com/GeorgeMicou' },
     { label: 'ORCID', href: 'https://orcid.org/0000-0002-5139-448X' },
-    { label: 'Semantic Scholar', href: 'https://www.semanticscholar.org/author/2180238066' },
+    { label: 'Instagram', href: 'https://www.instagram.com/george_michoulis/' },
   ],
 };
 
@@ -302,5 +298,6 @@ export const person = {
     'https://orcid.org/0000-0002-5139-448X',
     'https://twitter.com/GeorgeMicou',
     'https://www.semanticscholar.org/author/2180238066',
+    'https://www.instagram.com/george_michoulis/',
   ],
 };
