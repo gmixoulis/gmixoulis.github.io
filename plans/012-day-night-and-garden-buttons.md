@@ -6,7 +6,7 @@
 
 ## Status
 - **Priority**: P2 · **Effort**: S–M · **Risk**: LOW · **Category**: visual
-- **Planned at**: 2026-10-06 · **State**: DONE on `feat/day-night`, awaiting George's explicit OK to ship
+- **Planned at**: 2026-10-06 · **State**: DONE, shipped 2026-10-06 (George: "then go live")
 
 ## Goal
 1. **Theme switch is a day/night turn (~4 s each way)**, played only on a toggle click:
@@ -15,6 +15,7 @@
      and the page opens from the moon.
    - **To light:** the mirror image. The moon sets left as night turns to dawn, the sun rises from the right, and the
      page opens from the sun.
+   - **Day sky** behind the sun: clear Aegean blue, paler and warm at the horizon (George: "instead of too white").
    - **Sun:** must read as a sun, not an egg yolk. White-hot centre, yellow edge, wide warm glare, slow soft rays.
    - **Moon:** canvas, drawn once. Real maria in roughly their real places, shaded crater bowls, faint ray craters.
      Softer than a white disc.

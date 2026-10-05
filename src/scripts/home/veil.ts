@@ -1,5 +1,5 @@
 /* The theme switch as a day/night turn (plan 012), played only on a toggle click (nav.ts). A veil covers the page in
-   the current sky; the body in it (sun by day, moon by night) sets on an arc to the left while the sky turns through
+   the current sky (clear Aegean blue by day, stars by night); the body in it (sun by day, moon by night) sets on an arc to the left while the sky turns through
    dusk or dawn, the other body rises on an arc from the right, holds, and the page opens from its centre. The theme
    swaps underneath once the veil has covered the page. Web Animations only; styles in Nav.astro (.veil). */
 type Theme = 'light' | 'dark';
@@ -79,10 +79,10 @@ const arc = (a0: number, a1: number, n = 14) => Array.from({ length: n + 1 }, (_
 
 export async function veil(t: Theme, swap: () => void) {
   const toDark = t === 'dark', F = { fill: 'forwards' as const };
-  const v = document.createElement('div'), sun = document.createElement('i'), sky = document.createElement('u'), glow = document.createElement('em'), m = moon();
+  const v = document.createElement('div'), sun = document.createElement('i'), day = document.createElement('s'), sky = document.createElement('u'), glow = document.createElement('em'), m = moon();
   v.className = toDark ? 'veil up' : 'veil'; v.setAttribute('aria-hidden', 'true'); v.style.background = toDark ? DAY : NIGHT;
-  sky.style.backgroundImage = STARS; if (!toDark) sky.style.opacity = '1';
-  v.append(sky, glow, sun, m); document.body.append(v);
+  sky.style.backgroundImage = STARS; (toDark ? day : sky).style.opacity = '1'; // the blue day sky, or the stars, are up when it starts
+  v.append(day, sky, glow, sun, m); document.body.append(v);
   const [setter, riser] = toDark ? [sun, m] : [m, sun];
   try {
     const cover = v.animate([{ transform: `translateY(${toDark ? 101 : -101}%)` }, { transform: 'none' }], { duration: 800, easing: E, ...F });
@@ -91,6 +91,7 @@ export async function veil(t: Theme, swap: () => void) {
     const turn = toDark ? [DAY, '#f2b48a', '#8f5d6c', '#2a2442', NIGHT] : [NIGHT, '#2a2442', '#a8707e', '#f2b48a', DAY];
     v.animate(turn.map((c) => ({ backgroundColor: c })), { delay: 150, duration: 1600, easing: 'ease-in-out', ...F });
     glow.animate([{ opacity: 0 }, { opacity: 0.9 }, { opacity: 0 }], { delay: 150, duration: 1600, ...F });
+    day.animate(toDark ? [{ opacity: 1 }, { opacity: 0 }] : [{ opacity: 0 }, { opacity: 1 }], { delay: toDark ? 150 : 1150, duration: toDark ? 900 : 700, ...F });
     sky.animate(toDark ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0 }], { delay: toDark ? 900 : 100, duration: 1000, ...F });
     setter.animate(arc(0, -80), { duration: 1250, easing: 'cubic-bezier(.45,0,.75,.6)', ...F });
     setter.animate([{ opacity: 1, filter: 'none' },

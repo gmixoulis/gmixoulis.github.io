@@ -108,7 +108,9 @@ const sections = [
   /* the moon is a canvas drawn once in veil.ts; stars and a warm horizon glow sit behind it */
   .veil canvas{position:absolute;left:50%;top:50%;width:min(30vmin,240px);height:auto;aspect-ratio:1;border-radius:50%;opacity:0;transform:translate(-50%,-50%);
     box-shadow:0 0 24px 4px rgba(225,232,255,.45),0 0 90px 30px rgba(200,214,255,.22),0 0 220px 90px rgba(160,185,255,.1)}
-  .veil u,.veil em{position:absolute;inset:0;opacity:0;pointer-events:none}
+  .veil s,.veil u,.veil em{position:absolute;inset:0;opacity:0;pointer-events:none}
+  /* the day sky behind the sun: Aegean blue, paler and a little warm toward the horizon */
+  .veil s{background:linear-gradient(#6fb8de,#a9d8ec 52%,#e6eef0 82%,#f4e7d2)}
   .veil em{background:radial-gradient(ellipse 85% 48% at 50% 104%,rgba(255,150,92,.85),rgba(255,118,96,.28) 48%,transparent 76%)}
 
   /* Blog header (plan 012): real buttons in brushed ink with a red hanko seal (家 home, 庭 blog, 月/日 on the theme
