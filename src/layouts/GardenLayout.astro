@@ -61,7 +61,7 @@ const petals = [
  * CJK glyphs (seals, hanko, figcaption, kanji spread), so Yuji Syuku is loaded as a tiny
  * `text=` subset instead of the full Japanese font. New posts extend the subset at build time.
  */
-const BASE_CJK = '・円和夢奈川庭心愛沖浪無神禅裏道静';
+const BASE_CJK = '・円和夢奈川庭心愛沖浪無神禅裏道静家月日'; // 家 月 日: the header seals (Nav.astro)
 const postKanji = (await getPosts()).map((p) => p.data.kanji ?? '').join('');
 const cjk = [...new Set([...BASE_CJK, ...postKanji, ...kanji.map(([ch]) => ch).join('')])].join('');
 const brushHref = `https://fonts.googleapis.com/css2?family=Yuji+Syuku&text=${encodeURIComponent(cjk)}&display=swap`;

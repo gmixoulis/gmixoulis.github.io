@@ -7,8 +7,9 @@
 const path = Astro.url.pathname;
 const home = path === '/';
 const garden = path.startsWith('/garden');
-/* The blog shows no header, only a way back and the theme toggle: the blog index goes home, posts and tag pages go to the index. */
-const back = path.replace(/\/$/, '') === '/garden' ? { href: '/', label: 'Home' } : { href: '/garden/', label: 'Blog' };
+/* The blog shows no header, only a way back and the theme toggle: the blog index goes home (seal 家, house), posts and
+   tag pages go to the index (seal 庭, garden). */
+const back = path.replace(/\/$/, '') === '/garden' ? { href: '/', label: 'Home', seal: '家' } : { href: '/garden/', label: 'Blog', seal: '庭' };
 const sections = [
   ['about', 'About'], ['skills', 'Skills'], ['work', 'Experience'], ['research', 'Research'], ['certificates', 'Certificates'],
   ['projects', 'Projects'], ['activities', 'Activities'], ['linkedin', 'LinkedIn'], ['contact', 'Contact'],
@@ -16,7 +17,7 @@ const sections = [
 ---
 
 {garden ? (<>
-  <a class="back" href={back.href}><span aria-hidden="true">←</span>{back.label}</a>
+  <a class="back" href={back.href}><i class="seal" aria-hidden="true">{back.seal}</i>{back.label}</a>
   <button class="pill tg float" id="theme" type="button" aria-label="Switch to light theme"><i aria-hidden="true"></i><span>Light</span></button>
 </>) : (<>
 {home && <a class="skip" href="#main">Skip to content</a>}
@@ -65,14 +66,6 @@ const sections = [
     --glow:rgba(233,166,42,.2);--spot:rgba(12,111,126,.06);--sel:rgba(12,111,126,.18);--shade:rgba(8,95,110,.22);
     --acc:linear-gradient(90deg,#e9a62a,#c2401f);
   }
-  .back{position:fixed;top:14px;left:var(--pad);z-index:30;height:38px;display:inline-flex;align-items:center;gap:8px;padding:0 15px;border-radius:10px;border:1px solid transparent;background:linear-gradient(var(--nav),var(--nav)) padding-box,var(--acc) border-box;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:var(--fg);font:500 14px var(--ui);text-decoration:none;transition:transform .16s var(--ease)}
-  .back span{transition:transform .25s var(--ease)}
-  .back:hover span{transform:translateX(-3px)}
-  .back:active{transform:scale(.97)}
-  .back:focus-visible{outline:2px solid var(--a2);outline-offset:3px}
-  /* Blog pages have no header, so the theme toggle floats top-right, level with the Back pill. */
-  .float{position:fixed;top:16px;right:var(--pad);z-index:30;background:var(--nav);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
-  .float:focus-visible{outline:2px solid var(--a2);outline-offset:3px}
   .skip{position:fixed;left:12px;top:-60px;z-index:50;background:var(--solid);color:var(--solid-fg);padding:8px 14px;border-radius:8px}
   .skip:focus{top:12px}
   .nav :focus-visible,.skip:focus-visible{outline:2px solid var(--a2);outline-offset:3px;border-radius:6px}
@@ -104,9 +97,34 @@ const sections = [
   .veil{position:fixed;inset:0;z-index:100;overflow:hidden;background:#faf6ee;transform:translateY(-101%)}
   .veil.up{background:#0a0a0b;transform:translateY(101%)}
   .veil.iris{-webkit-mask:radial-gradient(circle,transparent var(--iris),#000 calc(var(--iris) + 1px));mask:radial-gradient(circle,transparent var(--iris),#000 calc(var(--iris) + 1px))}
-  .veil i{position:absolute;left:50%;top:50%;width:min(34vmin,270px);aspect-ratio:1;border-radius:50%;opacity:0;transform:translate(-50%,-50%);
-    background:radial-gradient(circle at 50% 44%,#fff3c4 0,#ffc94a 34%,#f08a2c 72%,#cf3d1b 100%);
-    box-shadow:0 0 90px 30px rgba(255,176,60,.35),0 0 240px 90px rgba(255,150,60,.18)}
+  /* the sun: white-hot centre, yellow edge, a wide warm glare and slow soft rays (not an egg yolk) */
+  .veil i{position:absolute;left:50%;top:50%;width:min(30vmin,240px);aspect-ratio:1;border-radius:50%;opacity:0;transform:translate(-50%,-50%);
+    background:radial-gradient(circle,#fffef6 0,#fff8d8 38%,#ffe48a 66%,#ffc54d 86%,#ffab38 100%);
+    box-shadow:0 0 22px 6px rgba(255,248,214,.95),0 0 70px 30px rgba(255,214,120,.6),0 0 170px 80px rgba(255,180,80,.3),0 0 360px 160px rgba(255,170,90,.14)}
+  .veil i::before{content:'';position:absolute;inset:-60%;border-radius:50%;z-index:-1;filter:blur(2px);animation:sunrays 30s linear infinite;
+    background:repeating-conic-gradient(rgba(255,226,150,0) 0deg 7deg,rgba(255,226,150,.36) 9deg,rgba(255,226,150,0) 11deg 18deg);
+    -webkit-mask:radial-gradient(closest-side,transparent 44%,#000 50%,transparent 100%);mask:radial-gradient(closest-side,transparent 44%,#000 50%,transparent 100%)}
+  @keyframes sunrays{to{transform:rotate(1turn)}}
+  /* the moon is a canvas drawn once in veil.ts; stars and a warm horizon glow sit behind it */
+  .veil canvas{position:absolute;left:50%;top:50%;width:min(30vmin,240px);height:auto;aspect-ratio:1;border-radius:50%;opacity:0;transform:translate(-50%,-50%);
+    box-shadow:0 0 24px 4px rgba(225,232,255,.45),0 0 90px 30px rgba(200,214,255,.22),0 0 220px 90px rgba(160,185,255,.1)}
+  .veil u,.veil em{position:absolute;inset:0;opacity:0;pointer-events:none}
+  .veil em{background:radial-gradient(ellipse 85% 48% at 50% 104%,rgba(255,150,92,.85),rgba(255,118,96,.28) 48%,transparent 76%)}
+
+  /* Blog header (plan 012): real buttons in brushed ink with a red hanko seal (家 home, 庭 blog, 月/日 on the theme
+     switch). The rough edge is the garden's own #z-sumi filter (GardenLayout); the label stays crisp. Paper in dark. */
+  .back,.float{position:fixed;top:14px;z-index:30;height:38px;display:inline-flex;align-items:center;gap:9px;padding:0 18px 0 10px;border:0;border-radius:3px;
+    background:none;isolation:isolate;color:#f4efe4;font:500 14px var(--font-shippori,serif);letter-spacing:.03em;text-decoration:none;cursor:pointer;transition:transform .2s var(--ease)}
+  .back{left:var(--pad)}.float{right:var(--pad)}
+  .back::before,.float::before{content:'';position:absolute;inset:-1px -3px;z-index:-1;background:#16130f;border-radius:6px 3px 7px 4px;filter:url(#z-sumi)}
+  .dark .back,.dark .float{color:#16130f}
+  .dark .back::before,.dark .float::before{background:#efe8da}
+  .back .seal,.float.tg i{display:inline-grid;place-items:center;width:22px;height:22px;border:0;border-radius:2px;background:#c43c2c;color:#fbf3e6;box-shadow:none;
+    font:400 15px/1 "Yuji Syuku","Hiragino Mincho ProN",serif;font-style:normal;transform:rotate(-3deg);transition:transform .3s var(--ease)}
+  .float.tg i::before{content:'月'}.dark .float.tg i::before{content:'日'}
+  .back:hover,.float:hover{transform:translateY(-1px)}.back:hover .seal,.float:hover i{transform:rotate(3deg)}
+  .back:active,.float:active{transform:scale(.97)}
+  .back:focus-visible,.float:focus-visible{outline:2px solid #c43c2c;outline-offset:4px}
 
   @media (max-width:1180px){
     .nav{gap:10px}

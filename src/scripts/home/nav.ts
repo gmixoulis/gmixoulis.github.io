@@ -3,6 +3,8 @@
    BaseLayout's inline bootstrap applies it before first paint; this keeps html.dark (garden CSS),
    html[data-theme] (homepage CSS) and the toggle in sync, follows the OS until the visitor picks a theme,
    and fires a 'gm-theme' event so the stages can swap (the cube in dark, the shore in light). */
+import { veil } from './veil';
+
 type Theme = 'light' | 'dark';
 const KEY = 'gm-theme';
 const root = document.documentElement;
@@ -24,45 +26,21 @@ const setTheme = (t: Theme) => {
   meta?.setAttribute('content', t === 'dark' ? '#0a0a0b' : '#faf6ee');
   dispatchEvent(new Event('gm-theme'));
 };
-/* A click switches behind a veil (never on load or an OS change). To light: a sand veil falls, a sun rises on it,
-   the theme swaps underneath, then the page opens from the sun's centre. To dark: a night veil rises, the sun sets,
-   the veil lifts. Web Animations only; reduced motion swaps at once. Styles in Nav.astro (.veil). */
+/* A click switches behind the day/night turn (veil.ts); never on load or an OS change. Reduced motion swaps at once,
+   and if the animation fails the theme still swaps. */
 let busy = false;
-const veil = async (t: Theme) => {
+const turn = async (t: Theme) => {
   let swapped = false;
   const swap = () => { swapped = true; setTheme(t); };
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return swap();
   busy = true;
-  const v = document.createElement('div'), sun = document.createElement('i'), E = 'cubic-bezier(.7,0,.25,1)';
-  v.className = t === 'light' ? 'veil' : 'veil up'; v.setAttribute('aria-hidden', 'true'); v.append(sun); document.body.append(v);
-  try {
-    const cover = v.animate([{ transform: `translateY(${t === 'light' ? -101 : 101}%)` }, { transform: 'none' }], { duration: 650, easing: E, fill: 'forwards' });
-    const s = t === 'light'
-      ? sun.animate([{ transform: 'translate(-50%,32vh) scale(.5)', opacity: 0 }, { transform: 'translate(-50%,-50%)', opacity: 1 }],
-        { delay: 380, duration: 900, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'forwards' })
-      : sun.animate([{ transform: 'translate(-50%,-50%)', opacity: 0 }, { transform: 'translate(-50%,-50%)', opacity: 1, offset: 0.25 },
-        { transform: 'translate(-50%,34vh) scale(.62)', opacity: 0, filter: 'hue-rotate(-18deg) saturate(1.5) brightness(.7)' }],
-        { delay: 250, duration: 1200, easing: 'cubic-bezier(.45,0,.55,1)', fill: 'forwards' });
-    await cover.finished; swap(); await s.finished;
-    if (t === 'light') {
-      await v.animate([{}, {}], { duration: 220 }).finished; // the held beat
-      v.classList.add('iris');
-      const r = Math.hypot(innerWidth, innerHeight) / 2 + 40;
-      sun.animate([{ transform: 'translate(-50%,-50%)', opacity: 1 }, { transform: 'translate(-50%,-50%) scale(7)', opacity: 0 }],
-        { duration: 760, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' });
-      await v.animate([{ '--iris': '0px' }, { '--iris': `${r}px` }], { duration: 760, easing: 'cubic-bezier(.55,0,.8,.2)', fill: 'forwards' }).finished;
-    } else await v.animate([{ transform: 'none' }, { transform: 'translateY(-101%)' }], { duration: 650, easing: E, fill: 'forwards' }).finished;
-  } catch {
-    if (!swapped) swap();
-  } finally {
-    v.remove(); busy = false;
-  }
+  try { await veil(t, swap); } catch { if (!swapped) swap(); } finally { busy = false; }
 };
 tb?.addEventListener('click', () => {
   if (busy) return;
   const t: Theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
   try { localStorage.setItem(KEY, t); } catch {}
-  veil(t);
+  turn(t);
 });
 matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { if (!saved()) setTheme(os()); });
 setTheme(saved() ?? os());
