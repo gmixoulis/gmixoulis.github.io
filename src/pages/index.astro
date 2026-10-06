@@ -77,7 +77,6 @@ const stats: Stats = {
   papers: listed.length, cites, h, certs: certs.length, featured: ranked.filter((c) => c.featured).length,
   asOf: built.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }),
 };
-const today = built.toISOString().slice(0, 10);
 
 /* JSON-LD: papers keep the curated (newest-first) numbering; no citation counts in it at all. */
 const jsonLd = {
@@ -85,7 +84,7 @@ const jsonLd = {
   '@graph': [
     { '@type': 'WebSite', '@id': `${site.url}#website`, url: site.url, name: 'George Michoulis', inLanguage: 'en', publisher: { '@id': person['@id'] } },
     { '@type': 'ProfilePage', '@id': `${site.url}#profile`, url: site.url, name: site.title, isPartOf: { '@id': `${site.url}#website` },
-      mainEntity: { '@id': person['@id'] }, dateModified: today, inLanguage: 'en' },
+      mainEntity: { '@id': person['@id'] }, dateModified: built.toISOString(), inLanguage: 'en' }, // full ISO 8601 with time + zone: Google rejects a bare date here
     person,
     ...listed.map((p, i) => ({
       '@type': 'ScholarlyArticle', '@id': `${site.url}#paper-${i + 1}`, headline: p.title, name: p.title,
