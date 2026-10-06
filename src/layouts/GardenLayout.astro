@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { Font } from 'astro:assets';
-import { getPosts } from '@/lib/garden';
+import { Font, fontData } from 'astro:assets';
+import { getPosts, GARDEN_OG } from '@/lib/garden';
 import '@/styles/garden.css';
 
 interface Props {
@@ -65,6 +65,10 @@ const BASE_CJK = '・円和夢奈川庭心愛沖浪無神禅裏道静家月日';
 const postKanji = (await getPosts()).map((p) => p.data.kanji ?? '').join('');
 const cjk = [...new Set([...BASE_CJK, ...postKanji, ...kanji.map(([ch]) => ch).join('')])].join('');
 const brushHref = `https://fonts.googleapis.com/css2?family=Yuji+Syuku&text=${encodeURIComponent(cjk)}&display=swap`;
+/* The body font's Latin file, preloaded on its own: Source Sans is a variable font, so Astro's preload filter can't pick a
+   style or subset (it would preload all six files, ~200 KB). Without a preload the post intro re-wrapped when the font
+   arrived (CLS 0.14 on mobile). */
+const sourceSans = fontData['--font-source-sans']?.find((f) => f.style === 'normal' && f.subset === 'latin')?.src[0]?.url;
 ---
 
 <BaseLayout
@@ -72,7 +76,7 @@ const brushHref = `https://fonts.googleapis.com/css2?family=Yuji+Syuku&text=${en
   description={description}
   canonical={canonical}
   ogType={ogType}
-  ogImage={ogImage}
+  ogImage={ogImage ?? new URL(GARDEN_OG, Astro.site).href}
   noindex={noindex}
   jsonLd={jsonLd}
   publishedTime={publishedTime}
@@ -82,11 +86,13 @@ const brushHref = `https://fonts.googleapis.com/css2?family=Yuji+Syuku&text=${en
 >
   <Fragment slot="head">
     <Font cssVariable="--font-shippori" preload={[{ weight: 600 }]} />
-    <Font cssVariable="--font-source-sans" preload={[{ weight: 400, style: 'normal', subset: 'latin' }]} />
+    <Font cssVariable="--font-source-sans" />
+    {sourceSans && <link rel="preload" href={sourceSans} as="font" type="font/woff2" crossorigin />}
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Decorative kanji only: load off the critical path; the script below switches media to "all". -->
     <link id="brush-font" rel="stylesheet" href={brushHref} media="print" />
     <noscript><link rel="stylesheet" href={brushHref} /></noscript>
+    <slot name="head" />
   </Fragment>
 
   <main class="garden" style="position: relative">

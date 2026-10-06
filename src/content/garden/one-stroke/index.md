@@ -1,7 +1,7 @@
 ---
 title: One stroke, no corrections
 date: 2026-09-01
-description: What the ensō taught me about shipping.
+description: What drawing an ensō in one stroke taught me about shipping code. Don't go back over the thin part, leave the gap, and call it done.
 tags: [craft]
 cover: ./enso.png
 coverAlt: "A single brushed ensō circle in black sumi ink, left open where the brush ran dry."

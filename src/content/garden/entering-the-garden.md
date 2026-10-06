@@ -1,7 +1,7 @@
 ---
 title: Entering the garden
 date: 2026-09-06
-description: Why this corner of the site exists, and what will grow here.
+description: Why this corner of the site exists. Short notes that don't fit a paper or a repo, on graphs, consensus, things I read and places I walked.
 tags: [meta, zen]
 kanji: 庭
 ---

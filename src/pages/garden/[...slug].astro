@@ -2,7 +2,7 @@
 import { Image, getImage } from 'astro:assets';
 import { render } from 'astro:content';
 import GardenLayout from '@/layouts/GardenLayout.astro';
-import { getPosts, tagHref, fmtDate, readingMinutes } from '@/lib/garden';
+import { getPosts, tagHref, fmtDate, readingMinutes, breadcrumbs, GARDEN_OG } from '@/lib/garden';
 import treeRight from '@/assets/ink/tree-right.png';
 import bandB from '@/assets/ink/band-b.png';
 import swirl from '@/assets/ink/swirl.png';
@@ -28,7 +28,7 @@ const canonical = new URL(`/garden/${post.id}/`, Astro.site).href;
 const minutes = readingMinutes(post.body);
 
 /** Optimised tatami paper backdrop, passed into the CSS as an inline var. */
-const tatamiImg = await getImage({ src: tatami, format: 'webp', width: 1600 });
+const tatamiImg = await getImage({ src: tatami, format: 'webp', width: 960, quality: 45 }); // shown at 14% opacity in greyscale: 204 KB → a fraction, same look
 
 let ogImage: string | undefined;
 if (post.data.cover) {
@@ -53,7 +53,7 @@ const jsonLd = {
   url: canonical,
   keywords: post.data.tags.join(', '),
   inLanguage: 'en',
-  ...(ogImage ? { image: ogImage } : {}),
+  image: ogImage ?? new URL(GARDEN_OG, Astro.site).href,
   isPartOf: { '@type': 'Blog', name: 'Zen Garden', url: new URL('/garden/', Astro.site).href },
 };
 ---
@@ -68,8 +68,10 @@ const jsonLd = {
   publishedTime={iso(date)}
   modifiedTime={iso(updated ?? date)}
   tags={post.data.tags}
-  jsonLd={jsonLd}
+  jsonLd={[jsonLd, breadcrumbs(Astro.site, [['Blog', '/garden/'], [post.data.title, `/garden/${post.id}/`]])]}
 >
+  <!-- The tatami backdrop is the post's largest paint, but it sits in a CSS var, so the browser finds it late: preload it. -->
+  <link slot="head" rel="preload" as="image" href={tatamiImg.src} fetchpriority="high" />
   <article>
     <header class="z-post-head">
       <div class="z-tatami" aria-hidden="true" style={`--z-tatami: url(${tatamiImg.src})`}></div>

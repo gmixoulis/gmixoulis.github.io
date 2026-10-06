@@ -1,11 +1,15 @@
 ---
 import GardenLayout from '@/layouts/GardenLayout.astro';
-import { getPosts, tagCounts, tagHref } from '@/lib/garden';
+import { getPosts, tagCounts, tagHref, breadcrumbs } from '@/lib/garden';
 
 const tags = tagCounts(await getPosts());
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Tags in the Zen Garden', url: new URL('/garden/tags/', Astro.site).href },
+  breadcrumbs(Astro.site, [['Blog', '/garden/'], ['Tags', '/garden/tags/']]),
+];
 ---
 
-<GardenLayout title="Tags — Zen Garden" description="Every tag in the Zen Garden, with post counts." noindex>
+<GardenLayout title="All tags — Zen Garden, George Michoulis's blog" jsonLd={jsonLd} description="Every tag in the Zen Garden, George Michoulis's blog, with how many posts each one has: agentic AI, craft, meta and zen.">
   <div class="z-wrap">
     <header style="padding: clamp(3rem, 10vh, 5.5rem) 0 2rem">
       <p class="z-meta">Zen Garden</p>

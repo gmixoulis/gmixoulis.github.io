@@ -40,4 +40,6 @@
 - [Home](https://george-michoulis.com/): profile, experience, research, certificates and projects
 - [Zen Garden](https://george-michoulis.com/garden/): blog posts (RSS: https://george-michoulis.com/garden/rss.xml)
 - [How a pipeline of agents builds this site](https://george-michoulis.com/garden/built-by-agents/): a case study of his agentic engineering workflow
+- [Entering the garden](https://george-michoulis.com/garden/entering-the-garden/): why the blog exists; short notes that don't fit a paper or a repo
+- [One stroke, no corrections](https://george-michoulis.com/garden/one-stroke/): what drawing an ensō in one stroke taught him about shipping code
 - [Ledger Run](https://george-michoulis.com/play/): a playable platformer version of this CV

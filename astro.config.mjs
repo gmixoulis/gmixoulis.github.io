@@ -2,7 +2,7 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-import { readdirSync, rmSync } from 'node:fs';
+import { readFileSync, readdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -76,6 +76,34 @@ function publicDirIndex() {
   };
 }
 
+/* Sitemap lastmod from the blog's front matter (updated ?? date): a post's own date, a tag page's newest post, the blog
+   index's newest post. Pages without a content date (home, /play/) get none rather than a made-up one. */
+/** @typedef {{ slug: string, date: string | undefined, tags: string[] }} Post */
+function gardenDates() {
+  const dir = './src/content/garden', /** @type {Post[]} */ posts = [];
+  const walk = (/** @type {string} */ d) => readdirSync(d, { withFileTypes: true }).forEach((e) => {
+    const p = `${d}/${e.name}`;
+    if (e.isDirectory()) return walk(p);
+    if (!e.name.endsWith('.md') || e.name.startsWith('_')) return;
+    const fm = readFileSync(p, 'utf8').split('---')[1] ?? '';
+    const get = (/** @type {string} */ k) => fm.match(new RegExp(`^${k}:\\s*(.+)$`, 'm'))?.[1]?.trim();
+    if (get('draft') === 'true') return;
+    const slug = p.slice(dir.length + 1).replace(/(\/index)?\.md$/, '');
+    posts.push({ slug, date: get('updated') ?? get('date'), tags: (get('tags') ?? '').replace(/[[\]]/g, '').split(',').map((t) => t.trim()).filter(Boolean) });
+  });
+  walk(dir);
+  return posts;
+}
+const POSTS = gardenDates();
+const newest = (/** @type {Post[]} */ ps) => ps.map((p) => p.date).sort().at(-1);
+function lastmod(/** @type {string} */ url) {
+  const path = new URL(url).pathname;
+  if (path === '/garden/' || path === '/garden/tags/') return newest(POSTS);
+  const tag = path.match(/^\/garden\/tags\/([^/]+)\/$/)?.[1];
+  if (tag) return newest(POSTS.filter((p) => p.tags.includes(tag)));
+  return POSTS.find((p) => path === `/garden/${p.slug}/`)?.date;
+}
+
 export default defineConfig({
   site: 'https://george-michoulis.com',
   outDir: 'build',
@@ -84,7 +112,8 @@ export default defineConfig({
   fonts: [
     // ponytail: Latin-only local files. The Google provider can't drop Shippori's 240 un-tagged
     // Japanese slices (subsets only filters tagged faces); CJK glyphs come from the Yuji Syuku text= subset.
-    { provider: fontProviders.local(), name: 'Shippori Mincho', cssVariable: '--font-shippori',
+    // fallbacks: a serif face falls back to a metric-matched serif (Times New Roman), not Arial.
+    { provider: fontProviders.local(), name: 'Shippori Mincho', cssVariable: '--font-shippori', fallbacks: ['serif'],
       options: { variants: [
         { src: ['./src/assets/fonts/shippori-mincho-400-latin.woff2'], weight: 400, style: 'normal',
           unicodeRange: ['U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD'] },
@@ -95,7 +124,9 @@ export default defineConfig({
         { src: ['./src/assets/fonts/shippori-mincho-600-latin-ext.woff2'], weight: 600, style: 'normal',
           unicodeRange: ['U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF'] },
       ] } },
-    { provider: fontProviders.google(), name: 'Source Sans 3', cssVariable: '--font-source-sans',
+    // Blog body text. display: optional: it's preloaded, so it's normally ready for the first paint; when it isn't (slow
+    // first visit) the fallback stays for that view instead of swapping, which re-wrapped the post intro (CLS 0.14).
+    { provider: fontProviders.google(), name: 'Source Sans 3', cssVariable: '--font-source-sans', display: 'optional',
       weights: [300, 400, 600], styles: ['normal', 'italic'], subsets: ['latin', 'latin-ext', 'greek'] },
     // Homepage (Cube). Latin fonts, so `subsets` filters the Google faces correctly.
     { provider: fontProviders.google(), name: 'Funnel Display', cssVariable: '--font-funnel',
@@ -110,7 +141,11 @@ export default defineConfig({
   ],
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/drafts/') && !page.includes('/garden/tags/'),
+      filter: (page) => !page.includes('/drafts/'),
+      serialize: (item) => {
+        const date = lastmod(item.url);
+        return date ? { ...item, lastmod: date } : item;
+      },
       customPages: ['https://george-michoulis.com/play/'],
     }),
     stripToolReceipts(),

@@ -24,3 +24,23 @@ export const readingMinutes = (body = '') => Math.max(1, Math.round(body.trim().
 
 export const fmtDate = (d: Date) =>
   d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' });
+
+/** BreadcrumbList JSON-LD for a garden page: Home › Blog › …; `trail` is [name, path] pairs after Home. */
+export const breadcrumbs = (site: URL | undefined, trail: [string, string][]) => ({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [['Home', '/'] as [string, string], ...trail].map(([name, path], i) => ({
+    '@type': 'ListItem', position: i + 1, name, item: new URL(path, site).href,
+  })),
+});
+
+/** The blog's share image (1200×630), used by every garden page without a cover of its own. */
+export const GARDEN_OG = '/og-garden.png';
+
+/** One line per tag for the tag pages' meta descriptions. */
+export const TAG_BLURB: Record<string, string> = {
+  'agentic-ai': 'building software with AI agents: plans, reviews, checks, and what broke along the way',
+  craft: 'the craft of writing code and shipping it, from one-stroke habits to the rules I work by',
+  meta: 'this site itself: why it exists, how it is built, and how it changes',
+  zen: 'the quieter notes: gardens, attention, and why this corner of the site exists',
+};

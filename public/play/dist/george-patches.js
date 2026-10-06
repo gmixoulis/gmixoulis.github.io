@@ -289,3 +289,17 @@
   }
   if (typeof ale !== "undefined") ale.frameTimeInterval = 120; // 200 read as sliding at 520px/s
 })();
+
+/* CLS (plan 013): the engine slides the preloader away by animating its `bottom`, which moves layout on every frame
+   (CLS 1.05 on mobile). Same slide, same 1 s and the same end state, but with a transform, which doesn't shift layout.
+   state.min.js calls shiftUpPreloader() after load, by which time this file has replaced it. */
+window.shiftUpPreloader = function () {
+  turnOffPreloaderDotsAnimation();
+  preloaderDiv.style.transition = 'transform 1s ease-in-out';
+  preloaderDiv.style.transform = 'translateY(-100%)';
+  setTimeout(function () {
+    hidePreloader();
+    preloaderDiv.style.transition = preloaderDiv.style.transform = '';
+  }, 1000);
+};
+

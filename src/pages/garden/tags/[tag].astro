@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import GardenLayout from '@/layouts/GardenLayout.astro';
-import { getPosts, tagCounts, tagHref, fmtDate, readingMinutes } from '@/lib/garden';
+import { getPosts, tagCounts, tagHref, fmtDate, readingMinutes, breadcrumbs, TAG_BLURB } from '@/lib/garden';
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -24,10 +24,9 @@ const jsonLd = {
 
 <GardenLayout
   title={`Posts tagged #${tag} — Zen Garden`}
-  description={`Zen Garden posts tagged #${tag}.`}
+  description={`Posts tagged #${tag} in the Zen Garden, George Michoulis's blog: ${TAG_BLURB[tag] ?? 'short notes on software, research and building things'}.`}
   canonical={canonical}
-  jsonLd={jsonLd}
-  noindex
+  jsonLd={[jsonLd, breadcrumbs(Astro.site, [['Blog', '/garden/'], [`#${tag}`, tagHref(tag)]])]}
 >
   <div class="z-wrap">
     <header style="padding: clamp(3rem, 10vh, 5.5rem) 0 2rem">

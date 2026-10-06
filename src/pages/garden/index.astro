@@ -1,7 +1,7 @@
 ---
 import { Image, getImage } from 'astro:assets';
 import GardenLayout from '@/layouts/GardenLayout.astro';
-import { getPosts, tagCounts, tagHref, fmtDate, readingMinutes } from '@/lib/garden';
+import { getPosts, tagCounts, tagHref, fmtDate, readingMinutes, breadcrumbs } from '@/lib/garden';
 import branch from '@/assets/ink/branch.png';
 import crane from '@/assets/ink/crane.png';
 import sunBrush from '@/assets/ink/sun-brush.png';
@@ -16,7 +16,7 @@ const rakes = [262, 282, 302];
 
 /** Optimised decorative backgrounds, passed into the CSS as inline vars. */
 const wave = await getImage({ src: greatWave, format: 'webp', width: 1600 });
-const enso = await getImage({ src: ensoSumi, format: 'png', width: 800 });
+const enso = await getImage({ src: ensoSumi, format: 'webp', width: 800 }); // webp keeps the alpha: 121 KB png → a fraction
 
 const blogJsonLd = {
   '@context': 'https://schema.org',
@@ -33,9 +33,9 @@ const blogJsonLd = {
 ---
 
 <GardenLayout
-  title="Zen Garden — George Michoulis"
-  description="Personal notes: graphs, code, walks, and whatever else gets raked into the sand."
-  jsonLd={blogJsonLd}
+  title="Zen Garden: notes by George Michoulis, software engineer"
+  description="Personal notes by George Michoulis, a software engineer in Thessaloniki, Greece: agentic AI, graphs, code, walks, and whatever else gets raked into the sand."
+  jsonLd={[blogJsonLd, breadcrumbs(Astro.site, [['Blog', '/garden/']])]}
 >
   <div class="z-wrap">
     <section class="z-hero" aria-labelledby="garden-title">
