@@ -15,7 +15,7 @@ by the orchestrator, who reviews every diff and commits. Execute in order unless
 | 009 | /play/ text and thesis fix; QA scripts without Easy read | P2 | S | 008 | DONE |
 | 011 | Light mode becomes a calm Aegean shore (no blocks) | P1 | M | — | DONE |
 | 012 | Day/night theme switch, brushed-ink blog buttons, blog light fixes | P2 | S–M | 011 | DONE |
-| 013 | SEO pass: descriptions, OG image, breadcrumbs, tag indexing, sitemap lastmod, CWV fixes | P1 | M | 012 | DONE (awaiting ship) |
+| 013 | SEO pass: descriptions, OG image, breadcrumbs, tag indexing, sitemap lastmod, CWV fixes | P1 | M | 012 | DONE |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (one-line reason) | REJECTED (one-line rationale)
 

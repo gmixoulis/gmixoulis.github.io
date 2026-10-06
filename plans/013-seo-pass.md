@@ -6,7 +6,7 @@
 
 ## Status
 - **Priority**: P1 · **Effort**: M · **Risk**: LOW (play engine: MED, see its gotchas memory) · **Planned at**: 2026-10-06
-- **State**: DONE on `feat/seo`, awaiting George's explicit OK to ship
+- **State**: DONE, shipped 2026-10-06 (George: "yes")
 
 ## Audit (live site, 2026-10-06)
 | # | Item | Now | Action |
