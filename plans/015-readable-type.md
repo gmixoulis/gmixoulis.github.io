@@ -5,7 +5,7 @@
 
 ## Status
 - **Priority**: P2 · **Effort**: S · **Risk**: LOW · **Planned at**: 2026-10-13
-- **State**: BUILT on fix/readable-type, awaiting George's yes
+- **State**: DONE, shipped 2026-10-13 (George: "y")
 
 ## Why
 The audience includes readers with dyslexia and short attention spans. Fonts made specifically for dyslexia don't measurably
