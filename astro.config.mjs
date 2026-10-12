@@ -124,15 +124,13 @@ export default defineConfig({
         { src: ['./src/assets/fonts/shippori-mincho-600-latin-ext.woff2'], weight: 600, style: 'normal',
           unicodeRange: ['U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF'] },
       ] } },
-    // Blog body text. display: optional: it's preloaded, so it's normally ready for the first paint; when it isn't (slow
-    // first visit) the fallback stays for that view instead of swapping, which re-wrapped the post intro (CLS 0.14).
-    { provider: fontProviders.google(), name: 'Source Sans 3', cssVariable: '--font-source-sans', display: 'optional',
-      weights: [300, 400, 600], styles: ['normal', 'italic'], subsets: ['latin', 'latin-ext', 'greek'] },
     // Homepage (Cube). Latin fonts, so `subsets` filters the Google faces correctly.
     { provider: fontProviders.google(), name: 'Funnel Display', cssVariable: '--font-funnel',
       weights: [500, 600], styles: ['normal'], subsets: ['latin', 'latin-ext'] },
-    // Body and UI text: designed for legibility (distinct b/d/p/q); headings keep Funnel Display.
-    { provider: fontProviders.google(), name: 'Atkinson Hyperlegible Next', cssVariable: '--font-atkinson',
+    // Body and UI text on every page: designed for legibility (distinct b/d/p/q); headings keep Funnel Display / Shippori.
+    // display: optional: it's preloaded, so it's normally ready for the first paint; when it isn't (slow first visit) the
+    // fallback stays for that view instead of swapping, which re-wrapped the post intro (CLS 0.14).
+    { provider: fontProviders.google(), name: 'Atkinson Hyperlegible Next', cssVariable: '--font-atkinson', display: 'optional',
       weights: [400, 500, 600, 700], styles: ['normal'], subsets: ['latin', 'latin-ext'] },
     { provider: fontProviders.google(), name: 'IBM Plex Mono', cssVariable: '--font-plex-mono',
       weights: [400, 500], styles: ['normal'], subsets: ['latin', 'latin-ext'], fallbacks: ['ui-monospace', 'monospace'] },

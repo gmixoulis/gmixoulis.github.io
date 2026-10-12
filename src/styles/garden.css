@@ -28,7 +28,7 @@
   --z-petal: color-mix(in srgb, var(--z-accent) 42%, var(--z-bg));
   --z-font-display: var(--font-shippori), "Hiragino Mincho ProN", "Times New Roman", serif;
   --z-font-brush: "Yuji Syuku", "Hiragino Mincho ProN", serif;
-  --z-font-body: var(--font-source-sans), "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --z-font-body: var(--font-atkinson), "Hiragino Sans", "Noto Sans JP", sans-serif;
   --z-font-meta: "IBM Plex Mono", ui-monospace, monospace;
   --z-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --z-cut-ease: cubic-bezier(0.7, 0, 0.2, 1);
@@ -43,6 +43,8 @@
   font-family: var(--z-font-body);
   font-size: 1.0625rem;
   line-height: 1.65;
+  letter-spacing: .01em;
+  word-spacing: .04em;
   overflow-x: clip;
 }
 
