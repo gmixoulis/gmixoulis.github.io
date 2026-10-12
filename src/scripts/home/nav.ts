@@ -22,7 +22,7 @@ const setTheme = (t: Theme) => {
   root.style.colorScheme = t;
   const label = tb?.querySelector('span');
   if (label) label.textContent = next === 'light' ? 'Light' : 'Dark';
-  tb?.setAttribute('aria-label', `Switch to ${next} theme`);
+  tb?.setAttribute('aria-label', next === 'dark' ? 'Turn to night' : 'Turn to day');
   meta?.setAttribute('content', t === 'dark' ? '#0a0a0b' : '#faf6ee');
   dispatchEvent(new Event('gm-theme'));
 };

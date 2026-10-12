@@ -221,19 +221,18 @@ export const projects = {
   ] as { wide?: boolean; img: string; w: number; h: number; alt: string; freeze?: boolean; name: string; host: string; d: string; tag?: string }[],
 };
 
-/** `glyph` picks the isometric drawing in Activities.astro. */
 export const activities = {
   /** In order of importance: all eight are cards, two rows of four. */
   h: ['Outside work.', 'The ones that matter most first.'],
   items: [
-    { glyph: 'agentic', h: 'Agentic AI', p: 'I build with **AI agents that write, test and ship code**.' },
-    { glyph: 'volunteering', h: 'Volunteering', p: '**MKI Hellas, 2019**: a Dialogflow chatbot and a web page.' },
-    { glyph: 'theatre', h: 'Theatre', p: '**Acting on stage** and watching plays.' },
-    { glyph: 'languages', h: 'Languages', p: 'I keep **learning new ones**.' },
-    { glyph: 'citizen', h: 'Active citizen', p: 'Politically engaged.' },
-    { glyph: 'fitness', h: 'Fitness', p: 'Workouts and staying fit.' },
-    { glyph: 'news', h: 'The news', p: 'I keep up with it.' },
-    { glyph: 'anime', h: 'Anime', p: 'Watching it.' },
+    { h: 'Agentic AI', p: 'I build with **AI agents that write, test and ship code**.' },
+    { h: 'Volunteering', p: '**MKI Hellas, 2019**: a Dialogflow chatbot and a web page.' },
+    { h: 'Theatre', p: '**Acting on stage** and watching plays.' },
+    { h: 'Languages', p: 'I keep **learning new ones**.' },
+    { h: 'Active citizen', p: 'Politically engaged.' },
+    { h: 'Fitness', p: 'Workouts and staying fit.' },
+    { h: 'The news', p: 'I keep up with it.' },
+    { h: 'Anime', p: 'Watching it.' },
   ],
 };
 

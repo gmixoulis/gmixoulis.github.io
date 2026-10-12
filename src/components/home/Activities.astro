@@ -1,17 +1,15 @@
 ---
 import { activities } from '@/data/profile';
-import { Dumbbell, Newspaper, Languages, Tv, Drama, Vote, Bot, HeartHandshake } from '@lucide/astro';
 const bold = (t: string) => t.split('**');
-const icons = { fitness: Dumbbell, news: Newspaper, languages: Languages, anime: Tv, theatre: Drama, citizen: Vote, agentic: Bot, volunteering: HeartHandshake };
 ---
 
 <section class="sec acts" id="activities" tabindex="-1" aria-labelledby="h-acts">
   <div class="wrap">
     <h2 class="h2" id="h-acts" data-rv>{activities.h[0]} <span class="dim">{activities.h[1]}</span></h2>
     <ul class="shelf" data-rv>
-      {activities.items.map((a) => { const I = icons[a.glyph as keyof typeof icons]; return (
-        <li class="act"><span class="ic" aria-hidden="true"><I size={22} stroke-width={1.75} /></span><h3>{a.h}</h3><p>{bold(a.p).map((t, i) => (i % 2 ? <b>{t}</b> : t))}</p></li>
-      ); })}
+      {activities.items.map((a) => (
+        <li class="act"><h3>{a.h}</h3><p>{bold(a.p).map((t, i) => (i % 2 ? <b>{t}</b> : t))}</p></li>
+      ))}
     </ul>
   </div>
 </section>

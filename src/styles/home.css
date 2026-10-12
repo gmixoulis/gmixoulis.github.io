@@ -284,7 +284,6 @@ body{font-size:17px;line-height:1.7;word-spacing:.04em}
 .venue,.plain span,.fine,.q figcaption,.socials{font-size:15px}
 .host,.tag,.card small{font-size:14px}
 /* One text per section: the paragraph reads in full colour with bold key facts for skimming. */
-body{font-family:var(--font-atkinson,var(--ui))}
 .body.one{color:var(--fg);max-width:52ch}
 .body b,.sk p b{color:var(--fg);font-weight:700}
 /* Experience: one column, no side-by-side. The job chain, then Education and Awards as separate full-width boxes. */
@@ -324,11 +323,10 @@ body{font-family:var(--font-atkinson,var(--ui))}
 .projects .head{padding:0;display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap}
 .pcard{width:clamp(240px,22vw,300px)}
 .pcard .th{height:150px}
-/* Activities: clean line icons instead of the isometric glyphs. */
+/* Activities: plain text cards, the heading carries each one. */
 .shelf{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .act{padding:20px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
-.act .ic{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:12px;border:1px solid transparent;background:linear-gradient(var(--panel),var(--panel)) padding-box,var(--acc) border-box;color:var(--a2)}
-.act h3{margin:14px 0 4px}
+.act h3{margin:0 0 4px}
 @media (max-width:860px){.shelf{grid-template-columns:repeat(2,minmax(0,1fr))}}
 /* Research: one column. Heading row (cube stage beside the heading only), then the top papers; the rest behind 'See all'. */
 .res-one{max-width:920px}
@@ -353,3 +351,5 @@ body{font-family:var(--font-atkinson,var(--ui))}
 .li-one .frame{margin-top:28px}
 .li-one .fine{max-width:none;margin-top:12px}
 .plain span b{display:inline;font-weight:700;color:var(--fg)}
+/* External-link cue, drawn in CSS so the arrow isn't part of the link text. */
+.chead .pill[target=_blank]::after,.fb a::after,.socials a::after,.note .lnk::after{content:'\2197';margin-left:.3em}
