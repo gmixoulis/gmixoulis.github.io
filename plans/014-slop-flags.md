@@ -5,7 +5,7 @@
 
 ## Status
 - **Priority**: P3 · **Effort**: S · **Risk**: LOW · **Planned at**: 2026-10-12
-- **State**: BUILT on fix/slop-flags, awaiting George's yes
+- **State**: DONE, shipped 2026-10-13 (George: "yes ship")
 
 ## Why
 A slop checker scored the homepage at 29%, based on Geist, the theme toggle's aria-label, 8 Lucide icons and "↗".
